@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.run();
-
+        System.out.println(".");
         try {
             MainMenuUI menu = new MainMenuUI();
             menu.run();
