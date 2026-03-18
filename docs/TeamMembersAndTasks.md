@@ -10,6 +10,7 @@ The team is formed by the students identified in the following table.
 | **[removed]**    | Marcelo Oliveira |
 | **[removed]**    | André Oliveira   |
 | **[removed]**    | Cauet Gonçalves  |
+| **[removed]**    | Bruno Pinto      |
 
 # 2. Task Distribution ###
 
@@ -37,9 +38,9 @@ At last, remember that each User Story does not stand alone... it needs to be in
 | US02 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US02) |          |          |
 | US03 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US03) |          |          |
 | US04 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US01) |          |          |
-| US05 (SDP Activities)                                                                                                          | [](system-documentation/US01)        |          |          |
+| US05 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US05) |          |          |
 | US06 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US01) |          |          |
-| US07 (SDP Activities)                                                                                                          | [](system-documentation/US01)        |          |          |
+| US07 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US07) |          |          |
 | US08 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US01) |          |          |
 | US09 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US01) |          |          |
 | US10 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US01) |          |          |
