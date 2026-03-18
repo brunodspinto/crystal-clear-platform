@@ -9,6 +9,8 @@ AC2: Only validated declarations (status = VALIDATED) on that specific date are 
 
 AC3: If no validated declarations exist in the period, an appropriate message is shown
 
+AC4: Sensitive data must be partially omitted based on the user's role
+
 Dependencies:
 
 US06 - declarations must exist to be analysed
