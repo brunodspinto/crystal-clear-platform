@@ -1,0 +1,25 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+autonumber
+actor "Administrator" as Admin
+participant ":System" as System
+activate Admin
+    Admin -> System : requests list of pending registration requests
+    activate System
+        System --> Admin : displays list of pending requests\n(name, email, requested role, submission date)
+    deactivate System
+    Admin -> System : selects a registration request
+    activate System
+        System --> Admin : shows full details of the selected request
+    deactivate System
+    Admin -> System : decides to accept or reject the request
+    activate System
+        System --> Admin : asks for confirmation of the decision
+    deactivate System
+    Admin -> System : confirms decision
+    activate System
+        System --> Admin : displays operation success\n(account activated or request rejected)
+    deactivate System
+@enduml

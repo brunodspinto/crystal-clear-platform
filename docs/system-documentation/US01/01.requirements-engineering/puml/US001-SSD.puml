@@ -1,0 +1,25 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+autonumber
+actor "Future User" as User
+participant ":System" as System
+activate User
+    User -> System : asks to register on the platform
+    activate System
+        System --> User : shows available roles list and requests selection
+    deactivate System
+    User -> System : selects a role
+    activate System
+        System --> User : requests data (i.e. full name, email address, password, password confirmation)
+    deactivate System
+    User -> System : types requested data
+    activate System
+        System --> User : shows all data and requests confirmation
+    deactivate System
+    User -> System : confirms data
+    activate System
+        System --> User : displays registration request submitted successfully\n(pending Administrator approval)
+    deactivate System
+@enduml
