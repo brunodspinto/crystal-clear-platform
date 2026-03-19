@@ -34,7 +34,7 @@ As an Administrator, I want to accept or reject registration requests on the pla
 
 > **Question:** Does the Administrator need to validate the identification documents submitted during registration (e.g., press card for Journalists, national identity card for Citizens)?
 >
-> **Answer:** Yes. The Administrator must verify the identification document provided — a valid press card (cartão de jornalista) for Journalists and a valid national identity card (cartão de cidadão) for Ordinary Citizens — before accepting the request.
+> **Answer:** Yes. The Administrator must verify the identification document provided , a valid press card (cartão de jornalista) for Journalists and a valid national identity card (cartão de cidadão) for Ordinary Citizens before accepting the request.
 
 > **Question:** Can the Administrator edit the role or personal data of a registration request before accepting it?
 >
@@ -49,12 +49,12 @@ As an Administrator, I want to accept or reject registration requests on the pla
 ### 1.3. Acceptance Criteria
 
 * **AC1:** The Administrator must be able to view a list of all pending registration requests.
-* **AC2:** For each request, the Administrator must be able to choose to **Accept** or **Reject** it.
+* **AC2:** For each request, the Administrator must be able to choose to Accept or Reject it.
 * **AC3:** When a request is accepted, the user account is activated with the requested role and the user may log in.
 * **AC4:** When a request is rejected, the Administrator must provide a mandatory rejection reason. The user does not gain access to the platform and the request is archived.
 * **AC5:** The Administrator must not be able to accept a request for a role that does not exist in the system's predefined list.
 * **AC6:** The Administrator must verify the identification document of the registering user (press card for Journalists; national identity card for Ordinary Citizens) before accepting the request.
-* **AC7:** The Administrator cannot edit any data within a registration request — only Accept or Reject.
+* **AC7:** The Administrator cannot edit any data within a registration request only Accept or Reject.
 
 ---
 
@@ -95,7 +95,7 @@ As an Administrator, I want to accept or reject registration requests on the pla
 * Only the System Administrator has the authority to accept or reject registration requests; no other role may perform this operation.
 * A registration request remains in **Pending** state until an explicit decision (Accept or Reject) is made by the Administrator.
 * When a request is rejected, the rejection reason is stored and displayed to the user upon their next login attempt.
-* The Administrator cannot modify any registration data — if the data is invalid or incorrect, the request must be rejected so the user can submit a corrected one.
+* The Administrator cannot modify any registration data if the data is invalid or incorrect, the request must be rejected so the user can submit a corrected one.
 * Each registration request is handled independently, even if multiple requests belong to the same person (one per role).
 * After acceptance, the newly activated user must authenticate using their registered password (7 alphanumeric characters including 3 uppercase letters and 2 digits).
 * This US is closely coupled with **US001**: together they form the complete user onboarding flow of the platform.

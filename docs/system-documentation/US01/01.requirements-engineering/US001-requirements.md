@@ -38,7 +38,7 @@ As a future user, I want to request to be registered in the platform with the ap
 
 > **Question:** What is the purpose of the platform and what kind of irregularities does it aim to detect?
 >
-> **Answer:** The platform supports the analysis of Declarations of Interests submitted by political agents. Its main goal is to detect irregularities such as conflicts of interest — for example, situations where a political agent holds shares in a company that benefits from their political decisions — and cases of illicit enrichment.
+> **Answer:** The platform supports the analysis of Declarations of Interests submitted by political agents. Its main goal is to detect irregularities such as conflicts of interest , for example, situations where a political agent holds shares in a company that benefits from their political decisions and cases of illicit enrichment.
 
 > **Question:** Does the Ethics Committee have any restrictions on what they can access on the platform?
 >
@@ -96,7 +96,7 @@ As a future user, I want to request to be registered in the platform with the ap
 
 ### 1.7. Other Relevant Remarks
 
-* The registration request remains in a **Pending** state until reviewed by an Administrator (see US002).
-* A user may hold multiple roles on the platform, but each role requires a separate and independent registration — roles must not overlap within a single account.
+* The registration request remains in a Pending state until reviewed by an Administrator (see US002).
+* A user may hold multiple roles on the platform, but each role requires a separate and independent registration roles must not overlap within a single account.
 * When a registration request is rejected, the Administrator must supply a rejection reason. This reason is displayed to the user the next time they attempt to log in.
-* Journalists may require additional validation via press card number — confirmed by the client.
+* Journalists may require additional validation via press card number , confirmed by the client.
