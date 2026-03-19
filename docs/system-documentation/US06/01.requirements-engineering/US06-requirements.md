@@ -13,7 +13,7 @@ As a Political Agent, I want to submit a declaration of interests including inco
 > Declarations of Interest may be initial, submitted by political agents whenever they begin a term of office; regular, submitted regularly (annually) while performing a political function; and exceptional, submitted whenever there is a significant change in the values mentioned in the declaration, when requested by the ethics committee, or for the purpose of correcting errors/omissions in previously submitted declarations.
 
 > Declarations of interest must include information regarding:
-> - professional positions, public, private, and social positions held (or previously held), in which institutions, the nature of these institutions, the functions performed, and the payment received;
+> - professional positions, public, private, and social positions held (or previously held), in which institutions, the nature of these institutions, the functions performed in the institution, and the payment received;
 > - support and subsidies received, from which institutions and the nature of the institution;
 > - assets (real estate: urban and rural) with their estimated value;
 > - quotas, shares, and holdings in companies, with their respective market values.
@@ -67,7 +67,7 @@ As a Political Agent, I want to submit a declaration of interests including inco
 
 ### 1.6. System Sequence Diagram (SSD)
 
-![System Sequence Diagram](svg/US006-SSD.svg)
+![System Sequence Diagram](svg/US06-SSD.svg)
 
 **_Other alternatives might exist._**
 
