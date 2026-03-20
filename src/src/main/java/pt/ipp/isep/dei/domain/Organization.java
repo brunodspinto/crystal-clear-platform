@@ -20,10 +20,28 @@ public class Organization {
      * @param vatNumber The vat number of the organization. This is the identity of the organization, therefore it
      *                  cannot be changed.
      */
-    public Organization(String vatNumber) {
-        this.vatNumber = vatNumber;
-        employees = new ArrayList<>();
-        tasks = new ArrayList<>();
+    public Organization(String vatNumber, String name, String website, String phone, String email) {
+    if (vatNumber == null || vatNumber.isBlank())
+        throw new IllegalArgumentException("VAT number required");
+        
+    if (name == null || name.isBlank())
+        throw new IllegalArgumentException("Name required");
+    
+    if (phone == null || phone.isBlank())
+        throw new IllegalArgumentException("Phone required");
+
+    if (email == null || email.isBlank())
+        throw new IllegalArgumentException("Email required");
+   
+    this.vatNumber = vatNumber;
+    this.name = name;   
+    this.website = website;
+    this.phone = phone;
+    this.email = email;
+
+    this.employees = new ArrayList<>();
+    this.tasks = new ArrayList<>();
+}
     }
 
     /**
