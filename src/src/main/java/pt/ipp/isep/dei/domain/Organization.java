@@ -100,6 +100,14 @@ public String toString() {
             ", email='" + email + '\'' +
             '}';
 }
+
+    //add employee to organization
+    public boolean addEmployee(Employee employee) {
+       if (!employees.contains(employee)) {
+            employees.add(employee);
+        }
+    }
+    
     /**
      * This method checks if an employee works for the organization.
      *
@@ -124,50 +132,23 @@ public String toString() {
      * @return
      */
     public Optional<Task> createTask(String reference, String description, String informalDescription,
-                                     String technicalDescription, int duration, double cost,
-                                     TaskCategory taskCategory, Employee employee) {
+                                 String technicalDescription, int duration, double cost,
+                                 TaskCategory taskCategory, Employee employee) {
 
-        //TODO: we could also check if the employee works for the organization before proceeding
-        //checkIfEmployeeWorksForOrganization(employee);
-
-        // When a Task is added, it should fail if the Task already exists in the list of Tasks.
-        // In order to not return null if the operation fails, we use the Optional class.
-        Optional<Task> optionalValue = Optional.empty();
-
-        Task task = new Task(reference, description, informalDescription, technicalDescription, duration, cost,
-                taskCategory, employee);
-
-        if (addTask(task)) {
-            optionalValue = Optional.of(task);
-        }
-        return optionalValue;
+    if (!employees.contains(employee)) {
+        return Optional.empty();
     }
 
-    /**
-     * This method adds a task to the list of tasks.
-     *
-     * @param task The task to be added.
-     * @return True if the task was added successfully.
-     */
-    private boolean addTask(Task task) {
-        boolean success = false;
-        if (validate(task)) {
-            // A clone of the task is added to the list of tasks, to avoid side effects and outside manipulation.
-            success = tasks.add(task.clone());
-        }
-        return success;
+    Task task = new Task(reference, description, informalDescription,
+            technicalDescription, duration, cost, taskCategory, employee);
+
+    if (tasks.contains(task)) {
+        return Optional.empty();
     }
 
-    /**
-     * This method validates the task, checking for duplicates.
-     *
-     * @param task The task to be validated.
-     * @return True if the task is valid.
-     */
-    private boolean validate(Task task) {
-        return tasksDoNotContain(task);
-    }
-
+    tasks.add(task);
+    return Optional.of(task);
+}
     /**
      * This method checks if the task is already in the list of tasks.
      *
@@ -209,23 +190,6 @@ public String toString() {
     @Override
     public int hashCode() {
         return Objects.hash(vatNumber);
-    }
-
-    //add employee to organization
-    public boolean addEmployee(Employee employee) {
-        boolean success = false;
-        if (validateEmployee(employee)) {
-            success = employees.add(employee);
-        }
-        return success;
-    }
-
-    private boolean validateEmployee(Employee employee) {
-        return employeesDoNotContain(employee);
-    }
-
-    private boolean employeesDoNotContain(Employee employee) {
-        return !employees.contains(employee);
     }
 
     //Clone organization
