@@ -25,7 +25,7 @@ public class Organization {
         throw new IllegalArgumentException("VAT number required");
         
     if (name == null || name.isBlank())
-        throw new IllegalArgumentException("Name required");
+        throw new IllegalArgumentException("Name cannot be null or empty");
     
     if (phone == null || phone.isBlank())
         throw new IllegalArgumentException("Phone required");
@@ -41,9 +41,65 @@ public class Organization {
 
     this.employees = new ArrayList<>();
     this.tasks = new ArrayList<>();
-}
     }
 
+public String getVatNumber() {
+    return vatNumber;
+}
+
+public String getName() {
+    return name;
+}
+
+public void setName(String name) {
+    if (name == null || name.isBlank()) {
+        throw new IllegalArgumentException("Name cannot be null or empty");
+    }
+    this.name = name;
+}
+
+public String getWebsite() {
+    return website;
+}
+
+public void setWebsite(String website) {
+    this.website = website;
+}
+
+public String getPhone() {
+    return phone;
+}
+
+public void setPhone(String phone) {
+    this.phone = phone;
+}
+
+public String getEmail() {
+    return email;
+}
+
+public void setEmail(String email) {
+    this.email = email;
+}
+
+public List<Employee> getEmployees() {
+    return List.copyOf(employees);
+}
+
+public List<Task> getTasks() {
+    return List.copyOf(tasks);
+}
+
+@Override
+public String toString() {
+    return "Organization{" +
+            "vatNumber='" + vatNumber + '\'' +
+            ", name='" + name + '\'' +
+            ", website='" + website + '\'' +
+            ", phone='" + phone + '\'' +
+            ", email='" + email + '\'' +
+            '}';
+}
     /**
      * This method checks if an employee works for the organization.
      *
