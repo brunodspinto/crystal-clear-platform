@@ -1,6 +1,7 @@
 package pt.ipp.isep.dei.domain;
 
 import java.io.Serializable;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -39,12 +40,16 @@ public class Function implements Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Function function = (Function) o;
-        return Objects.equals(designation, function.designation);
+        return normalizeDesignation(designation).equals(normalizeDesignation(function.designation));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(designation);
+        return Objects.hash(normalizeDesignation(designation));
+    }
+
+    private String normalizeDesignation(String value) {
+        return value.toLowerCase(Locale.ROOT);
     }
 
     /**
