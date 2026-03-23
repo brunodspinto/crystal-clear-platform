@@ -13,7 +13,7 @@ class OrganizationRepositoryTest {
     @Test
     void testAddOrganization() {
         OrganizationRepository organizationRepository = new OrganizationRepository();
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
 
         Optional<Organization> returnOrganization = organizationRepository.add(organization);
 
@@ -23,7 +23,7 @@ class OrganizationRepositoryTest {
     @Test
     void ensureGetOrganizationByEmployeeWorks() {
         OrganizationRepository organizationRepository = new OrganizationRepository();
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         Employee employee = new Employee("john.doe@this.company.com");
         organization.addEmployee(employee);
         organizationRepository.add(organization);
@@ -36,7 +36,7 @@ class OrganizationRepositoryTest {
     @Test
     void ensureGetOrganizationByEmployeeFails() {
         OrganizationRepository organizationRepository = new OrganizationRepository();
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         Employee employee = new Employee("john.doe@this.company.com");
         organization.addEmployee(employee);
         organizationRepository.add(organization);
@@ -50,7 +50,7 @@ class OrganizationRepositoryTest {
     @Test
     void ensureGetOrganizationByEmailWorks() {
         OrganizationRepository organizationRepository = new OrganizationRepository();
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         Employee employee = new Employee("john.doe@this.company.com");
         organization.addEmployee(employee);
         organizationRepository.add(organization);
@@ -64,14 +64,14 @@ class OrganizationRepositoryTest {
     @Test
     void ensureAddOrganizationWorks() {
         OrganizationRepository organizationRepository = new OrganizationRepository();
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         Employee employee = new Employee("john.doe@this.company.com");
         organization.addEmployee(employee);
 
         organizationRepository.add(organization);
 
         Optional<Organization> returnOrganization =
-                organizationRepository.getOrganizationByEmployeeEmail("john.doe@this" + ".company.com");
+                organizationRepository.getOrganizationByEmployeeEmail("john.doe@this.company.com");
 
         //Assert
         //Make sure both represents the same object
@@ -83,7 +83,7 @@ class OrganizationRepositoryTest {
     @Test
     void ensureAddOrganizationDuplicateFails() {
         OrganizationRepository organizationRepository = new OrganizationRepository();
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         Employee employee = new Employee("john.doe@this.company.com");
         organization.addEmployee(employee);
         organizationRepository.add(organization);

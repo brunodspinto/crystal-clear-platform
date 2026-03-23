@@ -19,18 +19,16 @@ public class Bootstrap implements Runnable {
     }
 
     private void addOrganization() {
-        //TODO: add organizations bootstrap here
         //get organization repository
         OrganizationRepository organizationRepository = Repositories.getInstance().getOrganizationRepository();
 
-        Organization organization = new Organization("This Company");
+        Organization organization = new Organization("123456789", "This Company", "www.this.app", "912345678", "geral@this.app");
         organization.addEmployee(new Employee("admin@this.app"));
         organization.addEmployee(new Employee("employee@this.app"));
         organizationRepository.add(organization);
     }
 
     private void addTaskCategories() {
-        //TODO: add bootstrap Task Categories here
         //get task category repository
         TaskCategoryRepository taskCategoryRepository = Repositories.getInstance().getTaskCategoryRepository();
 
@@ -44,14 +42,14 @@ public class Bootstrap implements Runnable {
     }
 
     private void addUsers() {
-        //TODO: add Authentication users here: should be created for each user in the organization
         //get authentication repository
         AuthenticationRepository authenticationRepository = Repositories.getInstance().getAuthenticationRepository();
 
         authenticationRepository.addUserRole(AuthenticationController.ROLE_ADMIN, AuthenticationController.ROLE_ADMIN);
         authenticationRepository.addUserRole(AuthenticationController.ROLE_EMPLOYEE, AuthenticationController.ROLE_EMPLOYEE);
 
-        authenticationRepository.addUserWithRole("Main Administrator", "admin@this.app", "admin", AuthenticationController.ROLE_ADMIN);
-        authenticationRepository.addUserWithRole("Employee", "employee@this.app", "pwd", AuthenticationController.ROLE_EMPLOYEE);
+        authenticationRepository.addUserWithRole("Main Administrator", "admin@this.app", "ADM1n2A", AuthenticationController.ROLE_ADMIN);
+
+        authenticationRepository.addUserWithRole("Employee", "employee@this.app", "EMP1o2e", AuthenticationController.ROLE_EMPLOYEE);
     }
 }

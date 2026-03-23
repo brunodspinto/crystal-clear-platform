@@ -10,81 +10,83 @@ class OrganizationTest {
 
     @Test
     void testEqualsSameObject() {
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         assertEquals(organization, organization);
     }
 
     @Test
     void testEqualsDifferentClass() {
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         assertNotEquals("", organization);
     }
 
     @Test
     void testEqualsNull() {
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         assertNotEquals(null, organization);
     }
 
     @Test
     void testEqualsDifferentObject() {
-        Organization organization = new Organization("123456789");
-        Organization organization1 = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
+        Organization organization1 = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         assertEquals(organization, organization1);
     }
 
     @Test
     void testHashCodeSameObject() {
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         assertEquals(organization.hashCode(), organization.hashCode());
     }
 
     @Test
     void testHashCodeDifferentObject() {
-        Organization organization = new Organization("123456789");
-        Organization organization1 = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
+        Organization organization1 = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         assertEquals(organization.hashCode(), organization1.hashCode());
     }
 
     @Test
         //same hashcode
     void testHashCodeSameObjectSameVATNumber() {
-        Organization organization = new Organization("123456789");
-        Organization organization1 = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
+        Organization organization1 = new Organization("123456789", "Another Org", "www.another.com", "987654321", "another@test.com");
         assertEquals(organization.hashCode(), organization1.hashCode());
     }
 
     @Test
     void ensureHashCodeFailsForDifferentVatNumbers() {
-        Organization organization = new Organization("123456789");
-        Organization organization1 = new Organization("123456788");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
+        Organization organization1 = new Organization("123456788", "Test Org", "www.test.com", "912345678", "test@test.com");
         assertNotEquals(organization.hashCode(), organization1.hashCode());
     }
 
     @Test
     void ensureEqualsFailsForDifferentObjectType() {
-        Organization organization = new Organization("123456789");
-        Organization organization1 = new Organization("123456788");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
+        Organization organization1 = new Organization("123456788", "Test Org", "www.test.com", "912345678", "test@test.com");
         assertNotEquals(organization, organization1);
     }
 
     @Test
     void ensureEqualsFailsWhenComparingNull() {
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         assertNotEquals(organization, null);
     }
 
     @Test
     void ensureEqualsSuccessWhenComparingSameObject() {
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         assertEquals(organization, organization);
     }
 
     @Test
     void testThatCreateTaskWorks() {
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
 
         Employee employee = new Employee("john.doe@this.company.com");
+        organization.addEmployee(employee); // CORREÇÃO: Adicionar o empregado primeiro
+
         TaskCategory taskCategory = new TaskCategory("Task Category Description");
 
         Task expected = new Task("Task Description", "Task Category Description", "informal description",
@@ -102,9 +104,12 @@ class OrganizationTest {
     @Test
     void ensureAddingDuplicateTaskFails() {
         //Arrange
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         Employee employee = new Employee("john.doe@this.company.com");
+        organization.addEmployee(employee); // CORREÇÃO: Adicionar o empregado primeiro
+
         TaskCategory taskCategory = new TaskCategory("Task Category Description");
+
         //Add the first task
         Optional<Task> originalTask =
                 organization.createTask("Task Description", "Task Category Description", "informal description",
@@ -122,7 +127,7 @@ class OrganizationTest {
 
     @Test
     void ensureEmploysFails() {
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         Employee employee = new Employee("john.doe@this.company.com");
 
         assertFalse(organization.employs(employee));
@@ -131,7 +136,7 @@ class OrganizationTest {
 
     @Test
     void ensureEmploysSuccess() {
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         Employee employee = new Employee("john.doe@this.company.com");
         organization.addEmployee(employee);
         assertTrue(organization.employs(employee));
@@ -139,7 +144,7 @@ class OrganizationTest {
 
     @Test
     void ensureAnyEmployeeHasEmailFails() {
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         Employee employee = new Employee("john.doe@this.company.com");
         organization.addEmployee(employee);
         assertFalse(organization.anyEmployeeHasEmail("jane.doe@this.company.com"));
@@ -147,7 +152,7 @@ class OrganizationTest {
 
     @Test
     void ensureAnyEmployeeHasEmailWorks() {
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         Employee employee = new Employee("john.doe@this.company.com");
         organization.addEmployee(employee);
         assertTrue(organization.anyEmployeeHasEmail("john.doe@this.company.com"));
@@ -155,7 +160,7 @@ class OrganizationTest {
 
     @Test
     void ensureAddDuplicateEmployeeFails() {
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         Employee employee = new Employee("john.doe@this.company.com");
         assertTrue(organization.addEmployee(employee));
         assertFalse(organization.addEmployee(employee));
@@ -163,14 +168,14 @@ class OrganizationTest {
 
     @Test
     void ensureAddEmployeeWorks() {
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         Employee employee = new Employee("john.doe@this.company.com");
         assertTrue(organization.addEmployee(employee));
     }
 
     @Test
     void ensureCloneWorks() {
-        Organization organization = new Organization("123456789");
+        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         Employee employee = new Employee("john.doe@this.company.com");
         organization.addEmployee(employee);
         organization.createTask("Task Description", "Task Category Description", "informal description",
