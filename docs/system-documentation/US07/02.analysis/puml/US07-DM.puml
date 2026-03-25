@@ -1,0 +1,35 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+hide circle
+hide methods
+
+title Domain Model Excerpt - US07
+
+class PoliticalAgent {
+}
+
+class DeclarationOfInterest {
+    - submissionDate: Date
+    - status: String
+}
+
+class Asset {
+}
+
+class Income {
+}
+
+PoliticalAgent "1" -- "*" DeclarationOfInterest : owns / consults >
+DeclarationOfInterest "1" *-- "*" Asset : includes >
+DeclarationOfInterest "1" *-- "*" Income : includes >
+
+note right of DeclarationOfInterest
+  Contains details about
+  positions, subsidies,
+  assets, and holdings.
+end note
+
+@enduml
