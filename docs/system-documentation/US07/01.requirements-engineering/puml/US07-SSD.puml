@@ -1,0 +1,27 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - US07
+
+autonumber
+
+actor "Political Agent" as Agent
+participant ":System" as System
+
+activate Agent
+
+Agent -> System : asks to consult a previously submitted Declaration of Interests
+activate System
+System --> Agent : shows a list of submitted declarations and asks to select one
+deactivate System
+
+Agent -> System : selects the desired declaration
+activate System
+System --> Agent : retrieves and displays the full details of the selected declaration
+deactivate System
+
+deactivate Agent
+
+@enduml

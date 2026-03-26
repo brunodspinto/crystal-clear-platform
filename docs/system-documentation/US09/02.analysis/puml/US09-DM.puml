@@ -1,0 +1,63 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class EthicsCommitteeMember {
+    name
+    email
+}
+
+class PoliticalAgent {
+    name
+    taxId
+}
+
+class Declaration {
+    submissionDate
+    status
+}
+
+class Position {
+    title
+    entity
+    startDate
+    endDate
+}
+
+class IncomeSource {
+    description
+    annualAmount
+}
+
+class Asset {
+    description
+    value
+}
+
+class BusinessParticipation {
+    companyName
+    percentage
+}
+
+EthicsCommitteeMember "1" -- "*" PoliticalAgent : consults
+
+PoliticalAgent "1" -- "*" Declaration : submits
+
+Declaration "1" -- "*" Position : includes
+Declaration "1" -- "*" IncomeSource : includes
+Declaration "1" -- "*" Asset : includes
+Declaration "1" -- "*" BusinessParticipation : includes
+
+note right of Declaration
+  Only VALIDATED declarations
+  up to the specified date
+  are considered
+end note
+
+@enduml
