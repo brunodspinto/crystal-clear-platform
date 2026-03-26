@@ -1,0 +1,97 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class PoliticalAgent {
+    name
+    taxIdentificationNumber
+    email
+    role
+}
+
+class DeclarationOfInterests {
+    submissionTimestamp
+    type
+    state
+}
+
+class DeclarationType {
+    designation
+}
+
+class DeclarationState {
+    designation
+}
+
+class PositionEntry {
+    nature
+    paymentReceived
+    startDate
+    endDate
+}
+
+class Function {
+    designation
+}
+
+class Institution {
+    name
+    type
+}
+
+class InstitutionType {
+    designation
+}
+
+class SubsidyEntry {
+    amount
+    description
+}
+
+class AssetEntry {
+    assetType
+    description
+    estimatedValue
+}
+
+class AssetType {
+    designation
+}
+
+class BusinessParticipation {
+    companyName
+    quotaPercentage
+    marketValue
+}
+
+PoliticalAgent "1" -- "*" DeclarationOfInterests : submits
+
+DeclarationOfInterests "*" -- "1" DeclarationType : classified as
+
+DeclarationOfInterests "*" -- "1" DeclarationState : has
+
+DeclarationOfInterests "1" -- "1..*" PositionEntry : includes
+
+DeclarationOfInterests "1" -- "*" SubsidyEntry : includes
+
+DeclarationOfInterests "1" -- "*" AssetEntry : includes
+
+DeclarationOfInterests "1" -- "*" BusinessParticipation : includes
+
+PositionEntry "*" -- "1" Institution : held at
+
+PositionEntry "*" -- "1" Function : performs
+
+Institution "*" -- "1" InstitutionType : categorized as
+
+SubsidyEntry "*" -- "1" Institution : received from
+
+AssetEntry "*" -- "1" AssetType : classified as
+
+@enduml
