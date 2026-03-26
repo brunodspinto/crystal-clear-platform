@@ -2,7 +2,7 @@
 
 This folder contains all the global artifacts for your project, split by each implementation phase.
 
-[Glossary](01.requirements-engineering/glossary.md)
+[Glossary](../../system-documentation/global-artifacts/01.requirements-engineering/glossary.md)
 
 [Supplementary Specification](01.requirements-engineering/supplementary-specification.md)
 
