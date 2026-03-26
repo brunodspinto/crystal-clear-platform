@@ -1,0 +1,56 @@
+@startuml US10-DM
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class Journalist {
+    name
+    email
+}
+
+class PoliticalAgent {
+    name
+    taxId
+}
+
+class Declaration {
+    submissionDate
+    status
+    totalIncome
+}
+
+class Position {
+    title
+    payment
+}
+
+class IncomeSource {
+    description
+    annualAmount
+}
+
+Journalist "1" -- "*" PoliticalAgent : analyses income of
+
+PoliticalAgent "1" -- "*" Declaration : submits
+
+Declaration "1" -- "*" Position : includes
+Declaration "1" -- "*" IncomeSource : includes
+
+note right of Journalist
+  Queries declarations between
+  a startDate and endDate
+end note
+
+note right of Declaration
+  Only VALIDATED declarations
+  within the specified period
+  are considered.
+  totalIncome = sum of all
+  Position payments + subsidies
+end note
+
+@enduml

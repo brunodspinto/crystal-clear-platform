@@ -1,0 +1,32 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Ethics Committee\nMember" as Ethics
+participant ":System" as System
+
+activate Ethics
+
+    Ethics -> System : asks to consult integrated situation of a political agent
+    activate System
+
+        System --> Ethics : requests agent name and reference date
+    deactivate System
+
+    Ethics -> System : enters agent name and reference date
+    activate System
+
+        System --> Ethics : shows list of validated declarations\nsubmitted up to the specified date
+    deactivate System
+
+    Ethics -> System : selects a declaration to view details
+    activate System
+
+        System --> Ethics : displays full declaration details\n(positions, assets, participations, subsidies)
+    deactivate System
+
+deactivate Ethics
+@enduml
