@@ -1,0 +1,57 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Political\nAgent" as Agent
+participant ":System" as System
+
+activate Agent
+
+    Agent -> System : asks to submit a new declaration of interests
+    activate System
+
+        System --> Agent : shows declaration type list (initial, regular, exceptional)\nand asks to select one
+    deactivate System
+
+    Agent -> System : selects declaration type
+    activate System
+
+        System --> Agent : shows registered institutions and functions;\nrequests position/income entries (institution, function,\nnature, payment)
+    deactivate System
+
+    Agent -> System : provides one or more position/income entries
+    activate System
+
+        System --> Agent : requests support and subsidy data\n(source institution, nature, amount)
+    deactivate System
+
+    Agent -> System : provides support and subsidy data (or skips if none)
+    activate System
+
+        System --> Agent : requests asset data\n(type: urban/rural, description, estimated value)
+    deactivate System
+
+    Agent -> System : provides asset entries (or skips if none)
+    activate System
+
+        System --> Agent : requests business participation data\n(company name, quota/share percentage, market value)
+    deactivate System
+
+    Agent -> System : provides business participation entries (or skips if none)
+    activate System
+
+        System --> Agent : shows full declaration summary and requests confirmation
+    deactivate System
+
+    Agent -> System : confirms submission
+    activate System
+
+        System --> Agent : displays operation success;\ndeclaration set to "pending validation" state
+    deactivate System
+
+deactivate Agent
+
+@enduml

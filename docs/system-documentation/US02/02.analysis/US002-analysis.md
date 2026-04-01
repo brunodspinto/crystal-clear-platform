@@ -24,7 +24,7 @@ The key entities and their attributes are:
 * **Role:** Represents one of the predefined roles in the system. The Administrator must ensure the requested role exists in the system before accepting the request.
 
 Business rules:
-* The Administrator cannot edit any data within a registration request — only Accept or Reject.
+* The Administrator cannot edit any data within a registration request only Accept or Reject.
 * A rejection reason is mandatory when rejecting a request.
 * The Administrator must verify the identification document before accepting (press card for Journalists; national identity card for Ordinary Citizens).
 * Each registration request is handled independently, even if multiple requests belong to the same person.

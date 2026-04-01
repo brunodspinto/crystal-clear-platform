@@ -1,0 +1,47 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Ethics Committee\nMember" as Member
+participant ":System" as System
+
+activate Member
+
+    Member -> System : asks to validate a declaration of interests
+    activate System
+
+        System --> Member : shows list of declarations pending validation
+    deactivate System
+
+    Member -> System : selects a declaration to review
+    activate System
+
+        System --> Member : displays full declaration content\n(positions, income, assets, business participations)
+    deactivate System
+
+    Member -> System : reviews declaration and indicates outcome\n(validated or rejected with comments)
+    activate System
+
+        alt declaration is correct
+            System --> Member : shows confirmation prompt for validation
+        else declaration has inconsistencies
+            System --> Member : requests identification of section(s), item(s),\nand comment(s) describing each inconsistency
+        end
+    deactivate System
+
+    Member -> System : confirms outcome\n(or provides section/item comments if rejecting)
+    activate System
+
+        alt validated
+            System --> Member : displays operation success;\ndeclaration set to "validated" state and made visible
+        else rejected
+            System --> Member : displays operation success;\ndeclaration returned to Political Agent for correction\nwith attached comments
+        end
+    deactivate System
+
+deactivate Member
+
+@enduml

@@ -1,0 +1,59 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class EthicsCommitteeMember {
+    name
+    email
+}
+
+class DeclarationOfInterests {
+    submissionTimestamp
+    type
+    state
+}
+
+class DeclarationState {
+    designation
+}
+
+class PoliticalAgent {
+    name
+    taxIdentificationNumber
+    email
+}
+
+class ValidationRecord {
+    timestamp
+    outcome
+}
+
+class ValidationOutcome {
+    designation
+}
+
+class ValidationComment {
+    section
+    item
+    comment
+}
+
+PoliticalAgent "1" -- "*" DeclarationOfInterests : submits
+
+DeclarationOfInterests "*" -- "1" DeclarationState : has
+
+EthicsCommitteeMember "1" -- "*" ValidationRecord : performs
+
+ValidationRecord "*" -- "1" DeclarationOfInterests : concerns
+
+ValidationRecord "*" -- "1" ValidationOutcome : results in
+
+ValidationRecord "1" -- "*" ValidationComment : contains
+
+@enduml

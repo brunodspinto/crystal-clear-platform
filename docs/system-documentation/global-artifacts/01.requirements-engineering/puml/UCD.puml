@@ -1,0 +1,48 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+left to right direction
+
+title Use Case Diagram - Sprint 1
+
+actor "Future User" as FutureUser
+actor "Administrator" as Admin
+actor "Political Agent" as Agent
+actor "Ethics Committee" as Ethics
+actor "Journalist" as Journalist
+actor "Citizen" as Citizen
+
+usecase "US01 - Request Registration" as US01
+usecase "US02 - Accept/Reject Registration" as US02
+usecase "US03 - List Institutions" as US03
+usecase "US04 - Register Institution" as US04
+usecase "US05 - Register Functions" as US05
+usecase "US06 - Submit Declaration" as US06
+usecase "US07 - Consult Own Declaration" as US07
+usecase "US08 - Validate Declaration" as US08
+usecase "US09 - Consult Integrated Situation" as US09
+usecase "US10 - Analyse Income Evolution" as US10
+usecase "US11 - Consult Assets" as US11
+usecase "US12 - Make a Complaint" as US12
+
+FutureUser --> US01
+Admin --> US02
+Admin --> US04
+Admin --> US05
+
+Agent --> US03
+Agent --> US06
+Agent --> US07
+
+Ethics --> US08
+Ethics --> US09
+
+Journalist --> US10
+Journalist --> US11
+
+Citizen --> US11
+Citizen --> US12
+
+@enduml
