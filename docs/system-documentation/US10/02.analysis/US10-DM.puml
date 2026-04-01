@@ -11,10 +11,14 @@ class Journalist {
     name
     email
     phone
+    pressCardNumber
 }
 
 class "Political Agent" as PoliticalAgent {
     name
+    email
+    nationalIdentityCard
+    taxIdentificationNumber
     politicalFunction
     mandateStart
     mandateEnd
@@ -23,19 +27,33 @@ class "Political Agent" as PoliticalAgent {
 class "Declaration of Interests" as Declaration {
     id
     name
-    position
     submissionDate
 }
 
+enum DeclarationStatus {
+    pending
+    validated
+    rejected
+}
+
 enum Type {
-    Initial
-    Regular
-    Exceptional
+    initial
+    regular
+    exceptional
+}
+
+enum PoliticalFunction {
+    minister
+    deputy
+    councillor
+    parishCouncilPresident
+    mayor
 }
 
 class Income {
     amount
     source
+    institution
     date
 }
 
@@ -43,7 +61,10 @@ Journalist "*" -- "*" Income : analyses
 
 PoliticalAgent "*" -- "*" Declaration : has
 
+PoliticalAgent "1" -- "1" PoliticalFunction : has
+
 Declaration "1" -- "1" Type : has
+Declaration "1" -- "1" DeclarationStatus : has
 Declaration "1" -- "*" Income : has
 
 @enduml
