@@ -19,8 +19,10 @@ class DeclarationOfInterests {
     state
 }
 
-class DeclarationState {
-    designation
+class DeclarationStatus {
+    pending
+        validated
+        rejected
 }
 
 class PoliticalAgent {

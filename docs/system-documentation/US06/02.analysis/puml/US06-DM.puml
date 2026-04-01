@@ -9,27 +9,31 @@ hide circle
 hide methods
 
 class PoliticalAgent {
-    name
-    email
-    nationalIdentityCard
-    taxIdentificationNumber
-    politicalFunction
-    mandateStart
-    mandateEnd
+    name: String
+    email: String
+    nationalIdentityCard: String
+    taxIdentificationNumber: String
+    politicalFunction: PoliticalFunction
+    mandateStart: Date
+    mandateEnd: Date
 }
 
 class DeclarationOfInterests {
-    submissionTimestamp
-    type
-    state
+    id: String
+    name: String
+    submissionDate: Date
 }
 
 class DeclarationType {
-    designation
+    initial
+    regular
+    exceptional
 }
 
 class DeclarationState {
-    designation
+    pending
+        validated
+        rejected
 }
 
 class PositionEntry {
