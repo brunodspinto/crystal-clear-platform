@@ -1,4 +1,4 @@
-@startuml US09-DM
+@startuml US11-DM
 skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
@@ -7,7 +7,13 @@ skinparam classAttributeIconSize 0
 hide circle
 hide methods
 
-class EthicsCommitteeMember {
+class Journalist {
+    name
+    email
+    phone
+}
+
+class Citizen {
     name
     email
 }
@@ -32,12 +38,6 @@ enum Type {
     Exceptional
 }
 
-class Income {
-    amount
-    source
-    date
-}
-
 class Asset {
     acquisitionValue
     marketValue
@@ -47,12 +47,12 @@ class "Real Estate" as RealEstate {
     description
 }
 
-EthicsCommitteeMember "1" -- "*" PoliticalAgent : consults
+Journalist "*" -- "*" PoliticalAgent : consults assets of
+Citizen "*" -- "*" PoliticalAgent : consults assets of
 
 PoliticalAgent "*" -- "*" Declaration : has
 
 Declaration "1" -- "1" Type : has
-Declaration "1" -- "*" Income : has
 Declaration "1" -- "*" Asset : has
 
 Asset "1" -- "1" RealEstate : can be

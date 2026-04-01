@@ -10,47 +10,40 @@ hide methods
 class Journalist {
     name
     email
+    phone
 }
 
-class PoliticalAgent {
+class "Political Agent" as PoliticalAgent {
     name
-    taxId
+    politicalFunction
+    mandateStart
+    mandateEnd
 }
 
-class Declaration {
+class "Declaration of Interests" as Declaration {
+    id
+    name
+    position
     submissionDate
-    status
-    totalIncome
 }
 
-class Position {
-    title
-    payment
+enum Type {
+    Initial
+    Regular
+    Exceptional
 }
 
-class IncomeSource {
-    description
-    annualAmount
+class Income {
+    amount
+    source
+    date
 }
 
-Journalist "1" -- "*" PoliticalAgent : analyses income of
+Journalist "*" -- "*" Income : analyses
 
-PoliticalAgent "1" -- "*" Declaration : submits
+PoliticalAgent "*" -- "*" Declaration : has
 
-Declaration "1" -- "*" Position : includes
-Declaration "1" -- "*" IncomeSource : includes
-
-note right of Journalist
-  Queries declarations between
-  a startDate and endDate
-end note
-
-note right of Declaration
-  Only VALIDATED declarations
-  within the specified period
-  are considered.
-  totalIncome = sum of all
-  Position payments + subsidies
-end note
+Declaration "1" -- "1" Type : has
+Declaration "1" -- "*" Income : has
 
 @enduml

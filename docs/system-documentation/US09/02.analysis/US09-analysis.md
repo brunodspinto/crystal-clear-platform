@@ -10,10 +10,10 @@
 
 The "integrated situation" of a political agent on a given date is composed of all information declared across their validated declarations submitted up to that date. This includes:
 
-- Active **positions** (public or private roles held by the agent)
-- **Income sources** and respective amounts
-- **Assets** (real estate, vehicles, financial instruments, etc.)
-- **Business participations** (stakes in companies)
+- The **position** held by the agent (recorded as an attribute of the Declaration of Interests)
+- **Income** entries (amount, source, and date of each income)
+- **Assets** (identified by acquisition value and market value; assets may be further classified as Real Estate)
+- The **type** of each declaration (Initial, Regular, or Exceptional)
 
 Only declarations with status `VALIDATED` are taken into account (per AC2). If multiple declarations exist up to the given date, the most recent validated data per category should be presented. If no validated declarations exist, an appropriate message is shown to the user (AC3).
 
