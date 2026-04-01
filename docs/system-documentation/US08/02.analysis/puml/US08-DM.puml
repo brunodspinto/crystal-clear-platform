@@ -25,8 +25,12 @@ class DeclarationState {
 
 class PoliticalAgent {
     name
-    taxIdentificationNumber
     email
+    nationalIdentityCard
+    taxIdentificationNumber
+    politicalFunction
+    mandateStart
+    mandateEnd
 }
 
 class ValidationRecord {
