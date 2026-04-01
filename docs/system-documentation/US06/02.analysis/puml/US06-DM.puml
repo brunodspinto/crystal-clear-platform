@@ -10,9 +10,12 @@ hide methods
 
 class PoliticalAgent {
     name
-    taxIdentificationNumber
     email
-    role
+    nationalIdentityCard
+    taxIdentificationNumber
+    politicalFunction
+    mandateStart
+    mandateEnd
 }
 
 class DeclarationOfInterests {
