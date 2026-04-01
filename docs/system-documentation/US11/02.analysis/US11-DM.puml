@@ -8,43 +8,60 @@ hide circle
 hide methods
 
 class Journalist {
-    name
-    email
-    phone
+    name: String
+    email: String
+    phone: String
+    pressCardNumber: String
 }
 
 class Citizen {
-    name
-    email
+    name: String
+    email: String
 }
 
 class "Political Agent" as PoliticalAgent {
-    name
-    politicalFunction
-    mandateStart
-    mandateEnd
+    name: String
+    email: String
+    nationalIdentityCard: String
+    taxIdentificationNumber: String
+    politicalFunction: PoliticalFunction
+    mandateStart: Date
+    mandateEnd: Date
 }
 
 class "Declaration of Interests" as Declaration {
-    id
-    name
-    position
-    submissionDate
+    id: String
+    name: String
+    submissionDate: Date
+}
+
+enum DeclarationStatus {
+    pending
+    validated
+    rejected
 }
 
 enum Type {
-    Initial
-    Regular
-    Exceptional
+    initial
+    regular
+    exceptional
+}
+
+enum PoliticalFunction {
+    minister
+    deputy
+    councillor
+    parishCouncilPresident
+    mayor
 }
 
 class Asset {
-    acquisitionValue
-    marketValue
+    acquisitionValue: Double
+    marketValue: Double
 }
 
 class "Real Estate" as RealEstate {
-    description
+    description: String
 }
 
 Journalist "*" -- "*" PoliticalAgent : consults assets of
@@ -52,7 +69,10 @@ Citizen "*" -- "*" PoliticalAgent : consults assets of
 
 PoliticalAgent "*" -- "*" Declaration : has
 
+PoliticalAgent "1" -- "1" PoliticalFunction : has
+
 Declaration "1" -- "1" Type : has
+Declaration "1" -- "1" DeclarationStatus : has
 Declaration "1" -- "*" Asset : has
 
 Asset "1" -- "1" RealEstate : can be
