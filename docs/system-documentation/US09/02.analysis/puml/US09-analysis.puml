@@ -8,24 +8,24 @@ hide circle
 hide methods
 
 class EthicsCommitteeMember {
-    name
-    email
+    name: String
+    email: String
 }
 
 class "Political Agent" as PoliticalAgent {
-    name
-    email
-    nationalIdentityCard
-    taxIdentificationNumber
-    politicalFunction
-    mandateStart
-    mandateEnd
+    name: String
+    email: String
+    nationalIdentityCard: String
+    taxIdentificationNumber: String
+    politicalFunction: PoliticalFunction
+    mandateStart: Date
+    mandateEnd: Date
 }
 
 class "Declaration of Interests" as Declaration {
-    id
-    name
-    submissionDate
+    id: String
+    name: String
+    submissionDate: Date
 }
 
 enum DeclarationStatus {
@@ -49,19 +49,19 @@ enum PoliticalFunction {
 }
 
 class Income {
-    amount
-    source
-    institution
-    date
+    amount: Double
+    source: String
+    institution: String
+    date: Date
 }
 
 class Asset {
-    acquisitionValue
-    marketValue
+    acquisitionValue: Double
+    marketValue: Double
 }
 
 class "Real Estate" as RealEstate {
-    description
+    description: String
 }
 
 EthicsCommitteeMember "1" -- "*" PoliticalAgent : consults
