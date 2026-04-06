@@ -145,9 +145,41 @@ An association is a relationship between instances of objects that indicates a r
 
 
 
-## Domain Model
+## Rationale to identify concept attributes
 
-**Do NOT forget to identify concept attributes too.**
+Attributes are chosen based on the information that needs to be stored or displayed for each conceptual class, as derived from the client specifications.
+
+| Concept                   | Attributes                                                                 |
+|---------------------------|----------------------------------------------------------------------------|
+| User                      | name: String, email: String, password: String                              |
+| Role                      | designation: String                                                        |
+| RegistrationRequest       | name: String, email: String, requestDate: Date                             |
+| Status                    | {pending, approved, rejected}                                              |
+| PoliticalAgent            | name: String, email: String, nationalIdentityCard: String, taxIdentificationNumber: String, mandateStart: Date, mandateEnd: Date |
+| PoliticalFunction         | {minister, deputy, councillor, parishCouncilPresident, mayor}              |
+| DeclarationOfInterests    | id: String, name: String, submissionDate: Date                             |
+| DeclarationType           | {initial, regular, exceptional}                                            |
+| DeclarationStatus         | {pending, validated, rejected}                                             |
+| PositionEntry             | remuneration: Double, startDate: Date, endDate: Date                       |
+| Function                  | designation: String                                                        |
+| Institution               | name: String                                                               |
+| InstitutionType           | {company, politicalParty, foundation, institute, association}              |
+| SubsidyEntry              | amount: Double, description: String, date: Date                            |
+| AssetEntry                | acquisitionValue: Double, marketValue: Double                              |
+| AssetType                 | {urban, rural}                                                             |
+| RealEstate                | description: String                                                        |
+| BusinessParticipation     | numberOfShares: Integer, marketValue: Double                               |
+| EthicsCommitteeMember     | name: String, email: String                                                |
+| Journalist                | name: String, email: String, phone: String, pressCardNumber: String        |
+| Citizen                   | name: String, email: String                                                |
+| Administrator             | name: String, email: String                                                |
+| ValidationRecord          | validationDate: Date                                                       |
+| ValidationOutcome         | {validated, returnedForCorrection}                                         |
+| ValidationComment         | comment: String, section: String                                           |
+| Income                    | amount: Double, source: String, institution: String, date: Date            |
+
+
+## Domain Model
 
 **Insert the Domain Model diagram in SVG format below.**
 
