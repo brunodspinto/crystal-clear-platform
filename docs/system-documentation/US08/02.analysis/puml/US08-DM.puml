@@ -1,65 +1,67 @@
-@startuml
+@startuml US08-DM
 skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
-
 skinparam classAttributeIconSize 0
 
 hide circle
 hide methods
 
-class EthicsCommitteeMember {
-    name
-    email
+class "Ethics Committee\nMember" as EthicsCommitteeMember {
+    name: String
+    email: String
 }
 
-class DeclarationOfInterests {
-    submissionTimestamp
-    type
-    state
+class "Political Agent" as PoliticalAgent {
+    name: String
+    email: String
+    nationalIdentityCard: String
+    taxIdentificationNumber: String
+    mandateStart: Date
+    mandateEnd: Date
 }
 
-class DeclarationStatus {
+class "Declaration of Interests" as Declaration {
+    id: String
+    name: String
+    submissionDate: Date
+}
+
+enum DeclarationType {
+    initial
+    regular
+    exceptional
+}
+
+enum DeclarationStatus {
     pending
-        validated
-        rejected
-}
-
-class PoliticalAgent {
-    name
-    email
-    nationalIdentityCard
-    taxIdentificationNumber
-    politicalFunction
-    mandateStart
-    mandateEnd
+    validated
+    rejected
 }
 
 class ValidationRecord {
-    timestamp
-    outcome
+    validationDate: Date
 }
 
-class ValidationOutcome {
-    designation
+enum ValidationOutcome {
+    validated
+    returnedForCorrection
 }
 
 class ValidationComment {
-    section
-    item
-    comment
+    section: String
+    comment: String
 }
 
-PoliticalAgent "1" -- "*" DeclarationOfInterests : submits
+PoliticalAgent "1" -- "*" Declaration : submits
 
-DeclarationOfInterests "*" -- "1" DeclarationState : has
+Declaration "*" -- "1" DeclarationType : classified as
+Declaration "*" -- "1" DeclarationStatus : has
 
 EthicsCommitteeMember "1" -- "*" ValidationRecord : performs
 
-ValidationRecord "*" -- "1" DeclarationOfInterests : concerns
-
+ValidationRecord "*" -- "1" Declaration : concerns
 ValidationRecord "*" -- "1" ValidationOutcome : results in
-
 ValidationRecord "1" -- "*" ValidationComment : contains
 
 @enduml

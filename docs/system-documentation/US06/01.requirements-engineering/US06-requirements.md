@@ -1,4 +1,4 @@
-# US006 - Submit a Declaration of Interests
+# US06 - Submit a Declaration of Interests
 
 ## 1. Requirements Engineering
 
@@ -24,17 +24,18 @@ As a Political Agent, I want to submit a declaration of interests including inco
 >
 > **Answer:** A declaration can be of three types: initial (when beginning a term of office), regular (submitted annually), or exceptional (when significant changes occur or when requested by the ethics committee).
 
+> **Question:** Can a Political Agent have more than one active declaration at the same time?
+>
+> **Answer:** No. Only one declaration per political agent per term/period is active at any given time. Exceptional declarations amend the current one.
 
 ### 1.3. Acceptance Criteria
 
 * **AC1:** All required fields must be filled in before submission.
 * **AC2:** The declaration type must be selected from the predefined list: initial, regular, or exceptional.
-* **AC3:** At least one income/position entry must be included in the declaration.
+* **AC3:** At least one position entry must be included in the declaration.
 * **AC4:** Asset values and business participation market values must be non-negative numeric values.
-* **AC5:** The declaration must be associated with the authenticated Political Agent and timestamped automatically by the system at the moment of submission.
-* **AC6:** Upon successful submission, the declaration is placed in a "pending validation" state and is not yet publicly visible.
-
-**_These ACs where determined without input from the client and might change when more question are asked_**
+* **AC5:** The declaration must be associated with the authenticated Political Agent and the submission date is recorded automatically by the system at the moment of submission.
+* **AC6:** Upon successful submission, the declaration is placed in a `pending` state and is not yet publicly visible.
 
 ### 1.4. Found out Dependencies
 
@@ -46,16 +47,18 @@ As a Political Agent, I want to submit a declaration of interests including inco
 **Input Data:**
 
 * Typed data:
-    * payment/income amount(s) per position
-    * support and subsidy amounts and sources
-    * asset descriptions and estimated values (urban and rural real estate)
-    * company names, quota/share percentages, and respective market values
+    * remuneration per position entry
+    * start date and end date per position entry
+    * support and subsidy amounts, descriptions, and dates
+    * asset acquisition values and market values
+    * business participation number of shares and market values
 
 * Selected data:
     * declaration type (initial, regular, or exceptional)
-    * institution(s) associated with each position
-    * function(s) performed per institution
+    * institution(s) and function(s) per position entry
     * nature of each position (public, private, or social)
+    * institution source per subsidy entry
+    * asset type (urban or rural) per asset entry
 
 **Output Data:**
 
@@ -73,6 +76,5 @@ As a Political Agent, I want to submit a declaration of interests including inco
 
 ### 1.7. Other Relevant Remarks
 
-* The submitted declaration is set to a **"pending validation"** state immediately after submission and remains invisible to the general public until validated by the Ethics Committee (see US008).
-* Exceptional declarations must reference the declaration they are amending.
-* The system must record the exact timestamp of submission for audit and temporal analysis purposes.
+* The submitted declaration is set to a `pending` state immediately after submission and remains invisible to the general public until validated by the Ethics Committee (see US08).
+* The system must record the submission date for audit and temporal analysis purposes (used by US10 and US11).
