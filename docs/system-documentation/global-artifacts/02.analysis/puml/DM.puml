@@ -1,0 +1,34 @@
+@startuml DM
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class User {
+    name: String
+    email: String
+    password: String
+}
+
+class Role {
+    designation: String
+}
+
+class RegistrationRequest {
+    name: String
+    email: String
+    requestDate: Date
+}
+
+enum Status {
+    pending
+    approved
+    rejected
+}
+
+' TODO: add remaining classes and associations
+
+@enduml
