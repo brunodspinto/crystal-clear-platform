@@ -1,4 +1,4 @@
-# US008 - Validate a Declaration of Interests
+# US08 - Validate a Declaration of Interests
 
 ## 2. Analysis
 
@@ -9,9 +9,10 @@
 ### 2.2. Other Remarks
 
 * The `ValidationRecord` is the key concept introduced by this US. It captures the result of a single validation action performed by an `EthicsCommitteeMember` on a `DeclarationOfInterests`, and is permanently stored for audit purposes.
-* A `DeclarationOfInterests` can only be acted upon when its state is **"pending validation"** (AC3). The system must enforce this guard.
-* When validated, the declaration transitions to state **"validated"** and becomes accessible to other users according to role-based visibility rules.
-* When rejected, the declaration transitions to state **"returned for correction"** and is made available to the `PoliticalAgent` for amendment. The `ValidationRecord` in this case must contain at least one `ValidationComment` identifying the section and item with the inconsistency (AC2).
-* Each validation action (approval or rejection) produces exactly one `ValidationRecord`, which records the identity of the `EthicsCommitteeMember` and the timestamp automatically (AC4).
-* A `ValidationComment` is only created in the context of a rejection. It must reference a specific section and item of the declaration to guide the Political Agent's correction.
+* A `DeclarationOfInterests` can only be acted upon when its `DeclarationStatus` is `pending` (AC3). The system must enforce this guard before proceeding.
+* `DeclarationStatus` is an enum with values `pending`, `validated`, and `rejected`, consistent with the global domain model and US06.
+* When validated, the declaration transitions to `validated` status and becomes accessible to other users according to role-based visibility rules (see US10, US11).
+* When rejected, the declaration transitions to `rejected` status and is made available to the `PoliticalAgent` for amendment. The `ValidationRecord` in this case must contain at least one `ValidationComment` identifying the section with the inconsistency (AC2).
+* `ValidationOutcome` is an enum with values `validated` and `returnedForCorrection`, consistent with the global domain model.
+* Each validation action produces exactly one `ValidationRecord`, which records the `EthicsCommitteeMember` identity and the `validationDate: Date` automatically (AC4).
 * The same `EthicsCommitteeMember` may validate the same declaration more than once (e.g., after resubmission), generating a new independent `ValidationRecord` each time.

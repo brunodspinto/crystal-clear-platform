@@ -1,0 +1,27 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+hide circle
+hide methods
+
+title Domain Model Excerpt - US04
+
+class Administrator {
+}
+
+class Institution {
+    - name: String
+    - type: String
+}
+
+Administrator "1" -- "*" Institution : registers >
+
+note right of Institution
+  Type can be: company,
+  political party, foundation,
+  institute, or association.
+end note
+
+@enduml

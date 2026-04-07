@@ -1,98 +1,106 @@
-@startuml
+@startuml US06-DM
 skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
-
 skinparam classAttributeIconSize 0
 
 hide circle
 hide methods
 
-class PoliticalAgent {
+class "Political Agent" as PoliticalAgent {
     name: String
     email: String
     nationalIdentityCard: String
     taxIdentificationNumber: String
-    politicalFunction: PoliticalFunction
     mandateStart: Date
     mandateEnd: Date
 }
 
-class DeclarationOfInterests {
+class "Declaration of Interests" as Declaration {
     id: String
     name: String
     submissionDate: Date
 }
 
-class DeclarationType {
+enum DeclarationType {
     initial
     regular
     exceptional
 }
 
-class DeclarationState {
+enum DeclarationStatus {
     pending
-        validated
-        rejected
+    validated
+    rejected
+}
+
+enum PoliticalFunction {
+    minister
+    deputy
+    councillor
+    parishCouncilPresident
+    mayor
 }
 
 class PositionEntry {
-    nature
-    paymentReceived
-    startDate
-    endDate
+    nature: String
+    remuneration: Double
+    startDate: Date
+    endDate: Date
 }
 
 class Function {
-    designation
+    designation: String
 }
 
 class Institution {
-    name
-    type
+    name: String
 }
 
-class InstitutionType {
-    designation
+enum InstitutionType {
+    company
+    politicalParty
+    foundation
+    institute
+    association
 }
 
 class SubsidyEntry {
-    amount
-    description
+    amount: Double
+    description: String
+    date: Date
 }
 
 class AssetEntry {
-    assetType
-    description
-    estimatedValue
+    acquisitionValue: Double
+    marketValue: Double
 }
 
-class AssetType {
-    designation
+class "Real Estate" as RealEstate {
+    description: String
+}
+
+enum AssetType {
+    urban
+    rural
 }
 
 class BusinessParticipation {
-    companyName
-    quotaPercentage
-    marketValue
+    numberOfShares: Integer
+    marketValue: Double
 }
 
-PoliticalAgent "1" -- "*" DeclarationOfInterests : submits
+PoliticalAgent "1" -- "1" PoliticalFunction : has
+PoliticalAgent "1" -- "*" Declaration : submits
 
-DeclarationOfInterests "*" -- "1" DeclarationType : classified as
-
-DeclarationOfInterests "*" -- "1" DeclarationState : has
-
-DeclarationOfInterests "1" -- "1..*" PositionEntry : includes
-
-DeclarationOfInterests "1" -- "*" SubsidyEntry : includes
-
-DeclarationOfInterests "1" -- "*" AssetEntry : includes
-
-DeclarationOfInterests "1" -- "*" BusinessParticipation : includes
+Declaration "*" -- "1" DeclarationType : classified as
+Declaration "*" -- "1" DeclarationStatus : has
+Declaration "1" -- "1..*" PositionEntry : includes
+Declaration "1" -- "*" SubsidyEntry : includes
+Declaration "1" -- "*" AssetEntry : includes
+Declaration "1" -- "*" BusinessParticipation : includes
 
 PositionEntry "*" -- "1" Institution : held at
-
 PositionEntry "*" -- "1" Function : performs
 
 Institution "*" -- "1" InstitutionType : categorized as
@@ -100,5 +108,8 @@ Institution "*" -- "1" InstitutionType : categorized as
 SubsidyEntry "*" -- "1" Institution : received from
 
 AssetEntry "*" -- "1" AssetType : classified as
+AssetEntry "1" -- "1" RealEstate : described by
+
+BusinessParticipation "*" -- "1" Institution : held in
 
 @enduml

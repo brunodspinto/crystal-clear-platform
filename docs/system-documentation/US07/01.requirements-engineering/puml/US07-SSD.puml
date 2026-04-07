@@ -19,7 +19,7 @@ deactivate System
 
 Agent -> System : selects the desired declaration
 activate System
-System --> Agent : retrieves and displays the full details of the selected declaration
+System --> Agent : displays the full details of the selected declaration
 deactivate System
 
 deactivate Agent

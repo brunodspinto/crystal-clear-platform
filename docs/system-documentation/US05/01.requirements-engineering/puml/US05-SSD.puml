@@ -19,7 +19,7 @@ deactivate System
 
 Admin -> System : types requested data
 activate System
-System --> Admin : validates data, registers the function and informs operation success
+System --> Admin : informs operation success
 deactivate System
 
 deactivate Admin
