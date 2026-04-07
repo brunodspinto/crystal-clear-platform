@@ -29,6 +29,6 @@ enum Status {
     rejected
 }
 
-' TODO: add remaining classes and associations
+' TODO:  add remaining classes and associations
 
 @enduml
