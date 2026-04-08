@@ -29,11 +29,11 @@ Business rules:
 * The Administrator must verify the identification document before accepting (press card for Journalists; national identity card for Ordinary Citizens).
 * Each registration request is handled independently, even if multiple requests belong to the same person.
 
-![Domain Model Excerpt](svg/US002-DM.svg)
+![Domain Model Excerpt](svg/US02-DM.svg)
 
 ### 2.2. Other Remarks
 
 * A `RegistrationRequest` remains in **Pending** state until an explicit decision is made by the Administrator.
 * The rejection reason is stored in the `RegistrationRequest` and displayed to the user upon their next login attempt.
 * Persistence of `RegistrationRequest` and `User` objects must be ensured through object serialization.
-* This US is tightly coupled with **US001**: together they form the complete user onboarding flow of the platform.
+* This US is tightly coupled with **US01**: together they form the complete user onboarding flow of the platform.

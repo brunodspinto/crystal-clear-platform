@@ -6,7 +6,7 @@
 
 To fulfill this requirement, the core concepts involved are `RegistrationRequest`, `Role`, and `User`.
 
-A future user interacts with the system by submitting a `RegistrationRequest`, which encapsulates all the information provided during registration. This request is associated with a single `Role` chosen from a predefined list. The request remains in a **Pending** state until an Administrator reviews it (see US002).
+A future user interacts with the system by submitting a `RegistrationRequest`, which encapsulates all the information provided during registration. This request is associated with a single `Role` chosen from a predefined list. The request remains in a **Pending** state until an Administrator reviews it (see US02).
 
 The key entities and their attributes are:
 
@@ -26,7 +26,7 @@ Business rules:
 * Passwords must follow strict format rules (7 alphanumeric characters: ≥3 uppercase, ≥2 digits).
 * Journalists must provide a press card number; Ordinary Citizens must provide a national identity card number.
 
-![Domain Model Excerpt](svg/US001-DM.svg)
+![Domain Model Excerpt](svg/US01-DM.svg)
 
 ### 2.2. Other Remarks
 

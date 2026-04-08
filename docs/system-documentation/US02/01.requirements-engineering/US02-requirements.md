@@ -42,7 +42,7 @@ As an Administrator, I want to accept or reject registration requests on the pla
 
 ### 1.4. Found out Dependencies
 
-* There is a dependency on **US001 - Request Registration** as there must be at least one pending registration request for the Administrator to manage.
+* There is a dependency on **US01 - Request Registration** as there must be at least one pending registration request for the Administrator to manage.
 
 ---
 
@@ -66,7 +66,7 @@ As an Administrator, I want to accept or reject registration requests on the pla
 
 ### 1.6. System Sequence Diagram (SSD)
 
-![System Sequence Diagram](svg/US002-SSD.svg)
+![System Sequence Diagram](svg/US02-SSD.svg)
 
 **_Other alternatives might exist._**
 
@@ -80,4 +80,4 @@ As an Administrator, I want to accept or reject registration requests on the pla
 * The Administrator cannot modify any registration data if the data is invalid or incorrect, the request must be rejected so the user can submit a corrected one.
 * Each registration request is handled independently, even if multiple requests belong to the same person (one per role).
 * After acceptance, the newly activated user must authenticate using their registered password (7 alphanumeric characters including 3 uppercase letters and 2 digits).
-* This US is closely coupled with **US001**: together they form the complete user onboarding flow of the platform.
+* This US is closely coupled with **US01**: together they form the complete user onboarding flow of the platform.

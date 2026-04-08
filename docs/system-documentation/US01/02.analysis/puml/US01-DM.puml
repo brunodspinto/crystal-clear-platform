@@ -6,24 +6,21 @@ skinparam shadowing false
 hide circle
 hide methods
 
-title Domain Model Excerpt - US002
-
-class Administrator {
-}
-
-class RegistrationRequest {
-    - fullName: String
-    - email: String
-    - identificationDocument: String
-    - status: Status
-    - submissionDate: Date
-    - rejectionReason: String
-}
+title Domain Model Excerpt - US01
 
 class User {
     - fullName: String
     - email: String
     - password: String
+}
+
+class RegistrationRequest {
+    - fullName: String
+    - email: String
+    - password: String
+    - identificationDocument: String
+    - status: Status
+    - submissionDate: Date
 }
 
 enum Status {
@@ -40,9 +37,9 @@ enum Role {
     SYSTEM_ADMINISTRATOR
 }
 
-Administrator "1" -- "*" RegistrationRequest : reviews >
-RegistrationRequest "1" -- "1" Status : has >
+User "0..1" -- "1" Role : has >
 RegistrationRequest "1" -- "1" Role : requests >
-RegistrationRequest ..> User : activates >
+RegistrationRequest "1" -- "1" Status : has >
+RegistrationRequest ..> User : results in >
 
 @enduml

@@ -13,9 +13,6 @@ As an Administrator, I want to register Functions.
 * The system must allow the Administrator to create new political or administrative functions (e.g., Mayor, Minister, Deputy) that will later be used by Political Agents.
 * The system must ensure data persistence through object serialization.
 
-**From the client clarifications:**
-* (Insert any specific clarifications given by the product owner/teachers in the forum here, if applicable. Otherwise, leave as "None yet.")
-
 ### 1.3. Acceptance Criteria
 
 * **AC 1:** A function must have a valid designation (cannot be null or empty).

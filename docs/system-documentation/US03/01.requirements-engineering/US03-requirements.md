@@ -43,7 +43,7 @@ As a Political Agent, I want to list Institutions (Companies, Political Parties,
 
 ### 1.6. System Sequence Diagram (SSD)
 
-![US003-SSD](svg/US003-SSD.svg)
+![US003-SSD](svg/US03-SSD.svg)
 
 **_Other alternatives might exist._**
 

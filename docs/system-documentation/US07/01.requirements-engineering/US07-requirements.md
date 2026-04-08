@@ -12,9 +12,6 @@ As a Political Agent, I want to consult a previously submitted Declaration of In
 * "As a Political Agent, I want to consult a previously submitted Declaration of Interests."
 * Declarations of interest include information regarding: professional positions, support and subsidies received, assets (real estate), and quotas, shares, and holdings in companies.
 
-**From the client clarifications:**
-* (Insert any specific clarifications given by the product owner/teachers in the forum here, if applicable. Otherwise, leave as "None yet.")
-
 ### 1.3. Acceptance Criteria
 
 * **AC 1:** The system must only allow a Political Agent to consult their own declarations of interests.
@@ -33,3 +30,11 @@ As a Political Agent, I want to consult a previously submitted Declaration of In
 **Output Data:**
 * List of previously submitted declarations (for selection).
 * The detailed information of the selected Declaration of Interests.
+
+### 1.6. System Sequence Diagram (SSD)
+
+![US07-SSD](svg/US07-SSD.svg)
+
+### 1.7. Other Relevant Remarks
+
+*
