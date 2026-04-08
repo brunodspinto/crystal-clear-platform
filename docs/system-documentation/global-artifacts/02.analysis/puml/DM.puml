@@ -1,4 +1,4 @@
-@startuml DM
+@startuml
 skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
@@ -7,28 +7,213 @@ skinparam classAttributeIconSize 0
 hide circle
 hide methods
 
+title Domain Model - Portal de Transparência
+
 class User {
-    name: String
+    fullName: String
     email: String
     password: String
 }
 
-class Role {
-    designation: String
-}
-
 class RegistrationRequest {
-    name: String
+    fullName: String
     email: String
-    requestDate: Date
+    password: String
+    identificationDocument: String
+    status: Status
+    submissionDate: Date
+    rejectionReason: String
 }
 
 enum Status {
-    pending
-    approved
-    rejected
+    PENDING
+    APPROVED
+    REJECTED
 }
 
-' TODO:  add remaining classes and associations
+enum Role {
+    POLITICAL_AGENT
+    ORDINARY_CITIZEN
+    JOURNALIST
+    ETHICS_COMMITTEE
+    SYSTEM_ADMINISTRATOR
+}
+
+class Administrator {
+}
+
+class Citizen {
+    name: String
+    email: String
+}
+
+class Journalist {
+    name: String
+    email: String
+    phone: String
+    pressCardNumber: String
+}
+
+class "Ethics Committee Member" as EthicsCommitteeMember {
+    name: String
+    email: String
+}
+
+class "Political Agent" as PoliticalAgent {
+    name: String
+    email: String
+    nationalIdentityCard: String
+    taxIdentificationNumber: String
+    mandateStart: Date
+    mandateEnd: Date
+}
+
+enum PoliticalFunction {
+    minister
+    deputy
+    councillor
+    parishCouncilPresident
+    mayor
+}
+
+class Function {
+    designation: String
+}
+
+class Institution {
+    name: String
+}
+
+enum InstitutionType {
+    COMPANY
+    POLITICAL_PARTY
+    FOUNDATION
+    INSTITUTE
+    ASSOCIATION
+}
+
+class "Declaration of Interests" as Declaration {
+    id: String
+    name: String
+    submissionDate: Date
+}
+
+enum DeclarationType {
+    INITIAL
+    REGULAR
+    EXCEPTIONAL
+}
+
+enum DeclarationStatus {
+    PENDING
+    VALIDATED
+    REJECTED
+}
+
+class PositionEntry {
+    nature: String
+    remuneration: Double
+    startDate: Date
+    endDate: Date
+}
+
+class Income {
+    amount: Double
+    source: String
+    date: Date
+}
+
+class SubsidyEntry {
+    amount: Double
+    description: String
+    date: Date
+}
+
+class Asset {
+    acquisitionValue: Double
+    marketValue: Double
+}
+
+enum AssetType {
+    URBAN
+    RURAL
+}
+
+class "Real Estate" as RealEstate {
+    description: String
+}
+
+class BusinessParticipation {
+    numberOfShares: Integer
+    marketValue: Double
+}
+
+class ValidationRecord {
+    validationDate: Date
+}
+
+enum ValidationOutcome {
+    VALIDATED
+    RETURNED_FOR_CORRECTION
+}
+
+class ValidationComment {
+    section: String
+    comment: String
+}
+
+class Complaint {
+    description: String
+    complaintDate: Date
+    submissionDate: Date
+}
+
+User "0..1" -- "1" Role : has >
+RegistrationRequest "1" -- "1" Role : requests >
+RegistrationRequest "1" -- "1" Status : has >
+RegistrationRequest ..> User : results in / activates >
+Administrator "1" -- "*" RegistrationRequest : reviews >
+
+Administrator "1" -- "*" Institution : registers >
+Administrator "1" -- "*" Function : registers >
+Institution "*" -- "1" InstitutionType : categorized as >
+
+PoliticalAgent "1" -- "1" PoliticalFunction : has >
+PoliticalAgent "1" -- "*" Institution : lists >
+PoliticalAgent "1" -- "*" Declaration : submits / has >
+
+Declaration "*" -- "1" DeclarationType : classified as >
+Declaration "*" -- "1" DeclarationStatus : has >
+
+Declaration "1" *-- "*" PositionEntry : includes >
+Declaration "1" *-- "*" Income : includes >
+Declaration "1" *-- "*" SubsidyEntry : includes >
+Declaration "1" *-- "*" Asset : includes >
+Declaration "1" *-- "*" BusinessParticipation : includes >
+
+PositionEntry "*" -- "1" Institution : held at >
+PositionEntry "*" -- "1" Function : performs >
+
+SubsidyEntry "*" -- "1" Institution : received from >
+Income "*" -- "1" Institution : received from >
+
+Asset "*" -- "1" AssetType : classified as >
+Asset "1" -- "1" RealEstate : can be / described by >
+
+BusinessParticipation "*" -- "1" Institution : held in >
+
+EthicsCommitteeMember "1" -- "*" PoliticalAgent : consults >
+EthicsCommitteeMember "1" -- "*" ValidationRecord : performs >
+ValidationRecord "*" -- "1" Declaration : concerns >
+ValidationRecord "*" -- "1" ValidationOutcome : results in >
+ValidationRecord "1" *-- "*" ValidationComment : contains >
+
+Journalist "*" -- "*" Income : analyses >
+Journalist "*" -- "*" PoliticalAgent : consults assets of >
+Citizen "*" -- "*" PoliticalAgent : consults assets of >
+
+Citizen "1" -- "*" Complaint : submits >
+Complaint "*" -- "1" PoliticalAgent : targets >
+Complaint "*" -- "1" PoliticalFunction : references >
 
 @enduml
