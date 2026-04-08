@@ -5,28 +5,39 @@
 | **_TEA_** (EN) | **_TEA_** (PT) | **_Description_** (EN) |
 | :--- | :--- | :--- |
 | **AD** | **DP** | Acronym for _Asset Declaration_. |
+| **Acquisition Value** | **Valor de Aquisição** | The price at which an asset was originally purchased or acquired by a political agent. |
 | **Asset** | **Ativo / Bem** | An item of property owned by a political agent, including real estate, which has an acquisition and market value. |
 | **Asset Declaration** | **Declaração de Património** | A formal document submitted by a political agent detailing their income, assets, positions, and business participations. |
 | **Business Participation** | **Participação Social** | Quotas, shares, and holdings a political agent has in companies, along with their respective market values. |
 | **Complaint** | **Queixa** | A report submitted by a citizen regarding a political agent's behaviour or lack of transparency. |
+| **Conflict of Interest** | **Conflito de Interesses** | A situation where a political agent's personal financial interests may influence or compromise their public duties. |
 | **Declaration of Interests** | **Declaração de Interesses** | The core document submitted by Political Agents, which may be initial, regular, or exceptional, detailing their professional, financial, and patrimonial situation. |
 | **DI** | **DI** | Acronym for _Declaration of Interests_. |
 | **EC** | **CE** | Acronym for _Ethics Committee_. |
 | **Ethics Committee** | **Comissão de Ética** | The body responsible for managing and supervising declarations of interests and verifying incompatibilities. |
+| **Exceptional Declaration** | **Declaração Excecional** | A Declaration of Interests submitted outside the regular schedule, triggered by a significant change in a political agent's situation. |
 | **Function** | **Função** | A political or administrative role (e.g., Mayor, Minister, Deputy) performed by a Political Agent. |
 | **Illicit Enrichment** | **Enriquecimento Ilícito** | Wealth accumulated by a political agent that cannot be justified by their official salary or declared income. |
 | **Income** | **Rendimento** | The financial gains or remuneration received by a political agent from various sources, subject to temporal analysis. |
+| **Incompatibility** | **Incompatibilidade** | A legal or regulatory conflict that prevents a political agent from simultaneously holding certain positions or financial interests. |
+| **Initial Declaration** | **Declaração Inicial** | The first Declaration of Interests submitted by a political agent upon taking up a public function. |
 | **INST** | **INST** | Acronym for _Institution_. |
 | **Institution** | **Instituição** | An organisation (company, political party, foundation, institute, or association) associated with a political agent's positions or participations. |
 | **Integrated Situation** | **Situação Integrada** | A consolidated view of a Political Agent's financial and professional status on a given date, used for temporal analysis. |
 | **Journalist** | **Jornalista** | A registered member of the Journalists' Union with specific access rights to the transparency portal for investigative purposes. |
 | **JRN** | **JRN** | Acronym for _Journalist_. |
+| **Market Value** | **Valor de Mercado** | The estimated current value of an asset at a given point in time, as declared by a political agent. |
+| **National Identity Card** | **Cartão de Cidadão** | An official identification document required from Ordinary Citizens during platform registration. |
 | **OC** | **CC** | Acronym for _Ordinary Citizen_. |
 | **Ordinary Citizen** | **Cidadão Comum** | A member of the public who has an interest in scrutinising political agents and can use the portal to report suspicious behaviour. |
 | **PA** | **AP** | Acronym for _Political Agent_. |
 | **Political Agent** | **Agente Político** | A person performing a political function such as deputy, minister, councillor, mayor, or parish council president. |
+| **Position** | **Cargo** | A professional or public role held by a political agent, either in a public institution or a private organisation. |
+| **Press Card** | **Cartão de Jornalista** | An official credential issued by the Journalists' Union, required for journalist registration on the platform. |
 | **Real Estate** | **Imóvel** | A specific type of asset comprising land or buildings, categorized as either urban or rural. |
 | **Registration Request** | **Pedido de Registo** | A formal application submitted by a prospective user to gain access to the platform with a specific role. |
+| **Regular Declaration** | **Declaração Regular** | A Declaration of Interests submitted periodically by a political agent during the exercise of their public function. |
+| **Rejection Reason** | **Motivo de Rejeição** | The mandatory explanation provided by the System Administrator when refusing a registration request, displayed to the user upon their next login attempt. |
 | **Role** | **Papel / Perfil** | The set of permissions assigned to a user (e.g., Administrator, Journalist, Citizen) that dictates their access level on the platform. |
 | **SA** | **AS** | Acronym for _System Administrator_. |
 | **Subsidy** | **Subsídio / Apoio** | Financial support or grants received by a political agent from specific institutions. |
