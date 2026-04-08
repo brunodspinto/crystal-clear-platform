@@ -33,3 +33,11 @@ As an Administrator, I want to register Functions.
 
 **Output Data:**
 * (In)Success of the operation
+* 
+### 1.6. System Sequence Diagram (SSD)
+
+![US05-SSD](svg/US05-SSD.svg)
+
+### 1.7. Other Relevant Remarks
+
+*
