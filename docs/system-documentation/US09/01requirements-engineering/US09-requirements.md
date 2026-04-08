@@ -1,31 +1,39 @@
-"As a member of the Ethics Committee, I want to consult the Integrated Situation of a Political Agent on a given date."
+# US09 - Consult the Integrated Situation of a Political Agent on a Given Date
 
-The system should allow a member of the Ethics Committee to select a political agent and a specific date, and view their integrated situation on that date, including all active positions, income sources, assets, and business participations declared up to that date.
+## 1. Requirements Engineering
 
-AC1: The Ethics Committee member must select a valid registered political agent
+### 1.1. User Story Description
 
-AC2: Only validated declarations (status = VALIDATED) up to the specified date are considered
+As a member of the Ethics Committee, I want to consult the Integrated Situation of a Political Agent on a given date.
 
-AC3: If no validated declarations exist up to the specified date, an appropriate message is shown
+### 1.2. Customer Specifications and Clarifications
 
-Dependencies:
+**From the specifications document:**
+* The system should allow a member of the Ethics Committee to select a political agent and a specific date, and view their integrated situation on that date, including all active positions, income sources, assets, and business participations declared up to that date.
 
-US06 - declarations must exist to be consulted
+**From the client clarifications:**
+* None yet.
 
-US08 - only validated declarations are included
+### 1.3. Acceptance Criteria
 
-US01/US02 - the Ethics Committee member must be registered and approved to access this feature
+* **AC 1:** The Ethics Committee member must select a valid registered political agent.
+* **AC 2:** Only validated declarations (status = VALIDATED) up to the specified date are considered.
+* **AC 3:** If no validated declarations exist up to the specified date, an appropriate message is shown.
 
-Input:
+### 1.4. Found out Dependencies
 
-Selectable: Political Agent name
+* **US06** - declarations must exist to be consulted.
+* **US08** - only validated declarations are included.
+* **US01/US02** - the Ethics Committee member must be registered and approved to access this feature.
 
-Typed/Selectable: date
+### 1.5 Input and Output Data
 
-Output:
+**Input Data:**
+* Selectable data:
+    * Political Agent name
+* Typed/Selectable data:
+    * Reference date
 
-If successful, display the integrated situation of the political agent on that date (positions, income, assets, business participations)
-
-If no results, show a message saying that there are no validated declarations up to that date
-
-If invalid date or any other error, show error message
+**Output Data:**
+* Integrated situation of the political agent on that date (positions, income, assets, business participations)
+* (In)Success of the operation
