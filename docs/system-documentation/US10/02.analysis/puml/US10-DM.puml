@@ -57,7 +57,7 @@ class Income {
     date: Date
 }
 
-Journalist "*" -- "*" Income : analyses
+Journalist "*" -- "*" PoliticalAgent : analyses income of
 
 PoliticalAgent "*" -- "*" Declaration : has
 

@@ -70,7 +70,7 @@ As a future user, I want to request to be registered in the platform with the ap
 
 ### 1.6. System Sequence Diagram (SSD)
 
-![System Sequence Diagram](svg/US001-SSD.svg)
+![System Sequence Diagram](svg/US01-SSD.svg)
 
 **_Other alternatives might exist._**
 
@@ -78,7 +78,7 @@ As a future user, I want to request to be registered in the platform with the ap
 
 ### 1.7. Other Relevant Remarks
 
-* The registration request remains in a Pending state until reviewed by an Administrator (see US002).
+* The registration request remains in a Pending state until reviewed by an Administrator (see US02).
 * A user may hold multiple roles on the platform, but each role requires a separate and independent registration roles must not overlap within a single account.
 * When a registration request is rejected, the Administrator must supply a rejection reason. This reason is displayed to the user the next time they attempt to log in.
 * Journalists may require additional validation via press card number , confirmed by the client.

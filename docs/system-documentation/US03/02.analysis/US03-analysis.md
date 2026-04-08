@@ -21,7 +21,7 @@ Business rules:
 * Within each type group, institutions must be ordered alphabetically by name.
 * Only institutions already registered in the system are shown.
 
-![US003-DM](svg/US003-DM.svg)
+![US003-DM](svg/US03-DM.svg)
 
 ### 2.2. Other Remarks
 

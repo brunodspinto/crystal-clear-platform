@@ -64,7 +64,18 @@ class "Real Estate" as RealEstate {
     description: String
 }
 
-EthicsCommitteeMember "1" -- "*" PoliticalAgent : consults
+class PositionEntry {
+    remuneration: Double
+    startDate: Date
+    endDate: Date
+}
+
+class BusinessParticipation {
+    numberOfShares: Integer
+    marketValue: Double
+}
+
+EthicsCommitteeMember "*" -- "*" PoliticalAgent : consults
 
 PoliticalAgent "*" -- "*" Declaration : has
 
@@ -74,6 +85,9 @@ Declaration "1" -- "1" Type : has
 Declaration "1" -- "1" DeclarationStatus : has
 Declaration "1" -- "*" Income : has
 Declaration "1" -- "*" Asset : has
+
+Declaration "1" -- "*" PositionEntry : has
+Declaration "1" -- "*" BusinessParticipation : has
 
 Asset "1" -- "1" RealEstate : can be
 
