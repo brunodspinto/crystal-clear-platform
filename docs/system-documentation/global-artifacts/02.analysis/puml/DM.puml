@@ -43,25 +43,17 @@ class Administrator {
 }
 
 class Citizen {
-    name: String
-    email: String
 }
 
 class Journalist {
-    name: String
-    email: String
     phone: String
     pressCardNumber: String
 }
 
 class "Ethics Committee Member" as EthicsCommitteeMember {
-    name: String
-    email: String
 }
 
 class "Political Agent" as PoliticalAgent {
-    name: String
-    email: String
     nationalIdentityCard: String
     taxIdentificationNumber: String
     mandateStart: Date
@@ -168,7 +160,12 @@ class Complaint {
     submissionDate: Date
 }
 
-User "0..1" -- "1" Role : has >
+User <|-- Administrator
+User <|-- Citizen
+User <|-- Journalist
+User <|-- EthicsCommitteeMember
+User <|-- PoliticalAgent
+
 RegistrationRequest "1" -- "1" Role : requests >
 RegistrationRequest "1" -- "1" Status : has >
 RegistrationRequest ..> User : results in / activates >

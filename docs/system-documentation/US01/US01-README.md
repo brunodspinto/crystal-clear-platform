@@ -1,9 +1,9 @@
 # US01 - Register on the Platform
 
-[Requirements Engineering](01.requirements-engineering/US001-requirements.md)
+[Requirements Engineering](01.requirements-engineering/US01-requirements.md)
 
-[Analysis](02.analysis/US001-analysis.md)
+[Analysis](02.analysis/US01-analysis.md)
 
-[Design](03.design/US001-design.md)
+[Design](03.design/US01-design.md)
 
-[Tests & Implementation](04.tests-and-implementation/US001-tests-and-implementation.md)
+[Tests & Implementation](04.tests-and-implementation/US01-tests-and-implementation.md)
