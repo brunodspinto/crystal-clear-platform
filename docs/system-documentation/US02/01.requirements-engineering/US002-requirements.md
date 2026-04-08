@@ -20,29 +20,11 @@ As an Administrator, I want to accept or reject registration requests on the pla
 
 **From the client clarifications:**
 
-> **Question:** When rejecting a registration request, is the Administrator required to provide a reason?
->
-> **Answer:** Yes. The Administrator must always supply a reason when rejecting a registration request. This reason will be displayed to the user the next time they attempt to log in, so they understand why their request was denied.
-
-> **Question:** Is the user notified of a rejection automatically, or only when they try to log in?
->
-> **Answer:** The rejection notice is shown to the user when they attempt to log in. The system must display the rejection reason provided by the Administrator at that point.
-
-> **Question:** Can a user hold more than one role? If so, how should the Administrator handle multiple pending requests from the same person?
->
-> **Answer:** A user may register for more than one role, but each role requires a separate and independent registration. Roles must not overlap within a single account. The Administrator handles each registration request independently, even if they belong to the same person.
-
-> **Question:** Does the Administrator need to validate the identification documents submitted during registration (e.g., press card for Journalists, national identity card for Citizens)?
->
-> **Answer:** Yes. The Administrator must verify the identification document provided , a valid press card (cartão de jornalista) for Journalists and a valid national identity card (cartão de cidadão) for Ordinary Citizens before accepting the request.
-
-> **Question:** Can the Administrator edit the role or personal data of a registration request before accepting it?
->
-> **Answer:** No. The Administrator cannot edit any data in a registration request. If the data is incorrect, the request must be rejected (with a reason), and the user must submit a new request with the correct information.
-
-> **Question:** Does the Ethics Committee have any restrictions when it comes to accessing user registration data?
->
-> **Answer:** No. The Ethics Committee has full access to all information on the platform, including registration and user data.
+* The Administrator must always supply a reason when rejecting a registration request. This reason is displayed to the user the next time they attempt to log in.
+* A user may register for more than one role, but each role requires a separate and independent registration. Roles must not overlap within a single account.
+* The Administrator must verify the identification document provided — a valid press card for Journalists and a valid national identity card for Ordinary Citizens — before accepting the request.
+* The Administrator cannot edit any data in a registration request. If the data is incorrect, the request must be rejected and the user must submit a new one.
+* The Ethics Committee has full access to all information on the platform, including registration and user data.
 
 ---
 

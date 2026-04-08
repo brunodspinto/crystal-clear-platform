@@ -1,0 +1,42 @@
+@startuml US12-DM
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+class Citizen {
+    name: String
+    email: String
+}
+
+class "Political Agent" as PoliticalAgent {
+    name: String
+    email: String
+    nationalIdentityCard: String
+    taxIdentificationNumber: String
+    mandateStart: Date
+    mandateEnd: Date
+}
+
+class Complaint {
+    description: String
+    complaintDate: Date
+    submissionDate: Date
+}
+
+enum PoliticalFunction {
+    minister
+    deputy
+    councillor
+    parishCouncilPresident
+    mayor
+}
+
+Citizen "1" -- "*" Complaint : submits
+Complaint "*" -- "1" PoliticalAgent : targets
+Complaint "*" -- "1" PoliticalFunction : references
+
+@enduml

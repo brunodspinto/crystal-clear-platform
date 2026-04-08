@@ -20,29 +20,11 @@ As a future user, I want to request to be registered in the platform with the ap
 
 **From the client clarifications:**
 
-> **Question:** Can a user hold more than one role simultaneously (e.g., being both a Journalist and an Ordinary Citizen)?
->
-> **Answer:** No. Roles must not overlap. If a user needs more than one role, they must create separate registrations for each role.
-
-> **Question:** What identification documents are required during registration, and does this vary by role?
->
-> **Answer:** Yes, identification requirements vary by role. For Journalists, the system must validate their press card (cartão de jornalista) issued by the Journalists' Union. For Ordinary Citizens, a valid national identity card (cartão de cidadão) is required. Other roles follow standard identification procedures.
-
-> **Question:** When a registration request is rejected, is the user informed of the reason?
->
-> **Answer:** Yes. The Administrator must provide a reason when rejecting a registration request. Additionally, when a rejected user attempts to log in, the system must display a rejection notice along with the reason provided by the Administrator.
-
-> **Question:** Can a user edit their registration request after submission?
->
-> **Answer:** No. Once a registration request is submitted, it cannot be edited. If the user needs to correct any information, they must submit a new request.
-
-> **Question:** What is the purpose of the platform and what kind of irregularities does it aim to detect?
->
-> **Answer:** The platform supports the analysis of Declarations of Interests submitted by political agents. Its main goal is to detect irregularities such as conflicts of interest , for example, situations where a political agent holds shares in a company that benefits from their political decisions and cases of illicit enrichment.
-
-> **Question:** Does the Ethics Committee have any restrictions on what they can access on the platform?
->
-> **Answer:** No. The Ethics Committee has full access to all information on the platform, including all submitted declarations, complaints, and user data.
+* Roles must not overlap. If a user needs more than one role, they must create separate registrations for each role.
+* Identification requirements vary by role. For Journalists, the system must validate their press card (cartão de jornalista) issued by the Journalists' Union. For Ordinary Citizens, a valid national identity card (cartão de cidadão) is required.
+* The Administrator must provide a reason when rejecting a registration request. When a rejected user attempts to log in, the system must display the rejection notice along with the reason provided by the Administrator.
+* Once a registration request is submitted, it cannot be edited. If the user needs to correct any information, they must submit a new request.
+* The Ethics Committee has full access to all information on the platform, including all submitted declarations, complaints, and user data.
 
 ---
 

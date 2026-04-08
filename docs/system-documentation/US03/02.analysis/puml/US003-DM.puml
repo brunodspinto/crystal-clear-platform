@@ -1,0 +1,29 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+hide circle
+hide methods
+
+title Domain Model Excerpt - US03
+
+class PoliticalAgent {
+}
+
+class Institution {
+    - name: String
+    - type: String
+}
+
+PoliticalAgent "1" -- "*" Institution : lists >
+
+note right of Institution
+  Type can be: Company,
+  Political Party, Foundation,
+  Institute, or Association.
+  Grouped by type, sorted
+  alphabetically by name.
+end note
+
+@enduml

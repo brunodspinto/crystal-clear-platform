@@ -1,0 +1,45 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Citizen" as Citizen
+participant ":System" as System
+
+activate Citizen
+
+    Citizen -> System : asks to make a complaint about a political agent
+    activate System
+
+        System --> Citizen : shows list of registered political agents\nand asks to select one
+    deactivate System
+
+    Citizen -> System : selects a political agent
+    activate System
+
+        System --> Citizen : shows list of political functions\nand asks to select the role held at the time of the behaviour
+    deactivate System
+
+    Citizen -> System : selects a political function
+    activate System
+
+        System --> Citizen : requests complaint data\n(complaint date, description)
+    deactivate System
+
+    Citizen -> System : types complaint date and description
+    activate System
+
+        System --> Citizen : shows complaint summary and requests confirmation
+    deactivate System
+
+    Citizen -> System : confirms submission
+    activate System
+
+        System --> Citizen : displays operation success
+    deactivate System
+
+deactivate Citizen
+
+@enduml

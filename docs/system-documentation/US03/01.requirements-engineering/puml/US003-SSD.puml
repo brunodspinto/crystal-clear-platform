@@ -1,0 +1,22 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD) - US03
+
+autonumber
+
+actor "Political Agent" as Agent
+participant ":System" as System
+
+activate Agent
+
+Agent -> System : asks to list institutions
+activate System
+System --> Agent : displays all institutions grouped by type\nand sorted alphabetically by name within each group
+deactivate System
+
+deactivate Agent
+
+@enduml
