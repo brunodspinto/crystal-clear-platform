@@ -40,3 +40,7 @@ As a journalist, I want to analyse the evolution of a Political Agent's income o
 **Output Data:**
 * Chronologically ordered list of validated declarations with income evolution (amount, source, institution, date) for each declaration in the period
 * (In)Success of the operation
+
+### 1.6. System Sequence Diagram (SSD)
+
+![System Sequence Diagram](svg/US10-SSD.svg)

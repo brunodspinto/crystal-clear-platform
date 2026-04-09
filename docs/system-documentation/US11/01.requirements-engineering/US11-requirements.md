@@ -38,3 +38,7 @@ As a citizen/journalist, I want to consult the assets of a political agent on a 
 **Output Data:**
 * List of assets from validated declarations up to the specified date (acquisition value, market value, real estate description), filtered by user role
 * (In)Success of the operation
+
+### 1.6. System Sequence Diagram (SSD)
+
+![System Sequence Diagram](svg/US11-SSD.svg)

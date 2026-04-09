@@ -37,3 +37,7 @@ As a member of the Ethics Committee, I want to consult the Integrated Situation 
 **Output Data:**
 * Integrated situation of the political agent on that date (positions, income, assets, business participations)
 * (In)Success of the operation
+
+### 1.6. System Sequence Diagram (SSD)
+
+![System Sequence Diagram](svg/US09-SSD.svg)
