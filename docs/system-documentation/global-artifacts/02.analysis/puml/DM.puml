@@ -219,6 +219,6 @@ Citizen "*" -- "*" PoliticalAgent : consults assets of >
 
 Citizen "1" -- "*" Complaint : submits >
 Complaint "*" -- "1" PoliticalAgent : targets >
-Complaint "*" -- "1" Function : references >
+Complaint "*" -- "1" PoliticalFunction : references >
 
 @enduml
