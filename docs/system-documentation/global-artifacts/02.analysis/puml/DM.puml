@@ -12,7 +12,6 @@ title Domain Model - Portal de Transparência
 class User {
     fullName: String
     email: String
-    password: String
 }
 
 class RegistrationRequest {
@@ -22,7 +21,10 @@ class RegistrationRequest {
     identificationDocument: String
     status: Status
     submissionDate: Date
-    rejectionReason: String
+}
+
+class RejectionReason {
+    description: String
 }
 
 enum Status {
@@ -51,6 +53,9 @@ class Journalist {
 }
 
 class "Ethics Committee Member" as EthicsCommitteeMember {
+}
+
+class "Ethics Committee" as EthicsCommittee {
 }
 
 class "Political Agent" as PoliticalAgent {
@@ -170,6 +175,9 @@ RegistrationRequest "1" -- "1" Role : requests >
 RegistrationRequest "1" -- "1" Status : has >
 RegistrationRequest ..> User : results in / activates >
 Administrator "1" -- "*" RegistrationRequest : reviews >
+RegistrationRequest "1" -- "0..1" RejectionReason : has >
+
+EthicsCommitteeMember "*" -- "1" EthicsCommittee : belongs to >
 
 Administrator "1" -- "*" Institution : registers >
 Administrator "1" -- "*" Function : registers >
@@ -195,7 +203,7 @@ SubsidyEntry "*" -- "1" Institution : received from >
 Income "*" -- "1" Institution : received from >
 
 Asset "*" -- "1" AssetType : classified as >
-Asset "1" -- "1" RealEstate : can be / described by >
+Asset "1" -- "0..1" RealEstate : can be / described by >
 
 BusinessParticipation "*" -- "1" Institution : held in >
 
@@ -211,6 +219,6 @@ Citizen "*" -- "*" PoliticalAgent : consults assets of >
 
 Citizen "1" -- "*" Complaint : submits >
 Complaint "*" -- "1" PoliticalAgent : targets >
-Complaint "*" -- "1" PoliticalFunction : references >
+Complaint "*" -- "1" Function : references >
 
 @enduml
