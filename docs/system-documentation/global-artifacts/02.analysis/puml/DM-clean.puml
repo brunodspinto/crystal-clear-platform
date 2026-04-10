@@ -1,25 +1,32 @@
 @startuml
+' ==========================================================
+' Domain Model - Portal da Transparência
+' Project: sem2-pi-25-26-g023
+' Sprint 1 - covers US01, US02, US03, US04, US06, US08,
+'            US09, US10, US11, US12
+' (team of 4 ESOFT students - US05 and US07 omitted per
+'  assignment rules)
+' ==========================================================
+
 skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
 skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 70
 
 hide circle
 hide methods
 
-title Domain Model - Portal de Transparência
+title Domain Model - Portal da Transparência
 
-class User {
-    fullName: String
-    email: String
-}
-
+' ---------- Authentication & Registration ----------
 class RegistrationRequest {
     fullName: String
     email: String
     password: String
     identificationDocument: String
-    status: Status
     submissionDate: Date
 }
 
@@ -27,7 +34,7 @@ class RejectionReason {
     description: String
 }
 
-enum Status {
+enum RequestStatus {
     PENDING
     APPROVED
     REJECTED
@@ -37,8 +44,15 @@ enum Role {
     POLITICAL_AGENT
     ORDINARY_CITIZEN
     JOURNALIST
-    ETHICS_COMMITTEE
+    ETHICS_COMMITTEE_MEMBER
     SYSTEM_ADMINISTRATOR
+}
+
+' ---------- Users ----------
+abstract class User {
+    fullName: String
+    email: String
+    password: String
 }
 
 class Administrator {
@@ -57,27 +71,28 @@ class "Ethics Committee Member" as EthicsCommitteeMember {
 }
 
 class "Ethics Committee" as EthicsCommittee {
+    name: String
 }
 
 class "Political Agent" as PoliticalAgent {
     nationalIdentityCard: String
     taxIdentificationNumber: String
-    mandateStart: Date
-    mandateEnd: Date
+}
+
+class Mandate {
+    startDate: Date
+    endDate: Date
 }
 
 enum PoliticalFunction {
-    minister
-    deputy
-    councillor
-    parishCouncilPresident
-    mayor
+    MINISTER
+    DEPUTY
+    COUNCILLOR
+    PARISH_COUNCIL_PRESIDENT
+    MAYOR
 }
 
-class Function {
-    designation: String
-}
-
+' ---------- Organizations ----------
 class Institution {
     name: String
 }
@@ -86,9 +101,14 @@ class InstitutionType {
     designation: String
 }
 
+class Function {
+    designation: String
+}
+
+' ---------- Declarations ----------
 class "Declaration of Interests" as Declaration {
     id: String
-    name: String
+    referenceDate: Date
     submissionDate: Date
 }
 
@@ -105,13 +125,19 @@ enum DeclarationStatus {
 }
 
 class PositionEntry {
-    nature: String
+    nature: PositionNature
     remuneration: Double
     startDate: Date
     endDate: Date
 }
 
-class Income {
+enum PositionNature {
+    PUBLIC
+    PRIVATE
+    SOCIAL
+}
+
+class SideIncome {
     amount: Double
     source: String
     date: Date
@@ -139,10 +165,24 @@ class "Real Estate" as RealEstate {
 }
 
 class BusinessParticipation {
-    numberOfShares: Integer
+    type: ParticipationType
+    quantity: Integer
     marketValue: Double
 }
 
+enum ParticipationType {
+    QUOTA
+    SHARE
+    HOLDING
+}
+
+class Attachment {
+    fileName: String
+    fileType: String
+    uploadDate: Date
+}
+
+' ---------- Validation ----------
 class ValidationRecord {
     validationDate: Date
 }
@@ -154,48 +194,56 @@ enum ValidationOutcome {
 
 class ValidationComment {
     section: String
+    item: String
     comment: String
 }
 
+' ---------- Complaints ----------
 class Complaint {
     description: String
-    complaintDate: Date
+    referenceDate: Date
     submissionDate: Date
 }
 
-class Attachment {
-    fileName: String
-    fileType: String
-    uploadDate: Date
-}
+' ==========================================================
+' Relationships
+' ==========================================================
 
+' Inheritance
 User <|-- Administrator
 User <|-- Citizen
 User <|-- Journalist
 User <|-- EthicsCommitteeMember
 User <|-- PoliticalAgent
 
+' Registration flow (US01, US02)
 RegistrationRequest "1" -- "1" Role : requests >
-RegistrationRequest "1" -- "1" Status : has >
-RegistrationRequest ..> User : results in / activates >
-Administrator "*" -- "*" RegistrationRequest : reviews >
+RegistrationRequest "1" -- "1" RequestStatus : has >
 RegistrationRequest "1" -- "0..1" RejectionReason : has >
+RegistrationRequest ..> User : activates >
+Administrator "*" -- "*" RegistrationRequest : reviews >
 
-EthicsCommitteeMember "*" -- "1" EthicsCommittee : belongs to >
+' Ethics Committee composition
+EthicsCommittee "1" *-- "*" EthicsCommitteeMember : has members >
 
+' Political Agent mandates (US06, US09, US10, US11)
+PoliticalAgent "1" -- "*" Mandate : has >
+Mandate "*" -- "1" PoliticalFunction : of type >
+Mandate "*" -- "0..1" Institution : associated with >
+
+' Institutions and Functions (US03, US04, US05)
 Administrator "*" -- "*" Institution : registers >
 Administrator "*" -- "*" Function : registers >
 Institution "*" -- "1" InstitutionType : categorized as >
 
-PoliticalAgent "1" -- "*" PoliticalFunction : has >
-PoliticalAgent "1" -- "*" Declaration : submits / has >
-
+' Declarations (US06)
+PoliticalAgent "1" -- "*" Declaration : submits >
 Declaration "*" -- "1" DeclarationType : classified as >
 Declaration "*" -- "1" DeclarationStatus : has >
 
 Declaration "1" *-- "*" PositionEntry : includes >
-Declaration "1" *-- "*" Income : includes >
 Declaration "1" *-- "*" SubsidyEntry : includes >
+Declaration "1" *-- "*" SideIncome : includes >
 Declaration "1" *-- "*" Asset : includes >
 Declaration "1" *-- "*" BusinessParticipation : includes >
 Declaration "1" *-- "*" Attachment : has >
@@ -204,18 +252,19 @@ PositionEntry "*" -- "1" Institution : held at >
 PositionEntry "*" -- "1" Function : performs >
 
 SubsidyEntry "*" -- "1" Institution : received from >
-Income "*" -- "1" Institution : received from >
 
 Asset "*" -- "1" AssetType : classified as >
-Asset "1" -- "1" RealEstate : described by >
+Asset "1" *-- "1" RealEstate : described by >
 
 BusinessParticipation "*" -- "1" Institution : held in >
 
-EthicsCommitteeMember "1" -- "*" ValidationRecord : performs >
+' Validation (US08)
+ValidationRecord "*" -- "1" EthicsCommitteeMember : performed by >
 ValidationRecord "*" -- "1" Declaration : concerns >
 ValidationRecord "*" -- "1" ValidationOutcome : results in >
 ValidationRecord "1" *-- "*" ValidationComment : contains >
 
+' Complaints (US12)
 Citizen "1" -- "*" Complaint : submits >
 Complaint "*" -- "1" PoliticalAgent : targets >
 Complaint "*" -- "1" PoliticalFunction : references >
