@@ -8,7 +8,7 @@
 
 ### 2.2. Other Remarks
 
-The asset consultation shows all assets declared by a given political agent in their validated declaration(s) up to a specific date. Each **Asset** is characterised by its acquisition value and market value. Assets may further be classified as **Real Estate** (with a description).
+The asset consultation shows all assets declared by a given political agent in their validated declaration(s) up to a specific date. Each **Asset** is characterised by its acquisition value and market value. Assets may further be classified as **Real Estate** (with a description and municipality).
 
 Access to this feature is available to both **Citizens** and **Journalists**, but the data shown differs based on the user's role (AC1):
 
