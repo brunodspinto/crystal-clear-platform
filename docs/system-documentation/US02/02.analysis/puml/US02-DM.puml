@@ -12,18 +12,18 @@ class Administrator {
 }
 
 class RegistrationRequest {
-    - fullName: String
-    - email: String
-    - identificationDocument: String
-    - status: Status
-    - submissionDate: Date
-    - rejectionReason: String
+    - fullName
+    - email
+    - identificationDocument
+    - status
+    - submissionDate
+    - rejectionReason
 }
 
 class User {
-    - fullName: String
-    - email: String
-    - password: String
+    - fullName
+    - email
+    - password
 }
 
 enum Status {

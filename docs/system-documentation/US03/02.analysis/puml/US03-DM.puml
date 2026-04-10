@@ -12,14 +12,14 @@ class PoliticalAgent {
 }
 
 class Institution {
-    - name: String
-    - type: String
+    - name
+    - type
 }
 
 PoliticalAgent "1" -- "*" Institution : lists >
 
 note right of Institution
-  Type can be: Company,
+  Type can be,
   Political Party, Foundation,
   Institute, or Association.
   Grouped by type, sorted

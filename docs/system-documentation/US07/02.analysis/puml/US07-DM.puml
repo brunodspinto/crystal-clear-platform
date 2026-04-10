@@ -12,8 +12,8 @@ class PoliticalAgent {
 }
 
 class DeclarationOfInterest {
-    - submissionDate: Date
-    - status: String
+    - submissionDate
+    - status
 }
 
 class Asset {

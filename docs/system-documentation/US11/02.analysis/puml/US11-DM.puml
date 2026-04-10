@@ -8,31 +8,31 @@ hide circle
 hide methods
 
 class Journalist {
-    name: String
-    email: String
-    phone: String
-    pressCardNumber: String
+    name
+    email
+    phone
+    pressCardNumber
 }
 
 class Citizen {
-    name: String
-    email: String
+    name
+    email
 }
 
 class "Political Agent" as PoliticalAgent {
-    name: String
-    email: String
-    nationalIdentityCard: String
-    taxIdentificationNumber: String
-    politicalFunction: PoliticalFunction
-    mandateStart: Date
-    mandateEnd: Date
+    name
+    email
+    nationalIdentityCard
+    taxIdentificationNumber
+    politicalFunction
+    mandateStart
+    mandateEnd
 }
 
 class "Declaration of Interests" as Declaration {
-    id: String
-    name: String
-    submissionDate: Date
+    id
+    name
+    submissionDate
 }
 
 enum DeclarationStatus {
@@ -56,12 +56,12 @@ enum PoliticalFunction {
 }
 
 class Asset {
-    acquisitionValue: Double
-    marketValue: Double
+    acquisitionValue
+    marketValue
 }
 
 class "Real Estate" as RealEstate {
-    description: String
+    description
 }
 
 Journalist "*" -- "*" PoliticalAgent : consults assets of

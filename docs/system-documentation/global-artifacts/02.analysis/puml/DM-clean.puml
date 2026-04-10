@@ -23,15 +23,15 @@ title Domain Model - Portal da Transparência
 
 ' ---------- Authentication & Registration ----------
 class RegistrationRequest {
-    fullName: String
-    email: String
-    password: String
-    identificationDocument: String
-    submissionDate: Date
+    fullName
+    email
+    password
+    identificationDocument
+    submissionDate
 }
 
 class RejectionReason {
-    description: String
+    description
 }
 
 enum RequestStatus {
@@ -50,38 +50,38 @@ enum Role {
 
 ' ---------- Users ----------
 abstract class User {
-    fullName: String
-    email: String
-    password: String
+    fullName
+    email
+    password
 }
 
 class Administrator {
 }
 
 class Citizen {
-    nationalIdCardNumber: String
+    nationalIdCardNumber
 }
 
 class Journalist {
-    phone: String
-    pressCardNumber: String
+    phone
+    pressCardNumber
 }
 
 class "Ethics Committee Member" as EthicsCommitteeMember {
 }
 
 class "Ethics Committee" as EthicsCommittee {
-    name: String
+    name
 }
 
 class "Political Agent" as PoliticalAgent {
-    nationalIdentityCard: String
-    taxIdentificationNumber: String
+    nationalIdentityCard
+    taxIdentificationNumber
 }
 
 class Mandate {
-    startDate: Date
-    endDate: Date
+    startDate
+    endDate
 }
 
 enum PoliticalFunction {
@@ -94,22 +94,22 @@ enum PoliticalFunction {
 
 ' ---------- Organizations ----------
 class Institution {
-    name: String
+    name
 }
 
 class InstitutionType {
-    designation: String
+    designation
 }
 
 class Function {
-    designation: String
+    designation
 }
 
 ' ---------- Declarations ----------
 class "Declaration of Interests" as Declaration {
-    id: String
-    referenceDate: Date
-    submissionDate: Date
+    id
+    referenceDate
+    submissionDate
 }
 
 enum DeclarationType {
@@ -125,10 +125,10 @@ enum DeclarationStatus {
 }
 
 class PositionEntry {
-    nature: PositionNature
-    remuneration: Double
-    startDate: Date
-    endDate: Date
+    nature
+    remuneration
+    startDate
+    endDate
 }
 
 enum PositionNature {
@@ -138,20 +138,20 @@ enum PositionNature {
 }
 
 class SideIncome {
-    amount: Double
-    source: String
-    date: Date
+    amount
+    source
+    date
 }
 
 class SubsidyEntry {
-    amount: Double
-    description: String
-    date: Date
+    amount
+    description
+    date
 }
 
 class Asset {
-    acquisitionValue: Double
-    marketValue: Double
+    acquisitionValue
+    marketValue
 }
 
 enum AssetType {
@@ -160,14 +160,14 @@ enum AssetType {
 }
 
 class "Real Estate" as RealEstate {
-    description: String
-    municipality: String
+    description
+    municipality
 }
 
 class BusinessParticipation {
-    type: ParticipationType
-    quantity: Integer
-    marketValue: Double
+    type
+    quantity
+    marketValue
 }
 
 enum ParticipationType {
@@ -177,14 +177,14 @@ enum ParticipationType {
 }
 
 class Attachment {
-    fileName: String
-    fileType: String
-    uploadDate: Date
+    fileName
+    fileType
+    uploadDate
 }
 
 ' ---------- Validation ----------
 class ValidationRecord {
-    validationDate: Date
+    validationDate
 }
 
 enum ValidationOutcome {
@@ -193,16 +193,16 @@ enum ValidationOutcome {
 }
 
 class ValidationComment {
-    section: String
-    item: String
-    comment: String
+    section
+    item
+    comment
 }
 
 ' ---------- Complaints ----------
 class Complaint {
-    description: String
-    referenceDate: Date
-    submissionDate: Date
+    description
+    referenceDate
+    submissionDate
 }
 
 ' ==========================================================

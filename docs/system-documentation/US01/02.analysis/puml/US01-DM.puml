@@ -9,18 +9,18 @@ hide methods
 title Domain Model Excerpt - US01
 
 class User {
-    - fullName: String
-    - email: String
-    - password: String
+    - fullName
+    - email
+    - password
 }
 
 class RegistrationRequest {
-    - fullName: String
-    - email: String
-    - password: String
-    - identificationDocument: String
-    - status: Status
-    - submissionDate: Date
+    - fullName
+    - email
+    - password
+    - identificationDocument
+    - status
+    - submissionDate
 }
 
 enum Status {

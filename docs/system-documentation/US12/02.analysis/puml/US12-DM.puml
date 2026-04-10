@@ -8,23 +8,23 @@ hide circle
 hide methods
 
 class Citizen {
-    name: String
-    email: String
+    name
+    email
 }
 
 class "Political Agent" as PoliticalAgent {
-    name: String
-    email: String
-    nationalIdentityCard: String
-    taxIdentificationNumber: String
-    mandateStart: Date
-    mandateEnd: Date
+    name
+    email
+    nationalIdentityCard
+    taxIdentificationNumber
+    mandateStart
+    mandateEnd
 }
 
 class Complaint {
-    description: String
-    complaintDate: Date
-    submissionDate: Date
+    description
+    complaintDate
+    submissionDate
 }
 
 enum PoliticalFunction {

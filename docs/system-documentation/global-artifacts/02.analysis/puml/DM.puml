@@ -10,21 +10,21 @@ hide methods
 title Domain Model - Portal de Transparência
 
 class User {
-    fullName: String
-    email: String
+    fullName
+    email
 }
 
 class RegistrationRequest {
-    fullName: String
-    email: String
-    password: String
-    identificationDocument: String
-    status: Status
-    submissionDate: Date
+    fullName
+    email
+    password
+    identificationDocument
+    status
+    submissionDate
 }
 
 class RejectionReason {
-    description: String
+    description
 }
 
 enum Status {
@@ -45,12 +45,12 @@ class Administrator {
 }
 
 class Citizen {
-    nationalIdCardNumber: String
+    nationalIdCardNumber
 }
 
 class Journalist {
-    phone: String
-    pressCardNumber: String
+    phone
+    pressCardNumber
 }
 
 class "Ethics Committee Member" as EthicsCommitteeMember {
@@ -60,10 +60,10 @@ class "Ethics Committee" as EthicsCommittee {
 }
 
 class "Political Agent" as PoliticalAgent {
-    nationalIdentityCard: String
-    taxIdentificationNumber: String
-    mandateStart: Date
-    mandateEnd: Date
+    nationalIdentityCard
+    taxIdentificationNumber
+    mandateStart
+    mandateEnd
 }
 
 enum PoliticalFunction {
@@ -75,22 +75,22 @@ enum PoliticalFunction {
 }
 
 class Function {
-    designation: String
+    designation
 }
 
 class Institution {
-    name: String
-    sector: String
+    name
+    sector
 }
 
 class InstitutionType {
-    designation: String
+    designation
 }
 
 class "Declaration of Interests" as Declaration {
-    id: String
-    name: String
-    submissionDate: Date
+    id
+    name
+    submissionDate
 }
 
 enum DeclarationType {
@@ -106,27 +106,27 @@ enum DeclarationStatus {
 }
 
 class PositionEntry {
-    nature: String
-    remuneration: Double
-    startDate: Date
-    endDate: Date
+    nature
+    remuneration
+    startDate
+    endDate
 }
 
 class Income {
-    amount: Double
-    source: String
-    date: Date
+    amount
+    source
+    date
 }
 
 class SubsidyEntry {
-    amount: Double
-    description: String
-    date: Date
+    amount
+    description
+    date
 }
 
 class Asset {
-    acquisitionValue: Double
-    marketValue: Double
+    acquisitionValue
+    marketValue
 }
 
 enum AssetType {
@@ -135,23 +135,23 @@ enum AssetType {
 }
 
 class "Real Estate" as RealEstate {
-    description: String
-    municipality: String
+    description
+    municipality
 }
 
 class BusinessParticipation {
-    numberOfShares: Integer
-    marketValue: Double
+    numberOfShares
+    marketValue
 }
 
 class AuditLog {
-    action: String
-    timestamp: Date
-    details: String
+    action
+    timestamp
+    details
 }
 
 class ValidationRecord {
-    validationDate: Date
+    validationDate
 }
 
 enum ValidationOutcome {
@@ -160,20 +160,20 @@ enum ValidationOutcome {
 }
 
 class ValidationComment {
-    section: String
-    comment: String
+    section
+    comment
 }
 
 class Complaint {
-    description: String
-    complaintDate: Date
-    submissionDate: Date
+    description
+    complaintDate
+    submissionDate
 }
 
 class Attachment {
-    fileName: String
-    fileType: String
-    uploadDate: Date
+    fileName
+    fileType
+    uploadDate
 }
 
 User <|-- Administrator

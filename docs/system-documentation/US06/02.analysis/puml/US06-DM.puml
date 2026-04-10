@@ -8,18 +8,18 @@ hide circle
 hide methods
 
 class "Political Agent" as PoliticalAgent {
-    name: String
-    email: String
-    nationalIdentityCard: String
-    taxIdentificationNumber: String
-    mandateStart: Date
-    mandateEnd: Date
+    name
+    email
+    nationalIdentityCard
+    taxIdentificationNumber
+    mandateStart
+    mandateEnd
 }
 
 class "Declaration of Interests" as Declaration {
-    id: String
-    name: String
-    submissionDate: Date
+    id
+    name
+    submissionDate
 }
 
 enum DeclarationType {
@@ -43,18 +43,18 @@ enum PoliticalFunction {
 }
 
 class PositionEntry {
-    nature: String
-    remuneration: Double
-    startDate: Date
-    endDate: Date
+    nature
+    remuneration
+    startDate
+    endDate
 }
 
 class Function {
-    designation: String
+    designation
 }
 
 class Institution {
-    name: String
+    name
 }
 
 enum InstitutionType {
@@ -66,18 +66,18 @@ enum InstitutionType {
 }
 
 class SubsidyEntry {
-    amount: Double
-    description: String
-    date: Date
+    amount
+    description
+    date
 }
 
 class AssetEntry {
-    acquisitionValue: Double
-    marketValue: Double
+    acquisitionValue
+    marketValue
 }
 
 class "Real Estate" as RealEstate {
-    description: String
+    description
 }
 
 enum AssetType {
@@ -86,8 +86,8 @@ enum AssetType {
 }
 
 class BusinessParticipation {
-    numberOfShares: Integer
-    marketValue: Double
+    numberOfShares
+    marketValue
 }
 
 PoliticalAgent "1" -- "1" PoliticalFunction : has

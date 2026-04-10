@@ -12,7 +12,7 @@ class Administrator {
 }
 
 class Function {
-    - designation: String
+    - designation
 }
 
 Administrator "1" -- "*" Function : registers >
