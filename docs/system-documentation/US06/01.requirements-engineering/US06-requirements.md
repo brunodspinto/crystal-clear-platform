@@ -50,8 +50,9 @@ As a Political Agent, I want to submit a declaration of interests including inco
     * remuneration per position entry
     * start date and end date per position entry
     * support and subsidy amounts, descriptions, and dates
-    * asset acquisition values and market values
+    * asset acquisition values, market values, real estate description, and municipality per asset entry
     * business participation number of shares and market values
+    * attachment file(s) (optional)
 
 * Selected data:
     * declaration type (initial, regular, or exceptional)
