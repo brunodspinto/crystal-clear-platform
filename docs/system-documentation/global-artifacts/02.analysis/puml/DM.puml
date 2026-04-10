@@ -80,11 +80,7 @@ class Function {
 
 class Institution {
     name
-    sector
-}
-
-class InstitutionType {
-    designation
+    type
 }
 
 class "Declaration of Interests" as Declaration {
@@ -194,7 +190,6 @@ EthicsCommitteeMember "*" -- "1" EthicsCommittee : belongs to >
 
 Administrator "*" -- "*" Institution : registers >
 Administrator "*" -- "*" Function : registers >
-Institution "*" -- "1" InstitutionType : categorized as >
 
 PoliticalAgent "1" -- "*" PoliticalFunction : has >
 PoliticalAgent "1" -- "*" Declaration : submits / has >

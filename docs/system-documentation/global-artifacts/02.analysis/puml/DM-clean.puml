@@ -95,11 +95,9 @@ enum PoliticalFunction {
 ' ---------- Organizations ----------
 class Institution {
     name
+    type
 }
 
-class InstitutionType {
-    designation
-}
 
 class Function {
     designation
@@ -234,7 +232,6 @@ Mandate "*" -- "0..1" Institution : associated with >
 ' Institutions and Functions (US03, US04, US05)
 Administrator "*" -- "*" Institution : registers >
 Administrator "*" -- "*" Function : registers >
-Institution "*" -- "1" InstitutionType : categorized as >
 
 ' Declarations (US06)
 PoliticalAgent "1" -- "*" Declaration : submits >
