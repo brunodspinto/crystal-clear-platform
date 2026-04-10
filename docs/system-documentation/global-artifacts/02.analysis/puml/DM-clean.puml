@@ -1,12 +1,5 @@
 @startuml
-' ==========================================================
-' Domain Model - Portal da Transparência
-' Project: sem2-pi-25-26-g023
-' Sprint 1 - covers US01, US02, US03, US04, US06, US08,
-'            US09, US10, US11, US12
-' (team of 4 ESOFT students - US05 and US07 omitted per
-'  assignment rules)
-' ==========================================================
+
 
 skinparam monochrome true
 skinparam packageStyle rectangle
