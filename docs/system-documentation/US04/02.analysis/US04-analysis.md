@@ -16,5 +16,3 @@ The system relies on object serialization to persist the registered institutions
 ![US04-MD](svg/US04-DM.svg)
 
 ### 2.2. Other Remarks
-
-* The classification of "Type" might be implemented later as an Enumeration (Enum) during the design phase to enforce data integrity.

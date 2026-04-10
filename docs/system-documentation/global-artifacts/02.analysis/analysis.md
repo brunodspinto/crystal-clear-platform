@@ -47,13 +47,13 @@ To identify domain conceptual classes, start by making a list of candidate conce
 
 **Physical Objects**
 
-* RealEstate: a physical property (urban or rural) associated with an asset entry
+* RealEstate: a physical property (urban or rural) associated with an asset entry, identified by description and municipality
 
 **Descriptions of Things**
 
 * DeclarationType: classifies a declaration as initial, regular, or exceptional
 * DeclarationStatus: the current state of a declaration (pending, validated, rejected)
-* InstitutionType: classifies an institution as a company, political party, foundation, institute, or association
+* InstitutionType: no longer a separate concept — the institution type is stored as a `type: String` attribute directly on `Institution`
 * AssetType: classifies an asset as urban or rural real estate
 * ValidationOutcome: the result of a validation (validated or returned for correction)
 * Status: the state of a registration request (pending, approved, rejected)
@@ -61,7 +61,6 @@ To identify domain conceptual classes, start by making a list of candidate conce
 **Catalogs**
 
 * Function: a predefined catalog of registerable functions
-* InstitutionType: a predefined catalog of institution types
 * AssetType: a predefined catalog of asset types
 
 **Containers**
@@ -96,6 +95,7 @@ To identify domain conceptual classes, start by making a list of candidate conce
 
 * DeclarationOfInterests: the formal document submitted to the platform
 * RegistrationRequest: the document submitted to request access to the platform
+* Attachment: a supporting document file uploaded alongside a declaration
 
 
 ## Rationale to identify associations between conceptual classes
@@ -129,10 +129,10 @@ An association is a relationship between instances of objects that indicates a r
 | DeclarationOfInterests    | includes                 | BusinessParticipation    |
 | PositionEntry             | held at                  | Institution              |
 | PositionEntry             | performs                 | Function                 |
-| Institution               | categorized as           | InstitutionType          |
 | SubsidyEntry              | received from            | Institution              |
 | AssetEntry                | classified as            | AssetType                |
 | AssetEntry                | described by             | RealEstate               |
+| DeclarationOfInterests    | includes                 | Attachment               |
 | EthicsCommitteeMember     | performs                 | ValidationRecord         |
 | ValidationRecord          | concerns                 | DeclarationOfInterests   |
 | ValidationRecord          | results in               | ValidationOutcome        |
@@ -162,21 +162,21 @@ Attributes are chosen based on the information that needs to be stored or displa
 | DeclarationStatus         | {pending, validated, rejected}                                             |
 | PositionEntry             | remuneration: Double, startDate: Date, endDate: Date                       |
 | Function                  | designation: String                                                        |
-| Institution               | name: String                                                               |
-| InstitutionType           | {company, politicalParty, foundation, institute, association}              |
+| Institution               | name: String, type: String                                                 |
 | SubsidyEntry              | amount: Double, description: String, date: Date                            |
 | AssetEntry                | acquisitionValue: Double, marketValue: Double                              |
 | AssetType                 | {urban, rural}                                                             |
-| RealEstate                | description: String                                                        |
+| RealEstate                | description: String, municipality: String                                  |
 | BusinessParticipation     | numberOfShares: Integer, marketValue: Double                               |
 | EthicsCommitteeMember     | name: String, email: String                                                |
 | Journalist                | name: String, email: String, phone: String, pressCardNumber: String        |
-| Citizen                   | name: String, email: String                                                |
+| Citizen                   | name: String, email: String, nationalIdCardNumber: String                  |
 | Administrator             | name: String, email: String                                                |
 | ValidationRecord          | validationDate: Date                                                       |
 | ValidationOutcome         | {validated, returnedForCorrection}                                         |
 | ValidationComment         | comment: String, section: String                                           |
 | Income                    | amount: Double, source: String, institution: String, date: Date            |
+| Attachment                | fileName: String, uploadDate: Date                                         |
 
 
 ## Domain Model
