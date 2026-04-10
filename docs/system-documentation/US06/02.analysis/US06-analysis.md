@@ -14,8 +14,8 @@
 * The declaration status is represented as the `DeclarationStatus` enum with values `pending`, `validated`, and `rejected`. Upon submission, the status is always set to `pending`.
 * Each declaration is composed of zero or more entries per section (`PositionEntry`, `SubsidyEntry`, `AssetEntry`, `BusinessParticipation`). At least one `PositionEntry` is mandatory (AC3).
 * `PositionEntry` holds `remuneration: Double`, `startDate: Date`, and `endDate: Date`, and references a pre-existing `Function` and `Institution`. The nature of the position (public, private, social) is an attribute of `PositionEntry`.
-* `AssetEntry` holds `acquisitionValue: Double` and `marketValue: Double`, and is linked to a `RealEstate` description. The asset type (urban or rural) is represented by the `AssetType` enum.
+* `AssetEntry` holds `acquisitionValue: Double` and `marketValue: Double`, and is linked to a `RealEstate` record with `description: String` and `municipality: String`. The asset type (urban or rural) is represented by the `AssetType` enum.
 * `BusinessParticipation` holds `numberOfShares: Integer` and `marketValue: Double`, and references the company as an `Institution`.
 * `SubsidyEntry` holds `amount: Double`, `description: String`, and `date: Date`, and references the source as an `Institution`.
-* `Institution` and `Function` are pre-existing entities registered in the system (dependencies on US04 and US05).
-* `InstitutionType` is an enum classifying institutions as company, politicalParty, foundation, institute, or association.
+* `Institution` and `Function` are pre-existing entities registered in the system (dependencies on US04 and US05). The type of institution (e.g. company, political party, foundation, institute, or association) is stored as a `type: String` attribute directly on `Institution`.
+* A `DeclarationOfInterests` may include zero or more `Attachment` entries. Each attachment holds a `fileName: String` and `uploadDate: Date`, allowing supporting documents to be submitted alongside the declaration.

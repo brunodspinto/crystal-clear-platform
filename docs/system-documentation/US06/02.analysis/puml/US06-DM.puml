@@ -55,14 +55,7 @@ class Function {
 
 class Institution {
     name: String
-}
-
-enum InstitutionType {
-    company
-    politicalParty
-    foundation
-    institute
-    association
+    type: String
 }
 
 class SubsidyEntry {
@@ -78,6 +71,7 @@ class AssetEntry {
 
 class "Real Estate" as RealEstate {
     description: String
+    municipality: String
 }
 
 enum AssetType {
@@ -103,13 +97,18 @@ Declaration "1" -- "*" BusinessParticipation : includes
 PositionEntry "*" -- "1" Institution : held at
 PositionEntry "*" -- "1" Function : performs
 
-Institution "*" -- "1" InstitutionType : categorized as
-
 SubsidyEntry "*" -- "1" Institution : received from
 
 AssetEntry "*" -- "1" AssetType : classified as
 AssetEntry "1" -- "1" RealEstate : described by
 
+class Attachment {
+    fileName: String
+    uploadDate: Date
+}
+
 BusinessParticipation "*" -- "1" Institution : held in
+
+Declaration "1" -- "*" Attachment : includes
 
 @enduml
