@@ -80,6 +80,7 @@ class Function {
 
 class Institution {
     name: String
+    sector: String
 }
 
 class InstitutionType {
@@ -143,6 +144,12 @@ class BusinessParticipation {
     marketValue: Double
 }
 
+class AuditLog {
+    action: String
+    timestamp: Date
+    details: String
+}
+
 class ValidationRecord {
     validationDate: Date
 }
@@ -180,6 +187,8 @@ RegistrationRequest "1" -- "1" Status : has >
 RegistrationRequest ..> User : results in / activates >
 Administrator "*" -- "*" RegistrationRequest : reviews >
 RegistrationRequest "1" -- "0..1" RejectionReason : has >
+RegistrationRequest "0..1" -- "0..1" Function : specifies >
+RegistrationRequest "0..1" -- "0..1" Institution : specifies >
 
 EthicsCommitteeMember "*" -- "1" EthicsCommittee : belongs to >
 
@@ -219,5 +228,7 @@ ValidationRecord "1" *-- "*" ValidationComment : contains >
 Citizen "1" -- "*" Complaint : submits >
 Complaint "*" -- "1" PoliticalAgent : targets >
 Complaint "*" -- "1" PoliticalFunction : references >
+
+User "1" -- "*" AuditLog : generates >
 
 @enduml
