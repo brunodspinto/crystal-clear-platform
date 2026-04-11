@@ -11,6 +11,8 @@ The `DeclarationOfInterest` is a complex aggregate root that contains multiple e
 
 For this specific User Story, the system's responsibility is purely retrieval and presentation. It must fetch the existing `DeclarationOfInterest` objects associated with the logged-in `PoliticalAgent` and display their state. No data mutation or creation occurs in this use case.
 
+![Domain Model Excerpt](svg/US07-DM.svg)
+
 ### 2.2. Other Remarks
 
 * This US heavily relies on the data structure defined in **US06**.

@@ -37,4 +37,5 @@ As an Administrator, I want to register Functions.
 
 ### 1.7. Other Relevant Remarks
 
-*
+* A `Function` represents a hierarchical or administrative role within an institution (e.g., CEO, Director, Board Member). It must not be confused with `PoliticalFunction`, which represents the political mandate of a Political Agent (e.g., Minister, Deputy, Mayor).
+* Functions registered through this US will later be referenced by Political Agents when submitting Declarations of Interests (see US06), specifically when declaring position entries held at institutions.

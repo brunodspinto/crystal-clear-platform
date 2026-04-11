@@ -12,6 +12,8 @@ The `Function` entity must contain a single primary attribute:
 
 Business rules dictate that the system cannot have duplicated functions, meaning the designation acts as a unique identifier within the repository.
 
+![Domain Model Excerpt](svg/US05-DM.svg)
+
 ### 2.2. Other Remarks
 
 * No specific technical difficulties are anticipated for this US in terms of analysis. It represents a straightforward creation of a domain entity.

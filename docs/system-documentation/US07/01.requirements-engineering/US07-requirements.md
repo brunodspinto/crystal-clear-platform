@@ -37,4 +37,7 @@ As a Political Agent, I want to consult a previously submitted Declaration of In
 
 ### 1.7. Other Relevant Remarks
 
-*
+* This US is a read-only operation. No data is created, modified, or deleted.
+* The Political Agent can only view their own declarations; access to other agents' declarations is not permitted.
+* The declaration details displayed must include all sections: position entries, subsidies, assets, business participations, and any attachments submitted alongside the declaration.
+* This US is tightly coupled with **US06**, which defines the structure and content of a Declaration of Interests.

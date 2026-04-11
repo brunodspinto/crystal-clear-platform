@@ -14,7 +14,8 @@ As an Administrator, I want to register an Institution of a given type.
 * The system must ensure data persistence through object serialization.
 
 **From the client clarifications:**
-* (Insert any specific clarifications given by the product owner/teachers in the forum here, if applicable. Otherwise, leave as "None yet.")
+* The type of an institution refers to the activity sector or nature of the organisation (e.g., civil construction, healthcare, finance), not the legal form such as company, political party, or foundation.
+* The institution type must be selected from a predefined list of available types.
 
 ### 1.3. Acceptance Criteria
 
@@ -39,3 +40,9 @@ As an Administrator, I want to register an Institution of a given type.
 ### 1.6. System Sequence Diagram (SSD)
 
 ![US04-SSD](svg/US04-SSD.svg)
+
+### 1.7. Other Relevant Remarks
+
+* The institution type refers to the activity sector or nature of the organisation (e.g., civil construction, healthcare, finance), not the legal form (e.g., company, political party, foundation).
+* Institutions registered through this US will be referenced by Political Agents when submitting Declarations of Interests (see US06), specifically in position entries, subsidy entries, and business participations.
+* This US is closely related to **US03**, which allows Political Agents to list all registered institutions grouped by type.
