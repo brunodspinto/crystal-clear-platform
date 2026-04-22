@@ -2,6 +2,7 @@
 skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
+skinparam classAttributeIconSize 0
 
 hide circle
 hide methods
@@ -9,21 +10,24 @@ hide methods
 title Domain Model Excerpt - US03
 
 class PoliticalAgent {
+    name
+    email
 }
 
-class Institution {
-    - name
-    - type
+class Organization {
+    name
 }
 
-PoliticalAgent "1" -- "*" Institution : lists >
+enum OrganizationType {
+    company
+    politicalParty
+    foundation
+    institute
+    association
+}
 
-note right of Institution
-  Type can be,
-  Political Party, Foundation,
-  Institute, or Association.
-  Grouped by type, sorted
-  alphabetically by name.
-end note
+PoliticalAgent "1" -- "*" Organization : lists >
+
+Organization "*" -- "1" OrganizationType : classified as
 
 @enduml

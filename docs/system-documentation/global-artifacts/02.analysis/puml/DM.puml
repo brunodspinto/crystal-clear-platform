@@ -78,9 +78,16 @@ class Function {
     designation
 }
 
-class Institution {
+class Organization {
     name
-    type
+}
+
+enum OrganizationType {
+    company
+    politicalParty
+    foundation
+    institute
+    association
 }
 
 class "Declaration of Interests" as Declaration {
@@ -103,7 +110,8 @@ enum DeclarationStatus {
 
 class PositionEntry {
     nature
-    remuneration
+    grossSalary
+    sideIncome
     startDate
     endDate
 }
@@ -120,14 +128,14 @@ class SubsidyEntry {
     date
 }
 
-class Asset {
-    acquisitionValue
-    marketValue
+class AssetEntry {
+    assetValue
 }
 
 enum AssetType {
-    URBAN
-    RURAL
+    realEstate
+    vehicles
+    stocks
 }
 
 class "Real Estate" as RealEstate {
@@ -135,9 +143,18 @@ class "Real Estate" as RealEstate {
     municipality
 }
 
+class VehicleAsset {
+    description
+}
+
+class StockAsset {
+    description
+}
+
 class BusinessParticipation {
-    numberOfShares
-    marketValue
+    companyNIF
+    totalValueInStocks
+    companyPercentage
 }
 
 class AuditLog {
@@ -168,7 +185,6 @@ class Complaint {
 
 class Attachment {
     fileName
-    fileType
     uploadDate
 }
 
@@ -184,11 +200,11 @@ RegistrationRequest ..> User : results in / activates >
 Administrator "*" -- "*" RegistrationRequest : reviews >
 RegistrationRequest "1" -- "0..1" RejectionReason : has >
 RegistrationRequest "0..1" -- "0..1" Function : specifies >
-RegistrationRequest "0..1" -- "0..1" Institution : specifies >
+RegistrationRequest "0..1" -- "0..1" Organization : specifies >
 
 EthicsCommitteeMember "*" -- "1" EthicsCommittee : belongs to >
 
-Administrator "*" -- "*" Institution : registers >
+Administrator "1" -- "*" Organization : registers >
 Administrator "*" -- "*" Function : registers >
 
 PoliticalAgent "1" -- "*" PoliticalFunction : has >
@@ -200,20 +216,24 @@ Declaration "*" -- "1" DeclarationStatus : has >
 Declaration "1" *-- "*" PositionEntry : includes >
 Declaration "1" *-- "*" Income : includes >
 Declaration "1" *-- "*" SubsidyEntry : includes >
-Declaration "1" *-- "*" Asset : includes >
+Declaration "1" *-- "*" AssetEntry : includes >
 Declaration "1" *-- "*" BusinessParticipation : includes >
 Declaration "1" *-- "*" Attachment : has >
 
-PositionEntry "*" -- "1" Institution : held at >
+PositionEntry "*" -- "1" Organization : held at >
 PositionEntry "*" -- "1" Function : performs >
 
-SubsidyEntry "*" -- "1" Institution : received from >
-Income "*" -- "1" Institution : received from >
+Organization "*" -- "1" OrganizationType : classified as >
 
-Asset "*" -- "1" AssetType : classified as >
-Asset "1" -- "1" RealEstate : described by >
+SubsidyEntry "*" -- "1" Organization : received from >
+Income "*" -- "1" Organization : received from >
 
-BusinessParticipation "*" -- "1" Institution : held in >
+AssetEntry "*" -- "1" AssetType : classified as >
+AssetEntry "1" -- "0..1" RealEstate : described by >
+AssetEntry "1" -- "0..1" VehicleAsset : described by >
+AssetEntry "1" -- "0..1" StockAsset : described by >
+
+BusinessParticipation "*" -- "1" Organization : held in >
 
 EthicsCommitteeMember "1" -- "*" ValidationRecord : performs >
 ValidationRecord "*" -- "1" Declaration : concerns >

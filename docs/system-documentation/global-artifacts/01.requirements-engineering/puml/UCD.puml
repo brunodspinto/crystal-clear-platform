@@ -16,8 +16,8 @@ actor "Citizen" as Citizen
 
 usecase "US01 - Request Registration" as US01
 usecase "US02 - Accept/Reject Registration" as US02
-usecase "US03 - List Institutions" as US03
-usecase "US04 - Register Institution" as US04
+usecase "US03 - List Organizations" as US03
+usecase "US04 - Register Organizations" as US04
 usecase "US05 - Register Functions" as US05
 usecase "US06 - Submit Declaration" as US06
 usecase "US07 - Consult Own Declaration" as US07

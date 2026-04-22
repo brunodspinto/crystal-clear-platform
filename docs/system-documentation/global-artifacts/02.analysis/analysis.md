@@ -24,8 +24,8 @@ To identify domain conceptual classes, start by making a list of candidate conce
 
 **Product/Service related to a Transaction or Transaction Line Item**
 
-* Function: a named function/role that can be performed at an institution (e.g. President, Member, Director)
-* Institution: an organisation (company, political party, foundation, institute, or association) where a position is held
+* Function: a named function/role that can be performed at an organization (e.g. President, Member, Director)
+* Organization: an entity (company, political party, foundation, institute, or association) where a position is held
 
 **Transaction Records**
 
@@ -53,14 +53,15 @@ To identify domain conceptual classes, start by making a list of candidate conce
 
 * DeclarationType: classifies a declaration as initial, regular, or exceptional
 * DeclarationStatus: the current state of a declaration (pending, validated, rejected)
-* InstitutionType: no longer a separate concept — the institution type is stored as a `type: String` attribute directly on `Institution`
-* AssetType: classifies an asset as urban or rural real estate
+* OrganizationType: classifies an organization as company, politicalParty, foundation, institute, or association
+* AssetType: classifies an asset as realEstate, vehicles, or stocks
 * ValidationOutcome: the result of a validation (validated or returned for correction)
 * Status: the state of a registration request (pending, approved, rejected)
 
 **Catalogs**
 
 * Function: a predefined catalog of registerable functions
+* OrganizationType: a predefined catalog of organization types
 * AssetType: a predefined catalog of asset types
 
 **Containers**
@@ -73,7 +74,7 @@ To identify domain conceptual classes, start by making a list of candidate conce
 
 **(Other) Organizations**
 
-* Institution: a company, political party, foundation, institute, or association
+* Organization: a company, political party, foundation, institute, or association
 
 **Other (External/Collaborating) Systems**
 
@@ -119,7 +120,7 @@ An association is a relationship between instances of objects that indicates a r
 | RegistrationRequest       | results in               | User                     |
 | Administrator             | reviews                  | RegistrationRequest      |
 | Administrator             | registers                | Function                 |
-| Administrator             | registers                | Institution              |
+| Administrator             | registers                | Organization             |
 | PoliticalAgent            | submits                  | DeclarationOfInterests   |
 | DeclarationOfInterests    | classified as            | DeclarationType          |
 | DeclarationOfInterests    | has                      | DeclarationStatus        |
@@ -127,12 +128,14 @@ An association is a relationship between instances of objects that indicates a r
 | DeclarationOfInterests    | includes                 | SubsidyEntry             |
 | DeclarationOfInterests    | includes                 | AssetEntry               |
 | DeclarationOfInterests    | includes                 | BusinessParticipation    |
-| PositionEntry             | held at                  | Institution              |
+| PositionEntry             | held at                  | Organization             |
 | PositionEntry             | performs                 | Function                 |
-| SubsidyEntry              | received from            | Institution              |
+| Organization              | classified as            | OrganizationType         |
+| SubsidyEntry              | received from            | Organization             |
 | AssetEntry                | classified as            | AssetType                |
 | AssetEntry                | described by             | RealEstate               |
 | DeclarationOfInterests    | includes                 | Attachment               |
+| BusinessParticipation     | held in                  | Organization             |
 | EthicsCommitteeMember     | performs                 | ValidationRecord         |
 | ValidationRecord          | concerns                 | DeclarationOfInterests   |
 | ValidationRecord          | results in               | ValidationOutcome        |
@@ -160,14 +163,17 @@ Attributes are chosen based on the information that needs to be stored or displa
 | DeclarationOfInterests    | id: String, name: String, submissionDate: Date                             |
 | DeclarationType           | {initial, regular, exceptional}                                            |
 | DeclarationStatus         | {pending, validated, rejected}                                             |
-| PositionEntry             | remuneration: Double, startDate: Date, endDate: Date                       |
+| PositionEntry             | nature: String, grossSalary: Double, sideIncome: Double, startDate: Date, endDate: Date |
 | Function                  | designation: String                                                        |
-| Institution               | name: String, type: String                                                 |
+| Organization              | name: String                                                               |
+| OrganizationType          | {company, politicalParty, foundation, institute, association}              |
 | SubsidyEntry              | amount: Double, description: String, date: Date                            |
-| AssetEntry                | acquisitionValue: Double, marketValue: Double                              |
-| AssetType                 | {urban, rural}                                                             |
+| AssetEntry                | assetValue: Double                                                         |
+| AssetType                 | {realEstate, vehicles, stocks}                                             |
 | RealEstate                | description: String, municipality: String                                  |
-| BusinessParticipation     | numberOfShares: Integer, marketValue: Double                               |
+| VehicleAsset              | description: String                                                        |
+| StockAsset                | description: String                                                        |
+| BusinessParticipation     | companyNIF: Long, totalValueInStocks: Double, companyPercentage: Double    |
 | EthicsCommitteeMember     | name: String, email: String                                                |
 | Journalist                | name: String, email: String, phone: String, pressCardNumber: String        |
 | Citizen                   | name: String, email: String, nationalIdCardNumber: String                  |

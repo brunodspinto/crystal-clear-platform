@@ -19,28 +19,28 @@ activate Agent
     Agent -> System : selects declaration type
     activate System
 
-        System --> Agent : shows registered institutions and functions;\nrequests position entries (institution, function,\nnature, remuneration, start date, end date)
+        System --> Agent : shows registered organizations and functions;\nrequests position entries (organization, function,\nnature, gross salary, side income, start date, end date)
     deactivate System
 
     Agent -> System : provides one or more position entries
     activate System
 
-        System --> Agent : requests subsidy entries\n(source institution, description, amount, date)
+        System --> Agent : requests subsidy entries\n(source organization, description, amount, date)
     deactivate System
 
     Agent -> System : provides subsidy entries (or skips if none)
     activate System
 
-        System --> Agent : requests asset entries\n(type: urban/rural, acquisition value, market value)
+        System --> Agent : requests asset entries\n(real estate: description, municipality, value;\nvehicles: value;\nstocks: value)
     deactivate System
 
     Agent -> System : provides asset entries (or skips if none)
     activate System
 
-        System --> Agent : requests business participation entries\n(institution, number of shares, market value)
+        System --> Agent : requests business participation (holdings) entries\n(company NIF, total value in stocks, company percentage)
     deactivate System
 
-    Agent -> System : provides business participation entries (or skips if none)
+    Agent -> System : provides holdings entries (or skips if none)
     activate System
 
         System --> Agent : shows full declaration summary and requests confirmation

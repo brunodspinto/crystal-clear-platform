@@ -1,40 +1,51 @@
-# US04 - Register an Institution
+# US04 - Register an Organization
 
 ## 1. Requirements Engineering
 
 ### 1.1. User Story Description
 
-As an Administrator, I want to register an Institution of a given type.
+As an Administrator, I want to register an Organization of a given type.
 
 ### 1.2. Customer Specifications and Clarifications
 
 **From the specifications document:**
-* "As an Administrator, I want to register an Institution of a given type."
-* Institutions represent organizations (companies, political parties, foundations, institutes, or associations) that may be associated with a political agent's positions or business participation.
-* The system must ensure data persistence through object serialization.
+
+> Organizations represent entities (companies, political parties, foundations, institutes, or associations) that may be associated with a political agent's positions, business participations, or subsidy declarations.
+
+> The institution type must be selected from a predefined list of available types.
 
 **From the client clarifications:**
-* The type of an institution refers to the activity sector or nature of the organisation (e.g., civil construction, healthcare, finance), not the legal form such as company, political party, or foundation.
-* The institution type must be selected from a predefined list of available types.
+
+> **Question:** What are the valid organization types?
+>
+> **Answer:** The organization type must be selected from a predefined list: Company, Political Party, Foundation, Institute, or Association.
+
+> **Question:** Can two organizations have the same name?
+>
+> **Answer:** No. The system must not allow the registration of duplicate organizations (same name and same type).
 
 ### 1.3. Acceptance Criteria
 
-* **AC 1:** An institution must have a valid designation/name (cannot be null or empty).
-* **AC 2:** The system must not allow the registration of duplicate institutions.
-* **AC 3:** The type of the institution (e.g., Company, Political Party, Foundation) must be specified during registration.
+* **AC1:** An organization must have a valid name (cannot be null or empty).
+* **AC2:** The organization type must be selected from the predefined list: Company, Political Party, Foundation, Institute, or Association.
+* **AC3:** The system must not allow the registration of duplicate organizations (same name and same type).
 
 ### 1.4. Found out Dependencies
 
 * There are no strict functional dependencies for this US. It is a foundational setup task for the domain model.
 
-### 1.5 Input and Output Data
+### 1.5. Input and Output Data
 
 **Input Data:**
+
 * Typed data:
-    * Name
-    * Type of Institution
+    * name
+
+* Selected data:
+    * organization type (from predefined list: Company, Political Party, Foundation, Institute, Association)
 
 **Output Data:**
+
 * (In)Success of the operation
 
 ### 1.6. System Sequence Diagram (SSD)
@@ -43,6 +54,5 @@ As an Administrator, I want to register an Institution of a given type.
 
 ### 1.7. Other Relevant Remarks
 
-* The institution type refers to the activity sector or nature of the organisation (e.g., civil construction, healthcare, finance), not the legal form (e.g., company, political party, foundation).
-* Institutions registered through this US will be referenced by Political Agents when submitting Declarations of Interests (see US06), specifically in position entries, subsidy entries, and business participations.
-* This US is closely related to **US03**, which allows Political Agents to list all registered institutions grouped by type.
+* Organizations registered through this US will be referenced by Political Agents when submitting Declarations of Interests (see US06), specifically in position entries, subsidy entries, and business participations.
+* This US is closely related to **US03**, which allows Political Agents to list all registered organizations grouped by type.
