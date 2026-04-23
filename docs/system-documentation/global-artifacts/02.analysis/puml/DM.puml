@@ -67,11 +67,11 @@ class "Political Agent" as PoliticalAgent {
 }
 
 enum PoliticalFunction {
-    minister
-    deputy
-    councillor
-    parishCouncilPresident
-    mayor
+    MINISTER
+    DEPUTY
+    COUNCILLOR
+    PARISH_COUNCIL_PRESIDENT
+    MAYOR
 }
 
 class Function {
@@ -83,11 +83,11 @@ class Organization {
 }
 
 enum OrganizationType {
-    company
-    politicalParty
-    foundation
-    institute
-    association
+    COMPANY
+    POLITICAL_PARTY
+    FOUNDATION
+    INSTITUTE
+    ASSOCIATION
 }
 
 class "Declaration of Interests" as Declaration {
@@ -133,9 +133,9 @@ class AssetEntry {
 }
 
 enum AssetType {
-    realEstate
-    vehicles
-    stocks
+    REAL_ESTATE
+    VEHICLES
+    STOCKS
 }
 
 class "Real Estate" as RealEstate {
