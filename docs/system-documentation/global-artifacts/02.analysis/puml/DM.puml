@@ -84,7 +84,6 @@ class Institution {
 }
 
 class "Declaration of Interests" as Declaration {
-    id
     name
     submissionDate
 }
