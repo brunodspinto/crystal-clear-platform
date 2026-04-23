@@ -13,15 +13,21 @@ class Administrator {
 
 class Institution {
     - name
-    - type
+    - nature
+}
+
+class InstitutionType {
+    - designation
+}
+
+enum InstitutionNature {
+    PUBLIC
+    PRIVATE
+    SOCIAL
 }
 
 Administrator "1" -- "*" Institution : registers >
-
-note right of Institution
-  Type can be: company,
-  political party, foundation,
-  institute, or association.
-end note
+Institution "*" -- "1" InstitutionType : has >
+Institution "*" -- "1" InstitutionNature : classified as >
 
 @enduml

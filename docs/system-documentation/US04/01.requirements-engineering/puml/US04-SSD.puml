@@ -17,7 +17,12 @@ activate System
 System --> Admin : requests data (name, type)
 deactivate System
 
-Admin -> System : types requested data
+Admin -> System : types name and type
+activate System
+System --> Admin : requests nature (public, private, social)
+deactivate System
+
+Admin -> System : selects nature
 activate System
 System --> Admin : informs operation success
 deactivate System
