@@ -19,11 +19,11 @@ class Organization {
 }
 
 enum OrganizationType {
-    company
-    politicalParty
-    foundation
-    institute
-    association
+    COMPANY
+    POLITICAL_PARTY
+    FOUNDATION
+    INSTITUTE
+    ASSOCIATION
 }
 
 Administrator "1" -- "*" Organization : registers >

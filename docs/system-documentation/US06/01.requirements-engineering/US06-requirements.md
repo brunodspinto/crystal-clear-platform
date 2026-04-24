@@ -47,7 +47,7 @@ As a Political Agent, I want to submit a declaration of interests including inco
 * **AC3:** At least one position entry must be included in the declaration.
 * **AC4:** Gross salary, side income, and all asset category values (real estate, vehicles, stocks) must be non-negative numeric values.
 * **AC5:** The declaration must be associated with the authenticated Political Agent and the submission date is recorded automatically by the system at the moment of submission.
-* **AC6:** Upon successful submission, the declaration is placed in a `pending` state and is not yet publicly visible.
+* **AC6:** Upon successful submission, the declaration is placed in a `PENDING` state and is not yet publicly visible.
 
 ### 1.4. Found out Dependencies
 
@@ -92,6 +92,6 @@ As a Political Agent, I want to submit a declaration of interests including inco
 
 ### 1.7. Other Relevant Remarks
 
-* The submitted declaration is set to a `pending` state immediately after submission and remains invisible to the general public until validated by the Ethics Committee (see US08).
+* The submitted declaration is set to a `PENDING` state immediately after submission and remains invisible to the general public until validated by the Ethics Committee (see US08).
 * The system must record the submission date for audit and temporal analysis purposes (used by US10, US11, US13–US18).
 * Once validated, the data stored in declarations feeds the statistical analysis tools (US13–US18) and must be exportable to the declaration dataset (US24) and holdings dataset (US25) formats.

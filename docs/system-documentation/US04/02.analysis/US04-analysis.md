@@ -9,7 +9,7 @@ To fulfill this requirement, the core concept added to the domain model is `Orga
 An `Organization` represents a broad set of entity types (company, political party, foundation, institute, or association) that may be associated with political agents' positions, business participations, or subsidy entries. It captures two fundamental attributes:
 
 * **name:** A unique identifier for the organization within its type.
-* **type:** The legal form of the organization, represented as the `OrganizationType` enum with values `company`, `politicalParty`, `foundation`, `institute`, and `association`. The type is selected from a predefined list (AC2), ensuring only valid values are stored.
+* **type:** The legal form of the organization, represented as the `OrganizationType` enum with values `COMPANY`, `POLITICAL_PARTY`, `FOUNDATION`, `INSTITUTE`, and `ASSOCIATION`. The type is selected from a predefined list (AC2), ensuring only valid values are stored.
 
 Using an enum for `OrganizationType` rather than a free-text string prevents invalid entries, ensures consistent grouping in US03, and aligns with the predefined list defined in the specifications.
 

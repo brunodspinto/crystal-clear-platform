@@ -12,7 +12,7 @@ The key entities and their attributes are:
 
 * **Organization:**
     * **name:** The designation of the organization, used for alphabetical ordering within its group.
-    * **type:** The legal form of the organization, represented as the `OrganizationType` enum with values `company`, `politicalParty`, `foundation`, `institute`, and `association`. Used for grouping.
+    * **type:** The legal form of the organization, represented as the `OrganizationType` enum with values `COMPANY`, `POLITICAL_PARTY`, `FOUNDATION`, `INSTITUTE`, and `ASSOCIATION`. Used for grouping.
 
 * **PoliticalAgent:** The authenticated actor who triggers the listing operation.
 

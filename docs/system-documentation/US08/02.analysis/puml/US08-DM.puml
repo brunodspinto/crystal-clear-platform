@@ -28,15 +28,15 @@ class "Declaration of Interests" as Declaration {
 }
 
 enum DeclarationType {
-    initial
-    regular
-    exceptional
+    INITIAL
+    REGULAR
+    EXCEPTIONAL
 }
 
 enum DeclarationStatus {
-    pending
-    validated
-    rejected
+    PENDING
+    VALIDATED
+    REJECTED
 }
 
 class ValidationRecord {
@@ -44,8 +44,8 @@ class ValidationRecord {
 }
 
 enum ValidationOutcome {
-    validated
-    returnedForCorrection
+    VALIDATED
+    RETURNED_FOR_CORRECTION
 }
 
 class ValidationComment {

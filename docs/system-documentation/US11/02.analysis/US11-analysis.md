@@ -15,6 +15,6 @@ Access to this feature is available to both **Citizens** and **Journalists**, bu
 - **Citizens** — sensitive financial data (acquisition value and market value) is partially hidden.
 - **Journalists** — full asset details are displayed.
 
-The **type** of the declaration (initial, regular, or exceptional) is also relevant as context for when the asset was declared. Each Declaration of Interests has a **status** (pending, validated, or rejected). Only declarations with status `validated` up to the specified date are considered (per AC2). If no validated declarations exist, an appropriate message is shown (AC3).
+The **type** of the declaration (`INITIAL`, `REGULAR`, or `EXCEPTIONAL`) is also relevant as context for when the asset was declared. Each Declaration of Interests has a **status** (`PENDING`, `VALIDATED`, or `REJECTED`). Only declarations with status `VALIDATED` up to the specified date are considered (per AC2). If no validated declarations exist, an appropriate message is shown (AC3).
 
 This US depends on US06 (declaration submission) and US08 (declaration validation) being implemented, as there must be validated declarations for this feature to return meaningful results.
