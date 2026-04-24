@@ -14,18 +14,18 @@ actor "Ethics Committee" as Ethics
 actor "Journalist" as Journalist
 actor "Citizen" as Citizen
 
-usecase "US01 - Request Registration" as US01
-usecase "US02 - Accept/Reject Registration" as US02
-usecase "US03 - List Organizations" as US03
-usecase "US04 - Register Organizations" as US04
-usecase "US05 - Register Functions" as US05
-usecase "US06 - Submit Declaration" as US06
-usecase "US07 - Consult Own Declaration" as US07
-usecase "US08 - Validate Declaration" as US08
-usecase "US09 - Consult Integrated Situation" as US09
-usecase "US10 - Analyse Income Evolution" as US10
-usecase "US11 - Consult Assets" as US11
-usecase "US12 - Make a Complaint" as US12
+usecase "UC01 - Request Registration" as US01
+usecase "UC02 - Accept/Reject Registration" as US02
+usecase "UC03 - List Organizations" as US03
+usecase "UC04 - Register Organizations" as US04
+usecase "UC05 - Register Functions" as US05
+usecase "UC06 - Submit Declaration" as US06
+usecase "UC07 - Consult Own Declaration" as US07
+usecase "UC08 - Validate Declaration" as US08
+usecase "UC09 - Consult Integrated Situation" as US09
+usecase "UC10 - Analyse Income Evolution" as US10
+usecase "UC11 - Consult Assets" as US11
+usecase "UC12 - Make a Complaint" as US12
 
 FutureUser --> US01
 Admin --> US02
