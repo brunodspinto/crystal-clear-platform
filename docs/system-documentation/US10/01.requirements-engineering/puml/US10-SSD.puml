@@ -13,10 +13,16 @@ activate Journalist
     Journalist -> System : asks to analyse income evolution of a political agent
     activate System
 
-        System --> Journalist : requests agent name, start date and end date
+        System --> Journalist : requests agent name
     deactivate System
 
-    Journalist -> System : enters agent name, start date and end date
+    Journalist -> System : selects agent name
+    activate System
+
+        System --> Journalist : requests start date and end date
+    deactivate System
+
+    Journalist -> System : enters start date and end date
     activate System
 
         System --> Journalist : shows list of validated declarations\nwithin the specified period with income data
