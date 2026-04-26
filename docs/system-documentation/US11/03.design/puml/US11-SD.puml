@@ -1,0 +1,94 @@
+@startuml US11-SD
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Citizen / Journalist" as Actor
+participant ":ConsultAssetsUI" as UI
+participant ":ConsultAssetsController" as CTRL
+participant ":AuthenticationService" as AUTH
+participant ":PoliticalAgentRepository" as PAR
+participant ":DeclarationRepository" as DR
+participant "d:Declaration" as DEC
+
+activate Actor
+
+    Actor -> UI : asks to consult assets of a political agent
+    activate UI
+
+        UI -> CTRL : getPoliticalAgents()
+        activate CTRL
+
+            CTRL -> PAR : getPoliticalAgents()
+            activate PAR
+                PAR --> CTRL : agents
+            deactivate PAR
+
+            CTRL --> UI : agents
+        deactivate CTRL
+
+        UI --> Actor : shows agent list, requests selection
+    deactivate UI
+
+    Actor -> UI : selects agent (AC1)
+    activate UI
+
+        UI --> Actor : requests reference date
+    deactivate UI
+
+    Actor -> UI : enters reference date
+    activate UI
+
+        UI -> CTRL : getAssets(agent, referenceDate)
+        activate CTRL
+
+            CTRL -> AUTH : getCurrentUserRole()
+            activate AUTH
+                AUTH --> CTRL : role
+            deactivate AUTH
+
+            CTRL -> DR : getValidatedDeclarationsUpTo(agent, referenceDate)
+            activate DR
+
+                note right of DR
+                    AC2: only declarations with
+                    status = VALIDATED and
+                    submissionDate <= referenceDate
+                end note
+
+                DR --> CTRL : declarations
+            deactivate DR
+
+            alt declarations is empty (AC3)
+                CTRL --> UI : empty list
+            else
+                loop for each d in declarations
+                    CTRL -> DEC : getAssets()
+                    activate DEC
+                        DEC --> CTRL : assets
+                    deactivate DEC
+                end
+
+                note right of CTRL
+                    AC4: if role = Citizen, mask
+                    acquisitionValue and marketValue
+                end note
+
+                CTRL --> UI : assets (masked if Citizen)
+            end
+
+        deactivate CTRL
+
+        alt assets is empty (AC3)
+            UI --> Actor : shows "no validated declarations up to that date"
+        else
+            UI --> Actor : shows assets (masked if Citizen)
+        end
+
+    deactivate UI
+
+deactivate Actor
+
+@enduml
