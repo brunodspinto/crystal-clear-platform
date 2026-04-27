@@ -37,12 +37,38 @@ Other software classes (i.e. Pure Fabrication) identified:
 
 ## 3.2. Sequence Diagram (SD)
 
-_In this section, it is suggested to present an UML dynamic view representing the sequence of interactions between software objects that allows to fulfill the requirements._
+### Full Diagram
 
-![US10-SD](svg/US10-SD.svg)
+This diagram shows the full sequence of interactions between the classes involved in the realization of this user story.
+
+![Sequence Diagram - Full](svg/US10-SD-full.svg)
+
+### Split Diagrams
+
+The following diagram shows the same sequence of interactions between the classes involved in the realization of this user story, but it is split in partial diagrams to better illustrate the interactions between the classes.
+
+It uses Interaction Occurrence (a.k.a. Interaction Use).
+
+![Sequence Diagram - split](svg/US10-SD-split.svg)
+
+**Get Political Agents Partial SD**
+
+![Sequence Diagram - Partial - Get Political Agents](svg/US10-SD-partial-get-political-agents.svg)
+
+**Validate Period Partial SD**
+
+![Sequence Diagram - Partial - Validate Period](svg/US10-SD-partial-validate-period.svg)
+
+**Get Validated Declarations Partial SD**
+
+![Sequence Diagram - Partial - Get Validated Declarations](svg/US10-SD-partial-get-validated-declarations.svg)
+
+**Collect Income Data Partial SD**
+
+![Sequence Diagram - Partial - Collect Income Data](svg/US10-SD-partial-collect-income-data.svg)
 
 ## 3.3. Class Diagram (CD)
 
 _In this section, it is suggested to present an UML static view representing the main related software classes that are involved in fulfilling the requirements as well as their relations, attributes and methods._
 
-![US10-CD](svg/US10-CD.svg)
+![Class Diagram](svg/US10-CD.svg)
