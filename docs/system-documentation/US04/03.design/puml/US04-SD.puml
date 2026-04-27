@@ -1,0 +1,69 @@
+@startuml US04-SD
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Administrator" as Admin
+participant ":RegisterOrganizationUI" as UI
+participant ":RegisterOrganizationController" as CTRL
+participant ":OrganizationRepository" as REPO
+participant "org:Organization" as ORG
+
+activate Admin
+
+    Admin -> UI : asks to register a new organization
+    activate UI
+
+        UI -> CTRL : getOrganizationTypes()
+        activate CTRL
+            CTRL --> UI : organizationTypeList
+        deactivate CTRL
+
+        UI --> Admin : shows organization type list\nand requests selection
+    deactivate UI
+
+    Admin -> UI : selects organization type
+    activate UI
+        UI --> Admin : requests organization name and nature
+    deactivate UI
+
+    Admin -> UI : types organization name and nature
+    activate UI
+        UI --> Admin : shows data and requests confirmation
+    deactivate UI
+
+    Admin -> UI : confirms
+    activate UI
+
+        UI -> CTRL : registerOrganization(name, nature, type)
+        activate CTRL
+
+            note right of CTRL
+                AC3: guard — no organization
+                with same name and type
+                may already exist
+            end note
+
+            CTRL -> REPO : existsByNameAndType(name, type)
+            activate REPO
+                REPO --> CTRL : false
+            deactivate REPO
+
+            CTRL -> ORG ** : create(name, nature, type)
+
+            CTRL -> REPO : save(org)
+            activate REPO
+                REPO --> CTRL : ok
+            deactivate REPO
+
+            CTRL --> UI : success
+        deactivate CTRL
+
+        UI --> Admin : displays operation success
+    deactivate UI
+
+deactivate Admin
+
+@enduml
