@@ -22,25 +22,29 @@ activate Member
         System --> Member : displays full declaration content\n(positions, subsidies, assets, business participations)
     deactivate System
 
-    Member -> System : indicates outcome\n(validated or rejected with comments)
+    Member -> System : indicates outcome\n(validated or rejected)
     activate System
 
         alt declaration is correct
             System --> Member : requests confirmation of validation
         else declaration has inconsistencies
-            System --> Member : requests section(s) and comment(s)\ndescribing each inconsistency
+            System --> Member : requests confirmation of rejection
         end
     deactivate System
 
-    Member -> System : confirms outcome\n(or provides section comments if rejecting)
+    Member -> System : confirms outcome
     activate System
-
-        alt validated
-            System --> Member : displays operation success;\ndeclaration status set to "validated"
-        else rejected
-            System --> Member : displays operation success;\ndeclaration status set to "rejected";\nreturned to Political Agent for correction
-        end
+        System --> Member : displays operation success;\ndeclaration status set to outcome
     deactivate System
+
+    opt outcome is rejected
+        loop for each inconsistent section
+            Member -> System : provides section and comment\ndescribing the inconsistency
+            activate System
+                System --> Member : acknowledges comment;\nasks if there are more sections to comment
+            deactivate System
+        end
+    end
 
 deactivate Member
 
