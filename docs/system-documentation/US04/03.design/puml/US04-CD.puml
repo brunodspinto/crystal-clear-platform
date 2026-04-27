@@ -33,12 +33,6 @@ enum OrganizationType {
     ASSOCIATION
 }
 
-note right of RegisterOrganizationController
-    AC3: guard — no organization
-    with same name and type
-    may already exist
-end note
-
 RegisterOrganizationUI .> RegisterOrganizationController
 
 RegisterOrganizationController ..> OrganizationRepository

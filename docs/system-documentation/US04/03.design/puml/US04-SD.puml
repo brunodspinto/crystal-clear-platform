@@ -40,28 +40,30 @@ activate Admin
         UI -> CTRL : registerOrganization(name, nature, type)
         activate CTRL
 
-            note right of CTRL
-                AC3: guard — no organization
-                with same name and type
-                may already exist
-            end note
-
             CTRL -> REPO : existsByNameAndType(name, type)
             activate REPO
-                REPO --> CTRL : false
+                REPO --> CTRL : result
             deactivate REPO
 
-            CTRL -> ORG ** : create(name, nature, type)
+            alt result = false (no duplicate)
 
-            CTRL -> REPO : save(org)
-            activate REPO
-                REPO --> CTRL : ok
-            deactivate REPO
+                CTRL -> ORG ** : create(name, nature, type)
 
-            CTRL --> UI : success
+                CTRL -> REPO : save(org)
+                activate REPO
+                    REPO --> CTRL : saved
+                deactivate REPO
+
+                CTRL --> UI : success
+
+            else result = true (duplicate exists)
+
+                CTRL --> UI : failure
+
+            end
         deactivate CTRL
 
-        UI --> Admin : displays operation success
+        UI --> Admin : displays operation (in)success
     deactivate UI
 
 deactivate Admin
