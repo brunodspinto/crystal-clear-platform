@@ -1,0 +1,93 @@
+@startuml US10-CD
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+class AnalyseIncomeEvolutionUI {
+}
+
+class AnalyseIncomeEvolutionController {
+    + AnalyseIncomeEvolutionController()
+    + getPoliticalAgents()
+    + getIncomeEvolution(agent, startDate, endDate)
+    - validatePeriod(startDate, endDate)
+}
+
+class PoliticalAgentRepository {
+    + getPoliticalAgents()
+}
+
+class DeclarationRepository {
+    + getValidatedDeclarations(agent, startDate, endDate)
+}
+
+class PoliticalAgent {
+    - name
+    - nationalIdentityCard
+    - taxIdentificationNumber
+}
+
+class "Declaration of Interests" as Declaration {
+    - id
+    - submissionDate
+    - status
+    - type
+    + getIncomes()
+    + getType()
+    + isValidatedIn(startDate, endDate)
+}
+
+enum DeclarationStatus {
+    PENDING
+    VALIDATED
+    REJECTED
+}
+
+enum Type {
+    INITIAL
+    REGULAR
+    EXCEPTIONAL
+}
+
+class Income {
+    - amount
+    - source
+    - institution
+    - date
+}
+
+AnalyseIncomeEvolutionUI .> AnalyseIncomeEvolutionController
+
+AnalyseIncomeEvolutionController ..> PoliticalAgentRepository
+AnalyseIncomeEvolutionController ..> DeclarationRepository
+AnalyseIncomeEvolutionController ..> PoliticalAgent
+AnalyseIncomeEvolutionController ..> Declaration
+AnalyseIncomeEvolutionController ..> Income
+
+PoliticalAgentRepository --> "*" PoliticalAgent : agents
+DeclarationRepository --> "*" Declaration : declarations
+
+PoliticalAgent "1" -- "*" Declaration : submits >
+Declaration "*" -- "1" DeclarationStatus : has >
+Declaration "*" -- "1" Type : has >
+Declaration "1" *-- "*" Income : includes >
+
+note right of AnalyseIncomeEvolutionController
+    AC2: validates that
+    startDate <= endDate
+end note
+
+note bottom of DeclarationRepository
+    AC3: returns only declarations
+    with status = VALIDATED in [start, end]
+    AC4: ordered by submissionDate
+end note
+
+note bottom of Declaration
+    isValidatedIn(start, end):
+    status == VALIDATED &&
+    submissionDate in [start, end]
+end note
+
+@enduml

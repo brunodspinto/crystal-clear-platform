@@ -1,0 +1,77 @@
+@startuml US10-SD-split
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Journalist" as Journalist
+participant ":AnalyseIncomeEvolutionUI" as UI
+participant ":AnalyseIncomeEvolutionController" as CTRL
+
+activate Journalist
+
+    Journalist -> UI : asks to analyse income evolution
+    activate UI
+
+        UI --> CTRL** : create()
+        UI -> CTRL : getPoliticalAgents()
+        ref over CTRL
+            Get Political Agents
+        end ref
+
+        activate CTRL
+            CTRL --> UI : agents
+        deactivate CTRL
+
+        UI --> Journalist : shows agent list, requests selection
+    deactivate UI
+
+    Journalist -> UI : selects agent (AC1)
+    activate UI
+        UI --> Journalist : requests start date and end date
+    deactivate UI
+
+    Journalist -> UI : enters start date and end date
+    activate UI
+
+        UI -> CTRL : getIncomeEvolution(agent, startDate, endDate)
+        activate CTRL
+
+            CTRL -> CTRL : validatePeriod(startDate, endDate)
+            activate CTRL
+                ref over CTRL
+                    Validate Period
+                end ref
+                CTRL --> CTRL : ok
+            deactivate CTRL
+
+            CTRL -> CTRL : getValidatedDeclarations(agent, startDate, endDate)
+            activate CTRL
+                ref over CTRL
+                    Get Validated Declarations
+                end ref
+                CTRL --> CTRL : declarations
+            deactivate CTRL
+
+            CTRL -> CTRL : collectIncomeData(declarations)
+            activate CTRL
+                ref over CTRL
+                    Collect Income Data
+                end ref
+                CTRL --> CTRL : declarationsWithIncome
+            deactivate CTRL
+
+            CTRL --> UI : declarations with income data
+        deactivate CTRL
+
+        alt declarations is empty (AC5)
+            UI --> Journalist : shows "no validated declarations in period"
+        else
+            UI --> Journalist : shows declarations with income evolution
+        end
+
+    deactivate UI
+
+deactivate Journalist
+@enduml

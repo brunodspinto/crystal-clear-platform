@@ -1,0 +1,34 @@
+@startuml US10-SD-partial-get-validated-declarations
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+participant ":AnalyseIncomeEvolutionController" as CTRL
+participant ":DeclarationRepository" as DR
+
+autonumber 9
+ -> CTRL : getValidatedDeclarations(agent, startDate, endDate)
+autonumber 9.1
+activate CTRL
+    group Get Validated Declarations
+
+        CTRL -> DR : getValidatedDeclarations(agent, startDate, endDate)
+        activate DR
+
+            note right of DR
+                AC3: only declarations with
+                status = VALIDATED in [start, end]
+                AC4: ordered by submissionDate
+            end note
+
+            DR --> CTRL : declarations
+        deactivate DR
+
+    end
+    autonumber 10
+    <-- CTRL : declarations
+deactivate CTRL
+
+@enduml
