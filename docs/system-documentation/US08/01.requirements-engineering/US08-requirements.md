@@ -27,7 +27,7 @@ As a member of the Ethics Committee, I want to validate a submitted Declaration 
 ### 1.3. Acceptance Criteria
 
 * **AC1:** When the declaration is found to be correct and complete, the Ethics Committee member must mark it as **validated**; the declaration status transitions to `VALIDATED` and becomes visible according to role-based access rules.
-* **AC2:** When the declaration contains inconsistencies or errors, the Ethics Committee member must add a comment identifying the specific **section** and **item** with the issue before rejecting it; the declaration status transitions to `REJECTED` and is returned to the Political Agent for correction.
+* **AC2:** When the declaration contains inconsistencies or errors, the Ethics Committee member must add at least one comment, each identifying a specific **section** and describing the inconsistency found; multiple sections may be commented independently. The declaration status transitions to `REJECTED` and is returned to the Political Agent for correction.
 * **AC3:** It must not be possible to validate or reject a declaration that is not in `PENDING` status.
 * **AC4:** The identity of the Ethics Committee member performing the validation and the date of the action must be automatically recorded by the system.
 
@@ -44,9 +44,9 @@ As a member of the Ethics Committee, I want to validate a submitted Declaration 
     * declaration to validate (from the list of pending declarations)
     * validation outcome (validated / rejected with comments)
 
-* Typed data (only when rejecting):
-    * section(s) containing inconsistencies
-    * comment(s) per section describing the nature of each inconsistency
+* Typed data (only when rejecting, one or more times):
+    * section containing the inconsistency
+    * comment describing the nature of the inconsistency in that section
 
 **Output Data:**
 

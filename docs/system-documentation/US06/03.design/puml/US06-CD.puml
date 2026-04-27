@@ -1,0 +1,161 @@
+@startuml US06-CD
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+class SubmitDeclarationUI {
+}
+
+class SubmitDeclarationController {
+    + SubmitDeclarationController()
+    + getDeclarationTypes()
+    + getOrganizations()
+    + getFunctions()
+    + submitDeclaration(type, positionEntries, subsidyEntries, assetEntries, holdingsEntries, attachments)
+    - getCurrentPoliticalAgent()
+}
+
+class AuthenticationService {
+    + getCurrentPoliticalAgent()
+}
+
+class OrganizationRepository {
+    + getOrganizations()
+}
+
+class FunctionRepository {
+    + getFunctions()
+}
+
+class DeclarationRepository {
+    + save(declaration : Declaration)
+}
+
+class PoliticalAgent {
+    - name : String
+    - email : String
+    - nationalIdentityCard : String
+    - taxIdentificationNumber : String
+    - mandateStart : Date
+    - mandateEnd : Date
+}
+
+class Declaration {
+    - submissionDate : Date
+    + Declaration(type : DeclarationType, agent : PoliticalAgent, submissionDate : Date, status : DeclarationStatus)
+    + addPositionEntry(organization : Organization, function : Function, nature : String, grossSalary : double, sideIncome : double, startDate : Date, endDate : Date)
+    + addSubsidyEntry(organization : Organization, amount : double, description : String, date : Date)
+    + addAssetEntry(assetType : AssetType, assetValue : double, detail : Object)
+    + addBusinessParticipation(organization : Organization, companyNIF : long, totalValueInStocks : double, companyPercentage : double)
+    + addAttachment(fileName : String, uploadDate : Date)
+}
+
+class PositionEntry {
+    - nature : String
+    - grossSalary : double
+    - sideIncome : double
+    - startDate : Date
+    - endDate : Date
+}
+
+class SubsidyEntry {
+    - amount : double
+    - description : String
+    - date : Date
+}
+
+class AssetEntry {
+    - assetValue : double
+    + AssetEntry(assetType : AssetType, assetValue : double, detail : Object)
+}
+
+class RealEstate {
+    - description : String
+    - municipality : String
+}
+
+class VehicleAsset {
+    - description : String
+}
+
+class StockAsset {
+    - description : String
+}
+
+class BusinessParticipation {
+    - companyNIF : long
+    - totalValueInStocks : double
+    - companyPercentage : double
+}
+
+class Organization {
+    - name : String
+}
+
+class Function {
+    - designation : String
+}
+
+class Attachment {
+    - fileName : String
+    - uploadDate : Date
+}
+
+enum DeclarationType {
+    INITIAL
+    REGULAR
+    EXCEPTIONAL
+}
+
+enum DeclarationStatus {
+    PENDING
+    VALIDATED
+    REJECTED
+}
+
+enum AssetType {
+    REAL_ESTATE
+    VEHICLES
+    STOCKS
+}
+
+note right of SubmitDeclarationController
+    type is retrieved
+    from selected data
+end note
+
+SubmitDeclarationUI .> SubmitDeclarationController
+
+SubmitDeclarationController ..> AuthenticationService
+SubmitDeclarationController ..> OrganizationRepository
+SubmitDeclarationController ..> FunctionRepository
+SubmitDeclarationController ..> DeclarationRepository
+SubmitDeclarationController ..> Declaration
+
+OrganizationRepository --> "*" Organization : organizations
+FunctionRepository --> "*" Function : functions
+
+Declaration --> "1" PoliticalAgent : agent
+Declaration --> "1" DeclarationType : type
+Declaration --> "1" DeclarationStatus : status
+Declaration --> "1..*" PositionEntry : positionEntries
+Declaration --> "*" SubsidyEntry : subsidyEntries
+Declaration --> "*" AssetEntry : assetEntries
+Declaration --> "*" BusinessParticipation : businessParticipations
+Declaration --> "*" Attachment : attachments
+
+PositionEntry --> "1" Organization : organization
+PositionEntry --> "1" Function : function
+
+SubsidyEntry --> "1" Organization : organization
+
+AssetEntry --> "1" AssetType : assetType
+AssetEntry --> "0..1" RealEstate : realEstate
+AssetEntry --> "0..1" VehicleAsset : vehicleAsset
+AssetEntry --> "0..1" StockAsset : stockAsset
+
+BusinessParticipation --> "1" Organization : organization
+
+@enduml

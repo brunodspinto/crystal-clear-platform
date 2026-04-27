@@ -1,0 +1,86 @@
+@startuml US08-CD
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+class ValidateDeclarationUI {
+}
+
+class ValidateDeclarationController {
+    + ValidateDeclarationController()
+    + getPendingDeclarations()
+    + getDeclarationDetails(declaration : Declaration)
+    + processValidation(declaration : Declaration, outcome : ValidationOutcome, comments : List)
+    - getCurrentEthicsCommitteeMember()
+}
+
+class AuthenticationService {
+    + getCurrentEthicsCommitteeMember()
+}
+
+class DeclarationRepository {
+    + getDeclarationsByStatus(status : DeclarationStatus)
+    + save(declaration : Declaration)
+}
+
+class ValidationRecordRepository {
+    + save(record : ValidationRecord)
+}
+
+class Declaration {
+    - submissionDate : Date
+    + getDetails()
+    + setStatus(outcome : ValidationOutcome)
+}
+
+class EthicsCommitteeMember {
+    - name : String
+    - email : String
+}
+
+class ValidationRecord {
+    - validationDate : Date
+    + ValidationRecord(member : EthicsCommitteeMember, declaration : Declaration, validationDate : Date, outcome : ValidationOutcome)
+    + addComment(section : String, comment : String)
+}
+
+class ValidationComment {
+    - section : String
+    - comment : String
+}
+
+enum DeclarationStatus {
+    PENDING
+    VALIDATED
+    REJECTED
+}
+
+enum ValidationOutcome {
+    VALIDATED
+    RETURNED_FOR_CORRECTION
+}
+
+note right of ValidateDeclarationController
+    AC3: guard — declaration
+    must be PENDING before
+    processing validation
+end note
+
+ValidateDeclarationUI .> ValidateDeclarationController
+
+ValidateDeclarationController ..> AuthenticationService
+ValidateDeclarationController ..> DeclarationRepository
+ValidateDeclarationController ..> ValidationRecordRepository
+ValidateDeclarationController ..> Declaration
+ValidateDeclarationController ..> ValidationRecord
+
+Declaration --> "1" DeclarationStatus : status
+
+ValidationRecord --> "1" EthicsCommitteeMember : member
+ValidationRecord --> "1" Declaration : declaration
+ValidationRecord --> "1" ValidationOutcome : outcome
+ValidationRecord --> "*" ValidationComment : comments
+
+@enduml
