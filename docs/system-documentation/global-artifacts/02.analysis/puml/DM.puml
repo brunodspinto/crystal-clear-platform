@@ -80,6 +80,7 @@ class Function {
 
 class Organization {
     name
+    nature
 }
 
 enum OrganizationType {

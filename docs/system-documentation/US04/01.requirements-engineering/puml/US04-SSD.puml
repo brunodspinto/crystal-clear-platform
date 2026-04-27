@@ -19,10 +19,10 @@ deactivate System
 
 Admin -> System : selects organization type
 activate System
-System --> Admin : requests organization name
+System --> Admin : requests organization name and nature
 deactivate System
 
-Admin -> System : types organization name
+Admin -> System : types organization name and nature
 activate System
 System --> Admin : shows data and requests confirmation
 deactivate System
