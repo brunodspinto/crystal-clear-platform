@@ -10,12 +10,11 @@ hide methods
 title Domain Model Excerpt - US04
 
 class Administrator {
-    name
-    email
 }
 
 class Organization {
     name
+    nature
 }
 
 enum OrganizationType {

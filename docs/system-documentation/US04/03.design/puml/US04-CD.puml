@@ -1,0 +1,51 @@
+@startuml US04-CD
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+class RegisterOrganizationUI {
+}
+
+class RegisterOrganizationController {
+    + RegisterOrganizationController()
+    + getOrganizationTypes() : List<OrganizationType>
+    + registerOrganization(name : String, nature : String, type : OrganizationType) : boolean
+}
+
+class OrganizationRepository {
+    + save(organization : Organization)
+    + existsByNameAndType(name : String, type : OrganizationType) : boolean
+}
+
+class Organization {
+    - name : String
+    - nature : String
+    + Organization(name : String, nature : String, type : OrganizationType)
+}
+
+enum OrganizationType {
+    COMPANY
+    POLITICAL_PARTY
+    FOUNDATION
+    INSTITUTE
+    ASSOCIATION
+}
+
+note right of RegisterOrganizationController
+    AC3: guard — no organization
+    with same name and type
+    may already exist
+end note
+
+RegisterOrganizationUI .> RegisterOrganizationController
+
+RegisterOrganizationController ..> OrganizationRepository
+RegisterOrganizationController ..> Organization
+
+OrganizationRepository --> "*" Organization : organizations
+
+Organization --> "1" OrganizationType : type
+
+@enduml
