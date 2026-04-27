@@ -1,0 +1,40 @@
+@startuml US11-SD-partial-collect-assets
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+participant ":ConsultAssetsController" as CTRL
+participant "d:Declaration" as DEC
+
+autonumber 11
+ -> CTRL : collectAssets(declarations, role)
+autonumber 11.1
+activate CTRL
+    group Collect Assets
+
+        alt declarations is empty (AC3)
+            CTRL --> CTRL : empty list
+        else
+            loop for each d in declarations
+                CTRL -> DEC : getAssets()
+                activate DEC
+                    DEC --> CTRL : assets
+                deactivate DEC
+            end
+
+            note right of CTRL
+                AC4: if role = Citizen, mask
+                acquisitionValue and marketValue
+            end note
+
+            CTRL --> CTRL : assets (masked if Citizen)
+        end
+
+    end
+    autonumber 12
+    <-- CTRL : assets
+deactivate CTRL
+
+@enduml

@@ -39,9 +39,35 @@ Other software classes (i.e. Pure Fabrication) identified:
 
 ## 3.2. Sequence Diagram (SD)
 
-_In this section, it is suggested to present an UML dynamic view representing the sequence of interactions between software objects that allows to fulfill the requirements._
+### Full Diagram
 
-![US11-SD](svg/US11-SD.svg)
+This diagram shows the full sequence of interactions between the classes involved in the realization of this user story.
+
+![Sequence Diagram - Full](svg/US11-SD-full.svg)
+
+### Split Diagrams
+
+The following diagram shows the same sequence of interactions between the classes involved in the realization of this user story, but it is split in partial diagrams to better illustrate the interactions between the classes.
+
+It uses Interaction Occurrence (a.k.a. Interaction Use).
+
+![Sequence Diagram - split](svg/US11-SD-split.svg)
+
+**Get Political Agents Partial SD**
+
+![Sequence Diagram - Partial - Get Political Agents](svg/US11-SD-partial-get-political-agents.svg)
+
+**Get Current User Role Partial SD**
+
+![Sequence Diagram - Partial - Get Current User Role](svg/US11-SD-partial-get-current-user-role.svg)
+
+**Get Validated Declarations Up To Date Partial SD**
+
+![Sequence Diagram - Partial - Get Validated Declarations Up To Date](svg/US11-SD-partial-get-validated-declarations-up-to.svg)
+
+**Collect Assets Partial SD**
+
+![Sequence Diagram - Partial - Collect Assets](svg/US11-SD-partial-collect-assets.svg)
 
 ## 3.3. Class Diagram (CD)
 

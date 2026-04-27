@@ -1,0 +1,33 @@
+@startuml US11-SD-partial-get-current-user-role
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+participant ":ConsultAssetsController" as CTRL
+participant ":AuthenticationService" as AUTH
+
+autonumber 7
+ -> CTRL : getCurrentUserRole()
+autonumber 7.1
+activate CTRL
+    group Get Current User Role
+
+        note right of CTRL
+            AC4: role decides whether
+            sensitive financial data is
+            masked (Citizen) or not (Journalist)
+        end note
+
+        CTRL -> AUTH : getCurrentUserRole()
+        activate AUTH
+            AUTH --> CTRL : role
+        deactivate AUTH
+
+    end
+    autonumber 8
+    <-- CTRL : role
+deactivate CTRL
+
+@enduml

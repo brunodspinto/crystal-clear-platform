@@ -1,0 +1,78 @@
+@startuml US11-SD-split
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Citizen / Journalist" as Actor
+participant ":ConsultAssetsUI" as UI
+participant ":ConsultAssetsController" as CTRL
+
+activate Actor
+
+    Actor -> UI : asks to consult assets of a political agent
+    activate UI
+
+        UI --> CTRL** : create()
+        UI -> CTRL : getPoliticalAgents()
+        ref over CTRL
+            Get Political Agents
+        end ref
+
+        activate CTRL
+            CTRL --> UI : agents
+        deactivate CTRL
+
+        UI --> Actor : shows agent list, requests selection
+    deactivate UI
+
+    Actor -> UI : selects agent (AC1)
+    activate UI
+        UI --> Actor : requests reference date
+    deactivate UI
+
+    Actor -> UI : enters reference date
+    activate UI
+
+        UI -> CTRL : getAssets(agent, referenceDate)
+        activate CTRL
+
+            CTRL -> CTRL : getCurrentUserRole()
+            activate CTRL
+                ref over CTRL
+                    Get Current User Role
+                end ref
+                CTRL --> CTRL : role
+            deactivate CTRL
+
+            CTRL -> CTRL : getValidatedDeclarationsUpTo(agent, referenceDate)
+            activate CTRL
+                ref over CTRL
+                    Get Validated Declarations Up To Date
+                end ref
+                CTRL --> CTRL : declarations
+            deactivate CTRL
+
+            CTRL -> CTRL : collectAssets(declarations, role)
+            activate CTRL
+                ref over CTRL
+                    Collect Assets
+                end ref
+                CTRL --> CTRL : assets
+            deactivate CTRL
+
+            CTRL --> UI : assets (masked if Citizen)
+        deactivate CTRL
+
+        alt assets is empty (AC3)
+            UI --> Actor : shows "no validated declarations up to that date"
+        else
+            UI --> Actor : shows assets (masked if Citizen)
+        end
+
+    deactivate UI
+
+deactivate Actor
+
+@enduml
