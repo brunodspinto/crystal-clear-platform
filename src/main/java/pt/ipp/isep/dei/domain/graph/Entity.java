@@ -1,7 +1,5 @@
 package pt.ipp.isep.dei.domain.graph;
 
-import java.util.Objects;
-
 public abstract class Entity {
 
     private final String id;
@@ -50,8 +48,4 @@ public abstract class Entity {
         return id.equals(entity.id);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

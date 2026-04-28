@@ -2,7 +2,6 @@ package pt.ipp.isep.dei.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -252,11 +251,6 @@ public class Organization {
         }
         Organization that = (Organization) o;
         return vatNumber.equals(that.vatNumber);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(vatNumber);
     }
 
     /**
