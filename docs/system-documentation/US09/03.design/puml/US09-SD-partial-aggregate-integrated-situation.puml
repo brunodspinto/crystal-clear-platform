@@ -1,0 +1,49 @@
+@startuml US09-SD-partial-aggregate-integrated-situation
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+participant ":ConsultIntegratedSituationController" as CTRL
+participant "d:Declaration" as DEC
+
+autonumber 9
+ -> CTRL : aggregateIntegratedSituation(declarations)
+autonumber 9.1
+activate CTRL
+    group Aggregate Integrated Situation
+
+        alt declarations is empty (AC3)
+            CTRL --> CTRL : empty situation
+        else
+            loop for each d in declarations
+                CTRL -> DEC : getPosition()
+                activate DEC
+                    DEC --> CTRL : position
+                deactivate DEC
+
+                CTRL -> DEC : getIncomes()
+                activate DEC
+                    DEC --> CTRL : incomes
+                deactivate DEC
+
+                CTRL -> DEC : getAssets()
+                activate DEC
+                    DEC --> CTRL : assets
+                deactivate DEC
+
+                CTRL -> DEC : getBusinessParticipations()
+                activate DEC
+                    DEC --> CTRL : participations
+                deactivate DEC
+            end
+            CTRL --> CTRL : situation
+        end
+
+    end
+    autonumber 10
+    <-- CTRL : situation
+deactivate CTRL
+
+@enduml

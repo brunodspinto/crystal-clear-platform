@@ -1,0 +1,118 @@
+@startuml US09-CD
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+class ConsultIntegratedSituationUI {
+}
+
+class ConsultIntegratedSituationController {
+    + ConsultIntegratedSituationController()
+    + getPoliticalAgents()
+    + getIntegratedSituation(agent, referenceDate)
+}
+
+class PoliticalAgentRepository {
+    + getPoliticalAgents()
+}
+
+class DeclarationRepository {
+    + getValidatedDeclarationsUpTo(agent, referenceDate)
+}
+
+class PoliticalAgent {
+    - name
+    - nationalIdentityCard
+    - taxIdentificationNumber
+}
+
+class "Declaration of Interests" as Declaration {
+    - id
+    - submissionDate
+    - status
+    - type
+    + getPosition()
+    + getIncomes()
+    + getAssets()
+    + getBusinessParticipations()
+    + isValidatedOn(date)
+}
+
+enum DeclarationStatus {
+    PENDING
+    VALIDATED
+    REJECTED
+}
+
+enum Type {
+    INITIAL
+    REGULAR
+    EXCEPTIONAL
+}
+
+class PositionEntry {
+    - politicalFunction
+    - mandateStart
+    - mandateEnd
+}
+
+class Income {
+    - amount
+    - source
+    - institution
+    - date
+}
+
+class Asset {
+    - acquisitionValue
+    - marketValue
+}
+
+class RealEstate {
+    - description
+    - municipality
+}
+
+class BusinessParticipation {
+    - companyName
+    - sharePercentage
+    - role
+}
+
+ConsultIntegratedSituationUI .> ConsultIntegratedSituationController
+
+ConsultIntegratedSituationController ..> PoliticalAgentRepository
+ConsultIntegratedSituationController ..> DeclarationRepository
+ConsultIntegratedSituationController ..> PoliticalAgent
+ConsultIntegratedSituationController ..> Declaration
+ConsultIntegratedSituationController ..> PositionEntry
+ConsultIntegratedSituationController ..> Income
+ConsultIntegratedSituationController ..> Asset
+ConsultIntegratedSituationController ..> BusinessParticipation
+
+PoliticalAgentRepository --> "*" PoliticalAgent : agents
+DeclarationRepository --> "*" Declaration : declarations
+
+PoliticalAgent "1" -- "*" Declaration : submits >
+Declaration "*" -- "1" DeclarationStatus : has >
+Declaration "*" -- "1" Type : has >
+Declaration "1" *-- "1" PositionEntry : holds >
+Declaration "1" *-- "*" Income : includes >
+Declaration "1" *-- "*" Asset : declares >
+Declaration "1" *-- "*" BusinessParticipation : declares >
+Asset <|-- RealEstate
+
+note bottom of DeclarationRepository
+    AC2: returns only declarations with
+    status = VALIDATED and
+    submissionDate <= referenceDate
+end note
+
+note bottom of Declaration
+    isValidatedOn(date):
+    status == VALIDATED &&
+    submissionDate <= date
+end note
+
+@enduml
