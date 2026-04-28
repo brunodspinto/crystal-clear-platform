@@ -1,7 +1,5 @@
 package pt.ipp.isep.dei.domain;
 
-import java.util.Objects;
-
 /**
  * Represents a citizen who can submit complaints about political agents.
  */

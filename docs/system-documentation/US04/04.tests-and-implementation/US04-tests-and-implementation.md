@@ -31,9 +31,9 @@
     @Test
     void ensureSaveDuplicateOrganizationFails() {
         OrganizationRepository repo = new OrganizationRepository();
-        Organization org = new Organization("ACME Corp", "A corporation", OrganizationType.COMPANY);
+        Organization org = new Organization("ACME Corp", "private", OrganizationType.COMPANY);
         repo.save(org);
-        Organization dup = new Organization("ACME Corp", "Different nature", OrganizationType.COMPANY);
+        Organization dup = new Organization("ACME Corp", "public", OrganizationType.COMPANY);
         assertFalse(repo.save(dup));
     }
 

@@ -101,14 +101,21 @@ public class Organization {
         this.nature = nature;
     }
 
+    /** @return the VAT number of the organization. */
     public String getVatNumber() {
         return vatNumber;
     }
 
+    /** @return the name of the organization. */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name of the organization.
+     *
+     * @param name the new name; cannot be null or blank.
+     */
     public void setName(String name) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Name cannot be null or empty");
@@ -116,34 +123,62 @@ public class Organization {
         this.name = name;
     }
 
+    /** @return the website URL of the organization, or {@code null} if not set. */
     public String getWebsite() {
         return website;
     }
 
+    /**
+     * Sets the website URL of the organization.
+     *
+     * @param website the website URL.
+     */
     public void setWebsite(String website) {
         this.website = website;
     }
 
+    /** @return the phone number of the organization, or {@code null} if not set. */
     public String getPhone() {
         return phone;
     }
 
+    /**
+     * Sets the phone number of the organization.
+     *
+     * @param phone the phone number.
+     */
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
+    /** @return the email address of the organization, or {@code null} if not set. */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Sets the email address of the organization.
+     *
+     * @param email the email address.
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * Returns an unmodifiable copy of the organization's employee list.
+     *
+     * @return list of employees.
+     */
     public List<Employee> getEmployees() {
         return List.copyOf(employees);
     }
 
+    /**
+     * Returns an unmodifiable copy of the organization's task list.
+     *
+     * @return list of tasks.
+     */
     public List<Task> getTasks() {
         return List.copyOf(tasks);
     }
@@ -164,7 +199,8 @@ public class Organization {
 
     /**
      * Adds an employee to the organization.
-     * * @param employee The employee to add.
+     *
+     * @param employee The employee to add.
      * @return True if the employee was successfully added, false otherwise.
      */
     public boolean addEmployee(Employee employee) {
@@ -255,11 +291,12 @@ public class Organization {
 
     /**
      * Creates a clone of the organization.
-     * @return A deep clone of the organization.
+     *
+     * @return a deep clone preserving the original vatNumber and all fields.
      */
     public Organization clone() {
         if (type != null) {
-            return new Organization(this.name, this.nature, this.type);
+            return new Organization(this.vatNumber, this.name, this.nature, this.type);
         }
         Organization clone = new Organization(this.vatNumber, this.name, this.website, this.phone, this.email);
         for (Employee in : this.employees) {
@@ -269,5 +306,20 @@ public class Organization {
             clone.tasks.add(in.clone());
         }
         return clone;
+    }
+
+    /**
+     * Private constructor for cloning US04 organizations, preserving the original vatNumber.
+     */
+    private Organization(String vatNumber, String name, String nature, OrganizationType type) {
+        this.vatNumber = vatNumber;
+        this.name = name;
+        this.nature = nature;
+        this.type = type;
+        this.website = null;
+        this.phone = null;
+        this.email = null;
+        this.employees = new ArrayList<>();
+        this.tasks = new ArrayList<>();
     }
 }
