@@ -1,0 +1,80 @@
+@startuml US12-CD
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+class SubmitComplaintUI {
+}
+
+class SubmitComplaintController {
+    + SubmitComplaintController()
+    + getPoliticalAgents() : List<PoliticalAgent>
+    + getPoliticalFunctions() : List<PoliticalFunction>
+    + submitComplaint(description : String, date : Date,\n  agent : PoliticalAgent, function : PoliticalFunction) : boolean
+}
+
+
+
+class PoliticalAgentRepository {
+    + getAll() : List<PoliticalAgent>
+    + save(agent : PoliticalAgent) : boolean
+}
+
+class CitizenRepository {
+    + getCitizenByEmail(email : String) : Optional<Citizen>
+    + save(citizen : Citizen) : boolean
+}
+
+class ComplaintRepository {
+    + save(complaint : Complaint) : boolean
+    + getComplaints() : List<Complaint>
+}
+
+class Complaint {
+    - description : String
+    - complaintDate : Date
+    - submissionDate : Date
+    + Complaint(description, date, citizen, agent, function)
+    + getDescription() : String
+    + getComplaintDate() : Date
+    + getSubmissionDate() : Date
+}
+
+class PoliticalAgent {
+    - name : String
+    - email : String
+    - nationalIdentityCard : String
+    - taxIdentificationNumber : String
+    - mandateStart : Date
+    - mandateEnd : Date
+}
+
+class Citizen {
+    - email : String
+    - name : String
+    + hasEmail(email : String) : boolean
+}
+
+enum PoliticalFunction {
+    MINISTER
+    DEPUTY
+    COUNCILLOR
+    PARISH_COUNCIL_PRESIDENT
+    MAYOR
+}
+
+SubmitComplaintUI .> SubmitComplaintController
+
+SubmitComplaintController ..> PoliticalAgentRepository
+SubmitComplaintController ..> CitizenRepository
+SubmitComplaintController ..> ComplaintRepository
+SubmitComplaintController ..> Complaint
+
+ComplaintRepository "1" --> "*" Complaint : complaints
+
+Complaint --> "1" Citizen : citizen
+Complaint --> "1" PoliticalAgent : politicalAgent
+Complaint ..> PoliticalFunction
+
+@enduml
