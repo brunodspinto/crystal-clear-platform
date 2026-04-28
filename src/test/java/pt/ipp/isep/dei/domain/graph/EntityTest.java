@@ -8,27 +8,33 @@ class EntityTest {
 
     @Test
     void ensureFieldsAreKept() {
-        Entity entity = new Entity("P-001", "Person", "Alice");
-        assertEquals("P-001", entity.id());
-        assertEquals("Person", entity.type());
-        assertEquals("Alice", entity.name());
+        Person person = new Person("P-001", "politician", "2020-01-01", "2024-01-01",
+                "Alice", "1980-05-10", "Portuguese");
+        assertEquals("P-001", person.id());
+        assertEquals("politician", person.type());
+        assertEquals("2020-01-01", person.startDate());
+        assertEquals("2024-01-01", person.endDate());
     }
 
     @Test
     void ensureBlankIdsAreRejected() {
-        assertThrows(IllegalArgumentException.class, () -> new Entity("", "Person", "Alice"));
-        assertThrows(IllegalArgumentException.class, () -> new Entity("   ", "Person", "Alice"));
-        assertThrows(IllegalArgumentException.class, () -> new Entity(null, "Person", "Alice"));
+        assertThrows(IllegalArgumentException.class,
+                () -> new Person("", "politician", "", "", "Alice", "", ""));
+        assertThrows(IllegalArgumentException.class,
+                () -> new Person("   ", "politician", "", "", "Alice", "", ""));
+        assertThrows(IllegalArgumentException.class,
+                () -> new Person(null, "politician", "", "", "Alice", "", ""));
     }
 
     @Test
     void ensureEqualityIsByIdOnly() {
-        Entity e1 = new Entity("P-001", "Person", "Alice");
-        Entity e2 = new Entity("P-001", "Organization", "Different Name");
-        Entity e3 = new Entity("P-002", "Person", "Alice");
+        Person p1 = new Person("P-001", "politician", "2020-01-01", "", "Alice", "", "Portuguese");
+        Person p2 = new Person("P-001", "businessman", "2018-01-01", "", "Different Name", "", "Spanish");
+        Organization o1 = new Organization("P-001", "company", "", "", "Some Org", "NGO", "PT");
 
-        assertEquals(e1, e2);
-        assertNotEquals(e1, e3);
-        assertEquals(e1.hashCode(), e2.hashCode());
+        assertEquals(p1, p2);
+        assertEquals(p1, o1);
+        assertNotEquals(p1, new Person("P-002", "politician", "", "", "Alice", "", ""));
+        assertEquals(p1.hashCode(), p2.hashCode());
     }
 }
