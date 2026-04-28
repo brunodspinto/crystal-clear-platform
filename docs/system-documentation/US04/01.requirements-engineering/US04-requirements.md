@@ -24,7 +24,8 @@ As an Administrator, I want to register an Organization of a given type.
 
 * **AC1:** An organization must have a valid name (cannot be null or empty).
 * **AC2:** The organization type must be selected from the predefined list: Company, Political Party, Foundation, Institute, or Association.
-* **AC3:** The system must not allow the registration of duplicate organizations (same name and same type).
+* **AC3:** The system must not allow the registration of duplicate organizations (same name and same type). The name comparison is case-insensitive.
+* **AC4:** The organization nature must be provided (cannot be null or empty).
 
 ### 1.4. Found out Dependencies
 

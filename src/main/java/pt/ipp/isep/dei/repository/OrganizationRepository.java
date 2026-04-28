@@ -2,6 +2,7 @@ package pt.ipp.isep.dei.repository;
 
 import pt.ipp.isep.dei.domain.Employee;
 import pt.ipp.isep.dei.domain.Organization;
+import pt.ipp.isep.dei.domain.OrganizationType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,5 +58,27 @@ public class OrganizationRepository {
 
     private boolean validateOrganization(Organization organization) {
         return !organizations.contains(organization);
+    }
+
+    public boolean existsByNameAndType(String name, OrganizationType type) {
+        for (Organization org : organizations) {
+            if (org.getType() != null
+                    && org.getName().equalsIgnoreCase(name)
+                    && org.getType() == type) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean save(Organization organization) {
+        if (existsByNameAndType(organization.getName(), organization.getType())) {
+            return false;
+        }
+        return organizations.add(organization.clone());
+    }
+
+    public List<Organization> getOrganizations() {
+        return List.copyOf(organizations);
     }
 }

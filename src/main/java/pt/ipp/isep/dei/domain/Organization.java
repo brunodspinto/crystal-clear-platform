@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 public class Organization {
     private final String vatNumber;
@@ -13,6 +14,33 @@ public class Organization {
     private String website;
     private String phone;
     private String email;
+    private OrganizationType type;
+    private String nature;
+
+    /**
+     * Constructor for US04 — registers an organization with a name, nature and type.
+     * The vatNumber is generated internally as a UUID.
+     */
+    public Organization(String name, String nature, OrganizationType type) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Name cannot be null or empty");
+        }
+        if (nature == null || nature.isBlank()) {
+            throw new IllegalArgumentException("Nature cannot be null or empty");
+        }
+        if (type == null) {
+            throw new IllegalArgumentException("Type cannot be null");
+        }
+        this.vatNumber = UUID.randomUUID().toString();
+        this.name = name;
+        this.nature = nature;
+        this.type = type;
+        this.website = null;
+        this.phone = null;
+        this.email = null;
+        this.employees = new ArrayList<>();
+        this.tasks = new ArrayList<>();
+    }
 
     /**
      * This method is the constructor of the organization.
@@ -45,6 +73,18 @@ public class Organization {
 
         this.employees = new ArrayList<>();
         this.tasks = new ArrayList<>();
+    }
+
+    public OrganizationType getType() {
+        return type;
+    }
+
+    public String getNature() {
+        return nature;
+    }
+
+    public void setNature(String nature) {
+        this.nature = nature;
     }
 
     public String getVatNumber() {
@@ -96,6 +136,9 @@ public class Organization {
 
     @Override
     public String toString() {
+        if (type != null) {
+            return name + " (" + type + ")";
+        }
         return "Organization{" +
                 "vatNumber='" + vatNumber + '\'' +
                 ", name='" + name + '\'' +
@@ -203,19 +246,19 @@ public class Organization {
 
     /**
      * Creates a clone of the organization.
-     * * @return A deep clone of the organization.
+     * @return A deep clone of the organization.
      */
     public Organization clone() {
+        if (type != null) {
+            return new Organization(this.name, this.nature, this.type);
+        }
         Organization clone = new Organization(this.vatNumber, this.name, this.website, this.phone, this.email);
-
         for (Employee in : this.employees) {
             clone.employees.add(in.clone());
         }
-
         for (Task in : this.tasks) {
             clone.tasks.add(in.clone());
         }
-
         return clone;
     }
 }
