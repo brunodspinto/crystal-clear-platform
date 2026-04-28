@@ -8,8 +8,12 @@ import java.util.List;
 
 public class AuthenticationController {
 
+    /** Role identifier for administrators. */
     public static final String ROLE_ADMIN = "ADMINISTRATOR";
+    /** Role identifier for employees. */
     public static final String ROLE_EMPLOYEE = "EMPLOYEE";
+    /** Role identifier for citizens (US12). */
+    public static final String ROLE_CITIZEN = "CITIZEN";
 
     //private final ApplicationSession applicationSession;
     private final AuthenticationRepository authenticationRepository;

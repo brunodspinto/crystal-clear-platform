@@ -2,6 +2,7 @@ package pt.ipp.isep.dei.ui.console.authorization;
 
 import pt.ipp.isep.dei.controller.AuthenticationController;
 import pt.ipp.isep.dei.ui.console.menu.AdminUI;
+import pt.ipp.isep.dei.ui.console.menu.CitizenUI;
 import pt.ipp.isep.dei.ui.console.menu.MenuItem;
 import pt.ipp.isep.dei.ui.console.utils.Utils;
 import pt.isep.lei.esoft.auth.mappers.dto.UserRoleDTO;
@@ -38,11 +39,15 @@ public class AuthenticationUI implements Runnable {
         this.logout();
     }
 
+    /**
+     * Builds the list of role-to-UI mappings used to redirect the user after login.
+     *
+     * @return list of {@link MenuItem} associating each role with its menu UI.
+     */
     private List<MenuItem> getMenuItemForRoles() {
         List<MenuItem> rolesUI = new ArrayList<>();
         rolesUI.add(new MenuItem(AuthenticationController.ROLE_ADMIN, new AdminUI()));
-
-        //TODO: Complete with other user roles and related RoleUI
+        rolesUI.add(new MenuItem(AuthenticationController.ROLE_CITIZEN, new CitizenUI()));
         return rolesUI;
     }
 
