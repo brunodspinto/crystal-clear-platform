@@ -75,14 +75,29 @@ public class Organization {
         this.tasks = new ArrayList<>();
     }
 
+    /**
+     * Returns the type of the organization.
+     *
+     * @return the organization type.
+     */
     public OrganizationType getType() {
         return type;
     }
 
+    /**
+     * Returns the legal nature of the organization (e.g. "public", "private", "social").
+     *
+     * @return the nature of the organization.
+     */
     public String getNature() {
         return nature;
     }
 
+    /**
+     * Sets the legal nature of the organization.
+     *
+     * @param nature the nature to set.
+     */
     public void setNature(String nature) {
         this.nature = nature;
     }

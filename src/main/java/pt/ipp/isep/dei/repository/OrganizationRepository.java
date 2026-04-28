@@ -60,6 +60,14 @@ public class OrganizationRepository {
         return !organizations.contains(organization);
     }
 
+    /**
+     * Checks whether an organization with the given name and type already exists.
+     * The name comparison is case-insensitive.
+     *
+     * @param name the name to search for.
+     * @param type the type to match.
+     * @return {@code true} if a matching organization exists, {@code false} otherwise.
+     */
     public boolean existsByNameAndType(String name, OrganizationType type) {
         for (Organization org : organizations) {
             if (org.getType() != null
@@ -71,6 +79,13 @@ public class OrganizationRepository {
         return false;
     }
 
+    /**
+     * Saves a new organization if no duplicate with the same name and type exists.
+     * A clone of the organization is stored to protect internal state.
+     *
+     * @param organization the organization to save.
+     * @return {@code true} if saved successfully, {@code false} if a duplicate exists.
+     */
     public boolean save(Organization organization) {
         if (existsByNameAndType(organization.getName(), organization.getType())) {
             return false;
@@ -78,6 +93,11 @@ public class OrganizationRepository {
         return organizations.add(organization.clone());
     }
 
+    /**
+     * Returns an unmodifiable copy of all organizations in the repository.
+     *
+     * @return list of all organizations.
+     */
     public List<Organization> getOrganizations() {
         return List.copyOf(organizations);
     }

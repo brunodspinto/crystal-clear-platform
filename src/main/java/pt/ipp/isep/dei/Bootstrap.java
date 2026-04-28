@@ -40,6 +40,9 @@ public class Bootstrap implements Runnable {
         taskCategoryRepository.add(new TaskCategory("Maintenance"));
     }
 
+    /**
+     * Adds sample organizations for US04 demo purposes.
+     */
     private void addUS04Organizations() {
         OrganizationRepository orgRepo = Repositories.getInstance().getOrganizationRepository();
         orgRepo.save(new Organization("PartyX", "public", OrganizationType.POLITICAL_PARTY));
