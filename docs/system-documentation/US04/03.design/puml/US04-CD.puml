@@ -15,7 +15,7 @@ class RegisterOrganizationController {
 }
 
 class OrganizationRepository {
-    + save(organization : Organization)
+    + save(organization : Organization) : boolean
     + existsByNameAndType(name : String, type : OrganizationType) : boolean
 }
 
@@ -23,6 +23,9 @@ class Organization {
     - name : String
     - nature : String
     + Organization(name : String, nature : String, type : OrganizationType)
+    + getName() : String
+    + getNature() : String
+    + getType() : OrganizationType
 }
 
 enum OrganizationType {
@@ -38,8 +41,8 @@ RegisterOrganizationUI .> RegisterOrganizationController
 RegisterOrganizationController ..> OrganizationRepository
 RegisterOrganizationController ..> Organization
 
-OrganizationRepository --> "*" Organization : organizations
+OrganizationRepository "1" --> "*" Organization : organizations
 
-Organization --> "1" OrganizationType : type
+Organization ..> OrganizationType
 
 @enduml

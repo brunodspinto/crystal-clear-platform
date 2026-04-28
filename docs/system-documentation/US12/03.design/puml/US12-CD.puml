@@ -14,6 +14,10 @@ class SubmitComplaintController {
     + submitComplaint(description : String, date : Date,\n  agent : PoliticalAgent, function : PoliticalFunction) : boolean
 }
 
+class AuthenticationRepository {
+    + getCurrentUserSession() : UserSession
+}
+
 
 
 class PoliticalAgentRepository {
@@ -69,12 +73,13 @@ SubmitComplaintUI .> SubmitComplaintController
 SubmitComplaintController ..> PoliticalAgentRepository
 SubmitComplaintController ..> CitizenRepository
 SubmitComplaintController ..> ComplaintRepository
+SubmitComplaintController ..> AuthenticationRepository
 SubmitComplaintController ..> Complaint
 
 ComplaintRepository "1" --> "*" Complaint : complaints
 
-Complaint --> "1" Citizen : citizen
-Complaint --> "1" PoliticalAgent : politicalAgent
+Complaint "*" --> "1" Citizen : citizen
+Complaint "*" --> "1" PoliticalAgent : politicalAgent
 Complaint ..> PoliticalFunction
 
 @enduml

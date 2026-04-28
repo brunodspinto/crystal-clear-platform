@@ -44,6 +44,7 @@ Other software classes (i.e. Pure Fabrication) identified:
 * PoliticalAgentRepository
 * CitizenRepository
 * ComplaintRepository
+* AuthenticationRepository
 * ApplicationSession
 * UserSession
 
