@@ -14,16 +14,6 @@ As an Administrator, I want to register an Organization of a given type.
 
 > The institution type must be selected from a predefined list of available types.
 
-**From the client clarifications:**
-
-> **Question:** What are the valid organization types?
->
-> **Answer:** The organization type must be selected from a predefined list: Company, Political Party, Foundation, Institute, or Association.
-
-> **Question:** Can two organizations have the same name?
->
-> **Answer:** No. The system must not allow the registration of duplicate organizations (same name and same type).
-
 ### 1.3. Acceptance Criteria
 
 * **AC1:** An organization must have a valid name (cannot be null or empty).
@@ -40,6 +30,7 @@ As an Administrator, I want to register an Organization of a given type.
 
 * Typed data:
     * name
+    * nature
 
 * Selected data:
     * organization type (from predefined list: Company, Political Party, Foundation, Institute, Association)
