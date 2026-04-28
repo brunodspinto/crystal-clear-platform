@@ -140,7 +140,7 @@ public boolean save(Organization organization) {
 
 * A new option **"Register Organization"** was added to the Admin menu.
 * For demo purposes, three sample organizations (a political party, a company, and a foundation) are bootstrapped when the system starts.
-* The admin credentials for demo: **admin@this.app / ADM1n2A**.
+* The admin credentials for demo: **admin@this.app / admin**.
 
 
 ## 7. Observations
