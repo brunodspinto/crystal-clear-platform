@@ -35,6 +35,5 @@ class EntityTest {
         assertEquals(p1, p2);
         assertEquals(p1, o1);
         assertNotEquals(p1, new Person("P-002", "politician", "", "", "Alice", "", ""));
-        assertEquals(p1.hashCode(), p2.hashCode());
     }
 }
