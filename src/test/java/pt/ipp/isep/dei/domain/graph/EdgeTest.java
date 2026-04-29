@@ -1,0 +1,33 @@
+package pt.ipp.isep.dei.domain.graph;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class EdgeTest {
+
+    @Test
+    void ensureFieldsAreKept() {
+        Edge e = new Edge("a", "b", "kinship", 0.5);
+        assertEquals("a", e.fromId());
+        assertEquals("b", e.toId());
+        assertEquals("kinship", e.label());
+        assertEquals(0.5, e.weight());
+    }
+
+    @Test
+    void ensureBlankIdsAreRejected() {
+        assertThrows(IllegalArgumentException.class, () -> new Edge("", "b", "kinship", 1));
+        assertThrows(IllegalArgumentException.class, () -> new Edge("a", " ", "kinship", 1));
+        assertThrows(IllegalArgumentException.class, () -> new Edge("a", "b", "", 1));
+        assertThrows(IllegalArgumentException.class, () -> new Edge(null, "b", "kinship", 1));
+    }
+
+    @Test
+    void ensureEqualityIsValueBased() {
+        Edge a = new Edge("a", "b", "kinship", 0.5);
+        Edge b = new Edge("a", "b", "kinship", 0.5);
+        assertEquals(a, b);
+        assertEquals(a.hashCode(), b.hashCode());
+    }
+}
