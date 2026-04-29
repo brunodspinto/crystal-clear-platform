@@ -1,7 +1,5 @@
 package pt.ipp.isep.dei.domain;
 
-import java.util.Objects;
-
 public class Employee {
     private final String email;
     private String name;
@@ -22,11 +20,6 @@ public class Employee {
         }
         Employee employee = (Employee) o;
         return email.equals(employee.email);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(email);
     }
 
     public boolean hasEmail(String email) {

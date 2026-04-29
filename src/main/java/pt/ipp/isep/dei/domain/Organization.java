@@ -2,8 +2,8 @@ package pt.ipp.isep.dei.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 public class Organization {
     private final String vatNumber;
@@ -13,6 +13,33 @@ public class Organization {
     private String website;
     private String phone;
     private String email;
+    private OrganizationType type;
+    private String nature;
+
+    /**
+     * Constructor for US04 — registers an organization with a name, nature and type.
+     * The vatNumber is generated internally as a UUID.
+     */
+    public Organization(String name, String nature, OrganizationType type) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Name cannot be null or empty");
+        }
+        if (nature == null || nature.isBlank()) {
+            throw new IllegalArgumentException("Nature cannot be null or empty");
+        }
+        if (type == null) {
+            throw new IllegalArgumentException("Type cannot be null");
+        }
+        this.vatNumber = UUID.randomUUID().toString();
+        this.name = name;
+        this.nature = nature;
+        this.type = type;
+        this.website = null;
+        this.phone = null;
+        this.email = null;
+        this.employees = new ArrayList<>();
+        this.tasks = new ArrayList<>();
+    }
 
     /**
      * This method is the constructor of the organization.
@@ -47,14 +74,48 @@ public class Organization {
         this.tasks = new ArrayList<>();
     }
 
+    /**
+     * Returns the type of the organization.
+     *
+     * @return the organization type.
+     */
+    public OrganizationType getType() {
+        return type;
+    }
+
+    /**
+     * Returns the legal nature of the organization (e.g. "public", "private", "social").
+     *
+     * @return the nature of the organization.
+     */
+    public String getNature() {
+        return nature;
+    }
+
+    /**
+     * Sets the legal nature of the organization.
+     *
+     * @param nature the nature to set.
+     */
+    public void setNature(String nature) {
+        this.nature = nature;
+    }
+
+    /** @return the VAT number of the organization. */
     public String getVatNumber() {
         return vatNumber;
     }
 
+    /** @return the name of the organization. */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name of the organization.
+     *
+     * @param name the new name; cannot be null or blank.
+     */
     public void setName(String name) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Name cannot be null or empty");
@@ -62,40 +123,71 @@ public class Organization {
         this.name = name;
     }
 
+    /** @return the website URL of the organization, or {@code null} if not set. */
     public String getWebsite() {
         return website;
     }
 
+    /**
+     * Sets the website URL of the organization.
+     *
+     * @param website the website URL.
+     */
     public void setWebsite(String website) {
         this.website = website;
     }
 
+    /** @return the phone number of the organization, or {@code null} if not set. */
     public String getPhone() {
         return phone;
     }
 
+    /**
+     * Sets the phone number of the organization.
+     *
+     * @param phone the phone number.
+     */
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
+    /** @return the email address of the organization, or {@code null} if not set. */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Sets the email address of the organization.
+     *
+     * @param email the email address.
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * Returns an unmodifiable copy of the organization's employee list.
+     *
+     * @return list of employees.
+     */
     public List<Employee> getEmployees() {
         return List.copyOf(employees);
     }
 
+    /**
+     * Returns an unmodifiable copy of the organization's task list.
+     *
+     * @return list of tasks.
+     */
     public List<Task> getTasks() {
         return List.copyOf(tasks);
     }
 
     @Override
     public String toString() {
+        if (type != null) {
+            return name + " (" + type + ")";
+        }
         return "Organization{" +
                 "vatNumber='" + vatNumber + '\'' +
                 ", name='" + name + '\'' +
@@ -107,7 +199,8 @@ public class Organization {
 
     /**
      * Adds an employee to the organization.
-     * * @param employee The employee to add.
+     *
+     * @param employee The employee to add.
      * @return True if the employee was successfully added, false otherwise.
      */
     public boolean addEmployee(Employee employee) {
@@ -196,26 +289,37 @@ public class Organization {
         return vatNumber.equals(that.vatNumber);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(vatNumber);
-    }
-
     /**
      * Creates a clone of the organization.
-     * * @return A deep clone of the organization.
+     *
+     * @return a deep clone preserving the original vatNumber and all fields.
      */
     public Organization clone() {
+        if (type != null) {
+            return new Organization(this.vatNumber, this.name, this.nature, this.type);
+        }
         Organization clone = new Organization(this.vatNumber, this.name, this.website, this.phone, this.email);
-
         for (Employee in : this.employees) {
             clone.employees.add(in.clone());
         }
-
         for (Task in : this.tasks) {
             clone.tasks.add(in.clone());
         }
-
         return clone;
+    }
+
+    /**
+     * Private constructor for cloning US04 organizations, preserving the original vatNumber.
+     */
+    private Organization(String vatNumber, String name, String nature, OrganizationType type) {
+        this.vatNumber = vatNumber;
+        this.name = name;
+        this.nature = nature;
+        this.type = type;
+        this.website = null;
+        this.phone = null;
+        this.email = null;
+        this.employees = new ArrayList<>();
+        this.tasks = new ArrayList<>();
     }
 }

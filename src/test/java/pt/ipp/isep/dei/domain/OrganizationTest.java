@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// Tests for US04 constructor (name, nature, type) are at the bottom of this file.
+
 class OrganizationTest {
 
     @Test
@@ -183,5 +185,54 @@ class OrganizationTest {
 
         Organization clone = organization.clone();
         assertEquals(organization, clone);
+    }
+
+    // --- US04 Tests (Organization with name, nature, type) ---
+
+    @Test
+    void ensureOrganizationUS04CreationWorks() {
+        Organization org = new Organization("Test Org", "private", OrganizationType.COMPANY);
+        assertEquals("Test Org", org.getName());
+        assertEquals(OrganizationType.COMPANY, org.getType());
+        assertEquals("private", org.getNature());
+    }
+
+    @Test
+    void ensureOrganizationUS04CreationFailsWithNullName() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new Organization(null, "nature", OrganizationType.COMPANY));
+    }
+
+    @Test
+    void ensureOrganizationUS04CreationFailsWithBlankName() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new Organization("   ", "nature", OrganizationType.COMPANY));
+    }
+
+    @Test
+    void ensureOrganizationUS04CreationFailsWithNullType() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new Organization("Test Org", "nature", null));
+    }
+
+    @Test
+    void ensureOrganizationUS04CreationFailsWithNullNature() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new Organization("Test Org", null, OrganizationType.FOUNDATION));
+    }
+
+    @Test
+    void ensureOrganizationUS04CreationFailsWithBlankNature() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new Organization("Test Org", "   ", OrganizationType.FOUNDATION));
+    }
+
+    @Test
+    void ensureOrganizationUS04CloneWorks() {
+        Organization org = new Organization("Test Org", "social", OrganizationType.FOUNDATION);
+        Organization clone = org.clone();
+        assertEquals(org.getName(), clone.getName());
+        assertEquals(org.getType(), clone.getType());
+        assertEquals(org.getNature(), clone.getNature());
     }
 }
