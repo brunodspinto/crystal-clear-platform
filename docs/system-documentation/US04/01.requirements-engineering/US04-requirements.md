@@ -14,11 +14,18 @@ As an Administrator, I want to register an Organization of a given type.
 
 > The institution type must be selected from a predefined list of available types.
 
+**From the client clarifications:**
+
+> **Question:** What is the `nature` field of an organization?
+>
+> **Answer:** The `nature` field is a String that allows the Administrator to indicate the legal nature of the organization (e.g. "public", "private", "social"). It is not the same as the formal type — it complements it with information about whether the organization is of a public, private, or social character.
+
 ### 1.3. Acceptance Criteria
 
 * **AC1:** An organization must have a valid name (cannot be null or empty).
 * **AC2:** The organization type must be selected from the predefined list: Company, Political Party, Foundation, Institute, or Association.
-* **AC3:** The system must not allow the registration of duplicate organizations (same name and same type).
+* **AC3:** The system must not allow the registration of duplicate organizations (same name and same type). The name comparison is case-insensitive.
+* **AC4:** The organization nature must be provided (cannot be null or empty).
 
 ### 1.4. Found out Dependencies
 
@@ -30,7 +37,7 @@ As an Administrator, I want to register an Organization of a given type.
 
 * Typed data:
     * name
-    * nature
+    * nature (String indicating the legal nature of the organization, e.g. "public", "private", "social")
 
 * Selected data:
     * organization type (from predefined list: Company, Political Party, Foundation, Institute, Association)

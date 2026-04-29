@@ -3,6 +3,7 @@ package pt.ipp.isep.dei.repository;
 import org.junit.jupiter.api.Test;
 import pt.ipp.isep.dei.domain.Employee;
 import pt.ipp.isep.dei.domain.Organization;
+import pt.ipp.isep.dei.domain.OrganizationType;
 
 import java.util.Optional;
 
@@ -91,5 +92,56 @@ class OrganizationRepositoryTest {
         Optional<Organization> result = organizationRepository.add(organization);
 
         assertTrue(result.isEmpty());
+    }
+
+    // --- US04 Tests (save + existsByNameAndType) ---
+
+    @Test
+    void ensureSaveOrganizationWorks() {
+        OrganizationRepository repo = new OrganizationRepository();
+        Organization org = new Organization("ACME Corp", "private", OrganizationType.COMPANY);
+        assertTrue(repo.save(org));
+    }
+
+    @Test
+    void ensureSaveDuplicateOrganizationFails() {
+        OrganizationRepository repo = new OrganizationRepository();
+        Organization org = new Organization("ACME Corp", "private", OrganizationType.COMPANY);
+        repo.save(org);
+        Organization dup = new Organization("ACME Corp", "public", OrganizationType.COMPANY);
+        assertFalse(repo.save(dup));
+    }
+
+    @Test
+    void ensureSameNameDifferentTypeIsAllowed() {
+        OrganizationRepository repo = new OrganizationRepository();
+        Organization org1 = new Organization("ACME Corp", "private", OrganizationType.COMPANY);
+        Organization org2 = new Organization("ACME Corp", "social", OrganizationType.FOUNDATION);
+        repo.save(org1);
+        assertTrue(repo.save(org2));
+    }
+
+    @Test
+    void ensureExistsByNameAndTypeWorks() {
+        OrganizationRepository repo = new OrganizationRepository();
+        Organization org = new Organization("ACME Corp", "private", OrganizationType.COMPANY);
+        repo.save(org);
+        assertTrue(repo.existsByNameAndType("ACME Corp", OrganizationType.COMPANY));
+    }
+
+    @Test
+    void ensureExistsByNameAndTypeIsCaseInsensitive() {
+        OrganizationRepository repo = new OrganizationRepository();
+        Organization org = new Organization("ACME Corp", "social", OrganizationType.FOUNDATION);
+        repo.save(org);
+        assertTrue(repo.existsByNameAndType("acme corp", OrganizationType.FOUNDATION));
+    }
+
+    @Test
+    void ensureExistsByNameAndTypeReturnsFalseForDifferentType() {
+        OrganizationRepository repo = new OrganizationRepository();
+        Organization org = new Organization("ACME Corp", "private", OrganizationType.COMPANY);
+        repo.save(org);
+        assertFalse(repo.existsByNameAndType("ACME Corp", OrganizationType.FOUNDATION));
     }
 }
