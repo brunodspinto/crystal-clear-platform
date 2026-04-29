@@ -1,0 +1,39 @@
+@startuml US10-SD-partial-collect-income-data
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+participant ":AnalyseIncomeEvolutionController" as CTRL
+participant "d:Declaration" as DEC
+
+autonumber 11
+ -> CTRL : collectIncomeData(declarations)
+autonumber 11.1
+activate CTRL
+    group Collect Income Data
+
+        alt declarations is empty (AC5)
+            CTRL --> CTRL : empty list
+        else
+            loop for each d in declarations
+                CTRL -> DEC : getIncomes()
+                activate DEC
+                    DEC --> CTRL : incomes
+                deactivate DEC
+
+                CTRL -> DEC : getType()
+                activate DEC
+                    DEC --> CTRL : type
+                deactivate DEC
+            end
+            CTRL --> CTRL : declarationsWithIncome
+        end
+
+    end
+    autonumber 12
+    <-- CTRL : declarationsWithIncome
+deactivate CTRL
+
+@enduml

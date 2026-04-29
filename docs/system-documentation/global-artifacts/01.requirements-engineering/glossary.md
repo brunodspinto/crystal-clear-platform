@@ -21,14 +21,15 @@
 | **Income** | **Rendimento** | The financial gains or remuneration received by a political agent from various sources, subject to temporal analysis. |
 | **Incompatibility** | **Incompatibilidade** | A legal or regulatory conflict that prevents a political agent from simultaneously holding certain positions or financial interests. |
 | **Initial Declaration** | **Declaração Inicial** | The first Declaration of Interests submitted by a political agent upon taking up a public function. |
-| **INST** | **INST** | Acronym for _Institution_. |
-| **Institution** | **Instituição** | An organisation (company, political party, foundation, institute, or association) associated with a political agent's positions or participations. |
 | **Integrated Situation** | **Situação Integrada** | A consolidated view of a Political Agent's financial and professional status on a given date, used for temporal analysis. |
 | **Journalist** | **Jornalista** | A registered member of the Journalists' Union with specific access rights to the transparency portal for investigative purposes. |
 | **JRN** | **JRN** | Acronym for _Journalist_. |
 | **Market Value** | **Valor de Mercado** | The estimated current value of an asset at a given point in time, as declared by a political agent. |
 | **National Identity Card** | **Cartão de Cidadão** | An official identification document required from Ordinary Citizens during platform registration. |
 | **OC** | **CC** | Acronym for _Ordinary Citizen_. |
+| **ORG** | **ORG** | Acronym for _Organization_. |
+| **Organization** | **Organização** | An entity (company, political party, foundation, institute, or association) associated with a political agent's positions, business participations, or subsidy declarations. |
+| **OrganizationType** | **Tipo de Organização** | A predefined classification of an organization's legal form: Company, Political Party, Foundation, Institute, or Association. |
 | **Ordinary Citizen** | **Cidadão Comum** | A member of the public who has an interest in scrutinising political agents and can use the portal to report suspicious behaviour. |
 | **PA** | **AP** | Acronym for _Political Agent_. |
 | **Political Agent** | **Agente Político** | A person performing a political function such as deputy, minister, councillor, mayor, or parish council president. |

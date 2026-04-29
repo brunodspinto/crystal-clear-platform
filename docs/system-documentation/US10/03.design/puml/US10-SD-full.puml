@@ -1,0 +1,97 @@
+@startuml US10-SD-full
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Journalist" as Journalist
+participant ":AnalyseIncomeEvolutionUI" as UI
+participant ":AnalyseIncomeEvolutionController" as CTRL
+participant ":PoliticalAgentRepository" as PAR
+participant ":DeclarationRepository" as DR
+participant "d:Declaration" as DEC
+
+activate Journalist
+
+    Journalist -> UI : asks to analyse income evolution
+    activate UI
+
+        UI -> CTRL : getPoliticalAgents()
+        activate CTRL
+
+            CTRL -> PAR : getPoliticalAgents()
+            activate PAR
+                PAR --> CTRL : agents
+            deactivate PAR
+
+            CTRL --> UI : agents
+        deactivate CTRL
+
+        UI --> Journalist : shows agent list, requests selection
+    deactivate UI
+
+    Journalist -> UI : selects agent (AC1)
+    activate UI
+
+        UI --> Journalist : requests start date and end date
+    deactivate UI
+
+    Journalist -> UI : enters start date and end date
+    activate UI
+
+        UI -> CTRL : getIncomeEvolution(agent, startDate, endDate)
+        activate CTRL
+
+            CTRL -> CTRL : validatePeriod(startDate, endDate)
+            activate CTRL
+
+                note right of CTRL
+                    AC2: startDate <= endDate
+                end note
+
+                CTRL --> CTRL : ok
+            deactivate CTRL
+
+            CTRL -> DR : getValidatedDeclarations(agent, startDate, endDate)
+            activate DR
+
+                note right of DR
+                    AC3: only declarations with
+                    status = VALIDATED in [start, end]
+                    AC4: ordered by submissionDate
+                end note
+
+                DR --> CTRL : declarations
+            deactivate DR
+
+            alt declarations is empty (AC5)
+                CTRL --> UI : empty list
+            else
+                loop for each d in declarations
+                    CTRL -> DEC : getIncomes()
+                    activate DEC
+                        DEC --> CTRL : incomes
+                    deactivate DEC
+
+                    CTRL -> DEC : getType()
+                    activate DEC
+                        DEC --> CTRL : type
+                    deactivate DEC
+                end
+
+                CTRL --> UI : declarations with income data
+            end
+
+        deactivate CTRL
+
+        alt declarations is empty (AC5)
+            UI --> Journalist : shows "no validated declarations in period"
+        else
+            UI --> Journalist : shows declarations with income evolution
+        end
+
+    deactivate UI
+
+deactivate Journalist
+@enduml

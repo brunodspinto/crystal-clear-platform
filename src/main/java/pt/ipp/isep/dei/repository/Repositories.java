@@ -12,6 +12,9 @@ public class Repositories {
     private final TaskCategoryRepository taskCategoryRepository;
     private final AuthenticationRepository authenticationRepository;
     private final FunctionRepository functionRepository;
+    private final PoliticalAgentRepository politicalAgentRepository;
+    private final CitizenRepository citizenRepository;
+    private final ComplaintRepository complaintRepository;
 
     /**
      * The Singleton's constructor should always be private to prevent direct construction calls with the new operator.
@@ -21,6 +24,9 @@ public class Repositories {
         taskCategoryRepository = new TaskCategoryRepository();
         authenticationRepository = new AuthenticationRepository();
         functionRepository = new FunctionRepository();
+        politicalAgentRepository = new PoliticalAgentRepository();
+        citizenRepository = new CitizenRepository();
+        complaintRepository = new ComplaintRepository();
     }
 
     /**
@@ -51,5 +57,32 @@ public class Repositories {
 
     public FunctionRepository getFunctionRepository() {
         return functionRepository;
+    }
+
+    /**
+     * Returns the political agent repository.
+     *
+     * @return the {@link PoliticalAgentRepository} instance.
+     */
+    public PoliticalAgentRepository getPoliticalAgentRepository() {
+        return politicalAgentRepository;
+    }
+
+    /**
+     * Returns the citizen repository.
+     *
+     * @return the {@link CitizenRepository} instance.
+     */
+    public CitizenRepository getCitizenRepository() {
+        return citizenRepository;
+    }
+
+    /**
+     * Returns the complaint repository.
+     *
+     * @return the {@link ComplaintRepository} instance.
+     */
+    public ComplaintRepository getComplaintRepository() {
+        return complaintRepository;
     }
 }

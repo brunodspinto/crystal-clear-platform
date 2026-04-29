@@ -1,0 +1,34 @@
+@startuml US09-SD-partial-get-validated-declarations-up-to
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+participant ":ConsultIntegratedSituationController" as CTRL
+participant ":DeclarationRepository" as DR
+
+autonumber 7
+ -> CTRL : getValidatedDeclarationsUpTo(agent, referenceDate)
+autonumber 7.1
+activate CTRL
+    group Get Validated Declarations Up To Date
+
+        CTRL -> DR : getValidatedDeclarationsUpTo(agent, referenceDate)
+        activate DR
+
+            note right of DR
+                AC2: only declarations with
+                status = VALIDATED and
+                submissionDate <= referenceDate
+            end note
+
+            DR --> CTRL : declarations
+        deactivate DR
+
+    end
+    autonumber 8
+    <-- CTRL : declarations
+deactivate CTRL
+
+@enduml

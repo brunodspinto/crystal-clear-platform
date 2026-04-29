@@ -1,7 +1,5 @@
 package pt.ipp.isep.dei.domain;
 
-import java.util.Objects;
-
 public class Task {
     private final String reference;
     private String description;
@@ -45,11 +43,6 @@ public class Task {
         }
         Task task = (Task) o;
         return reference.equals(task.reference) && employee.equals(task.employee);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(reference, employee);
     }
 
     /**

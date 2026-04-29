@@ -1,0 +1,143 @@
+@startuml US06-SD
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Political\nAgent" as Agent
+participant ":SubmitDeclarationUI" as UI
+participant ":SubmitDeclarationController" as CTRL
+participant ":AuthenticationService" as AUTH
+participant ":OrganizationRepository" as ORGR
+participant ":FunctionRepository" as FUNCR
+participant ":DeclarationRepository" as DR
+participant "d:Declaration" as DEC
+
+activate Agent
+
+    Agent -> UI : asks to submit a new declaration of interests
+    activate UI
+
+        UI -> CTRL : getDeclarationTypes()
+        activate CTRL
+            CTRL --> UI : declarationTypes
+        deactivate CTRL
+
+        UI --> Agent : shows declaration type list, requests selection
+    deactivate UI
+
+    Agent -> UI : selects declaration type
+    activate UI
+
+        UI -> CTRL : getOrganizations()
+        activate CTRL
+
+            CTRL -> ORGR : getOrganizations()
+            activate ORGR
+                ORGR --> CTRL : organizations
+            deactivate ORGR
+
+            CTRL --> UI : organizations
+        deactivate CTRL
+
+        UI -> CTRL : getFunctions()
+        activate CTRL
+
+            CTRL -> FUNCR : getFunctions()
+            activate FUNCR
+                FUNCR --> CTRL : functions
+            deactivate FUNCR
+
+            CTRL --> UI : functions
+        deactivate CTRL
+
+        UI --> Agent : shows organizations and functions;\nrequests position entries
+    deactivate UI
+
+    Agent -> UI : provides one or more position entries
+    activate UI
+        UI --> Agent : requests subsidy entries
+    deactivate UI
+
+    Agent -> UI : provides subsidy entries (or skips)
+    activate UI
+        UI --> Agent : requests asset entries\n(real estate / vehicles / stocks)
+    deactivate UI
+
+    Agent -> UI : provides asset entries (or skips)
+    activate UI
+        UI --> Agent : requests holdings entries\n(company NIF, total value in stocks, company percentage)
+    deactivate UI
+
+    Agent -> UI : provides holdings entries (or skips)
+    activate UI
+        UI --> Agent : shows full declaration summary;\nrequests confirmation
+    deactivate UI
+
+    Agent -> UI : confirms submission
+    activate UI
+
+        UI -> CTRL : submitDeclaration(type, positionEntries, subsidyEntries,\nassetEntries, holdingsEntries, attachments)
+        activate CTRL
+
+            CTRL -> AUTH : getCurrentPoliticalAgent()
+            activate AUTH
+                AUTH --> CTRL : agent
+            deactivate AUTH
+
+            CTRL -> DEC ** : create(type, agent, submissionDate=now, status=PENDING)
+
+            loop for each positionEntry
+                CTRL -> DEC : addPositionEntry(organization, function,\nnature, grossSalary, sideIncome, startDate, endDate)
+                activate DEC
+                    DEC --> CTRL : ok
+                deactivate DEC
+            end
+
+            loop for each subsidyEntry
+                CTRL -> DEC : addSubsidyEntry(organization, amount, description, date)
+                activate DEC
+                    DEC --> CTRL : ok
+                deactivate DEC
+            end
+
+            loop for each assetEntry
+                CTRL -> DEC : addAssetEntry(assetType, assetValue, detail)
+                activate DEC
+                    note right of DEC
+                        creates RealEstate, VehicleAsset
+                        or StockAsset based on assetType
+                    end note
+                    DEC --> CTRL : ok
+                deactivate DEC
+            end
+
+            loop for each holdingEntry
+                CTRL -> DEC : addBusinessParticipation(organization,\ncompanyNIF, totalValueInStocks, companyPercentage)
+                activate DEC
+                    DEC --> CTRL : ok
+                deactivate DEC
+            end
+
+            loop for each attachment
+                CTRL -> DEC : addAttachment(fileName, uploadDate)
+                activate DEC
+                    DEC --> CTRL : ok
+                deactivate DEC
+            end
+
+            CTRL -> DR : save(d)
+            activate DR
+                DR --> CTRL : ok
+            deactivate DR
+
+            CTRL --> UI : success
+        deactivate CTRL
+
+        UI --> Agent : displays operation success;\ndeclaration set to PENDING state
+    deactivate UI
+
+deactivate Agent
+
+@enduml

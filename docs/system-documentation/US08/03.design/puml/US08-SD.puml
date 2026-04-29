@@ -1,0 +1,117 @@
+@startuml US08-SD
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Ethics Committee\nMember" as Member
+participant ":ValidateDeclarationUI" as UI
+participant ":ValidateDeclarationController" as CTRL
+participant ":AuthenticationService" as AUTH
+participant ":DeclarationRepository" as DR
+participant "d:Declaration" as DEC
+participant ":ValidationRecordRepository" as VRR
+participant "vr:ValidationRecord" as VR
+
+activate Member
+
+    Member -> UI : asks to validate a declaration of interests
+    activate UI
+
+        UI -> CTRL : getPendingDeclarations()
+        activate CTRL
+
+            CTRL -> DR : getDeclarationsByStatus(PENDING)
+            activate DR
+                DR --> CTRL : declarations
+            deactivate DR
+
+            CTRL --> UI : declarations
+        deactivate CTRL
+
+        UI --> Member : shows list of pending declarations
+    deactivate UI
+
+    Member -> UI : selects a declaration to review
+    activate UI
+
+        UI -> CTRL : getDeclarationDetails(declaration)
+        activate CTRL
+
+            CTRL -> DEC : getDetails()
+            activate DEC
+                DEC --> CTRL : positions, subsidies, assets, participations
+            deactivate DEC
+
+            CTRL --> UI : declaration details
+        deactivate CTRL
+
+        UI --> Member : displays full declaration content
+    deactivate UI
+
+    Member -> UI : indicates outcome\n(validated or rejected with comments)
+    activate UI
+
+        alt outcome is validated
+            UI --> Member : requests confirmation
+        else outcome is rejected
+            UI --> Member : requests section(s) and comment(s)
+        end
+    deactivate UI
+
+    Member -> UI : confirms outcome\n(or provides section comments if rejecting)
+    activate UI
+
+        UI -> CTRL : processValidation(declaration, outcome, comments)
+        activate CTRL
+
+            note right of CTRL
+                AC3: guard — declaration
+                must be PENDING
+            end note
+
+            CTRL -> AUTH : getCurrentEthicsCommitteeMember()
+            activate AUTH
+                AUTH --> CTRL : member
+            deactivate AUTH
+
+            CTRL -> DEC : setStatus(outcome)
+            activate DEC
+                DEC --> CTRL : ok
+            deactivate DEC
+
+            CTRL -> DR : save(d)
+            activate DR
+                DR --> CTRL : ok
+            deactivate DR
+
+            CTRL -> VR ** : create(member, declaration, validationDate=now, outcome)
+
+            alt outcome is REJECTED
+                loop for each comment
+                    CTRL -> VR : addComment(section, comment)
+                    activate VR
+                        VR --> CTRL : ok
+                    deactivate VR
+                end
+            end
+
+            CTRL -> VRR : save(vr)
+            activate VRR
+                VRR --> CTRL : ok
+            deactivate VRR
+
+            CTRL --> UI : success
+        deactivate CTRL
+
+        alt validated
+            UI --> Member : displays operation success;\ndeclaration status set to VALIDATED
+        else rejected
+            UI --> Member : displays operation success;\ndeclaration status set to REJECTED;\nreturned to Political Agent for correction
+        end
+    deactivate UI
+
+deactivate Member
+
+@enduml

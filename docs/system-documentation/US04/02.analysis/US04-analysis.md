@@ -1,19 +1,21 @@
-# US04 - Register an Institution
+# US04 - Register an Organization
 
 ## 2. Analysis
 
 ### 2.1. Relevant Domain Model Excerpt
 
-To fulfill this requirement, the core concept added to the domain model is the `Institution`.
-The Administrator is the actor responsible for creating these institutions within the platform.
+To fulfill this requirement, the core concept added to the domain model is `Organization`. The Administrator is the actor responsible for creating these organizations within the platform.
 
-According to the business rules, an `Institution` is a broad term that can represent various types of organisations (like a company, a political party, a foundation, an institute, or an association). Therefore, the entity must capture the following attributes:
-* **Name:** A unique identifier for the institution.
-* **Type:** The legal form of the organisation (e.g., company, political party, foundation), represented as a separate `InstitutionType` entity with a `designation`.
-* **Nature:** Whether the institution is public, private, or social, represented by the `InstitutionNature` enum.
+An `Organization` represents a broad set of entity types (company, political party, foundation, institute, or association) that may be associated with political agents' positions, business participations, or subsidy entries. It captures three fundamental attributes:
 
-The system relies on object serialization to persist the registered institutions, allowing them to be referenced later by Political Agents when submitting their declarations.
+* **name:** A unique identifier for the organization within its type.
+* **nature:** A String indicating the legal nature of the organization (e.g. "public", "private", "social"). It complements the formal type with information about the organization's legal standing.
+* **type:** The legal form of the organization, represented as the `OrganizationType` enum with values `COMPANY`, `POLITICAL_PARTY`, `FOUNDATION`, `INSTITUTE`, and `ASSOCIATION`. The type is selected from a predefined list (AC2), ensuring only valid values are stored.
 
-![US04-MD](svg/US04-DM.svg)
+Using an enum for `OrganizationType` rather than a free-text string prevents invalid entries, ensures consistent grouping in US03, and aligns with the predefined list defined in the specifications.
+
+![US04-DM](svg/US04-DM.svg)
 
 ### 2.2. Other Remarks
+
+* The `OrganizationType` enum is shared across US03 (listing), US04 (registration), and US06 (declaration submission), ensuring consistency throughout the domain model.

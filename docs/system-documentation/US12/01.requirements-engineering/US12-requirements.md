@@ -13,17 +13,7 @@ As a citizen, I want to make a complaint about a political agent in a specific r
 > The platform may be used by Ordinary Citizens — persons who have an interest in scrutinising political agents and who can use the platform to report behaviour and processes that they consider to be lacking in transparency.
 
 > The platform supports the analysis of Declarations of Interests submitted by political agents. Its main goal is to detect irregularities such as conflicts of interest and cases of illicit enrichment.
-
-**From the client clarifications:**
-
-> **Question:** What information must a citizen provide when making a complaint?
->
-> **Answer:** The citizen must identify the political agent, the specific role (political function) held by the agent at the time of the reported behaviour, and the date on which the behaviour occurred. A description of the complaint must also be provided.
-
-> **Question:** Is the identity of the citizen who submits a complaint kept confidential?
->
-> **Answer:** This is still under discussion. For now, the system must record the identity of the citizen who submitted the complaint for internal audit purposes, but it should not be publicly disclosed.
-
+ 
 ### 1.3. Acceptance Criteria
 
 * **AC1:** The citizen must select a registered political agent from the system.

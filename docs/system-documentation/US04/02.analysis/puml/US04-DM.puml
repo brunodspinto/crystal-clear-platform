@@ -2,6 +2,7 @@
 skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
+skinparam classAttributeIconSize 0
 
 hide circle
 hide methods
@@ -11,23 +12,21 @@ title Domain Model Excerpt - US04
 class Administrator {
 }
 
-class Institution {
-    - name
-    - nature
+class Organization {
+    name
+    nature
 }
 
-class InstitutionType {
-    - designation
+enum OrganizationType {
+    COMPANY
+    POLITICAL_PARTY
+    FOUNDATION
+    INSTITUTE
+    ASSOCIATION
 }
 
-enum InstitutionNature {
-    PUBLIC
-    PRIVATE
-    SOCIAL
-}
+Administrator "1" -- "*" Organization : registers >
 
-Administrator "1" -- "*" Institution : registers >
-Institution "*" -- "1" InstitutionType : has >
-Institution "*" -- "1" InstitutionNature : classified as >
+Organization "*" -- "1" OrganizationType : classified as
 
 @enduml

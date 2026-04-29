@@ -1,0 +1,27 @@
+@startuml US10-SD-partial-get-political-agents
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+participant ":AnalyseIncomeEvolutionController" as CTRL
+participant ":PoliticalAgentRepository" as PAR
+
+autonumber 2
+ -> CTRL : getPoliticalAgents()
+autonumber 2.1
+activate CTRL
+    group Get Political Agents
+
+        CTRL -> PAR : getPoliticalAgents()
+        activate PAR
+            PAR --> CTRL : agents
+        deactivate PAR
+
+    end
+    autonumber 3
+    <-- CTRL : agents
+deactivate CTRL
+
+@enduml

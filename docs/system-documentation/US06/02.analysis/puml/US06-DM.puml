@@ -23,28 +23,29 @@ class "Declaration of Interests" as Declaration {
 }
 
 enum DeclarationType {
-    initial
-    regular
-    exceptional
+    INITIAL
+    REGULAR
+    EXCEPTIONAL
 }
 
 enum DeclarationStatus {
-    pending
-    validated
-    rejected
+    PENDING
+    VALIDATED
+    REJECTED
 }
 
 enum PoliticalFunction {
-    minister
-    deputy
-    councillor
-    parishCouncilPresident
-    mayor
+    MINISTER
+    DEPUTY
+    COUNCILLOR
+    PARISH_COUNCIL_PRESIDENT
+    MAYOR
 }
 
 class PositionEntry {
     nature
-    remuneration
+    grossSalary
+    sideIncome
     startDate
     endDate
 }
@@ -53,9 +54,16 @@ class Function {
     designation
 }
 
-class Institution {
+class Organization {
     name
-    type
+}
+
+enum OrganizationType {
+    COMPANY
+    POLITICAL_PARTY
+    FOUNDATION
+    INSTITUTE
+    ASSOCIATION
 }
 
 class SubsidyEntry {
@@ -65,8 +73,13 @@ class SubsidyEntry {
 }
 
 class AssetEntry {
-    acquisitionValue
-    marketValue
+    assetValue
+}
+
+enum AssetType {
+    REAL_ESTATE
+    VEHICLES
+    STOCKS
 }
 
 class "Real Estate" as RealEstate {
@@ -74,19 +87,22 @@ class "Real Estate" as RealEstate {
     municipality
 }
 
-enum AssetType {
-    urban
-    rural
+class VehicleAsset {
+    description
+}
+
+class StockAsset {
+    description
 }
 
 class BusinessParticipation {
-    numberOfShares
-    marketValue
+    companyNIF
+    totalValueInStocks
+    companyPercentage
 }
 
 class Attachment {
     fileName
-    fileType
     uploadDate
 }
 
@@ -99,16 +115,20 @@ Declaration "1" -- "1..*" PositionEntry : includes
 Declaration "1" -- "*" SubsidyEntry : includes
 Declaration "1" -- "*" AssetEntry : includes
 Declaration "1" -- "*" BusinessParticipation : includes
-Declaration "1" *-- "*" Attachment : has >
+Declaration "1" *-- "*" Attachment : has
 
-PositionEntry "*" -- "1" Institution : held at
+PositionEntry "*" -- "1" Organization : held at
 PositionEntry "*" -- "1" Function : performs
 
-SubsidyEntry "*" -- "1" Institution : received from
+Organization "*" -- "1" OrganizationType : classified as
+
+SubsidyEntry "*" -- "1" Organization : received from
 
 AssetEntry "*" -- "1" AssetType : classified as
-AssetEntry "1" -- "1" RealEstate : described by
+AssetEntry "1" -- "0..1" RealEstate : described by
+AssetEntry "1" -- "0..1" VehicleAsset : described by
+AssetEntry "1" -- "0..1" StockAsset : described by
 
-BusinessParticipation "*" -- "1" Institution : held in
+BusinessParticipation "*" -- "1" Organization : held in
 
 @enduml

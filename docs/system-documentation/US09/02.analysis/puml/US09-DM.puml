@@ -29,23 +29,23 @@ class "Declaration of Interests" as Declaration {
 }
 
 enum DeclarationStatus {
-    pending
-    validated
-    rejected
+    PENDING
+    VALIDATED
+    REJECTED
 }
 
 enum Type {
-    initial
-    regular
-    exceptional
+    INITIAL
+    REGULAR
+    EXCEPTIONAL
 }
 
 enum PoliticalFunction {
-    minister
-    deputy
-    councillor
-    parishCouncilPresident
-    mayor
+    MINISTER
+    DEPUTY
+    COUNCILLOR
+    PARISH_COUNCIL_PRESIDENT
+    MAYOR
 }
 
 class Income {

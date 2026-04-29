@@ -12,9 +12,9 @@ participant ":System" as System
 
 activate Agent
 
-Agent -> System : asks to list institutions
+Agent -> System : asks to list organizations
 activate System
-System --> Agent : displays all institutions grouped by type\nand sorted alphabetically by name within each group
+System --> Agent : displays all organizations grouped by type\nand sorted alphabetically by name within each group
 deactivate System
 
 deactivate Agent

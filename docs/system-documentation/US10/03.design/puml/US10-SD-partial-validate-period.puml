@@ -1,0 +1,31 @@
+@startuml US10-SD-partial-validate-period
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+participant ":AnalyseIncomeEvolutionController" as CTRL
+
+autonumber 7
+ -> CTRL : validatePeriod(startDate, endDate)
+autonumber 7.1
+activate CTRL
+    group Validate Period
+
+        note right of CTRL
+            AC2: startDate <= endDate
+            otherwise raises validation error
+        end note
+
+        CTRL -> CTRL : check startDate <= endDate
+        activate CTRL
+            CTRL --> CTRL : ok
+        deactivate CTRL
+
+    end
+    autonumber 8
+    <-- CTRL : ok
+deactivate CTRL
+
+@enduml

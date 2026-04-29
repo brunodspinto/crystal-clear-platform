@@ -1,0 +1,48 @@
+@startuml US04-CD
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+class RegisterOrganizationUI {
+}
+
+class RegisterOrganizationController {
+    + RegisterOrganizationController()
+    + getOrganizationTypes() : List<OrganizationType>
+    + registerOrganization(name : String, nature : String, type : OrganizationType) : boolean
+}
+
+class OrganizationRepository {
+    + save(organization : Organization) : boolean
+    + existsByNameAndType(name : String, type : OrganizationType) : boolean
+}
+
+class Organization {
+    - name : String
+    - nature : String
+    + Organization(name : String, nature : String, type : OrganizationType)
+    + getName() : String
+    + getNature() : String
+    + getType() : OrganizationType
+}
+
+enum OrganizationType {
+    COMPANY
+    POLITICAL_PARTY
+    FOUNDATION
+    INSTITUTE
+    ASSOCIATION
+}
+
+RegisterOrganizationUI .> RegisterOrganizationController
+
+RegisterOrganizationController ..> OrganizationRepository
+RegisterOrganizationController ..> Organization
+
+OrganizationRepository "1" --> "*" Organization : organizations
+
+Organization ..> OrganizationType
+
+@enduml

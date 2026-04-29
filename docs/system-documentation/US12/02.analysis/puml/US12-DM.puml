@@ -28,11 +28,11 @@ class Complaint {
 }
 
 enum PoliticalFunction {
-    minister
-    deputy
-    councillor
-    parishCouncilPresident
-    mayor
+    MINISTER
+    DEPUTY
+    COUNCILLOR
+    PARISH_COUNCIL_PRESIDENT
+    MAYOR
 }
 
 Citizen "1" -- "*" Complaint : submits

@@ -1,0 +1,92 @@
+@startuml US11-CD
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+class ConsultAssetsUI {
+}
+
+class ConsultAssetsController {
+    + ConsultAssetsController()
+    + getPoliticalAgents()
+    + getAssets(agent, referenceDate)
+    - maskIfCitizen(assets)
+}
+
+class AuthenticationService {
+    + getCurrentUserRole()
+}
+
+class PoliticalAgentRepository {
+    + getPoliticalAgents()
+}
+
+class DeclarationRepository {
+    + getValidatedDeclarationsUpTo(agent, referenceDate)
+}
+
+class PoliticalAgent {
+    - nationalIdentityCard
+    - taxIdentificationNumber
+}
+
+class "Declaration of Interests" as Declaration {
+    - id
+    - submissionDate
+    - status
+    + getAssets()
+    + isValidatedOn(date)
+}
+
+enum DeclarationStatus {
+    PENDING
+    VALIDATED
+    REJECTED
+}
+
+class Asset {
+    - acquisitionValue
+    - marketValue
+}
+
+class RealEstate {
+    - description
+    - municipality
+}
+
+enum Role {
+    ORDINARY_CITIZEN
+    JOURNALIST
+}
+
+ConsultAssetsUI .> ConsultAssetsController
+
+ConsultAssetsController ..> AuthenticationService
+ConsultAssetsController ..> PoliticalAgentRepository
+ConsultAssetsController ..> DeclarationRepository
+ConsultAssetsController ..> PoliticalAgent
+ConsultAssetsController ..> Declaration
+ConsultAssetsController ..> Asset
+ConsultAssetsController ..> Role
+
+PoliticalAgentRepository --> "*" PoliticalAgent : agents
+DeclarationRepository --> "*" Declaration : declarations
+
+PoliticalAgent "1" -- "*" Declaration : submits >
+Declaration "*" -- "1" DeclarationStatus : has >
+Declaration "1" *-- "*" Asset : includes >
+Asset <|-- RealEstate
+
+note right of ConsultAssetsController
+    Masks acquisitionValue and
+    marketValue when role = Citizen (AC4)
+end note
+
+note bottom of Declaration
+    isValidatedOn(date):
+    status == VALIDATED &&
+    submissionDate <= date (AC2)
+end note
+
+@enduml

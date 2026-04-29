@@ -12,19 +12,24 @@ participant ":System" as System
 
 activate Admin
 
-Admin -> System : asks to register a new institution
+Admin -> System : asks to register a new organization
 activate System
-System --> Admin : requests data (name, type)
+System --> Admin : shows organization type list\n(Company, Political Party, Foundation, Institute, Association)\nand requests selection
 deactivate System
 
-Admin -> System : types name and type
+Admin -> System : selects organization type
 activate System
-System --> Admin : requests nature (public, private, social)
+System --> Admin : requests organization name and nature
 deactivate System
 
-Admin -> System : selects nature
+Admin -> System : types organization name and nature
 activate System
-System --> Admin : informs operation success
+System --> Admin : shows data and requests confirmation
+deactivate System
+
+Admin -> System : confirms
+activate System
+System --> Admin : displays operation success
 deactivate System
 
 deactivate Admin

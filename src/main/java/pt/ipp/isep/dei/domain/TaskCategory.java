@@ -1,7 +1,5 @@
 package pt.ipp.isep.dei.domain;
 
-import java.util.Objects;
-
 public class TaskCategory {
 
     private final String description;
@@ -20,11 +18,6 @@ public class TaskCategory {
         }
         TaskCategory that = (TaskCategory) o;
         return description.equals(that.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(description);
     }
 
     /**
