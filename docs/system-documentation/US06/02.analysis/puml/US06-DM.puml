@@ -43,11 +43,16 @@ enum PoliticalFunction {
 }
 
 class PositionEntry {
-    nature
     grossSalary
     sideIncome
     startDate
     endDate
+}
+
+enum PositionNature {
+    PUBLIC
+    PRIVATE
+    SOCIAL
 }
 
 class Function {
@@ -119,6 +124,7 @@ Declaration "1" *-- "*" Attachment : has
 
 PositionEntry "*" -- "1" Organization : held at
 PositionEntry "*" -- "1" Function : performs
+PositionEntry "*" -- "1" PositionNature : has
 
 Organization "*" -- "1" OrganizationType : classified as
 

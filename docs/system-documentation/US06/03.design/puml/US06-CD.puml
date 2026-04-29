@@ -45,7 +45,7 @@ class PoliticalAgent {
 class Declaration {
     - submissionDate : Date
     + Declaration(type : DeclarationType, agent : PoliticalAgent, submissionDate : Date, status : DeclarationStatus)
-    + addPositionEntry(organization : Organization, function : Function, nature : String, grossSalary : double, sideIncome : double, startDate : Date, endDate : Date)
+    + addPositionEntry(organization : Organization, function : Function, nature : PositionNature, grossSalary : double, sideIncome : double, startDate : Date, endDate : Date)
     + addSubsidyEntry(organization : Organization, amount : double, description : String, date : Date)
     + addAssetEntry(assetType : AssetType, assetValue : double, detail : Object)
     + addBusinessParticipation(organization : Organization, companyNIF : long, totalValueInStocks : double, companyPercentage : double)
@@ -53,7 +53,7 @@ class Declaration {
 }
 
 class PositionEntry {
-    - nature : String
+    - nature : PositionNature
     - grossSalary : double
     - sideIncome : double
     - startDate : Date
@@ -121,6 +121,12 @@ enum AssetType {
     STOCKS
 }
 
+enum PositionNature {
+    PUBLIC
+    PRIVATE
+    SOCIAL
+}
+
 note right of SubmitDeclarationController
     type is retrieved
     from selected data
@@ -148,6 +154,7 @@ Declaration --> "*" Attachment : attachments
 
 PositionEntry --> "1" Organization : organization
 PositionEntry --> "1" Function : function
+PositionEntry --> "1" PositionNature : nature
 
 SubsidyEntry --> "1" Organization : organization
 

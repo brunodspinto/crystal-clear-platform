@@ -1,0 +1,9 @@
+# Entity CSV — format: category;id;type;startDate;endDate;field1;field2;field3
+person;P-001;politician;2020-01-01;2024-01-01;Alice Smith;1980-05-10;Portuguese
+person;P-002;businessman;;; Bob Jones;1975-03-22;British
+organization;O-001;company;2010-01-01;;Acme Corp;private;Portugal
+organization;O-002;NGO;2005-06-15;2022-12-31;Green Earth;foundation;Spain
+position;J-001;public;2019-03-01;2023-03-01;Minister of Finance;government;O-001
+position;J-002;business;2015-01-01;;Board Member;private;O-002
+asset;A-001;property;2015-01-01;;real_estate;Portugal;500000.0
+asset;A-002;fund;2018-06-01;2023-01-01;company;Luxembourg;1200000.50

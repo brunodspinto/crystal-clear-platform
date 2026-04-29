@@ -72,7 +72,7 @@ As a Political Agent, I want to submit a declaration of interests including inco
 * Selected data:
     * declaration type (initial, regular, or exceptional)
     * organization(s) and function(s) per position entry
-    * nature of each position (public, private, or social)
+    * nature of each position (selected from: Public, Private, Social)
     * organization source per subsidy entry
     * asset type (real estate / vehicles / stocks) per asset entry
 
