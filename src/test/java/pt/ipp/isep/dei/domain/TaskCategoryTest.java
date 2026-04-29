@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TaskCategoryTest {
 
-    //Tests for equals and hashcode
     @Test
     void testEqualsSameObject() {
         TaskCategory taskCategory = new TaskCategory("Task Category Description");

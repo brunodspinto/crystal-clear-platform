@@ -5,6 +5,9 @@ public class TaskCategory {
     private final String description;
 
     public TaskCategory(String description) {
+        if (description == null || description.isBlank()) {
+            throw new IllegalArgumentException("Description cannot be null or empty");
+        }
         this.description = description;
     }
 
