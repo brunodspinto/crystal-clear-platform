@@ -10,19 +10,19 @@ _To be elaborated later._
 Initial Python skeleton lives in `src/main/python/us16/income_boxplot.py`.
 
 Pieces in place:
-- `_load(path)` reads a csv with columns `name, role, total_income` and groups income by role.
-- `summarise(by_role)` computes per-role n, min, Q1, median, Q3, max, mean using `statistics`.
-- `print_summary(stats)` prints a fixed-width table to stdout.
+- `load_data(path)` reads a csv with columns `name, role, total_income` and groups income by role.
+- `summarise(by_role)` computes per-role n, min, Q1, median, Q3, max, mean. Quartiles are approximated by index (Q1 = values[n/4], median = values[n/2], Q3 = values[3n/4-1]) — not exact but enough for now.
+- `print_summary(stats)` prints a comma-separated line per role to stdout.
 - `plot_boxplot` is declared but not implemented yet — needs matplotlib in the env (waiting on the python `requirements.txt`).
 
 A small `sample_declarations.csv` with 16 rows across 4 roles is included so the script runs end-to-end without US24 input. Running the script today gives:
 
 ```
-role                         n        min         q1     median         q3        max       mean
-deputy                       4      71000      73750      88500     106250     110000      89500
-mayor                        4      55000      55750      60000      68750      71000      61500
-minister                     4     128000     131000     145000     161250     165000     145750
-secretary_of_state           4      89000      91250     100500     109750     112000     100500
+role, n, min, q1, median, q3, max, mean
+deputy 4 71000.0 82000.0 95000.0 95000.0 110000.0 89500.0
+mayor 4 55000.0 58000.0 62000.0 62000.0 71000.0 61500.0
+minister 4 128000.0 140000.0 150000.0 150000.0 165000.0 145750.0
+secretary_of_state 4 89000.0 98000.0 103000.0 103000.0 112000.0 100500.0
 ```
 
 ## 6. Integration and Demo

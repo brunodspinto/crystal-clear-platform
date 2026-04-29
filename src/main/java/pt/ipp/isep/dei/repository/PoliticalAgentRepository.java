@@ -4,6 +4,8 @@ import pt.ipp.isep.dei.domain.PoliticalAgent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.List;
 
 /**
  * Repository for storing and retrieving {@link PoliticalAgent} instances.
@@ -39,5 +41,20 @@ public class PoliticalAgentRepository {
      */
     public List<PoliticalAgent> getAll() {
         return List.copyOf(politicalAgents);
+    }
+
+    /**
+     * Finds a political agent by email address (case-insensitive).
+     *
+     * @param email the email to search for.
+     * @return an {@link Optional} containing the agent, or empty if not found.
+     */
+    public Optional<PoliticalAgent> getByEmail(String email) {
+        for (PoliticalAgent agent : politicalAgents) {
+            if (agent.getEmail().equalsIgnoreCase(email)) {
+                return Optional.of(agent);
+            }
+        }
+        return Optional.empty();
     }
 }
