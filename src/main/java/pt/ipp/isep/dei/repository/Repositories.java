@@ -15,6 +15,7 @@ public class Repositories {
     private final PoliticalAgentRepository politicalAgentRepository;
     private final CitizenRepository citizenRepository;
     private final ComplaintRepository complaintRepository;
+    private final DeclarationRepository declarationRepository;
 
     /**
      * The Singleton's constructor should always be private to prevent direct construction calls with the new operator.
@@ -27,6 +28,7 @@ public class Repositories {
         politicalAgentRepository = new PoliticalAgentRepository();
         citizenRepository = new CitizenRepository();
         complaintRepository = new ComplaintRepository();
+        declarationRepository = new DeclarationRepository();
     }
 
     /**
@@ -84,5 +86,14 @@ public class Repositories {
      */
     public ComplaintRepository getComplaintRepository() {
         return complaintRepository;
+    }
+
+    /**
+     * Returns the declaration repository.
+     *
+     * @return the {@link DeclarationRepository} instance.
+     */
+    public DeclarationRepository getDeclarationRepository() {
+        return declarationRepository;
     }
 }

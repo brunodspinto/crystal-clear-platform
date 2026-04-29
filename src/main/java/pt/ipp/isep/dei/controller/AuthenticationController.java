@@ -14,6 +14,8 @@ public class AuthenticationController {
     public static final String ROLE_EMPLOYEE = "EMPLOYEE";
     /** Role identifier for citizens (US12). */
     public static final String ROLE_CITIZEN = "CITIZEN";
+    /** Role identifier for political agents (US06). */
+    public static final String ROLE_POLITICAL_AGENT = "POLITICAL_AGENT";
 
     //private final ApplicationSession applicationSession;
     private final AuthenticationRepository authenticationRepository;
