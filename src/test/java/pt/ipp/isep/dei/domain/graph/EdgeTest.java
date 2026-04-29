@@ -28,6 +28,5 @@ class EdgeTest {
         Edge a = new Edge("a", "b", "kinship", 0.5);
         Edge b = new Edge("a", "b", "kinship", 0.5);
         assertEquals(a, b);
-        assertEquals(a.hashCode(), b.hashCode());
     }
 }

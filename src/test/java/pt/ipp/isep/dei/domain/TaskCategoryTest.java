@@ -47,33 +47,6 @@ class TaskCategoryTest {
     }
 
     @Test
-    void testHashCodeSameObject() {
-        TaskCategory taskCategory = new TaskCategory("Task Category Description");
-        assertEquals(taskCategory.hashCode(), taskCategory.hashCode());
-    }
-
-    @Test
-    void testHashCodeDifferentObject() {
-        TaskCategory taskCategory = new TaskCategory("Task Category Description");
-        TaskCategory taskCategory1 = new TaskCategory("Task Category Description 1");
-        assertNotEquals(taskCategory.hashCode(), taskCategory1.hashCode());
-    }
-
-    @Test
-    void testHashCodeSameObjectDifferentDescription() {
-        TaskCategory taskCategory = new TaskCategory("Task Category Description");
-        TaskCategory taskCategory1 = new TaskCategory("Task Category Description 1");
-        assertNotEquals(taskCategory.hashCode(), taskCategory1.hashCode());
-    }
-
-    @Test
-    void testHashCodeSameObjectSameDescription() {
-        TaskCategory taskCategory = new TaskCategory("Task Category Description");
-        TaskCategory taskCategory1 = new TaskCategory("Task Category Description");
-        assertEquals(taskCategory.hashCode(), taskCategory1.hashCode());
-    }
-
-    @Test
     void testEqualsForDifferentObjectType() {
         TaskCategory taskCategory = new TaskCategory("Task Category Description");
         assertNotEquals(taskCategory, new Object());

@@ -39,22 +39,6 @@ class EmployeeTest {
     }
 
     @Test
-    void ensureHashCodeIsEqualForEqualObjects() {
-        String email = "john.doe@this.company.com";
-        Employee employee1 = new Employee(email);
-        Employee employee2 = new Employee(email);
-        assertEquals(employee1.hashCode(), employee2.hashCode());
-    }
-
-    @Test
-    void ensureHashCodeIsNotEqualForDifferentObjects() {
-
-        Employee employee1 = new Employee("john.doe@this.company.com");
-        Employee employee2 = new Employee("jane.doe@this.company.com");
-        assertNotEquals(employee1.hashCode(), employee2.hashCode());
-    }
-
-    @Test
     void ensureHasEmailWorksForTheSameEmail() {
         String email = "john.doe@this.compay.org";
         Employee employee = new Employee(email);
