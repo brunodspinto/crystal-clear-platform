@@ -47,7 +47,7 @@ public class DeclarationRepository {
                 result.add(d);
             }
         }
-        return List.copyOf(result);
+        return new ArrayList<>(result);
     }
 
     /**
@@ -56,6 +56,6 @@ public class DeclarationRepository {
      * @return list of all declarations.
      */
     public List<Declaration> getAll() {
-        return List.copyOf(declarations);
+        return new ArrayList<>(declarations);
     }
 }

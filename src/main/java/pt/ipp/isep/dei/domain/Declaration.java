@@ -146,19 +146,19 @@ public class Declaration {
     public DeclarationStatus getStatus() { return status; }
 
     /** @return an unmodifiable copy of the position entries. */
-    public List<PositionEntry> getPositionEntries() { return List.copyOf(positionEntries); }
+    public List<PositionEntry> getPositionEntries() { return new ArrayList<>(positionEntries); }
 
     /** @return an unmodifiable copy of the subsidy entries. */
-    public List<SubsidyEntry> getSubsidyEntries() { return List.copyOf(subsidyEntries); }
+    public List<SubsidyEntry> getSubsidyEntries() { return new ArrayList<>(subsidyEntries); }
 
     /** @return an unmodifiable copy of the asset entries. */
-    public List<AssetEntry> getAssetEntries() { return List.copyOf(assetEntries); }
+    public List<AssetEntry> getAssetEntries() { return new ArrayList<>(assetEntries); }
 
     /** @return an unmodifiable copy of the business participations. */
-    public List<BusinessParticipation> getBusinessParticipations() { return List.copyOf(businessParticipations); }
+    public List<BusinessParticipation> getBusinessParticipations() { return new ArrayList<>(businessParticipations); }
 
     /** @return an unmodifiable copy of the attachments. */
-    public List<Attachment> getAttachments() { return List.copyOf(attachments); }
+    public List<Attachment> getAttachments() { return new ArrayList<>(attachments); }
 
     @Override
     public String toString() {
