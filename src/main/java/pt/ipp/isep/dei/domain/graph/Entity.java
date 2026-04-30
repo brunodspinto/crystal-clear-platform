@@ -48,9 +48,4 @@ public abstract class Entity {
         return id.equals(entity.id);
     }
 
-    @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
-
 }

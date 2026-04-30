@@ -27,7 +27,6 @@ public class Task {
     }
 
     private void validateReference(String reference) {
-        //TODO: missing from the diagrams
         if (reference == null || reference.isEmpty()) {
             throw new IllegalArgumentException("Reference cannot be null or empty.");
         }
@@ -52,6 +51,6 @@ public class Task {
      */
     public Task clone() {
         return new Task(this.reference, this.description, this.informalDescription, this.technicalDescription,
-                this.duration, this.cost, this.taskCategory, this.employee);
+                this.duration, this.cost, this.taskCategory.clone(), this.employee.clone());
     }
 }

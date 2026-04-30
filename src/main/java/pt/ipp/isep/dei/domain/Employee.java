@@ -7,6 +7,9 @@ public class Employee {
     private String phone;
 
     public Employee(String email) {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("Email cannot be null or empty");
+        }
         this.email = email;
     }
 

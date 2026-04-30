@@ -1,7 +1,6 @@
 package pt.ipp.isep.dei.domain;
 
 import java.io.Serializable;
-import java.util.Locale;
 
 /**
  * Represents a political or administrative function in the system.
@@ -39,11 +38,7 @@ public class Function implements Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Function function = (Function) o;
-        return normalizeDesignation(designation).equals(normalizeDesignation(function.designation));
-    }
-
-    private String normalizeDesignation(String value) {
-        return value.toLowerCase(Locale.ROOT);
+        return designation.equals(function.designation);
     }
 
     /**

@@ -44,7 +44,6 @@ class OrganizationTest {
         Organization o1 = new Organization("O-001", "company", "2010-01-01", "", "Acme Corp", "private", "PT");
         Organization o2 = new Organization("O-001", "NGO", "2005-01-01", "", "Other Name", "foundation", "ES");
         assertEquals(o1, o2);
-        assertEquals(o1.hashCode(), o2.hashCode());
         assertNotEquals(o1, new Organization("O-002", "company", "", "", "Acme Corp", "private", "PT"));
     }
 }

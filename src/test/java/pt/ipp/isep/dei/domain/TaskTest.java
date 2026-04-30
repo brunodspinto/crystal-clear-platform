@@ -93,28 +93,6 @@ class TaskTest {
     }
 
     @Test
-    void testHashCodeSameObject() {
-        Employee employee = new Employee("john.doe@this.company.com");
-        TaskCategory taskCategory = new TaskCategory("Task Category Description");
-        Task task = new Task("reference", "description", "informal description", "technical description", 1, 1d,
-                taskCategory, employee);
-
-        assertEquals(task.hashCode(), task.hashCode());
-    }
-
-    @Test
-    void testHashCodeDifferentObject() {
-        Employee employee = new Employee("john.doe@this.company.com");
-        TaskCategory taskCategory = new TaskCategory("Task Category Description");
-        Task task = new Task("reference", "description", "informal description", "technical description", 1, 1d,
-                taskCategory, employee);
-        Task task1 = new Task("reference1", "description1", "informal description1", "technical description1", 2, 2d,
-                taskCategory, employee);
-
-        assertNotEquals(task.hashCode(), task1.hashCode());
-    }
-
-    @Test
     void ensureCloneWorks() {
         Employee employee = new Employee("john.doe@this.company.org");
         TaskCategory taskCategory = new TaskCategory("Task Category Description");

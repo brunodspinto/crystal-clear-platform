@@ -1,7 +1,5 @@
 package pt.ipp.isep.dei.domain.graph;
 
-import java.util.Objects;
-
 /**
  * A relation between two entities, identified by their ids.
  *
@@ -56,8 +54,4 @@ public class Edge {
                 && label.equals(other.label);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(fromId, toId, label, weight);
-    }
 }

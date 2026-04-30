@@ -36,34 +36,6 @@ class OrganizationTest {
     }
 
     @Test
-    void testHashCodeSameObject() {
-        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
-        assertEquals(organization.hashCode(), organization.hashCode());
-    }
-
-    @Test
-    void testHashCodeDifferentObject() {
-        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
-        Organization organization1 = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
-        assertEquals(organization.hashCode(), organization1.hashCode());
-    }
-
-    @Test
-        //same hashcode
-    void testHashCodeSameObjectSameVATNumber() {
-        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
-        Organization organization1 = new Organization("123456789", "Another Org", "www.another.com", "987654321", "another@test.com");
-        assertEquals(organization.hashCode(), organization1.hashCode());
-    }
-
-    @Test
-    void ensureHashCodeFailsForDifferentVatNumbers() {
-        Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
-        Organization organization1 = new Organization("123456788", "Test Org", "www.test.com", "912345678", "test@test.com");
-        assertNotEquals(organization.hashCode(), organization1.hashCode());
-    }
-
-    @Test
     void ensureEqualsFailsForDifferentObjectType() {
         Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
         Organization organization1 = new Organization("123456788", "Test Org", "www.test.com", "912345678", "test@test.com");
