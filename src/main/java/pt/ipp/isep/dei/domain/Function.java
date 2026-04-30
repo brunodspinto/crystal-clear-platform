@@ -38,7 +38,7 @@ public class Function implements Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Function function = (Function) o;
-        return designation.equals(function.designation);
+        return designation.equalsIgnoreCase(function.designation);
     }
 
     /**

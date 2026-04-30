@@ -3,7 +3,9 @@ package pt.ipp.isep.dei.domain.graph;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,7 +15,11 @@ class EntityCsvParserTest {
     private String resourcePath(String name) {
         URL url = getClass().getClassLoader().getResource(name);
         assertNotNull(url, "Test resource not found: " + name);
-        return url.getPath();
+        try {
+            return Paths.get(url.toURI()).toString();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
