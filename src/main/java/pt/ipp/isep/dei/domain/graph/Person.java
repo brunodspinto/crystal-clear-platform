@@ -14,15 +14,20 @@ public class Person extends Entity {
         this.nationality = nationality == null ? "" : nationality;
     }
 
-    public String name() {
+    public String getName() {
         return name;
     }
 
-    public String birthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
 
-    public String nationality() {
+    public String getNationality() {
         return nationality;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{id='" + getId() + "', name='" + name + "', birthDate='" + birthDate + "', nationality='" + nationality + "'}";
     }
 }

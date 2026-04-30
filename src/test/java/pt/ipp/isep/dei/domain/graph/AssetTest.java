@@ -10,13 +10,13 @@ class AssetTest {
     void ensureFieldsAreKept() {
         Asset asset = new Asset("A-001", "asset", "2021-01-01", "2023-01-01",
                 "real_estate", "Portugal", 250000.0);
-        assertEquals("A-001", asset.id());
-        assertEquals("asset", asset.type());
-        assertEquals("2021-01-01", asset.startDate());
-        assertEquals("2023-01-01", asset.endDate());
-        assertEquals("real_estate", asset.assetType());
-        assertEquals("Portugal", asset.country());
-        assertEquals(250000.0, asset.estimatedValue());
+        assertEquals("A-001", asset.getId());
+        assertEquals("asset", asset.getType());
+        assertEquals("2021-01-01", asset.getStartDate());
+        assertEquals("2023-01-01", asset.getEndDate());
+        assertEquals("real_estate", asset.getAssetType());
+        assertEquals("Portugal", asset.getCountry());
+        assertEquals(250000.0, asset.getEstimatedValue());
     }
 
     @Test
@@ -32,10 +32,10 @@ class AssetTest {
     @Test
     void ensureNullStringsDefaultToEmpty() {
         Asset asset = new Asset("A-002", "asset", null, null, null, null, 0.0);
-        assertEquals("", asset.startDate());
-        assertEquals("", asset.endDate());
-        assertEquals("", asset.assetType());
-        assertEquals("", asset.country());
+        assertEquals("", asset.getStartDate());
+        assertEquals("", asset.getEndDate());
+        assertEquals("", asset.getAssetType());
+        assertEquals("", asset.getCountry());
     }
 
     @Test

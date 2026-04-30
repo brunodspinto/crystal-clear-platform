@@ -14,15 +14,20 @@ public class Position extends Entity {
         this.organizationId = organizationId == null ? "" : organizationId;
     }
 
-    public String positionTitle() {
+    public String getPositionTitle() {
         return positionTitle;
     }
 
-    public String positionType() {
+    public String getPositionType() {
         return positionType;
     }
 
-    public String organizationId() {
+    public String getOrganizationId() {
         return organizationId;
+    }
+
+    @Override
+    public String toString() {
+        return "Position{id='" + getId() + "', positionTitle='" + positionTitle + "', positionType='" + positionType + "', organizationId='" + organizationId + "'}";
     }
 }

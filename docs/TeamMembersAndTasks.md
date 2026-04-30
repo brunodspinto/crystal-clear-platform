@@ -28,19 +28,19 @@ At last, remember that each User Story does not stand alone... it needs to be in
 
 **This table must be always up-to-date.**
 
-| Task                                                                                                                           | Sprint 1                             | Sprint 2 | Sprint 3 |
-|--------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|----------|----------|
-| [Glossary](system-documentation/global-artifacts/01.requirements-engineering/glossary.md)                                      | all                                  | all      | all      |
-| [Use Case Diagram (UCD)](system-documentation/global-artifacts/01.requirements-engineering/use-case-diagram.md)                | all                                  | all      | all      |
-| [Supplementary Specification](system-documentation/global-artifacts/01.requirements-engineering/suplementary-specification.md) | all                                  | all      | all      |
-| [Domain Model](system-documentation/global-artifacts/01.requirements-engineering/domain-model.md)                              | all                                  | all      | all      |
+| Task                                                                                                                           | Sprint 1                             | Sprint 2                             | Sprint 3 |
+|--------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|--------------------------------------|----------|
+| [Glossary](system-documentation/global-artifacts/01.requirements-engineering/glossary.md)                                      | all                                  | all                                  | all      |
+| [Use Case Diagram (UCD)](system-documentation/global-artifacts/01.requirements-engineering/use-case-diagram.md)                | all                                  | all                                  | all      |
+| [Supplementary Specification](system-documentation/global-artifacts/01.requirements-engineering/suplementary-specification.md) | all                                  | all                                  | all      |
+| [Domain Model](system-documentation/global-artifacts/01.requirements-engineering/domain-model.md)                              | all                                  | all                                  | all      |
 | US01 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US01) | [[removed]](system-documentation/US01) |          |
 | US02 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US02) | [[removed]](system-documentation/US02) |          |
 | US03 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US03) | [[removed]](system-documentation/US03) |          |
 | US04 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US04) | [[removed]](system-documentation/US04) |          |
-| US05 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US05) | dispensada |          |
+| US05 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US05) | dispensada                           |          |
 | US06 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US06) | [[removed]](system-documentation/US06) |          |
-| US07 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US07) | dispensada |          |
+| US07 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US07) | dispensada                           |          |
 | US08 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US08) | [[removed]](system-documentation/US08) |          |
 | US09 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US09) | [[removed]](system-documentation/US09) |          |
 | US10 (SDP Activities)                                                                                                          | [[removed]](system-documentation/US10) | [[removed]](system-documentation/US10) |          |

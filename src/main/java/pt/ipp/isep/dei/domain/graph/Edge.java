@@ -47,11 +47,17 @@ public class Edge {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Edge other)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
+        Edge other = (Edge) o;
         return Double.compare(weight, other.weight) == 0
                 && fromId.equals(other.fromId)
                 && toId.equals(other.toId)
                 && label.equals(other.label);
+    }
+
+    @Override
+    public String toString() {
+        return "Edge{fromId='" + fromId + "', toId='" + toId + "', label='" + label + "', weight=" + weight + "}";
     }
 
 }

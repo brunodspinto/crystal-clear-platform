@@ -14,15 +14,20 @@ public class Organization extends Entity {
         this.country = country == null ? "" : country;
     }
 
-    public String name() {
+    public String getName() {
         return name;
     }
 
-    public String organizationType() {
+    public String getOrganizationType() {
         return organizationType;
     }
 
-    public String country() {
+    public String getCountry() {
         return country;
+    }
+
+    @Override
+    public String toString() {
+        return "Organization{id='" + getId() + "', name='" + name + "', organizationType='" + organizationType + "', country='" + country + "'}";
     }
 }

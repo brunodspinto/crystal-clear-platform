@@ -10,13 +10,13 @@ class PositionTest {
     void ensureFieldsAreKept() {
         Position position = new Position("J-001", "public", "2019-03-01", "2023-03-01",
                 "Minister of Finance", "government", "O-001");
-        assertEquals("J-001", position.id());
-        assertEquals("public", position.type());
-        assertEquals("2019-03-01", position.startDate());
-        assertEquals("2023-03-01", position.endDate());
-        assertEquals("Minister of Finance", position.positionTitle());
-        assertEquals("government", position.positionType());
-        assertEquals("O-001", position.organizationId());
+        assertEquals("J-001", position.getId());
+        assertEquals("public", position.getType());
+        assertEquals("2019-03-01", position.getStartDate());
+        assertEquals("2023-03-01", position.getEndDate());
+        assertEquals("Minister of Finance", position.getPositionTitle());
+        assertEquals("government", position.getPositionType());
+        assertEquals("O-001", position.getOrganizationId());
     }
 
     @Test
@@ -32,11 +32,11 @@ class PositionTest {
     @Test
     void ensureNullStringsDefaultToEmpty() {
         Position position = new Position("J-002", "business", null, null, null, null, null);
-        assertEquals("", position.startDate());
-        assertEquals("", position.endDate());
-        assertEquals("", position.positionTitle());
-        assertEquals("", position.positionType());
-        assertEquals("", position.organizationId());
+        assertEquals("", position.getStartDate());
+        assertEquals("", position.getEndDate());
+        assertEquals("", position.getPositionTitle());
+        assertEquals("", position.getPositionType());
+        assertEquals("", position.getOrganizationId());
     }
 
     @Test
