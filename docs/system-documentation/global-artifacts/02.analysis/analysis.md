@@ -34,8 +34,9 @@ To identify domain conceptual classes, start by making a list of candidate conce
 
 **Roles of People or Organizations**
 
-* Role: the platform role of a user (Political Agent, Ordinary Citizen, Journalist, Ethics Committee, System Administrator)
+* Role: the platform role of a user (Political Agent, Ordinary Citizen, Journalist, Ethics Committee, System Administrator, Product Owner)
 * PoliticalFunction: the political mandate of a political agent (minister, deputy, councillor, mayor, parish council president)
+* ProductOwner: the stakeholder responsible for importing entities and relationships into the heterogeneous network and exporting CSV datasets
 
 **Places**
 
@@ -57,6 +58,8 @@ To identify domain conceptual classes, start by making a list of candidate conce
 * AssetType: classifies an asset as realEstate, vehicles, or stocks
 * ValidationOutcome: the result of a validation (validated or returned for correction)
 * Status: the state of a registration request (pending, approved, rejected)
+* EntityType: classifies a graph entity as PERSON, ORGANIZATION, POSITION, or ASSET
+* RelationshipType: classifies a relationship between entities (e.g. relativeOf, friendOf, holdsPosition, memberOf, influences)
 
 **Catalogs**
 
@@ -75,6 +78,7 @@ To identify domain conceptual classes, start by making a list of candidate conce
 **(Other) Organizations**
 
 * Organization: a company, political party, foundation, institute, or association
+* EthicsCommittee: the body to which Ethics Committee Members belong
 
 **Other (External/Collaborating) Systems**
 
@@ -86,6 +90,8 @@ To identify domain conceptual classes, start by making a list of candidate conce
 * AssetEntry: record of real estate with estimated value
 * BusinessParticipation: record of company holdings with market value
 * SubsidyEntry: record of supports and subsidies received
+* Complaint: a report submitted by a citizen targeting a political agent's behaviour or lack of transparency
+* AuditLog: a record of actions performed by users on the platform
 
 **Financial Instruments**
 
@@ -97,6 +103,15 @@ To identify domain conceptual classes, start by making a list of candidate conce
 * DeclarationOfInterests: the formal document submitted to the platform
 * RegistrationRequest: the document submitted to request access to the platform
 * Attachment: a supporting document file uploaded alongside a declaration
+
+**Heterogeneous Network Entities (Sprint 2)**
+
+* Entity: a node in the heterogeneous network representing a real-world object (person, organization, position, or asset); has an id, type, and temporal validity
+* GraphPerson: a person entity in the network with biographical attributes
+* GraphOrganization: an organization entity in the network
+* GraphPosition: a position entity in the network
+* GraphAsset: an asset entity in the network
+* EntityRelationship: an edge connecting two entities in the heterogeneous network, typed and weighted
 
 
 ## Rationale to identify associations between conceptual classes
@@ -128,14 +143,17 @@ An association is a relationship between instances of objects that indicates a r
 | DeclarationOfInterests    | includes                 | SubsidyEntry             |
 | DeclarationOfInterests    | includes                 | AssetEntry               |
 | DeclarationOfInterests    | includes                 | BusinessParticipation    |
+| DeclarationOfInterests    | includes                 | Income                   |
 | PositionEntry             | held at                  | Organization             |
 | PositionEntry             | performs                 | Function                 |
 | Organization              | classified as            | OrganizationType         |
 | SubsidyEntry              | received from            | Organization             |
+| Income                    | received from            | Organization             |
 | AssetEntry                | classified as            | AssetType                |
 | AssetEntry                | described by             | RealEstate               |
 | DeclarationOfInterests    | includes                 | Attachment               |
 | BusinessParticipation     | held in                  | Organization             |
+| EthicsCommitteeMember     | belongs to               | EthicsCommittee          |
 | EthicsCommitteeMember     | performs                 | ValidationRecord         |
 | ValidationRecord          | concerns                 | DeclarationOfInterests   |
 | ValidationRecord          | results in               | ValidationOutcome        |
@@ -145,6 +163,17 @@ An association is a relationship between instances of objects that indicates a r
 | Journalist                | analyses income of       | PoliticalAgent           |
 | Journalist                | consults assets of       | PoliticalAgent           |
 | Citizen                   | consults assets of       | PoliticalAgent           |
+| Citizen                   | submits                  | Complaint                |
+| Complaint                 | targets                  | PoliticalAgent           |
+| Complaint                 | references               | PoliticalFunction        |
+| User                      | generates                | AuditLog                 |
+| Entity                    | classified as            | EntityType               |
+| EntityRelationship        | of type                  | RelationshipType         |
+| EntityRelationship        | connects (entity1)       | Entity                   |
+| EntityRelationship        | connects (entity2)       | Entity                   |
+| ProductOwner              | imports                  | Entity                   |
+| ProductOwner              | imports                  | EntityRelationship       |
+| ProductOwner              | exports (CSV)            | DeclarationOfInterests   |
 
 
 
@@ -165,9 +194,10 @@ Attributes are chosen based on the information that needs to be stored or displa
 | DeclarationStatus         | {pending, validated, rejected}                                             |
 | PositionEntry             | nature: String, grossSalary: Double, sideIncome: Double, startDate: Date, endDate: Date |
 | Function                  | designation: String                                                        |
-| Organization              | name: String                                                               |
+| Organization              | name: String, nature: String                                               |
 | OrganizationType          | {company, politicalParty, foundation, institute, association}              |
 | SubsidyEntry              | amount: Double, description: String, date: Date                            |
+| Income                    | amount: Double, source: String, date: Date                                 |
 | AssetEntry                | assetValue: Double                                                         |
 | AssetType                 | {realEstate, vehicles, stocks}                                             |
 | RealEstate                | description: String, municipality: String                                  |
@@ -178,11 +208,21 @@ Attributes are chosen based on the information that needs to be stored or displa
 | Journalist                | name: String, email: String, phone: String, pressCardNumber: String        |
 | Citizen                   | name: String, email: String, nationalIdCardNumber: String                  |
 | Administrator             | name: String, email: String                                                |
+| ProductOwner              | name: String, email: String                                                |
 | ValidationRecord          | validationDate: Date                                                       |
 | ValidationOutcome         | {validated, returnedForCorrection}                                         |
 | ValidationComment         | comment: String, section: String                                           |
-| Income                    | amount: Double, source: String, institution: String, date: Date            |
 | Attachment                | fileName: String, uploadDate: Date                                         |
+| Complaint                 | description: String, complaintDate: Date, submissionDate: Date             |
+| AuditLog                  | action: String, timestamp: DateTime, details: String                       |
+| Entity                    | id: String, startDate: Date, endDate: Date                                 |
+| EntityType                | {PERSON, ORGANIZATION, POSITION, ASSET}                                    |
+| GraphPerson               | name: String, birthDate: Date, nationality: String                         |
+| GraphOrganization         | name: String, organizationType: String, country: String                    |
+| GraphPosition             | positionTitle: String, positionType: String, organizationId: String        |
+| GraphAsset                | assetType: String, country: String, estimatedValue: Double                 |
+| EntityRelationship        | id: String, startDate: Date, endDate: Date, weight: Double                 |
+| RelationshipType          | {RELATIVE_OF, FRIEND_OF, ASSOCIATED_WITH, APPOINTED_BY, HOLDS_POSITION, IN_ORGANIZATION, MEMBER_OF, INFLUENCES, CONTROLS, PARTNER_OF, SUPERVISES} |
 
 
 ## Domain Model

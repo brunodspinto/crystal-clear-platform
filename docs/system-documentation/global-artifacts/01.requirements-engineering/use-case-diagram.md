@@ -12,17 +12,31 @@ However, be aware, this is a pedagogical simplification. On further projects and
 
 # Use Cases / User Stories
 
-| UC/US | Description                                            |                   
-|:------|:-------------------------------------------------------|
-| US01  | [Request Registration](../US01/US01-README.md)         |
-| US02  | [Accept/reject Registration](../US02/US02-README.md)   |
-| US03  | [List Institutions](../US03/US03-README.md)            |
-| US04  | [Register Institution](../US04/US04-README.md)         |
-| US05  | [Register Functions](../US05/US05-README.md)           |
-| US06  | [Submit Declaration](../US06/US06-README.md)           |
-| US07  | [Consult Own Declaration](../US07/US07-README.md)      |
-| US08  | [Validate Declaration](../US08/US08-README.md)         |
-| US09  | [Consult Integrated Situation](../US09/US09-README.md) |
-| US10  | [Analyse Income Evolution](../US10/US10-README.md)     |
-| US11  | [Consult Assets](../US11/US11-README.md)               |
-| US12  | [Make a Complaint](../US12/US12-README.md)             |
+| UC/US | Description                                                              |
+|:------|:-------------------------------------------------------------------------|
+| US01  | [Request Registration](../US01/US01-README.md)                           |
+| US02  | [Accept/reject Registration](../US02/US02-README.md)                     |
+| US03  | [List Institutions](../US03/US03-README.md)                              |
+| US04  | [Register Institution](../US04/US04-README.md)                           |
+| US05  | [Register Functions](../US05/US05-README.md)                             |
+| US06  | [Submit Declaration](../US06/US06-README.md)                             |
+| US07  | [Consult Own Declaration](../US07/US07-README.md)                        |
+| US08  | [Validate Declaration](../US08/US08-README.md)                           |
+| US09  | [Consult Integrated Situation](../US09/US09-README.md)                   |
+| US10  | [Analyse Income Evolution](../US10/US10-README.md)                       |
+| US11  | [Consult Assets](../US11/US11-README.md)                                 |
+| US12  | [Make a Complaint](../US12/US12-README.md)                               |
+| US13  | [Exploratory Analysis of Declarations](../US13/US13-README.md)           |
+| US14  | [Statistical Overview of Declarations](../US14/US14-README.md)           |
+| US15  | [Evolution of Political Actor's Assets Over Time](../US15/US15-README.md)|
+| US16  | [Compare Total Income Across Roles (Boxplots)](../US16/US16-README.md)   |
+| US17  | [Identify Top Companies by Share Values](../US17/US17-README.md)         |
+| US18  | [Identify Top Stock Value Increases](../US18/US18-README.md)             |
+| US19  | [Extract Entities from CSV](../US19/US19-README.md)                      |
+| US20  | [Draw Entity Relationships from CSV](../US20/US20-README.md)             |
+| US21  | [Represent Graph with Adjacency Matrices](../US21/US21-README.md)        |
+| US22  | [Detect Direct Nepotism](../US22/US22-README.md)                         |
+| US23  | [Detect Indirect Conflicts of Interest](../US23/US23-README.md)          |
+| US24  | [Export Declaration Dataset to CSV](../US24/US24-README.md)              |
+| US25  | [Export Holdings Dataset to CSV](../US25/US25-README.md)                 |
+| US26  | [Interact with Graph via Hyperlinks](../US26/US26-README.md)             |

@@ -5,7 +5,7 @@ skinparam shadowing false
 
 left to right direction
 
-title Use Case Diagram - Sprint 1
+title Use Case Diagram - Sprint 1 & 2
 
 actor "Future User" as FutureUser
 actor "Administrator" as Admin
@@ -13,6 +13,7 @@ actor "Political Agent" as Agent
 actor "Ethics Committee" as Ethics
 actor "Journalist" as Journalist
 actor "Citizen" as Citizen
+actor "Product Owner" as PO
 
 usecase "UC01 - Request Registration" as US01
 usecase "UC02 - Accept/Reject Registration" as US02
@@ -26,6 +27,20 @@ usecase "UC09 - Consult Integrated Situation" as US09
 usecase "UC10 - Analyse Income Evolution" as US10
 usecase "UC11 - Consult Assets" as US11
 usecase "UC12 - Make a Complaint" as US12
+usecase "UC13 - Exploratory Analysis of Declarations" as US13
+usecase "UC14 - Statistical Overview of Declarations" as US14
+usecase "UC15 - Evolution of Political Actor's Assets" as US15
+usecase "UC16 - Compare Total Income Across Roles" as US16
+usecase "UC17 - Identify Top Companies by Share Values" as US17
+usecase "UC18 - Identify Top Stock Value Increases" as US18
+usecase "UC19 - Extract Entities from CSV" as US19
+usecase "UC20 - Draw Entity Relationships from CSV" as US20
+usecase "UC21 - Represent Graph with Adjacency Matrices" as US21
+usecase "UC22 - Detect Direct Nepotism" as US22
+usecase "UC23 - Detect Indirect Conflicts of Interest" as US23
+usecase "UC24 - Export Declaration Dataset to CSV" as US24
+usecase "UC25 - Export Holdings Dataset to CSV" as US25
+usecase "UC26 - Interact with Graph via Hyperlinks" as US26
 
 FutureUser --> US01
 Admin --> US02
@@ -44,5 +59,21 @@ Journalist --> US11
 
 Citizen --> US11
 Citizen --> US12
+
+Ethics --> US13
+Ethics --> US14
+Ethics --> US15
+Ethics --> US16
+Ethics --> US17
+Ethics --> US18
+Ethics --> US22
+Ethics --> US23
+
+PO --> US19
+PO --> US20
+PO --> US21
+PO --> US24
+PO --> US25
+PO --> US26
 
 @enduml
