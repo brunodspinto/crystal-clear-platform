@@ -10,7 +10,7 @@
 
     <properties>
         <!-- Java Version Configuration -->
-        <java.version>11</java.version>
+        <java.version>25</java.version>
 
         <!-- Maven Version Configuration -->
         <maven-compiler-plugin>3.14.0</maven-compiler-plugin>

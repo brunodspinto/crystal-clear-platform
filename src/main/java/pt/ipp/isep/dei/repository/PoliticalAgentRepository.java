@@ -40,7 +40,7 @@ public class PoliticalAgentRepository {
      * @return list of all political agents.
      */
     public List<PoliticalAgent> getAll() {
-        return List.copyOf(politicalAgents);
+        return new ArrayList<>(politicalAgents);
     }
 
     /**
