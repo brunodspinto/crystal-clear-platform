@@ -20,19 +20,19 @@ public abstract class Entity {
         this.endDate = endDate == null ? "" : endDate;
     }
 
-    public String id() {
+    public String getId() {
         return id;
     }
 
-    public String type() {
+    public String getType() {
         return type;
     }
 
-    public String startDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public String endDate() {
+    public String getEndDate() {
         return endDate;
     }
 
@@ -41,11 +41,16 @@ public abstract class Entity {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Entity)) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         Entity entity = (Entity) o;
         return id.equals(entity.id);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getName() + "{id='" + id + "', type='" + type + "', startDate='" + startDate + "', endDate='" + endDate + "'}";
     }
 
 }

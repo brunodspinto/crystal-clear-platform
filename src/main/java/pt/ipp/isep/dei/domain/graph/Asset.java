@@ -14,15 +14,20 @@ public class Asset extends Entity {
         this.estimatedValue = estimatedValue;
     }
 
-    public String assetType() {
+    public String getAssetType() {
         return assetType;
     }
 
-    public String country() {
+    public String getCountry() {
         return country;
     }
 
-    public double estimatedValue() {
+    public double getEstimatedValue() {
         return estimatedValue;
+    }
+
+    @Override
+    public String toString() {
+        return "Asset{id='" + getId() + "', assetType='" + assetType + "', country='" + country + "', estimatedValue=" + estimatedValue + "}";
     }
 }

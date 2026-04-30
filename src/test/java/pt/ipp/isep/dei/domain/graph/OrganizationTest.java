@@ -10,13 +10,13 @@ class OrganizationTest {
     void ensureFieldsAreKept() {
         Organization org = new Organization("O-001", "company", "2010-01-01", "2024-01-01",
                 "Acme Corp", "private", "Portugal");
-        assertEquals("O-001", org.id());
-        assertEquals("company", org.type());
-        assertEquals("2010-01-01", org.startDate());
-        assertEquals("2024-01-01", org.endDate());
-        assertEquals("Acme Corp", org.name());
-        assertEquals("private", org.organizationType());
-        assertEquals("Portugal", org.country());
+        assertEquals("O-001", org.getId());
+        assertEquals("company", org.getType());
+        assertEquals("2010-01-01", org.getStartDate());
+        assertEquals("2024-01-01", org.getEndDate());
+        assertEquals("Acme Corp", org.getName());
+        assertEquals("private", org.getOrganizationType());
+        assertEquals("Portugal", org.getCountry());
     }
 
     @Test
@@ -32,11 +32,11 @@ class OrganizationTest {
     @Test
     void ensureNullStringsDefaultToEmpty() {
         Organization org = new Organization("O-002", "NGO", null, null, null, null, null);
-        assertEquals("", org.startDate());
-        assertEquals("", org.endDate());
-        assertEquals("", org.name());
-        assertEquals("", org.organizationType());
-        assertEquals("", org.country());
+        assertEquals("", org.getStartDate());
+        assertEquals("", org.getEndDate());
+        assertEquals("", org.getName());
+        assertEquals("", org.getOrganizationType());
+        assertEquals("", org.getCountry());
     }
 
     @Test

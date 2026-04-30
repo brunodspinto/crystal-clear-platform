@@ -10,13 +10,13 @@ class PersonTest {
     void ensureFieldsAreKept() {
         Person person = new Person("P-001", "politician", "2020-01-01", "2024-01-01",
                 "Alice Smith", "1980-05-10", "Portuguese");
-        assertEquals("P-001", person.id());
-        assertEquals("politician", person.type());
-        assertEquals("2020-01-01", person.startDate());
-        assertEquals("2024-01-01", person.endDate());
-        assertEquals("Alice Smith", person.name());
-        assertEquals("1980-05-10", person.birthDate());
-        assertEquals("Portuguese", person.nationality());
+        assertEquals("P-001", person.getId());
+        assertEquals("politician", person.getType());
+        assertEquals("2020-01-01", person.getStartDate());
+        assertEquals("2024-01-01", person.getEndDate());
+        assertEquals("Alice Smith", person.getName());
+        assertEquals("1980-05-10", person.getBirthDate());
+        assertEquals("Portuguese", person.getNationality());
     }
 
     @Test
@@ -32,11 +32,11 @@ class PersonTest {
     @Test
     void ensureNullStringsDefaultToEmpty() {
         Person person = new Person("P-002", "advisor", null, null, null, null, null);
-        assertEquals("", person.startDate());
-        assertEquals("", person.endDate());
-        assertEquals("", person.name());
-        assertEquals("", person.birthDate());
-        assertEquals("", person.nationality());
+        assertEquals("", person.getStartDate());
+        assertEquals("", person.getEndDate());
+        assertEquals("", person.getName());
+        assertEquals("", person.getBirthDate());
+        assertEquals("", person.getNationality());
     }
 
     @Test

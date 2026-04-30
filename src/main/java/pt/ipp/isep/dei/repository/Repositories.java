@@ -16,6 +16,7 @@ public class Repositories {
     private final CitizenRepository citizenRepository;
     private final ComplaintRepository complaintRepository;
     private final DeclarationRepository declarationRepository;
+    private final GraphRepository graphRepository;
 
     /**
      * The Singleton's constructor should always be private to prevent direct construction calls with the new operator.
@@ -29,6 +30,7 @@ public class Repositories {
         citizenRepository = new CitizenRepository();
         complaintRepository = new ComplaintRepository();
         declarationRepository = new DeclarationRepository();
+        graphRepository = new GraphRepository();
     }
 
     /**
@@ -95,5 +97,9 @@ public class Repositories {
      */
     public DeclarationRepository getDeclarationRepository() {
         return declarationRepository;
+    }
+
+    public GraphRepository getGraphRepository() {
+        return graphRepository;
     }
 }
