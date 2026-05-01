@@ -21,7 +21,7 @@ public class PositionEntry {
      * Creates a new PositionEntry.
      *
      * @param organization              the organization where the position is held.
-     * @param function                  the function performed at the organization.
+     * @param functionDesignation       the function performed at the organization.
      * @param nature                    the legal nature of the position (public, private, social).
      * @param grossSalary               the annual gross salary; must be non-negative.
      * @param sideIncomeConsulting      consulting side income; must be non-negative.

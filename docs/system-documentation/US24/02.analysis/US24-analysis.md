@@ -9,7 +9,7 @@ The central concept for this US is the `Declaration`, which aggregates all infor
 Key mappings from the domain to Table 2 columns (in column order):
 
 * **agent id** — `Declaration.getAgent().getTaxIdentificationNumber()` (the NIF of the political agent).
-* **role** — The function designation from the first `PositionEntry` (`positionEntries.get(0).getFunction().getDesignation()`).
+* **role** — The function designation from the first `PositionEntry` (`positionEntries.get(0).getFunctionDesignation()`).
 * **declaration type** — `Declaration.getType().toString()` → "initial", "regular", or "exceptional".
 * **declaration date** — `Declaration.getSubmissionDate()` formatted as `yyyy-MM-dd`.
 * **declaration id** — A UUID generated at declaration creation time and stored in `Declaration`. Provides a stable unique identifier across exports.

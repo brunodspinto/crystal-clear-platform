@@ -15,6 +15,7 @@ public class Bootstrap implements Runnable {
         addPoliticalAgents();
         addCitizens();
         addUsers();
+        addValidatedDeclaration();
     }
 
     private void addOrganization() {
@@ -70,10 +71,31 @@ public class Bootstrap implements Runnable {
         authenticationRepository.addUserRole(AuthenticationController.ROLE_EMPLOYEE, AuthenticationController.ROLE_EMPLOYEE);
         authenticationRepository.addUserRole(AuthenticationController.ROLE_CITIZEN, AuthenticationController.ROLE_CITIZEN);
         authenticationRepository.addUserRole(AuthenticationController.ROLE_POLITICAL_AGENT, AuthenticationController.ROLE_POLITICAL_AGENT);
+        authenticationRepository.addUserRole(AuthenticationController.ROLE_PRODUCT_OWNER, AuthenticationController.ROLE_PRODUCT_OWNER);
 
         authenticationRepository.addUserWithRole("Main Administrator", "admin@this.app", "admin", AuthenticationController.ROLE_ADMIN);
         authenticationRepository.addUserWithRole("Employee", "employee@this.app", "employee", AuthenticationController.ROLE_EMPLOYEE);
         authenticationRepository.addUserWithRole("Active Citizen", "citizen@this.app", "citizen", AuthenticationController.ROLE_CITIZEN);
         authenticationRepository.addUserWithRole("António Félix", "antonio@gov.pt", "AAA11bb", AuthenticationController.ROLE_POLITICAL_AGENT);
+        authenticationRepository.addUserWithRole("Product Owner", "po@this.app", "po", AuthenticationController.ROLE_PRODUCT_OWNER);
+    }
+
+    /**
+     * Adds a sample validated declaration for US24 demo purposes.
+     */
+    private void addValidatedDeclaration() {
+        DeclarationRepository declarationRepo = Repositories.getInstance().getDeclarationRepository();
+
+        PoliticalAgent agent = new PoliticalAgent("António Félix", "antonio@gov.pt",
+                "12345678", "123456789", new Date(), null);
+        Organization parliament = new Organization("Parliament", "public", OrganizationType.POLITICAL_PARTY);
+
+        Declaration d = new Declaration(DeclarationType.INITIAL, agent, new Date());
+        d.addPositionEntry(parliament, "Deputy", PositionNature.PUBLIC,
+                60000.0, 5000.0, 2000.0, new Date(), null);
+        d.addAssetEntry(AssetType.REAL_ESTATE, 250000.0, new RealEstate("Apartment", "Lisbon"));
+        d.addAssetEntry(AssetType.VEHICLES, 25000.0, new VehicleAsset("Toyota Corolla"));
+        d.setStatus(DeclarationStatus.VALIDATED);
+        declarationRepo.save(d);
     }
 }

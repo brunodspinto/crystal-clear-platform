@@ -194,7 +194,6 @@ class Attachment {
 }
 
 class Entity {
-    id
     startDate
     endDate
 }
@@ -231,7 +230,6 @@ class "graph.Asset" as GraphAsset {
 }
 
 class EntityRelationship {
-    id
     type
     startDate
     endDate
