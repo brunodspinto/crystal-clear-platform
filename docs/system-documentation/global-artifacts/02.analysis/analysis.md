@@ -192,7 +192,7 @@ Attributes are chosen based on the information that needs to be stored or displa
 | DeclarationOfInterests    | id: String, name: String, submissionDate: Date                             |
 | DeclarationType           | {initial, regular, exceptional}                                            |
 | DeclarationStatus         | {pending, validated, rejected}                                             |
-| PositionEntry             | nature: String, grossSalary: Double, sideIncome: Double, startDate: Date, endDate: Date |
+| PositionEntry             | nature: String, grossSalary: Double, sideIncomeConsulting: Double, sideIncomeBoardMemberships: Double, startDate: Date, endDate: Date |
 | Function                  | designation: String                                                        |
 | Organization              | name: String, nature: String                                               |
 | OrganizationType          | {company, politicalParty, foundation, institute, association}              |

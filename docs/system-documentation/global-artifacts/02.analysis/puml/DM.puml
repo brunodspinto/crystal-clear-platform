@@ -115,7 +115,8 @@ enum DeclarationStatus {
 class PositionEntry {
     nature
     grossSalary
-    sideIncome
+    sideIncomeConsulting
+    sideIncomeBoardMemberships
     startDate
     endDate
 }
