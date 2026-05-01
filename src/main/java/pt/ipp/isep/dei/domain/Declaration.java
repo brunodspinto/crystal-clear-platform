@@ -3,6 +3,7 @@ package pt.ipp.isep.dei.domain;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Represents a Declaration of Interests submitted by a Political Agent.
@@ -12,6 +13,7 @@ import java.util.List;
  */
 public class Declaration {
 
+    private final UUID id = UUID.randomUUID();
     private final PoliticalAgent agent;
     private final DeclarationType type;
     private final Date submissionDate;
@@ -57,7 +59,7 @@ public class Declaration {
      * Adds a position entry to the declaration.
      *
      * @param organization              the organization where the position is held.
-     * @param function                  the function performed.
+     * @param functionDesignation                  the function performed.
      * @param nature                    the nature of the position.
      * @param grossSalary               the annual gross salary.
      * @param sideIncomeConsulting      consulting side income.
@@ -134,6 +136,9 @@ public class Declaration {
         }
         this.status = status;
     }
+
+    /** @return the unique identifier of this declaration. */
+    public UUID getId() { return id; }
 
     /** @return the political agent who submitted the declaration. */
     public PoliticalAgent getAgent() { return agent; }

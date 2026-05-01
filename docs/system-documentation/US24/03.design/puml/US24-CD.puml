@@ -37,9 +37,14 @@ class PoliticalAgent {
 
 class PositionEntry {
     + getGrossSalary() : double
-    + getSideIncome() : double
-    + getFunction() : Function
+    + getSideIncomeConsulting() : double
+    + getSideIncomeBoardMemberships() : double
+    + getFunctionDesignation() : String
     + getOrganization() : Organization
+}
+
+class Organization {
+    + getName() : String
 }
 
 class AssetEntry {
@@ -54,5 +59,6 @@ DeclarationCsvExporter ..> Declaration
 Declaration "1" --> "1" PoliticalAgent : agent
 Declaration "1" --> "*" PositionEntry : positionEntries
 Declaration "1" --> "*" AssetEntry : assetEntries
+PositionEntry --> Organization
 
 @enduml
