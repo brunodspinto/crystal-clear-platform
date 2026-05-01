@@ -9,7 +9,7 @@ class AdjacencyMatrixTest {
     @Test
     void ensureSizeIsKept() {
         AdjacencyMatrix m = new AdjacencyMatrix(5);
-        assertEquals(5, m.size());
+        assertEquals(5, m.getSize());
     }
 
     @Test

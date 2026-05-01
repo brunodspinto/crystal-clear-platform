@@ -22,7 +22,7 @@ public class AdjacencyMatrix {
         this.weights = new double[size][size];
     }
 
-    public int size() {
+    public int getSize() {
         return size;
     }
 
