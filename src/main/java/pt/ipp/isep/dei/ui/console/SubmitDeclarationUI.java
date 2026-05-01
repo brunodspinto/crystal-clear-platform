@@ -97,13 +97,8 @@ public class SubmitDeclarationUI implements Runnable {
         Organization org = (Organization) Utils.showAndSelectOne(orgs, "Select organization:");
         if (org == null) return null;
 
-        List<Function> functions = controller.getFunctions();
-        if (functions.isEmpty()) {
-            System.out.println("No functions registered. Cannot add position entry.");
-            return null;
-        }
-        Function function = (Function) Utils.showAndSelectOne(functions, "Select function:");
-        if (function == null) return null;
+        String function = Utils.readLineFromConsole("Enter function/position designation (e.g., Director, Mayor): ");
+        if (function == null || function.trim().isEmpty()) return null;
 
         PositionNature nature = (PositionNature) Utils.showAndSelectOne(
                 controller.getPositionNatures(), "Select nature:");
@@ -111,17 +106,17 @@ public class SubmitDeclarationUI implements Runnable {
 
         double grossSalary = Double.parseDouble(
                 Utils.readLineFromConsole("Annual gross salary: "));
-        double sideIncome = Double.parseDouble(
-                Utils.readLineFromConsole("Side income (0 if none): "));
+        double sideIncomeConsulting = Double.parseDouble(
+                Utils.readLineFromConsole("Side income - consulting (0 if none): "));
+        double sideIncomeBoardMemberships = Double.parseDouble(
+                Utils.readLineFromConsole("Side income - board memberships (0 if none): "));
         Date startDate = Utils.readDateFromConsole("Start date (dd-MM-yyyy): ");
         Date endDate = null;
-        if (Utils.confirm("Is the position still active? (s/n)")) {
-            endDate = null;
-        } else {
+        if (!Utils.confirm("Is the position still active? (s/n)")) {
             endDate = Utils.readDateFromConsole("End date (dd-MM-yyyy): ");
         }
 
-        return new Object[]{org, function, nature, grossSalary, sideIncome, startDate, endDate};
+        return new Object[]{org, function, nature, grossSalary, sideIncomeConsulting, sideIncomeBoardMemberships, startDate, endDate};
     }
 
     // -------------------------------------------------------------------------

@@ -15,8 +15,8 @@ class PositionEntryTest {
         return new Organization("TechCorp", "private", OrganizationType.COMPANY);
     }
 
-    private Function createFunction() {
-        return new Function("Director");
+    private String createFunction() {
+        return "Director";
     }
 
     // -------------------------------------------------------------------------
@@ -26,14 +26,14 @@ class PositionEntryTest {
     @Test
     void ensurePositionEntryCreationWorks() {
         PositionEntry pe = new PositionEntry(createOrg(), createFunction(),
-                PositionNature.PUBLIC, 50000, 5000, START, END);
+                PositionNature.PUBLIC, 50000, 5000, 3000, START, END);
         assertNotNull(pe);
     }
 
     @Test
     void ensurePositionEntryWithNullEndDateWorks() {
         PositionEntry pe = new PositionEntry(createOrg(), createFunction(),
-                PositionNature.PRIVATE, 30000, 0, START, null);
+                PositionNature.PRIVATE, 30000, 0, 0, START, null);
         assertNotNull(pe);
         assertNull(pe.getEndDate());
     }
@@ -41,37 +41,43 @@ class PositionEntryTest {
     @Test
     void ensurePositionEntryFailsWithNullOrganization() {
         assertThrows(IllegalArgumentException.class, () ->
-                new PositionEntry(null, createFunction(), PositionNature.PUBLIC, 50000, 0, START, END));
+                new PositionEntry(null, createFunction(), PositionNature.PUBLIC, 50000, 0, 0, START, END));
     }
 
     @Test
     void ensurePositionEntryFailsWithNullFunction() {
         assertThrows(IllegalArgumentException.class, () ->
-                new PositionEntry(createOrg(), null, PositionNature.PUBLIC, 50000, 0, START, END));
+                new PositionEntry(createOrg(), null, PositionNature.PUBLIC, 50000, 0, 0, START, END));
     }
 
     @Test
     void ensurePositionEntryFailsWithNullNature() {
         assertThrows(IllegalArgumentException.class, () ->
-                new PositionEntry(createOrg(), createFunction(), null, 50000, 0, START, END));
+                new PositionEntry(createOrg(), createFunction(), null, 50000, 0, 0, START, END));
     }
 
     @Test
     void ensurePositionEntryFailsWithNegativeGrossSalary() {
         assertThrows(IllegalArgumentException.class, () ->
-                new PositionEntry(createOrg(), createFunction(), PositionNature.PUBLIC, -1, 0, START, END));
+                new PositionEntry(createOrg(), createFunction(), PositionNature.PUBLIC, -1, 0, 0, START, END));
     }
 
     @Test
-    void ensurePositionEntryFailsWithNegativeSideIncome() {
+    void ensurePositionEntryFailsWithNegativeSideIncomeConsulting() {
         assertThrows(IllegalArgumentException.class, () ->
-                new PositionEntry(createOrg(), createFunction(), PositionNature.PUBLIC, 50000, -1, START, END));
+                new PositionEntry(createOrg(), createFunction(), PositionNature.PUBLIC, 50000, -1, 0, START, END));
+    }
+
+    @Test
+    void ensurePositionEntryFailsWithNegativeSideIncomeBoardMemberships() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new PositionEntry(createOrg(), createFunction(), PositionNature.PUBLIC, 50000, 0, -1, START, END));
     }
 
     @Test
     void ensurePositionEntryFailsWithNullStartDate() {
         assertThrows(IllegalArgumentException.class, () ->
-                new PositionEntry(createOrg(), createFunction(), PositionNature.PUBLIC, 50000, 0, null, END));
+                new PositionEntry(createOrg(), createFunction(), PositionNature.PUBLIC, 50000, 0, 0, null, END));
     }
 
     // -------------------------------------------------------------------------
@@ -81,7 +87,7 @@ class PositionEntryTest {
     @Test
     void ensureZeroGrossSalaryIsValid() {
         PositionEntry pe = new PositionEntry(createOrg(), createFunction(),
-                PositionNature.SOCIAL, 0, 0, START, END);
+                PositionNature.SOCIAL, 0, 0, 0, START, END);
         assertEquals(0, pe.getGrossSalary());
     }
 
@@ -92,15 +98,16 @@ class PositionEntryTest {
     @Test
     void ensureGettersReturnCorrectValues() {
         Organization org = createOrg();
-        Function function = createFunction();
+        String function = createFunction();
         PositionEntry pe = new PositionEntry(org, function, PositionNature.PRIVATE,
-                40000, 2000, START, END);
+                40000, 2000, 1000, START, END);
 
         assertEquals(org, pe.getOrganization());
-        assertEquals(function, pe.getFunction());
+        assertEquals(function, pe.getFunctionDesignation());
         assertEquals(PositionNature.PRIVATE, pe.getNature());
         assertEquals(40000, pe.getGrossSalary());
-        assertEquals(2000, pe.getSideIncome());
+        assertEquals(2000, pe.getSideIncomeConsulting());
+        assertEquals(1000, pe.getSideIncomeBoardMemberships());
         assertEquals(START, pe.getStartDate());
         assertEquals(END, pe.getEndDate());
     }

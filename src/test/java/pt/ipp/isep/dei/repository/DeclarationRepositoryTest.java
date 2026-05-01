@@ -16,9 +16,9 @@ class DeclarationRepositoryTest {
         Declaration d = new Declaration(type, agent, new Date());
         d.addPositionEntry(
                 new Organization("TechCorp", "private", OrganizationType.COMPANY),
-                new Function("Director"),
+                "Director",
                 PositionNature.PUBLIC,
-                50000, 0, new Date(), null);
+                50000, 0, 0, new Date(), null);
         return d;
     }
 

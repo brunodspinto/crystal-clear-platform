@@ -56,18 +56,20 @@ public class Declaration {
     /**
      * Adds a position entry to the declaration.
      *
-     * @param organization the organization where the position is held.
-     * @param function     the function performed.
-     * @param nature       the nature of the position.
-     * @param grossSalary  the annual gross salary.
-     * @param sideIncome   additional earnings.
-     * @param startDate    the start date.
-     * @param endDate      the end date, or {@code null} if still active.
+     * @param organization              the organization where the position is held.
+     * @param function                  the function performed.
+     * @param nature                    the nature of the position.
+     * @param grossSalary               the annual gross salary.
+     * @param sideIncomeConsulting      consulting side income.
+     * @param sideIncomeBoardMemberships board membership side income.
+     * @param startDate                 the start date.
+     * @param endDate                   the end date, or {@code null} if still active.
      */
-    public void addPositionEntry(Organization organization, Function function, PositionNature nature,
-                                  double grossSalary, double sideIncome, Date startDate, Date endDate) {
-        positionEntries.add(new PositionEntry(organization, function, nature,
-                grossSalary, sideIncome, startDate, endDate));
+    public void addPositionEntry(Organization organization, String functionDesignation, PositionNature nature,
+                                  double grossSalary, double sideIncomeConsulting,
+                                  double sideIncomeBoardMemberships, Date startDate, Date endDate) {
+        positionEntries.add(new PositionEntry(organization, functionDesignation, nature,
+                grossSalary, sideIncomeConsulting, sideIncomeBoardMemberships, startDate, endDate));
     }
 
     /**

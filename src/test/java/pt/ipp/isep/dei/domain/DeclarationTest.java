@@ -18,8 +18,8 @@ class DeclarationTest {
         return new Organization("TechCorp", "private", OrganizationType.COMPANY);
     }
 
-    private Function createFunction() {
-        return new Function("Director");
+    private String createFunction() {
+        return "Director";
     }
 
     // -------------------------------------------------------------------------
@@ -98,15 +98,15 @@ class DeclarationTest {
     void ensureAddPositionEntryWorks() {
         Declaration d = new Declaration(DeclarationType.INITIAL, createAgent(), NOW);
         d.addPositionEntry(createOrg(), createFunction(), PositionNature.PUBLIC,
-                50000, 0, NOW, null);
+                50000, 0, 0, NOW, null);
         assertEquals(1, d.getPositionEntries().size());
     }
 
     @Test
     void ensureMultiplePositionEntriesCanBeAdded() {
         Declaration d = new Declaration(DeclarationType.INITIAL, createAgent(), NOW);
-        d.addPositionEntry(createOrg(), createFunction(), PositionNature.PUBLIC, 50000, 0, NOW, null);
-        d.addPositionEntry(createOrg(), createFunction(), PositionNature.PRIVATE, 30000, 5000, NOW, null);
+        d.addPositionEntry(createOrg(), createFunction(), PositionNature.PUBLIC, 50000, 0, 0, NOW, null);
+        d.addPositionEntry(createOrg(), createFunction(), PositionNature.PRIVATE, 30000, 5000, 0, NOW, null);
         assertEquals(2, d.getPositionEntries().size());
     }
 
@@ -212,7 +212,7 @@ class DeclarationTest {
     @Test
     void ensureGetPositionEntriesReturnsDefensiveCopy() {
         Declaration d = new Declaration(DeclarationType.INITIAL, createAgent(), NOW);
-        d.addPositionEntry(createOrg(), createFunction(), PositionNature.PUBLIC, 50000, 0, NOW, null);
+        d.addPositionEntry(createOrg(), createFunction(), PositionNature.PUBLIC, 50000, 0, 0, NOW, null);
         assertNotSame(d.getPositionEntries(), d.getPositionEntries());
     }
 }
