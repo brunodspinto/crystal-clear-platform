@@ -2,8 +2,10 @@ package pt.ipp.isep.dei.repository;
 
 import pt.ipp.isep.dei.domain.Declaration;
 import pt.ipp.isep.dei.domain.DeclarationStatus;
+import pt.ipp.isep.dei.domain.PoliticalAgent;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,5 +59,32 @@ public class DeclarationRepository {
      */
     public List<Declaration> getAll() {
         return new ArrayList<>(declarations);
+    }
+
+    /**
+     * Returns all validated declarations of the given agent submitted on or before the reference date.
+     * Used by US09 to compute the integrated situation of a political agent on a given date.
+     *
+     * @param agent         the political agent to filter by.
+     * @param referenceDate the latest acceptable submission date (inclusive).
+     * @return a new list of matching declarations; never null.
+     * @throws IllegalArgumentException if any argument is null.
+     */
+    public List<Declaration> getValidatedDeclarationsForAgentUpTo(PoliticalAgent agent, Date referenceDate) {
+        if (agent == null) {
+            throw new IllegalArgumentException("Agent cannot be null.");
+        }
+        if (referenceDate == null) {
+            throw new IllegalArgumentException("Reference date cannot be null.");
+        }
+        List<Declaration> result = new ArrayList<>();
+        for (Declaration d : declarations) {
+            if (d.getStatus() == DeclarationStatus.VALIDATED
+                    && d.getAgent().equals(agent)
+                    && !d.getSubmissionDate().after(referenceDate)) {
+                result.add(d);
+            }
+        }
+        return result;
     }
 }
