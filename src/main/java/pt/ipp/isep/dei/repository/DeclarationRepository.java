@@ -5,6 +5,8 @@ import pt.ipp.isep.dei.domain.DeclarationStatus;
 import pt.ipp.isep.dei.domain.PoliticalAgent;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -85,6 +87,39 @@ public class DeclarationRepository {
                 result.add(d);
             }
         }
+        return result;
+    }
+
+    // US10 - validated declarations of an agent between startDate and endDate (inclusive), ordered chronologically.
+    public List<Declaration> getValidatedDeclarationsForAgentBetween(PoliticalAgent agent,
+                                                                     Date startDate,
+                                                                     Date endDate) {
+        if (agent == null) {
+            throw new IllegalArgumentException("Agent cannot be null.");
+        }
+        if (startDate == null || endDate == null) {
+            throw new IllegalArgumentException("Dates cannot be null.");
+        }
+        if (startDate.after(endDate)) {
+            throw new IllegalArgumentException("Start date must be before or equal to end date.");
+        }
+        List<Declaration> result = new ArrayList<>();
+        for (Declaration d : declarations) {
+            Date sd = d.getSubmissionDate();
+            if (d.getStatus() == DeclarationStatus.VALIDATED
+                    && d.getAgent().equals(agent)
+                    && !sd.before(startDate)
+                    && !sd.after(endDate)) {
+                result.add(d);
+            }
+        }
+        // chronological order by submission date (AC4)
+        Collections.sort(result, new Comparator<Declaration>() {
+            @Override
+            public int compare(Declaration d1, Declaration d2) {
+                return d1.getSubmissionDate().compareTo(d2.getSubmissionDate());
+            }
+        });
         return result;
     }
 }
