@@ -28,23 +28,22 @@ def load_data(path):
     numeric_fields = ["gross_salary", "side_income",
                       "assets_in_real_estate", "assets_in_vehicles", "assets_in_stocks"]
 
-    f = open(path, "r")
-    reader = csv.DictReader(f)
-    for row in reader:
-        entry = {}
-        entry["declaration_id"] = row["declaration_id"].strip()
-        entry["agent_id"] = row["agent_id"].strip()
-        entry["role"] = row["role"].strip()
-        entry["institution"] = row["institution"].strip()
-        entry["declaration_type"] = row["declaration_type"].strip()
-        entry["declaration_date"] = row["declaration_date"].strip()
-        for field in numeric_fields:
-            try:
-                entry[field] = float(row[field])
-            except (ValueError, KeyError):
-                entry[field] = 0.0
-        declarations.append(entry)
-    f.close()
+    with open(path, "r") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            entry = {}
+            entry["declaration_id"] = row["declaration_id"].strip()
+            entry["agent_id"] = row["agent_id"].strip()
+            entry["role"] = row["role"].strip()
+            entry["institution"] = row["institution"].strip()
+            entry["declaration_type"] = row["declaration_type"].strip()
+            entry["declaration_date"] = row["declaration_date"].strip()
+            for field in numeric_fields:
+                try:
+                    entry[field] = float(row[field])
+                except (ValueError, KeyError):
+                    entry[field] = 0.0
+            declarations.append(entry)
     return declarations
 
 
