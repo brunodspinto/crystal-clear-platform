@@ -1,0 +1,7 @@
+agent_id,role,declaration_type,declaration_date,declaration_id,institution,gross_salary,side_income_consulting,side_income_board_memberships,assets_in_real_estate,assets_in_vehicles,assets_in_stocks
+A001,MP,regular,2025-01-01 00:00:00,D001,Parliament,50000,5000,5000,100000,10000,20000
+A001,MP,initial,2024-01-01 00:00:00,D002,Parliament,40000,2000,2000,80000,8000,15000
+A002,MP,initial,2025-01-01 00:00:00,D003,Parliament,70000,10000,0,200000,20000,30000
+A003,MP,initial,2025-01-01 00:00:00,D004,Parliament,60000,0,10000,150000,15000,25000
+A004,Minister,initial,2025-01-01 00:00:00,D005,Government,90000,15000,5000,300000,30000,50000
+A005,Minister,initial,2025-01-01 00:00:00,D006,Government,80000,20000,10000,250000,25000,40000
