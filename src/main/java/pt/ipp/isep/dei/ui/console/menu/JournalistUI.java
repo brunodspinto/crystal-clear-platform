@@ -1,6 +1,7 @@
 package pt.ipp.isep.dei.ui.console.menu;
 
 import pt.ipp.isep.dei.ui.console.AnalyseIncomeEvolutionUI;
+import pt.ipp.isep.dei.ui.console.ConsultAssetsUI;
 import pt.ipp.isep.dei.ui.console.utils.Utils;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class JournalistUI implements Runnable {
     public void run() {
         List<MenuItem> options = new ArrayList<>();
         options.add(new MenuItem("Analyse Income Evolution", new AnalyseIncomeEvolutionUI()));
+        options.add(new MenuItem("Consult Assets", new ConsultAssetsUI()));
 
         int option = 0;
         do {
