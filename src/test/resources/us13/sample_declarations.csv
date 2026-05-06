@@ -1,0 +1,17 @@
+declaration_id,agent_id,role,institution,declaration_type,declaration_date,gross_salary,side_income,assets_in_real_estate,assets_in_vehicles,assets_in_stocks
+D001,A001,MP,Parliament,Initial,2020-01-15,85000,5000,250000,15000,30000
+D002,A001,MP,Parliament,Regular,2021-01-10,87000,5000,250000,15000,32000
+D003,A002,Minister,Government,Initial,2019-06-01,120000,0,500000,40000,100000
+D004,A002,Minister,Government,Regular,2020-06-01,122000,0,510000,40000,110000
+D005,A002,Minister,Government,Exceptional,2020-09-15,122000,0,510000,40000,150000
+D006,A003,Judge,Courts,Initial,2018-03-01,95000,0,300000,20000,0
+D007,A003,Judge,Courts,Regular,2019-03-01,97000,0,305000,20000,0
+D008,A004,State Secretary,Government,Initial,2021-02-01,90000,10000,180000,25000,50000
+D009,A004,State Secretary,Government,Regular,2022-02-01,92000,10000,185000,25000,55000
+D010,A005,MP,Parliament,Initial,2020-03-15,83000,2000,120000,10000,0
+D011,A005,MP,Parliament,Regular,2021-03-10,85000,2000,120000,10000,5000
+D012,A006,Advisor,Government,Initial,2022-01-01,75000,15000,0,8000,10000
+D013,A007,MP,Parliament,Exceptional,2021-11-01,86000,3000,200000,12000,20000
+D014,A007,MP,Parliament,Regular,2022-01-10,88000,3000,205000,12000,22000
+D015,A008,Minister,Government,Regular,2023-01-01,125000,0,600000,45000,200000
+D016,A009,Judge,Courts,Regular,2023-03-01,99000,0,320000,22000,0
