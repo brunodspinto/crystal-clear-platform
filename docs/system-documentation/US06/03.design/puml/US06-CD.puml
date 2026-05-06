@@ -45,7 +45,7 @@ class PoliticalAgent {
 class Declaration {
     - submissionDate : Date
     + Declaration(type : DeclarationType, agent : PoliticalAgent, submissionDate : Date, status : DeclarationStatus)
-    + addPositionEntry(organization : Organization, function : Function, nature : PositionNature, grossSalary : double, sideIncome : double, startDate : Date, endDate : Date)
+    + addPositionEntry(organization : Organization, function : Function, nature : PositionNature, grossSalary : double, sideIncomeConsulting : double, sideIncomeBoardMemberships : double, startDate : Date, endDate : Date)
     + addSubsidyEntry(organization : Organization, amount : double, description : String, date : Date)
     + addAssetEntry(assetType : AssetType, assetValue : double, detail : Object)
     + addBusinessParticipation(organization : Organization, companyNIF : long, totalValueInStocks : double, companyPercentage : double)
@@ -55,7 +55,8 @@ class Declaration {
 class PositionEntry {
     - nature : PositionNature
     - grossSalary : double
-    - sideIncome : double
+    - sideIncomeConsulting : double
+    - sideIncomeBoardMemberships : double
     - startDate : Date
     - endDate : Date
 }

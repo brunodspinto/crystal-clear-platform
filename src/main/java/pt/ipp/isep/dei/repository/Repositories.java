@@ -11,7 +11,6 @@ public class Repositories {
     private final OrganizationRepository organizationRepository;
     private final TaskCategoryRepository taskCategoryRepository;
     private final AuthenticationRepository authenticationRepository;
-    private final FunctionRepository functionRepository;
     private final PoliticalAgentRepository politicalAgentRepository;
     private final CitizenRepository citizenRepository;
     private final ComplaintRepository complaintRepository;
@@ -25,7 +24,6 @@ public class Repositories {
         organizationRepository = new OrganizationRepository();
         taskCategoryRepository = new TaskCategoryRepository();
         authenticationRepository = new AuthenticationRepository();
-        functionRepository = new FunctionRepository();
         politicalAgentRepository = new PoliticalAgentRepository();
         citizenRepository = new CitizenRepository();
         complaintRepository = new ComplaintRepository();
@@ -57,10 +55,6 @@ public class Repositories {
 
     public AuthenticationRepository getAuthenticationRepository() {
         return authenticationRepository;
-    }
-
-    public FunctionRepository getFunctionRepository() {
-        return functionRepository;
     }
 
     /**

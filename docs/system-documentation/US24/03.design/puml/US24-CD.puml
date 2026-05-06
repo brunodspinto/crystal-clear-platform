@@ -1,0 +1,64 @@
+@startuml US24-CD
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+class ExportDeclarationCsvUI {
+}
+
+class ExportDeclarationCsvController {
+    + ExportDeclarationCsvController()
+    + exportToCsv(filePath : String) : boolean
+}
+
+class DeclarationRepository {
+    + getDeclarationsByStatus(status : DeclarationStatus) : List<Declaration>
+}
+
+class DeclarationCsvExporter {
+    + {static} export(declarations : List<Declaration>, filePath : String) : boolean
+}
+
+class Declaration {
+    - id : UUID
+    - submissionDate : Date
+    + getId() : UUID
+    + getAgent() : PoliticalAgent
+    + getType() : DeclarationType
+    + getSubmissionDate() : Date
+    + getPositionEntries() : List<PositionEntry>
+    + getAssetEntries() : List<AssetEntry>
+}
+
+class PoliticalAgent {
+    + getTaxIdentificationNumber() : String
+}
+
+class PositionEntry {
+    + getGrossSalary() : double
+    + getSideIncomeConsulting() : double
+    + getSideIncomeBoardMemberships() : double
+    + getFunctionDesignation() : String
+    + getOrganization() : Organization
+}
+
+class Organization {
+    + getName() : String
+}
+
+class AssetEntry {
+    + getAssetType() : AssetType
+    + getAssetValue() : double
+}
+
+ExportDeclarationCsvUI .> ExportDeclarationCsvController
+ExportDeclarationCsvController ..> DeclarationRepository
+ExportDeclarationCsvController ..> DeclarationCsvExporter
+DeclarationCsvExporter ..> Declaration
+Declaration "1" --> "1" PoliticalAgent : agent
+Declaration "1" --> "*" PositionEntry : positionEntries
+Declaration "1" --> "*" AssetEntry : assetEntries
+PositionEntry --> Organization
+
+@enduml

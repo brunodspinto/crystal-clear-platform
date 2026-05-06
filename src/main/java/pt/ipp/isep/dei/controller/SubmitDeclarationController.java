@@ -15,7 +15,6 @@ import java.util.Optional;
 public class SubmitDeclarationController {
 
     private final OrganizationRepository organizationRepository;
-    private final FunctionRepository functionRepository;
     private final DeclarationRepository declarationRepository;
     private final PoliticalAgentRepository politicalAgentRepository;
     private final AuthenticationRepository authenticationRepository;
@@ -26,7 +25,6 @@ public class SubmitDeclarationController {
     public SubmitDeclarationController() {
         Repositories repos = Repositories.getInstance();
         this.organizationRepository = repos.getOrganizationRepository();
-        this.functionRepository = repos.getFunctionRepository();
         this.declarationRepository = repos.getDeclarationRepository();
         this.politicalAgentRepository = repos.getPoliticalAgentRepository();
         this.authenticationRepository = repos.getAuthenticationRepository();
@@ -36,12 +34,10 @@ public class SubmitDeclarationController {
      * Creates a controller with injected repositories (used in tests).
      */
     public SubmitDeclarationController(OrganizationRepository organizationRepository,
-                                        FunctionRepository functionRepository,
                                         DeclarationRepository declarationRepository,
                                         PoliticalAgentRepository politicalAgentRepository,
                                         AuthenticationRepository authenticationRepository) {
         this.organizationRepository = organizationRepository;
-        this.functionRepository = functionRepository;
         this.declarationRepository = declarationRepository;
         this.politicalAgentRepository = politicalAgentRepository;
         this.authenticationRepository = authenticationRepository;
@@ -63,15 +59,6 @@ public class SubmitDeclarationController {
      */
     public List<Organization> getOrganizations() {
         return organizationRepository.getOrganizations();
-    }
-
-    /**
-     * Returns all registered functions.
-     *
-     * @return list of {@link Function}.
-     */
-    public List<Function> getFunctions() {
-        return functionRepository.getFunctions();
     }
 
     /**
@@ -98,8 +85,9 @@ public class SubmitDeclarationController {
      *
      * @param type                 the declaration type.
      * @param positionEntries      list of position entry data arrays; each array contains:
-     *                             [Organization, Function, PositionNature, Double grossSalary,
-     *                              Double sideIncome, Date startDate, Date endDate].
+     *                             [Organization, String functionDesignation, PositionNature, Double grossSalary,
+     *                              Double sideIncomeConsulting, Double sideIncomeBoardMemberships,
+     *                              Date startDate, Date endDate].
      * @param subsidyEntries       list of subsidy entry data arrays; each array contains:
      *                             [Organization, Double amount, String description, Date date].
      * @param assetEntries         list of asset entry data arrays; each array contains:
@@ -127,12 +115,13 @@ public class SubmitDeclarationController {
         for (Object[] pe : positionEntries) {
             declaration.addPositionEntry(
                     (Organization) pe[0],
-                    (Function) pe[1],
+                    (String) pe[1],
                     (PositionNature) pe[2],
                     (double) pe[3],
                     (double) pe[4],
-                    (Date) pe[5],
-                    (Date) pe[6]
+                    (double) pe[5],
+                    (Date) pe[6],
+                    (Date) pe[7]
             );
         }
 

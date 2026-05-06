@@ -39,9 +39,13 @@ enum Role {
     JOURNALIST
     ETHICS_COMMITTEE
     SYSTEM_ADMINISTRATOR
+    PRODUCT_OWNER
 }
 
 class Administrator {
+}
+
+class "Product Owner" as ProductOwner {
 }
 
 class Citizen {
@@ -111,7 +115,8 @@ enum DeclarationStatus {
 class PositionEntry {
     nature
     grossSalary
-    sideIncome
+    sideIncomeConsulting
+    sideIncomeBoardMemberships
     startDate
     endDate
 }
@@ -188,11 +193,69 @@ class Attachment {
     uploadDate
 }
 
+class Entity {
+    startDate
+    endDate
+}
+
+enum EntityType {
+    PERSON
+    ORGANIZATION
+    POSITION
+    ASSET
+}
+
+class "graph.Person" as GraphPerson {
+    name
+    birthDate
+    nationality
+}
+
+class "graph.Organization" as GraphOrganization {
+    name
+    organizationType
+    country
+}
+
+class "graph.Position" as GraphPosition {
+    positionTitle
+    positionType
+    organizationId
+}
+
+class "graph.Asset" as GraphAsset {
+    assetType
+    country
+    estimatedValue
+}
+
+class EntityRelationship {
+    type
+    startDate
+    endDate
+    weight
+}
+
+enum RelationshipType {
+    RELATIVE_OF
+    FRIEND_OF
+    ASSOCIATED_WITH
+    APPOINTED_BY
+    HOLDS_POSITION
+    IN_ORGANIZATION
+    MEMBER_OF
+    INFLUENCES
+    CONTROLS
+    PARTNER_OF
+    SUPERVISES
+}
+
 User <|-- Administrator
 User <|-- Citizen
 User <|-- Journalist
 User <|-- EthicsCommitteeMember
 User <|-- PoliticalAgent
+User <|-- ProductOwner
 
 RegistrationRequest "1" -- "1" Role : requests >
 RegistrationRequest "1" -- "1" Status : has >
@@ -245,5 +308,19 @@ Complaint "*" -- "1" PoliticalAgent : targets >
 Complaint "*" -- "1" PoliticalFunction : references >
 
 User "1" -- "*" AuditLog : generates >
+
+Entity "*" -- "1" EntityType : classified as >
+Entity <|-- GraphPerson
+Entity <|-- GraphOrganization
+Entity <|-- GraphPosition
+Entity <|-- GraphAsset
+
+EntityRelationship "*" -- "1" Entity : entity1 >
+EntityRelationship "*" -- "1" Entity : entity2 >
+EntityRelationship "*" -- "1" RelationshipType : of type >
+
+ProductOwner "1" -- "*" Entity : imports >
+ProductOwner "1" -- "*" EntityRelationship : imports >
+ProductOwner "1" -- "*" Declaration : exports (CSV) >
 
 @enduml

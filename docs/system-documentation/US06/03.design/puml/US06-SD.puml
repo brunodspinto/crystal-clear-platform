@@ -89,7 +89,7 @@ activate Agent
             CTRL -> DEC ** : create(type, agent, submissionDate=now, status=PENDING)
 
             loop for each positionEntry
-                CTRL -> DEC : addPositionEntry(organization, function,\nnature, grossSalary, sideIncome, startDate, endDate)
+                CTRL -> DEC : addPositionEntry(organization, function,\nnature, grossSalary, sideIncomeConsulting, sideIncomeBoardMemberships, startDate, endDate)
                 activate DEC
                     DEC --> CTRL : ok
                 deactivate DEC
