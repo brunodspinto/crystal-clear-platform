@@ -64,18 +64,6 @@ After `load_data`, the 5 resulting agents have:
 - `docs/system-documentation/US14/US14_histograms.svg`
 - `docs/system-documentation/US14/US14_boxplots.svg`
 
-Running the script against `dataset1_declarations.csv` produces:
-
-```
-Number of political agents (most recent declaration): 1
-=======================================================
-  TOTAL INCOME
-=======================================================
-  Mean     (x̄)  :          67,000.00 €
-  Median   (x̃)  :          67,000.00 €
-  Mode          :          67,000.00 €
-```
-
 
 ## 6. Integration and Demo
 

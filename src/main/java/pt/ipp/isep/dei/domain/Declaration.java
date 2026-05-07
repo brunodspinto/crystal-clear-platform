@@ -137,6 +137,47 @@ public class Declaration {
         this.status = status;
     }
 
+    /**
+     * Updates the status of this declaration based on a validation outcome (US08).
+     * VALIDATED → DeclarationStatus.VALIDATED
+     * RETURNED_FOR_CORRECTION → DeclarationStatus.REJECTED
+     *
+     * @param outcome the validation outcome; cannot be null.
+     * @throws IllegalArgumentException if outcome is null.
+     */
+    public void setStatus(ValidationOutcome outcome) {
+        if (outcome == null) {
+            throw new IllegalArgumentException("Outcome cannot be null.");
+        }
+        switch (outcome) {
+            case VALIDATED:
+                this.status = DeclarationStatus.VALIDATED;
+                break;
+            case RETURNED_FOR_CORRECTION:
+                this.status = DeclarationStatus.REJECTED;
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown outcome: " + outcome);
+        }
+    }
+
+    /**
+     * Returns a summary of the declaration's content for display purposes (used by US08).
+     *
+     * @return a formatted string with the declaration details.
+     */
+    public String getDetails() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("Declaration [%s | %s | %s]%n", type, submissionDate, status));
+        sb.append(String.format("  Agent                 : %s%n", agent.getName()));
+        sb.append(String.format("  Position entries      : %d%n", positionEntries.size()));
+        sb.append(String.format("  Subsidy entries       : %d%n", subsidyEntries.size()));
+        sb.append(String.format("  Asset entries         : %d%n", assetEntries.size()));
+        sb.append(String.format("  Business participations: %d%n", businessParticipations.size()));
+        sb.append(String.format("  Attachments           : %d%n", attachments.size()));
+        return sb.toString();
+    }
+
     /** @return the unique identifier of this declaration. */
     public UUID getId() { return id; }
 

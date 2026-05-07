@@ -1,0 +1,55 @@
+@startuml usxx-sequence-diagram-controller-checking-user-authorization
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+participant ":{NameOfUC}UI" as UI
+participant ":{NameOfUC}Controller" as CTRL
+participant ":AuthenticationRepository" as AuthRepo
+participant "session:UserSession" as Session
+
+note over UI, Session
+  This sequence occurs at the start of every
+  controller method that requires a specific role.
+  AuthenticationRepository wraps the AuthLib (AuthFacade).
+end note
+
+activate UI
+
+    UI -> CTRL : methodX(...)
+    activate CTRL
+
+        CTRL -> AuthRepo : getCurrentUserSession()
+        activate AuthRepo
+            AuthRepo --> CTRL : session
+        deactivate AuthRepo
+
+        CTRL -> Session : isLoggedIn()
+        activate Session
+            Session --> CTRL : true / false
+        deactivate Session
+
+        alt user is logged in
+            CTRL -> Session : hasRole(requiredRole)
+            activate Session
+                Session --> CTRL : true / false
+            deactivate Session
+
+            alt has required role
+                CTRL -> CTRL : execute business logic
+                CTRL --> UI : result
+            else insufficient role
+                CTRL --> UI : unauthorized / empty result
+            end
+
+        else user not logged in
+            CTRL --> UI : unauthorized / empty result
+        end
+
+    deactivate CTRL
+
+deactivate UI
+
+@enduml

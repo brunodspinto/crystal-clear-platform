@@ -16,6 +16,8 @@ public class Repositories {
     private final ComplaintRepository complaintRepository;
     private final DeclarationRepository declarationRepository;
     private final GraphRepository graphRepository;
+    private final EthicsCommitteeMemberRepository ethicsCommitteeMemberRepository;
+    private final ValidationRecordRepository validationRecordRepository;
     private final RegistrationRequestRepository registrationRequestRepository;
 
     /**
@@ -30,6 +32,8 @@ public class Repositories {
         complaintRepository = new ComplaintRepository();
         declarationRepository = new DeclarationRepository();
         graphRepository = new GraphRepository();
+        ethicsCommitteeMemberRepository = new EthicsCommitteeMemberRepository();
+        validationRecordRepository = new ValidationRecordRepository();
         registrationRequestRepository = new RegistrationRequestRepository();
     }
 
@@ -97,6 +101,14 @@ public class Repositories {
 
     public GraphRepository getGraphRepository() {
         return graphRepository;
+    }
+
+    public EthicsCommitteeMemberRepository getEthicsCommitteeMemberRepository() {
+        return ethicsCommitteeMemberRepository;
+    }
+
+    public ValidationRecordRepository getValidationRecordRepository() {
+        return validationRecordRepository;
     }
 
     public RegistrationRequestRepository getRegistrationRequestRepository() {

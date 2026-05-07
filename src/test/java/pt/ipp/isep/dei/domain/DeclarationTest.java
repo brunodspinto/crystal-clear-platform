@@ -189,7 +189,7 @@ class DeclarationTest {
     @Test
     void ensureSetStatusFailsWithNull() {
         Declaration d = new Declaration(DeclarationType.INITIAL, createAgent(), NOW);
-        assertThrows(IllegalArgumentException.class, () -> d.setStatus(null));
+        assertThrows(IllegalArgumentException.class, () -> d.setStatus((DeclarationStatus) null));
     }
 
     // -------------------------------------------------------------------------
@@ -214,5 +214,47 @@ class DeclarationTest {
         Declaration d = new Declaration(DeclarationType.INITIAL, createAgent(), NOW);
         d.addPositionEntry(createOrg(), createFunction(), PositionNature.PUBLIC, 50000, 0, 0, NOW, null);
         assertNotSame(d.getPositionEntries(), d.getPositionEntries());
+    }
+
+    // -------------------------------------------------------------------------
+    // setStatus(ValidationOutcome)
+    // -------------------------------------------------------------------------
+
+    @Test
+    void ensureSetStatusWithValidatedOutcomeSetsValidated() {
+        Declaration d = new Declaration(DeclarationType.INITIAL, createAgent(), NOW);
+        d.setStatus(ValidationOutcome.VALIDATED);
+        assertEquals(DeclarationStatus.VALIDATED, d.getStatus());
+    }
+
+    @Test
+    void ensureSetStatusWithReturnedForCorrectionSetsRejected() {
+        Declaration d = new Declaration(DeclarationType.INITIAL, createAgent(), NOW);
+        d.setStatus(ValidationOutcome.RETURNED_FOR_CORRECTION);
+        assertEquals(DeclarationStatus.REJECTED, d.getStatus());
+    }
+
+    @Test
+    void ensureSetStatusWithNullOutcomeFails() {
+        Declaration d = new Declaration(DeclarationType.INITIAL, createAgent(), NOW);
+        assertThrows(IllegalArgumentException.class, () -> d.setStatus((ValidationOutcome) null));
+    }
+
+    // -------------------------------------------------------------------------
+    // getDetails
+    // -------------------------------------------------------------------------
+
+    @Test
+    void ensureGetDetailsReturnsNonEmptyString() {
+        Declaration d = new Declaration(DeclarationType.INITIAL, createAgent(), NOW);
+        String details = d.getDetails();
+        assertNotNull(details);
+        assertFalse(details.isBlank());
+    }
+
+    @Test
+    void ensureGetDetailsContainsAgentName() {
+        Declaration d = new Declaration(DeclarationType.INITIAL, createAgent(), NOW);
+        assertTrue(d.getDetails().contains("Agent Name"));
     }
 }

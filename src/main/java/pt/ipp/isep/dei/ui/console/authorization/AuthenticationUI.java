@@ -3,6 +3,7 @@ package pt.ipp.isep.dei.ui.console.authorization;
 import pt.ipp.isep.dei.controller.AuthenticationController;
 import pt.ipp.isep.dei.ui.console.menu.AdminUI;
 import pt.ipp.isep.dei.ui.console.menu.CitizenUI;
+import pt.ipp.isep.dei.ui.console.menu.EthicsCommitteeUI;
 import pt.ipp.isep.dei.ui.console.menu.JournalistUI;
 import pt.ipp.isep.dei.ui.console.menu.PoliticalAgentUI;
 import pt.ipp.isep.dei.ui.console.menu.ProductOwnerUI;
@@ -54,6 +55,7 @@ public class AuthenticationUI implements Runnable {
         rolesUI.add(new MenuItem(AuthenticationController.ROLE_POLITICAL_AGENT, new PoliticalAgentUI()));
         rolesUI.add(new MenuItem(AuthenticationController.ROLE_PRODUCT_OWNER, new ProductOwnerUI()));
         rolesUI.add(new MenuItem(AuthenticationController.ROLE_JOURNALIST, new JournalistUI()));
+        rolesUI.add(new MenuItem(AuthenticationController.ROLE_ETHICS_COMMITTEE, new EthicsCommitteeUI()));
         return rolesUI;
     }
 
