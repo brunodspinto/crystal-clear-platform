@@ -20,6 +20,8 @@ public class AuthenticationController {
     public static final String ROLE_PRODUCT_OWNER = "PRODUCT_OWNER";
     /** Role identifier for journalists (US10). */
     public static final String ROLE_JOURNALIST = "JOURNALIST";
+    /** Role identifier for ethics committee members (US08). */
+    public static final String ROLE_ETHICS_COMMITTEE = "ETHICS_COMMITTEE";
 
     //private final ApplicationSession applicationSession;
     private final AuthenticationRepository authenticationRepository;
