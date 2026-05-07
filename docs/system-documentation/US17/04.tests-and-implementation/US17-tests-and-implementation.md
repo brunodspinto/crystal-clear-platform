@@ -45,8 +45,8 @@ After `load_data`, 7 unique (agent, company) pairs remain. After `aggregate_by_c
 | Company NIF | Total Value (€) |
 |-------------|----------------|
 | C004 | 500,000 |
-| C003 | 300,000 |
 | C001 | 330,000 |
+| C003 | 300,000 |
 | C002 | 200,000 |
 | C005 | 120,000 |
 
