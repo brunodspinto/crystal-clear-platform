@@ -1,0 +1,61 @@
+@startuml usxx-sequence-diagram-ui-controller-overview
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "User" as User
+participant ":MainMenuUI" as MainMenu
+participant ":{MenuX}UI" as MenuUI
+participant ":{NameOfUC}UI" as UCUI
+participant ":{NameOfUC}Controller" as CTRL
+participant "obj:DomainClass" as Domain
+
+activate User
+
+    User -> MainMenu : starts application
+    activate MainMenu
+
+        MainMenu --> User : shows main menu options\n(Login, Dev Team)
+    deactivate MainMenu
+
+    User -> MainMenu : selects Login
+    activate MainMenu
+
+        MainMenu --> User : authenticated — shows role menu
+    deactivate MainMenu
+
+    User -> MenuUI : selects use case option
+    activate MenuUI
+
+        MenuUI -> UCUI ** : create()
+        MenuUI -> UCUI : run()
+        activate UCUI
+
+            UCUI -> CTRL ** : create()
+
+            loop user interaction
+                UCUI --> User : requests input / shows data
+                User -> UCUI : provides input
+
+                UCUI -> CTRL : methodX(data)
+                activate CTRL
+
+                    CTRL -> Domain : methodY(data)
+                    activate Domain
+                        Domain --> CTRL : result
+                    deactivate Domain
+
+                    CTRL --> UCUI : result
+                deactivate CTRL
+
+                UCUI --> User : displays result / feedback
+            end
+
+        deactivate UCUI
+    deactivate MenuUI
+
+deactivate User
+
+@enduml
