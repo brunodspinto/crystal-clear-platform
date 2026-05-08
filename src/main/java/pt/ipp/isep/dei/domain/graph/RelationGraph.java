@@ -24,9 +24,16 @@ public class RelationGraph {
         if (e == null) {
             throw new IllegalArgumentException("edge must not be null");
         }
-        adj.computeIfAbsent(e.fromId(), k -> new ArrayList<>()).add(e);
+        List<Edge> outgoing = adj.get(e.fromId());
+        if (outgoing == null) {
+            outgoing = new ArrayList<>();
+            adj.put(e.fromId(), outgoing);
+        }
+        outgoing.add(e);
         // make sure the target node is at least registered, even with no outgoing edges
-        adj.computeIfAbsent(e.toId(), k -> new ArrayList<>());
+        if (!adj.containsKey(e.toId())) {
+            adj.put(e.toId(), new ArrayList<>());
+        }
         // TODO: directed vs undirected — for now we only store from -> to
     }
 
@@ -42,6 +49,58 @@ public class RelationGraph {
         return adj.size();
     }
 
-    // TODO: AdjacencyMatrix toAdjacencyMatrix() — bridge for US21
+    /**
+     * Bridge for US21. Builds a square AdjacencyMatrix containing every edge
+     * stored in this graph, regardless of label. The given registry is used
+     * to map entity ids to row/column indexes; the registry is updated with
+     * the ids encountered here, so the same instance can be reused across
+     * several relation matrices to keep indexes consistent.
+     */
+    public AdjacencyMatrix toAdjacencyMatrix(IndexRegistry registry) {
+        if (registry == null) {
+            throw new IllegalArgumentException("registry must not be null");
+        }
+        for (String id : adj.keySet()) {
+            registry.indexFor(id);
+        }
+        AdjacencyMatrix m = new AdjacencyMatrix(registry.size());
+        for (String fromId : adj.keySet()) {
+            for (Edge e : adj.get(fromId)) {
+                int from = registry.indexFor(e.fromId());
+                int to = registry.indexFor(e.toId());
+                m.addEdge(from, to, e.weight());
+            }
+        }
+        return m;
+    }
+
+    /**
+     * Same as {@link #toAdjacencyMatrix(IndexRegistry)} but only includes the
+     * edges whose label matches {@code label}. Used by US21 to produce one
+     * matrix per relation type.
+     */
+    public AdjacencyMatrix toAdjacencyMatrix(String label, IndexRegistry registry) {
+        if (label == null || label.isBlank()) {
+            throw new IllegalArgumentException("label must not be blank");
+        }
+        if (registry == null) {
+            throw new IllegalArgumentException("registry must not be null");
+        }
+        for (String id : adj.keySet()) {
+            registry.indexFor(id);
+        }
+        AdjacencyMatrix m = new AdjacencyMatrix(registry.size());
+        for (String fromId : adj.keySet()) {
+            for (Edge e : adj.get(fromId)) {
+                if (label.equals(e.label())) {
+                    int from = registry.indexFor(e.fromId());
+                    int to = registry.indexFor(e.toId());
+                    m.addEdge(from, to, e.weight());
+                }
+            }
+        }
+        return m;
+    }
+
     // TODO: String exportDot() — graphviz, optional, only if there is time
 }
