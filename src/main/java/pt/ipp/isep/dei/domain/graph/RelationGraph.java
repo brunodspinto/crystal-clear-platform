@@ -37,6 +37,20 @@ public class RelationGraph {
         // TODO: directed vs undirected — for now we only store from -> to
     }
 
+    /**
+     * Registers a node with no outgoing edges. Useful when an entity from
+     * US19 has no relations yet but should still appear in queries that
+     * iterate every known node.
+     */
+    public void addNode(String id) {
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException("id must not be blank");
+        }
+        if (!adj.containsKey(id)) {
+            adj.put(id, new ArrayList<>());
+        }
+    }
+
     public List<Edge> neighbors(String id) {
         return Collections.unmodifiableList(adj.getOrDefault(id, List.of()));
     }

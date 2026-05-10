@@ -81,4 +81,29 @@ class RelationGraphTest {
         assertThrows(IllegalArgumentException.class, () -> g.toAdjacencyMatrix("", r));
         assertThrows(IllegalArgumentException.class, () -> g.toAdjacencyMatrix(null, r));
     }
+
+    @Test
+    void ensureAddNodeRegistersIsolatedNode() {
+        RelationGraph g = new RelationGraph();
+        g.addNode("X");
+        assertTrue(g.nodes().contains("X"));
+        assertTrue(g.neighbors("X").isEmpty());
+    }
+
+    @Test
+    void ensureAddNodeIsIdempotent() {
+        RelationGraph g = new RelationGraph();
+        g.addNode("X");
+        g.addEdge(new Edge("X", "Y", "kinship", 1.0));
+        g.addNode("X");
+        assertEquals(1, g.neighbors("X").size());
+    }
+
+    @Test
+    void ensureAddNodeRejectsBlankId() {
+        RelationGraph g = new RelationGraph();
+        assertThrows(IllegalArgumentException.class, () -> g.addNode(null));
+        assertThrows(IllegalArgumentException.class, () -> g.addNode(""));
+        assertThrows(IllegalArgumentException.class, () -> g.addNode("   "));
+    }
 }
