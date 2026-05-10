@@ -86,10 +86,10 @@ class RelationCsvParserTest {
         try {
             List<Edge> edges = RelationCsvParser.parse(tmp.toString());
             Edge e = edges.get(0);
-            assertEquals("A", e.fromId());
-            assertEquals("B", e.toId());
-            assertEquals("ownership", e.label());
-            assertEquals(0.75, e.weight());
+            assertEquals("A", e.getFromId());
+            assertEquals("B", e.getToId());
+            assertEquals("ownership", e.getLabel());
+            assertEquals(0.75, e.getWeight());
         } finally {
             Files.deleteIfExists(tmp);
         }

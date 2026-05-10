@@ -9,10 +9,10 @@ class EdgeTest {
     @Test
     void ensureFieldsAreKept() {
         Edge e = new Edge("a", "b", "kinship", 0.5);
-        assertEquals("a", e.fromId());
-        assertEquals("b", e.toId());
-        assertEquals("kinship", e.label());
-        assertEquals(0.5, e.weight());
+        assertEquals("a", e.getFromId());
+        assertEquals("b", e.getToId());
+        assertEquals("kinship", e.getLabel());
+        assertEquals(0.5, e.getWeight());
     }
 
     @Test

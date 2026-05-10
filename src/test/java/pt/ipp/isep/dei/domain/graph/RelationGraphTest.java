@@ -12,7 +12,7 @@ class RelationGraphTest {
         g.addEdge(new Edge("A", "B", "ownership", 1.0));
 
         assertEquals(1, g.neighbors("A").size());
-        assertEquals("B", g.neighbors("A").get(0).toId());
+        assertEquals("B", g.neighbors("A").get(0).getToId());
     }
 
     @Test

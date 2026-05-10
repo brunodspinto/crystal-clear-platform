@@ -35,7 +35,7 @@ class GraphBuilderTest {
         RelationGraph g = GraphBuilder.build(entities, edges);
 
         assertEquals(1, g.neighbors("A").size());
-        assertEquals("B", g.neighbors("A").get(0).toId());
+        assertEquals("B", g.neighbors("A").get(0).getToId());
     }
 
     @Test

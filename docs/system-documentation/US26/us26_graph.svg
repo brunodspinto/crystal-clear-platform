@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="900" height="1040" viewBox="0 0 900 1040">
+<defs>
+  <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+    <path d="M0,0 L0,6 L8,3 z" fill="#666"/>
+  </marker>
+</defs>
+<style>
+  text { font-family: Arial, sans-serif; }
+  .node-label { font-size: 11px; fill: #222; text-anchor: middle; pointer-events: none; }
+  .edge-label { font-size: 10px; fill: #555; text-anchor: middle; }
+  .detail-title { font-size: 13px; font-weight: bold; fill: #333; }
+  .detail-body { font-size: 11px; fill: #555; }
+  .section-title { font-size: 15px; font-weight: bold; fill: #222; }
+  a:hover > circle, a:hover > rect, a:hover > polygon { opacity: 0.75; }
+</style>
+<rect x="0" y="0" width="900" height="700" fill="#f8f9fa"/>
+<text x="450" y="30" class="section-title" text-anchor="middle">Heterogeneous Multi-Relational Graph</text>
+<line x1="450,0" y1="80,0" x2="713,2" y2="410,1" stroke="#999" stroke-width="1.5" marker-end="url(#arrow)"/>
+<a href="#detail-rel-P-001-O-001" xlink:href="#detail-rel-P-001-O-001">
+  <title>P-001 → O-001 | employment (weight: 1,00)</title>
+  <text x="581,6" y="240,0" class="edge-label">employment</text>
+</a>
+<line x1="450,0" y1="80,0" x2="186,8" y2="410,1" stroke="#999" stroke-width="1.5" marker-end="url(#arrow)"/>
+<a href="#detail-rel-P-001-A-001" xlink:href="#detail-rel-P-001-A-001">
+  <title>P-001 → A-001 | ownership (weight: 1,00)</title>
+  <text x="318,4" y="240,0" class="edge-label">ownership</text>
+</a>
+<line x1="661,1" y1="181,7" x2="567,1" y2="593,3" stroke="#999" stroke-width="1.5" marker-end="url(#arrow)"/>
+<a href="#detail-rel-P-002-O-002" xlink:href="#detail-rel-P-002-O-002">
+  <title>P-002 → O-002 | employment (weight: 1,00)</title>
+  <text x="614,1" y="382,5" class="edge-label">employment</text>
+</a>
+<line x1="661,1" y1="181,7" x2="238,9" y2="181,7" stroke="#999" stroke-width="1.5" marker-end="url(#arrow)"/>
+<a href="#detail-rel-P-002-A-002" xlink:href="#detail-rel-P-002-A-002">
+  <title>P-002 → A-002 | ownership (weight: 1,00)</title>
+  <text x="450,0" y="176,7" class="edge-label">ownership</text>
+</a>
+<line x1="450,0" y1="80,0" x2="661,1" y2="181,7" stroke="#999" stroke-width="1.5" marker-end="url(#arrow)"/>
+<a href="#detail-rel-P-001-P-002" xlink:href="#detail-rel-P-001-P-002">
+  <title>P-001 → P-002 | kinship (weight: 0,50)</title>
+  <text x="555,5" y="125,8" class="edge-label">kinship</text>
+</a>
+<line x1="713,2" y1="410,1" x2="567,1" y2="593,3" stroke="#999" stroke-width="1.5" marker-end="url(#arrow)"/>
+<a href="#detail-rel-O-001-O-002" xlink:href="#detail-rel-O-001-O-002">
+  <title>O-001 → O-002 | membership (weight: 0,80)</title>
+  <text x="640,2" y="496,7" class="edge-label">membership</text>
+</a>
+<a href="#detail-P-001" xlink:href="#detail-P-001">
+  <title>Name: Alice Smith | Born: 1980-05-10 | Portuguese | type: politician | start: 2020-01-01 | end: 2024-01-01</title>
+  <circle cx="450,0" cy="80,0" r="28" fill="#7ec8e3" stroke="#555" stroke-width="1.5"/>
+  <text x="450,0" y="121,0" class="node-label">Alice Smith</text>
+</a>
+<a href="#detail-P-002" xlink:href="#detail-P-002">
+  <title>Name: Bob Jones | Born: 1975-03-22 | British | type: businessman | start:  | end: </title>
+  <circle cx="661,1" cy="181,7" r="28" fill="#7ec8e3" stroke="#555" stroke-width="1.5"/>
+  <text x="661,1" y="222,7" class="node-label">Bob Jones</text>
+</a>
+<a href="#detail-O-001" xlink:href="#detail-O-001">
+  <title>Name: Acme Corp | OrgType: private | Portugal | type: company | start: 2010-01-01 | end: </title>
+  <rect x="685,2" y="382,1" width="56" height="56" rx="4" fill="#f9c74f" stroke="#555" stroke-width="1.5"/>
+  <text x="713,2" y="451,1" class="node-label">Acme Corp</text>
+</a>
+<a href="#detail-O-002" xlink:href="#detail-O-002">
+  <title>Name: Green Earth | OrgType: foundation | Spain | type: NGO | start: 2005-06-15 | end: 2022-12-31</title>
+  <rect x="539,1" y="565,3" width="56" height="56" rx="4" fill="#f9c74f" stroke="#555" stroke-width="1.5"/>
+  <text x="567,1" y="634,3" class="node-label">Green Earth</text>
+</a>
+<a href="#detail-J-001" xlink:href="#detail-J-001">
+  <title>Title: Minister of Finance | PosType: government | Org: O-001 | type: public | start: 2019-03-01 | end: 2023-03-01</title>
+  <polygon points="332,9,565,3 360,9,593,3 332,9,621,3 304,9,593,3" fill="#90be6d" stroke="#555" stroke-width="1.5"/>
+  <text x="332,9" y="634,3" class="node-label">Minister of Finance</text>
+</a>
+<a href="#detail-A-001" xlink:href="#detail-A-001">
+  <title>AssetType: real_estate | Country: Portugal | Value: 500000.0 | type: property | start: 2015-01-01 | end: </title>
+  <polygon points="186,8,382,1 214,8,438,1 158,8,438,1" fill="#f8961e" stroke="#555" stroke-width="1.5"/>
+  <text x="186,8" y="451,1" class="node-label">real_estate</text>
+</a>
+<a href="#detail-A-002" xlink:href="#detail-A-002">
+  <title>AssetType: company | Country: Luxembourg | Value: 1200000.5 | type: fund | start: 2018-06-01 | end: 2023-01-01</title>
+  <polygon points="238,9,153,7 266,9,209,7 210,9,209,7" fill="#f8961e" stroke="#555" stroke-width="1.5"/>
+  <text x="238,9" y="222,7" class="node-label">company</text>
+</a>
+<line x1="20" y1="710" x2="880" y2="710" stroke="#ccc" stroke-width="1"/>
+<text x="20" y="740" class="section-title">Entity &amp; Relation Details</text>
+<g id="detail-P-001">
+  <rect x="20" y="760" width="280" height="82" rx="5" fill="white" stroke="#7ec8e3" stroke-width="1.5"/>
+  <text x="28" y="778" class="detail-title">[PERSON] P-001</text>
+  <text x="28" y="794" class="detail-body">Name: Alice Smith</text>
+  <text x="28" y="808" class="detail-body">Born: 1980-05-10 | Portuguese</text>
+  <text x="28" y="822" class="detail-body">type: politician | start: 2020-01-01 | end: 2024-01-01</text>
+</g>
+<g id="detail-P-002">
+  <rect x="310" y="760" width="280" height="82" rx="5" fill="white" stroke="#7ec8e3" stroke-width="1.5"/>
+  <text x="318" y="778" class="detail-title">[PERSON] P-002</text>
+  <text x="318" y="794" class="detail-body">Name: Bob Jones</text>
+  <text x="318" y="808" class="detail-body">Born: 1975-03-22 | British</text>
+  <text x="318" y="822" class="detail-body">type: businessman | start:  | end: </text>
+</g>
+<g id="detail-O-001">
+  <rect x="600" y="760" width="280" height="82" rx="5" fill="white" stroke="#f9c74f" stroke-width="1.5"/>
+  <text x="608" y="778" class="detail-title">[ORGANIZATION] O-001</text>
+  <text x="608" y="794" class="detail-body">Name: Acme Corp</text>
+  <text x="608" y="808" class="detail-body">OrgType: private | Portugal</text>
+  <text x="608" y="822" class="detail-body">type: company | start: 2010-01-01 | end: </text>
+</g>
+<g id="detail-O-002">
+  <rect x="20" y="850" width="280" height="82" rx="5" fill="white" stroke="#f9c74f" stroke-width="1.5"/>
+  <text x="28" y="868" class="detail-title">[ORGANIZATION] O-002</text>
+  <text x="28" y="884" class="detail-body">Name: Green Earth</text>
+  <text x="28" y="898" class="detail-body">OrgType: foundation | Spain</text>
+  <text x="28" y="912" class="detail-body">type: NGO | start: 2005-06-15 | end: 2022-12-31</text>
+</g>
+<g id="detail-J-001">
+  <rect x="310" y="850" width="280" height="82" rx="5" fill="white" stroke="#90be6d" stroke-width="1.5"/>
+  <text x="318" y="868" class="detail-title">[POSITION] J-001</text>
+  <text x="318" y="884" class="detail-body">Title: Minister of Finance</text>
+  <text x="318" y="898" class="detail-body">PosType: government | Org: O-001</text>
+  <text x="318" y="912" class="detail-body">type: public | start: 2019-03-01 | end: 2023-03-01</text>
+</g>
+<g id="detail-A-001">
+  <rect x="600" y="850" width="280" height="82" rx="5" fill="white" stroke="#f8961e" stroke-width="1.5"/>
+  <text x="608" y="868" class="detail-title">[ASSET] A-001</text>
+  <text x="608" y="884" class="detail-body">AssetType: real_estate</text>
+  <text x="608" y="898" class="detail-body">Country: Portugal | Value: 500000.0</text>
+  <text x="608" y="912" class="detail-body">type: property | start: 2015-01-01 | end: </text>
+</g>
+<g id="detail-A-002">
+  <rect x="20" y="940" width="280" height="82" rx="5" fill="white" stroke="#f8961e" stroke-width="1.5"/>
+  <text x="28" y="958" class="detail-title">[ASSET] A-002</text>
+  <text x="28" y="974" class="detail-body">AssetType: company</text>
+  <text x="28" y="988" class="detail-body">Country: Luxembourg | Value: 1200000.5</text>
+  <text x="28" y="1002" class="detail-body">type: fund | start: 2018-06-01 | end: 2023-01-01</text>
+</g>
+<text x="20" y="1050" class="section-title">Relations</text>
+<g id="detail-rel-P-001-O-001">
+  <text x="20" y="1070" class="detail-body">P-001 → O-001 | label: employment | weight: 1,00</text>
+</g>
+<g id="detail-rel-P-001-A-001">
+  <text x="20" y="1088" class="detail-body">P-001 → A-001 | label: ownership | weight: 1,00</text>
+</g>
+<g id="detail-rel-P-002-O-002">
+  <text x="20" y="1106" class="detail-body">P-002 → O-002 | label: employment | weight: 1,00</text>
+</g>
+<g id="detail-rel-P-002-A-002">
+  <text x="20" y="1124" class="detail-body">P-002 → A-002 | label: ownership | weight: 1,00</text>
+</g>
+<g id="detail-rel-P-001-P-002">
+  <text x="20" y="1142" class="detail-body">P-001 → P-002 | label: kinship | weight: 0,50</text>
+</g>
+<g id="detail-rel-O-001-O-002">
+  <text x="20" y="1160" class="detail-body">O-001 → O-002 | label: membership | weight: 0,80</text>
+</g>
+</svg>

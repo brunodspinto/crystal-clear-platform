@@ -21,19 +21,19 @@ public class Edge {
         this.weight = weight;
     }
 
-    public String fromId() {
+    public String getFromId() {
         return fromId;
     }
 
-    public String toId() {
+    public String getToId() {
         return toId;
     }
 
-    public String label() {
+    public String getLabel() {
         return label;
     }
 
-    public double weight() {
+    public double getWeight() {
         return weight;
     }
 

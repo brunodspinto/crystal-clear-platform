@@ -69,7 +69,7 @@ def plot_type_distribution(declarations, output_path):
     Saves a pie chart of declaration type proportions as SVG.
     """
     import matplotlib
-    matplotlib.use("svg")
+    matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
     counts = count_by_field(declarations, "declaration_type")
@@ -90,7 +90,7 @@ def plot_by_role_and_institution(declarations, output_path):
     Saves a bar chart with two subplots (by role, by institution) as SVG.
     """
     import matplotlib
-    matplotlib.use("svg")
+    matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
     role_counts = count_by_field(declarations, "role")

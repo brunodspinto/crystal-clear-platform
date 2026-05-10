@@ -5,6 +5,7 @@ import pt.ipp.isep.dei.domain.UserRole;
 import pt.ipp.isep.dei.repository.RegistrationRequestRepository;
 import pt.ipp.isep.dei.repository.Repositories;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,7 +28,9 @@ public class RegisterController {
      * Returns the list of roles available for registration.
      */
     public List<UserRole> getAvailableRoles() {
-        return Arrays.asList(UserRole.values());
+        List<UserRole> roles = new ArrayList<>(Arrays.asList(UserRole.values()));
+        roles.remove(UserRole.ADMINISTRATOR);
+        return roles;
     }
 
     /**

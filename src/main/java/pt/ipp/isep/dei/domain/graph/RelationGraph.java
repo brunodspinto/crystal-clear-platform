@@ -24,15 +24,15 @@ public class RelationGraph {
         if (e == null) {
             throw new IllegalArgumentException("edge must not be null");
         }
-        List<Edge> outgoing = adj.get(e.fromId());
+        List<Edge> outgoing = adj.get(e.getFromId());
         if (outgoing == null) {
             outgoing = new ArrayList<>();
-            adj.put(e.fromId(), outgoing);
+            adj.put(e.getFromId(), outgoing);
         }
         outgoing.add(e);
         // make sure the target node is at least registered, even with no outgoing edges
-        if (!adj.containsKey(e.toId())) {
-            adj.put(e.toId(), new ArrayList<>());
+        if (!adj.containsKey(e.getToId())) {
+            adj.put(e.getToId(), new ArrayList<>());
         }
         // TODO: directed vs undirected — for now we only store from -> to
     }
@@ -80,9 +80,9 @@ public class RelationGraph {
         AdjacencyMatrix m = new AdjacencyMatrix(registry.size());
         for (String fromId : adj.keySet()) {
             for (Edge e : adj.get(fromId)) {
-                int from = registry.indexFor(e.fromId());
-                int to = registry.indexFor(e.toId());
-                m.addEdge(from, to, e.weight());
+                int from = registry.indexFor(e.getFromId());
+                int to = registry.indexFor(e.getToId());
+                m.addEdge(from, to, e.getWeight());
             }
         }
         return m;
@@ -106,10 +106,10 @@ public class RelationGraph {
         AdjacencyMatrix m = new AdjacencyMatrix(registry.size());
         for (String fromId : adj.keySet()) {
             for (Edge e : adj.get(fromId)) {
-                if (label.equals(e.label())) {
-                    int from = registry.indexFor(e.fromId());
-                    int to = registry.indexFor(e.toId());
-                    m.addEdge(from, to, e.weight());
+                if (label.equals(e.getLabel())) {
+                    int from = registry.indexFor(e.getFromId());
+                    int to = registry.indexFor(e.getToId());
+                    m.addEdge(from, to, e.getWeight());
                 }
             }
         }

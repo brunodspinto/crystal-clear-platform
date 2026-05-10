@@ -282,7 +282,7 @@ public class Organization {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Organization)) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         Organization that = (Organization) o;

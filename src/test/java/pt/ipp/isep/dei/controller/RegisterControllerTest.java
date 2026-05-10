@@ -21,9 +21,28 @@ class RegisterControllerTest {
     }
 
     @Test
-    void ensureGetAvailableRolesReturnsAllRoles() {
+    void ensureGetAvailableRolesExcludesAdministrator() {
         List<UserRole> roles = controller.getAvailableRoles();
-        assertEquals(UserRole.values().length, roles.size());
+        assertFalse(roles.contains(UserRole.ADMINISTRATOR));
+        assertEquals(UserRole.values().length - 1, roles.size());
+    }
+
+    @Test
+    void ensureGetDocumentLabelForJournalist() {
+        assertNotNull(controller.getDocumentLabel(UserRole.JOURNALIST));
+        assertTrue(controller.getDocumentLabel(UserRole.JOURNALIST).toLowerCase().contains("press"));
+    }
+
+    @Test
+    void ensureGetDocumentLabelForCitizen() {
+        assertNotNull(controller.getDocumentLabel(UserRole.CITIZEN));
+        assertTrue(controller.getDocumentLabel(UserRole.CITIZEN).toLowerCase().contains("national"));
+    }
+
+    @Test
+    void ensureGetDocumentLabelForOtherRoleReturnsNull() {
+        assertNull(controller.getDocumentLabel(UserRole.POLITICAL_AGENT));
+        assertNull(controller.getDocumentLabel(UserRole.ETHICS_COMMITTEE));
     }
 
     @Test
