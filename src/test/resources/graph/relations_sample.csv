@@ -1,0 +1,7 @@
+# Relations CSV — format: from_id;to_id;label;weight
+P-001;O-001;employment;1.0
+P-001;A-001;ownership;1.0
+P-002;O-002;employment;1.0
+P-002;A-002;ownership;1.0
+P-001;P-002;kinship;0.5
+O-001;O-002;membership;0.8
