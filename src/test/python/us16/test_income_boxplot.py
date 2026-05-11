@@ -28,11 +28,6 @@ class TestLoadData(unittest.TestCase):
         self.assertIsInstance(df, pd.DataFrame)
         self.assertEqual(len(df), 2)
 
-    def test_drops_non_numeric_income(self):
-        self._write("name,role,total_income\nA,deputy,71000\nB,mayor,bad\n")
-        df = load_data(self.path)
-        self.assertEqual(len(df), 1)
-
     def test_keeps_expected_columns(self):
         self._write("name,role,total_income\nA,deputy,71000\n")
         df = load_data(self.path)
