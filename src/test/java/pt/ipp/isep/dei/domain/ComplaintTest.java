@@ -11,7 +11,7 @@ class ComplaintTest {
     private static final Date PAST_DATE = new Date(0); // 1 Jan 1970 — always in the past
 
     private Citizen createTestCitizen() {
-        return new Citizen("citizen@test.com", "John Citizen");
+        return new Citizen("citizen@test.com", "John Citizen", "CC111111111");
     }
 
     private PoliticalAgent createTestAgent() {

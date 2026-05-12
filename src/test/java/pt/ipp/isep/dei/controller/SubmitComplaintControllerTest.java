@@ -64,7 +64,7 @@ class SubmitComplaintControllerTest {
         agentRepo.save(agent);
 
         CitizenRepository citizenRepo = new CitizenRepository();
-        citizenRepo.save(new Citizen("citizen@test.com", "Test Citizen"));
+        citizenRepo.save(new Citizen("citizen@test.com", "Test Citizen", "CC222222222"));
 
         ComplaintRepository complaintRepo = new ComplaintRepository();
         AuthenticationRepository authRepo = createAuthRepoLoggedInAs("citizen@test.com", "Test Citizen");
@@ -104,7 +104,7 @@ class SubmitComplaintControllerTest {
         agentRepo.save(agent);
 
         CitizenRepository citizenRepo = new CitizenRepository();
-        citizenRepo.save(new Citizen("citizen@test.com", "Test Citizen"));
+        citizenRepo.save(new Citizen("citizen@test.com", "Test Citizen", "CC222222222"));
 
         ComplaintRepository complaintRepo = new ComplaintRepository();
         AuthenticationRepository authRepo = createAuthRepoLoggedInAs("citizen@test.com", "Test Citizen");
