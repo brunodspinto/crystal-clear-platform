@@ -22,7 +22,7 @@ As an Administrator, I want to accept or reject registration requests on the pla
 
 * The Administrator must always supply a reason when rejecting a registration request. This reason is displayed to the user the next time they attempt to log in.
 * A user may register for more than one role, but each role requires a separate and independent registration. Roles must not overlap within a single account.
-* The Administrator must verify the identification document provided — a valid press card for Journalists and a valid national identity card for Ordinary Citizens — before accepting the request.
+* The Administrator must verify the identification document provided (a valid press card for Journalists and a valid national identity card for Ordinary Citizens) before accepting the request.
 * The Administrator cannot edit any data in a registration request. If the data is incorrect, the request must be rejected and the user must submit a new one.
 * The Ethics Committee has full access to all information on the platform, including registration and user data.
 

@@ -9,9 +9,9 @@
 | `ListOrganizationsController` | `src/main/java/pt/ipp/isep/dei/controller/ListOrganizationsController.java` |
 | `ListOrganizationsUI` | `src/main/java/pt/ipp/isep/dei/ui/console/ListOrganizationsUI.java` |
 
-**`ListOrganizationsController`** — fetches all organizations from `OrganizationRepository`, groups them into an `EnumMap<OrganizationType, List<Organization>>`, and sorts each group alphabetically by name (case-insensitive).
+**`ListOrganizationsController`**: fetches all organizations from `OrganizationRepository`, groups them into an `EnumMap<OrganizationType, List<Organization>>`, and sorts each group alphabetically by name (case-insensitive).
 
-**`ListOrganizationsUI`** — iterates over the grouped map and prints each non-empty group with a header, followed by the organization names sorted alphabetically. Shows a "no institutions" message if the repository is empty.
+**`ListOrganizationsUI`**: iterates over the grouped map and prints each non-empty group with a header, followed by the organization names sorted alphabetically. Shows a "no institutions" message if the repository is empty.
 
 ## Tests
 
@@ -28,7 +28,7 @@
 
 ## Checklist
 
-- [x] `ListOrganizationsController` — groups and sorts organizations
-- [x] `ListOrganizationsUI` — displays grouped result to Political Agent
-- [x] `PoliticalAgentUI` — "List Institutions" option wired up
+- [x] `ListOrganizationsController`: groups and sorts organizations
+- [x] `ListOrganizationsUI`: displays grouped result to Political Agent
+- [x] `PoliticalAgentUI`: "List Institutions" option wired up
 - [x] 6 unit tests (all passing)

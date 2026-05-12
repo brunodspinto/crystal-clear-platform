@@ -39,18 +39,18 @@
 
 ## Tests
 
-- `src/test/java/pt/ipp/isep/dei/domain/graph/EntityTest.java` — 3 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/PersonTest.java` — 4 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/OrganizationTest.java` — 4 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/PositionTest.java` — 4 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/AssetTest.java` — 4 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/EdgeTest.java` — 3 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/RelationGraphTest.java` — 11 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/GraphBuilderTest.java` — 7 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/EntityCsvParserTest.java` — 7 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/RelationCsvParserTest.java` — 9 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/IndexRegistryTest.java` — 8 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/AdjacencyMatrixTest.java` — 9 tests
+- `src/test/java/pt/ipp/isep/dei/domain/graph/EntityTest.java`: 3 tests
+- `src/test/java/pt/ipp/isep/dei/domain/graph/PersonTest.java`: 4 tests
+- `src/test/java/pt/ipp/isep/dei/domain/graph/OrganizationTest.java`: 4 tests
+- `src/test/java/pt/ipp/isep/dei/domain/graph/PositionTest.java`: 4 tests
+- `src/test/java/pt/ipp/isep/dei/domain/graph/AssetTest.java`: 4 tests
+- `src/test/java/pt/ipp/isep/dei/domain/graph/EdgeTest.java`: 3 tests
+- `src/test/java/pt/ipp/isep/dei/domain/graph/RelationGraphTest.java`: 11 tests
+- `src/test/java/pt/ipp/isep/dei/domain/graph/GraphBuilderTest.java`: 7 tests
+- `src/test/java/pt/ipp/isep/dei/domain/graph/EntityCsvParserTest.java`: 7 tests
+- `src/test/java/pt/ipp/isep/dei/domain/graph/RelationCsvParserTest.java`: 9 tests
+- `src/test/java/pt/ipp/isep/dei/domain/graph/IndexRegistryTest.java`: 8 tests
+- `src/test/java/pt/ipp/isep/dei/domain/graph/AdjacencyMatrixTest.java`: 9 tests
 
 Total: 73 tests (all passing)
 

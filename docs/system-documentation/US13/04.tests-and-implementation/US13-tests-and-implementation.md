@@ -4,7 +4,7 @@
 
 ### Python Script
 
-- `src/main/python/us13/declaration_analysis.py` — reads the declarations CSV and produces two SVG charts
+- `src/main/python/us13/declaration_analysis.py`: reads the declarations CSV and produces two SVG charts
 
 | Function | Description |
 |----------|-------------|
@@ -16,16 +16,16 @@
 
 ### Output Charts (SVG)
 
-- `docs/system-documentation/US13/us13_chart1_type_distribution.svg` — pie chart: proportion of declarations by type (Initial / Regular / Exceptional)
-- `docs/system-documentation/US13/us13_chart2_role_institution.svg` — bar charts: total declarations by role and by institution
+- `docs/system-documentation/US13/us13_chart1_type_distribution.svg`: pie chart: proportion of declarations by type (Initial / Regular / Exceptional)
+- `docs/system-documentation/US13/us13_chart2_role_institution.svg`: bar charts: total declarations by role and by institution
 
 ### Test Data
 
-- `src/test/resources/us13/sample_declarations.csv` — 16 sample declarations covering all types (Initial, Regular, Exceptional), roles (MP, Minister, Judge, State Secretary, Advisor), and institutions (Parliament, Government, Courts)
+- `src/test/resources/us13/sample_declarations.csv`: 16 sample declarations covering all types (Initial, Regular, Exceptional), roles (MP, Minister, Judge, State Secretary, Advisor), and institutions (Parliament, Government, Courts)
 
 ## Tests
 
-- `src/test/python/us13/test_declaration_analysis.py` — 6 unit tests for `count_by_field` (pure function; I/O functions are excluded per project guidelines)
+- `src/test/python/us13/test_declaration_analysis.py`: 6 unit tests for `count_by_field` (pure function; I/O functions are excluded per project guidelines)
 
 | Test | Description |
 |------|-------------|
@@ -44,10 +44,10 @@ python3 src/test/python/us13/test_declaration_analysis.py -v
 
 ## Checklist
 
-- [x] `load_data` — reads declarations CSV
-- [x] `count_by_field` — counts by any field
-- [x] `plot_type_distribution` — pie chart by type → SVG
-- [x] `plot_by_role_and_institution` — bar charts by role and institution → SVG
-- [x] `sample_declarations.csv` — 16-row test dataset
+- [x] `load_data`: reads declarations CSV
+- [x] `count_by_field`: counts by any field
+- [x] `plot_type_distribution`: pie chart by type → SVG
+- [x] `plot_by_role_and_institution`: bar charts by role and institution → SVG
+- [x] `sample_declarations.csv`: 16-row test dataset
 - [x] 6 unit tests for `count_by_field` (all passing)
 - [x] SVG charts generated in `docs/system-documentation/US13/`
