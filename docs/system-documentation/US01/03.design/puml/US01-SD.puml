@@ -1,0 +1,67 @@
+@startuml US01-SD
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Future User" as User
+participant ":RegisterUI" as UI
+participant ":RegisterController" as CTRL
+participant "rr:RegistrationRequest" as RR
+participant ":RegistrationRequestRepository" as REPO
+
+activate User
+
+    User -> UI : asks to register on the platform
+    activate UI
+        UI -> CTRL : getAvailableRoles()
+        activate CTRL
+            CTRL --> UI : roles
+        deactivate CTRL
+        UI --> User : shows available roles and requests selection
+    deactivate UI
+
+    User -> UI : selects role and types data\n(fullName, email, password)
+    activate UI
+        UI -> CTRL : isValidPassword(password)
+        activate CTRL
+            CTRL --> UI : true/false
+        deactivate CTRL
+        UI -> CTRL : requiresDocument(role)
+        activate CTRL
+            CTRL --> UI : true/false
+        deactivate CTRL
+        UI --> User : requests identification document (if required)
+    deactivate UI
+
+    User -> UI : types identification document (if required)
+    activate UI
+        UI --> User : shows all data and requests confirmation
+    deactivate UI
+
+    User -> UI : confirms data
+    activate UI
+
+        UI -> CTRL : submitRequest(fullName, email, password, role, identificationDocument)
+        activate CTRL
+
+            CTRL -> RR ** : new RegistrationRequest(fullName, email, password, role, identificationDocument)
+            activate RR
+                RR --> CTRL : rr
+            deactivate RR
+
+            CTRL -> REPO : save(rr)
+            activate REPO
+                REPO --> CTRL : success
+            deactivate REPO
+
+            CTRL --> UI : success
+        deactivate CTRL
+
+        UI --> User : displays operation success
+    deactivate UI
+
+deactivate User
+
+@enduml

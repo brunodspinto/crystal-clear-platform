@@ -9,9 +9,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * @author Paulo Maio pam@isep.ipp.pt
- */
 public class Utils {
 
     static public String readLineFromConsole(String prompt) {
@@ -76,9 +73,9 @@ public class Utils {
         String input;
         do {
             input = Utils.readLineFromConsole("\n" + message + "\n");
-        } while (!input.equalsIgnoreCase("s") && !input.equalsIgnoreCase("n"));
+        } while (!input.equalsIgnoreCase("y") && !input.equalsIgnoreCase("n"));
 
-        return input.equalsIgnoreCase("s");
+        return input.equalsIgnoreCase("y");
     }
 
     static public Object showAndSelectOne(List list, String header) {

@@ -1,0 +1,34 @@
+@startuml US03-SD
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Political Agent" as PA
+participant ":ListOrganizationsUI" as UI
+participant ":ListOrganizationsController" as CTRL
+participant ":OrganizationRepository" as REPO
+
+activate PA
+
+    PA -> UI : asks to list institutions
+    activate UI
+
+        UI -> CTRL : getOrganizationsGroupedByType()
+        activate CTRL
+
+            CTRL -> REPO : getOrganizations()
+            activate REPO
+                REPO --> CTRL : organizations
+            deactivate REPO
+
+            CTRL --> UI : grouped (EnumMap<OrganizationType, List<Organization>>)
+        deactivate CTRL
+
+        UI --> PA : displays institutions grouped by type,\nsorted alphabetically within each group
+    deactivate UI
+
+deactivate PA
+
+@enduml

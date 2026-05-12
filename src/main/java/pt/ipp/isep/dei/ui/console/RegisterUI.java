@@ -49,7 +49,7 @@ public class RegisterUI implements Runnable {
             System.out.printf("Document  : %s%n", identificationDocument);
         }
 
-        if (!Utils.confirm("Submit registration request? (s/n)")) {
+        if (!Utils.confirm("Submit registration request? (y/n)")) {
             System.out.println("\nOperation cancelled.");
             return;
         }

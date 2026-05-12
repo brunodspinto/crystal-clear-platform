@@ -1,0 +1,63 @@
+@startuml US02-CD
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+class ReviewRegistrationUI {
+}
+
+class ReviewRegistrationController {
+    + ReviewRegistrationController()
+    + getPendingRequests() : List<RegistrationRequest>
+    + approveRequest(request : RegistrationRequest) : void
+    + rejectRequest(request : RegistrationRequest, reason : String) : void
+}
+
+class RegistrationRequest {
+    - fullName : String
+    - email : String
+    - password : String
+    - identificationDocument : String
+    - submissionDate : Date
+    - status : RegistrationStatus
+    - rejectionReason : String
+    + approve() : void
+    + reject(reason : String) : void
+    + getFullName() : String
+    + getEmail() : String
+    + getPassword() : String
+    + getRole() : UserRole
+    + getStatus() : RegistrationStatus
+}
+
+class RegistrationRequestRepository {
+    + getPendingRequests() : List<RegistrationRequest>
+}
+
+class AuthenticationRepository {
+    + addUserWithRole(name : String, email : String, password : String, roleId : String) : void
+}
+
+enum UserRole {
+    POLITICAL_AGENT
+    CITIZEN
+    JOURNALIST
+    ETHICS_COMMITTEE
+    ADMINISTRATOR
+}
+
+enum RegistrationStatus {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
+ReviewRegistrationUI .> ReviewRegistrationController
+ReviewRegistrationController ..> RegistrationRequestRepository
+ReviewRegistrationController ..> AuthenticationRepository
+ReviewRegistrationController ..> RegistrationRequest
+RegistrationRequest "1" --> "1" UserRole : role
+RegistrationRequest "1" --> "1" RegistrationStatus : status
+
+@enduml

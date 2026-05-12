@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ComplaintRepositoryTest {
 
     private Complaint createTestComplaint(String description) {
-        Citizen citizen = new Citizen("citizen@test.com", "Test Citizen");
+        Citizen citizen = new Citizen("citizen@test.com", "Test Citizen", "CC333333333");
         PoliticalAgent agent = new PoliticalAgent("Agent", "agent@gov.pt", "12345678", "123456789",
                 new Date(), null);
         return new Complaint(description, new Date(0), citizen, agent, PoliticalFunction.MAYOR);

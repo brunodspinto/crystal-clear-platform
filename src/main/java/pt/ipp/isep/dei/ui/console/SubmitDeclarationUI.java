@@ -58,7 +58,7 @@ public class SubmitDeclarationUI implements Runnable {
 
         printSummary();
 
-        if (Utils.confirm("Confirm submission? (s/n)")) {
+        if (Utils.confirm("Confirm submission? (y/n)")) {
             submitData();
         } else {
             System.out.println("\nOperation cancelled.");
@@ -85,7 +85,7 @@ public class SubmitDeclarationUI implements Runnable {
             if (entry != null) {
                 positionEntries.add(entry);
             }
-        } while (Utils.confirm("Add another position entry? (s/n)"));
+        } while (Utils.confirm("Add another position entry? (y/n)"));
     }
 
     private Object[] collectSinglePositionEntry() {
@@ -112,7 +112,7 @@ public class SubmitDeclarationUI implements Runnable {
                 Utils.readLineFromConsole("Side income - board memberships (0 if none): "));
         Date startDate = Utils.readDateFromConsole("Start date (dd-MM-yyyy): ");
         Date endDate = null;
-        if (!Utils.confirm("Is the position still active? (s/n)")) {
+        if (!Utils.confirm("Is the position still active? (y/n)")) {
             endDate = Utils.readDateFromConsole("End date (dd-MM-yyyy): ");
         }
 
@@ -125,11 +125,11 @@ public class SubmitDeclarationUI implements Runnable {
 
     private void collectSubsidyEntries() {
         System.out.println("\n--- Subsidy / Support Entries (optional) ---");
-        if (!Utils.confirm("Add subsidy entries? (s/n)")) return;
+        if (!Utils.confirm("Add subsidy entries? (y/n)")) return;
         do {
             Object[] entry = collectSingleSubsidyEntry();
             if (entry != null) subsidyEntries.add(entry);
-        } while (Utils.confirm("Add another subsidy entry? (s/n)"));
+        } while (Utils.confirm("Add another subsidy entry? (y/n)"));
     }
 
     private Object[] collectSingleSubsidyEntry() {
@@ -150,11 +150,11 @@ public class SubmitDeclarationUI implements Runnable {
 
     private void collectAssetEntries() {
         System.out.println("\n--- Asset Entries (optional) ---");
-        if (!Utils.confirm("Add asset entries? (s/n)")) return;
+        if (!Utils.confirm("Add asset entries? (y/n)")) return;
         do {
             Object[] entry = collectSingleAssetEntry();
             if (entry != null) assetEntries.add(entry);
-        } while (Utils.confirm("Add another asset entry? (s/n)"));
+        } while (Utils.confirm("Add another asset entry? (y/n)"));
     }
 
     private Object[] collectSingleAssetEntry() {
@@ -192,11 +192,11 @@ public class SubmitDeclarationUI implements Runnable {
 
     private void collectBusinessParticipations() {
         System.out.println("\n--- Business Participations / Holdings (optional) ---");
-        if (!Utils.confirm("Add business participation entries? (s/n)")) return;
+        if (!Utils.confirm("Add business participation entries? (y/n)")) return;
         do {
             Object[] entry = collectSingleBusinessParticipation();
             if (entry != null) businessParticipations.add(entry);
-        } while (Utils.confirm("Add another participation entry? (s/n)"));
+        } while (Utils.confirm("Add another participation entry? (y/n)"));
     }
 
     private Object[] collectSingleBusinessParticipation() {
@@ -217,12 +217,12 @@ public class SubmitDeclarationUI implements Runnable {
 
     private void collectAttachments() {
         System.out.println("\n--- Attachments (optional) ---");
-        if (!Utils.confirm("Add attachments? (s/n)")) return;
+        if (!Utils.confirm("Add attachments? (y/n)")) return;
         do {
             String fileName = Utils.readLineFromConsole("File name: ");
             Date uploadDate = new Date();
             attachments.add(new Object[]{fileName, uploadDate});
-        } while (Utils.confirm("Add another attachment? (s/n)"));
+        } while (Utils.confirm("Add another attachment? (y/n)"));
     }
 
     // -------------------------------------------------------------------------
