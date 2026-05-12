@@ -1,0 +1,70 @@
+@startuml US02-SD
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Administrator" as Admin
+participant ":ReviewRegistrationUI" as UI
+participant ":ReviewRegistrationController" as CTRL
+participant ":RegistrationRequestRepository" as REPO
+participant "rr:RegistrationRequest" as RR
+participant ":AuthenticationRepository" as AUTH
+
+activate Admin
+
+    Admin -> UI : asks to review registration requests
+    activate UI
+        UI -> CTRL : getPendingRequests()
+        activate CTRL
+            CTRL -> REPO : getPendingRequests()
+            activate REPO
+                REPO --> CTRL : pendingRequests
+            deactivate REPO
+            CTRL --> UI : pendingRequests
+        deactivate CTRL
+        UI --> Admin : displays list of pending requests
+    deactivate UI
+
+    Admin -> UI : selects a request and decides to accept/reject
+    activate UI
+        UI --> Admin : shows full request details and asks for decision
+    deactivate UI
+
+    alt accept
+        Admin -> UI : confirms acceptance
+        activate UI
+            UI -> CTRL : approveRequest(rr)
+            activate CTRL
+                CTRL -> RR : approve()
+                activate RR
+                    RR --> CTRL : ok
+                deactivate RR
+                CTRL -> AUTH : addUserWithRole(fullName, email, password, roleId)
+                activate AUTH
+                    AUTH --> CTRL : ok
+                deactivate AUTH
+                CTRL --> UI : ok
+            deactivate CTRL
+            UI --> Admin : displays request accepted
+        deactivate UI
+
+    else reject
+        Admin -> UI : confirms rejection with reason
+        activate UI
+            UI -> CTRL : rejectRequest(rr, reason)
+            activate CTRL
+                CTRL -> RR : reject(reason)
+                activate RR
+                    RR --> CTRL : ok
+                deactivate RR
+                CTRL --> UI : ok
+            deactivate CTRL
+            UI --> Admin : displays request rejected
+        deactivate UI
+    end
+
+deactivate Admin
+
+@enduml
