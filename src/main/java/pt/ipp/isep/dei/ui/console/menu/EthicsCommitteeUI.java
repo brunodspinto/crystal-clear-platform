@@ -1,5 +1,6 @@
 package pt.ipp.isep.dei.ui.console.menu;
 
+import pt.ipp.isep.dei.ui.console.AssetEvolutionUI;
 import pt.ipp.isep.dei.ui.console.ShowTextUI;
 import pt.ipp.isep.dei.ui.console.ValidateDeclarationUI;
 import pt.ipp.isep.dei.ui.console.utils.Utils;
@@ -18,7 +19,8 @@ public class EthicsCommitteeUI implements Runnable {
     public void run() {
         List<MenuItem> options = new ArrayList<>();
         options.add(new MenuItem("Validate Declaration of Interests", new ValidateDeclarationUI()));
-        options.add(new MenuItem("Option 2", new ShowTextUI("You have chosen Option 2.")));
+        options.add(new MenuItem("Examine Asset & Net Worth Evolution", new AssetEvolutionUI()));
+        options.add(new MenuItem("Option 3", new ShowTextUI("You have chosen Option 3.")));
 
         int option = 0;
         do {
