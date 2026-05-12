@@ -30,14 +30,13 @@ The full implementation lives in `src/main/python/us18/stock_increases.py`.
 
 | Function | Description |
 |----------|-------------|
-| `load_data(path)` | Reads the holdings CSV and parses `declaration_date`; all rows are kept (no deduplication — full history is required) |
+| `load_data(path)` | Reads the holdings CSV; all rows are kept (no deduplication — full history is required) |
 | `compute_increases(df)` | For each (agent, company) pair, computes increase from earliest to most recent declaration; excludes pairs with fewer than 2 declarations; returns DataFrame sorted by increase descending |
 | `top_n_increases(df_inc, n=10)` | Returns the top N rows of the increases DataFrame |
-| `get_evolution(df, df_top)` | Returns all historical rows from `df` for the (agent, company) pairs in `df_top`, sorted by pair and date |
+| `get_evolution(df, df_top)` | Returns all historical rows from `df` for the (agent, company) pairs in `df_top` using set-based boolean filtering |
 | `print_top_increases(df_top)` | Prints a ranked table of the top pairs and their increases to stdout |
-| `plot_top_increases(df_top, output_path)` | Saves a horizontal bar chart of the top 10 increases as SVG |
-| `plot_evolution(df_evolution, output_path)` | Saves a line chart showing stock value evolution over time for each top pair as SVG |
-| `main()` | Orchestrates all steps end-to-end |
+| `plot_top_increases(df_top, output_path)` | Saves a horizontal bar chart of the top 10 increases as SVG using `sns.barplot` (slide 11) |
+| `plot_evolution(df_evolution, output_path)` | Saves boxplots of `total_value_in_stocks` grouped by `agent_id` showing value distribution using `df.groupby().boxplot()` (slide 39) |
 
 ### Test Data
 
@@ -56,17 +55,17 @@ After `compute_increases`: 4 rows (A002/C003 and A004/C005 excluded), sorted des
 
 ### Output Charts (SVG)
 
-- `docs/system-documentation/US18/US18_top_increases.svg` — horizontal bar chart, highest increase at top, bars annotated with value in euros
-- `docs/system-documentation/US18/US18_evolution.svg` — line chart, one line per (agent, company) pair, each data point marked with a circle
+- `docs/system-documentation/US18/US18_top_increases.svg` — bar chart of the top 10 (agent, company) pairs by stock value increase
+- `docs/system-documentation/US18/US18_evolution.svg` — boxplots of `total_value_in_stocks` grouped by agent, showing distribution of values over time
 
 
 ## 6. Integration and Demo
 
-- Consumes `dataset2_holdings.csv` (produced by US25). The script accepts the CSV path as an optional command-line argument:
+- Consumes `dataset2_holdings.csv` (produced by US25). The CSV path is hardcoded to `dataset2_holdings.csv`.
+- Run directly with:
   ```
-  py src/main/python/us18/stock_increases.py dataset2_holdings.csv
+  py src/main/python/us18/stock_increases.py
   ```
-  If no argument is given, it defaults to `dataset2_holdings.csv`.
 - Generated SVGs are saved to `docs/system-documentation/US18/`.
 
 
@@ -75,7 +74,7 @@ After `compute_increases`: 4 rows (A002/C003 and A004/C005 excluded), sorted des
 - Unlike US17, `load_data` does **not** deduplicate — the full declaration history is required to compute increases and plot evolution over time.
 - A pair must have at least 2 declarations to appear in the results; single-declaration pairs are silently excluded.
 - Negative increases (value decreased over time) are included in the results and sorted accordingly.
-- `get_evolution` uses a DataFrame merge (not apply+lambda) for performance on large datasets.
+- `get_evolution` uses set-based boolean filtering with `df.values` to select rows matching the top pairs — avoids `df.merge()` which is not covered in the Statistics slides.
 
 
 ## 8. Checklist
@@ -86,7 +85,7 @@ After `compute_increases`: 4 rows (A002/C003 and A004/C005 excluded), sorted des
 - [x] `get_evolution` — retrieves full history for top pairs
 - [x] `print_top_increases` — ranked table to stdout
 - [x] `plot_top_increases` — horizontal bar chart → SVG
-- [x] `plot_evolution` — line chart of evolution over time → SVG
+- [x] `plot_evolution` — boxplots grouped by agent (`df.groupby().boxplot()`, slide 39) → SVG
 - [x] `sample_holdings.csv` — 4-agent/5-company test dataset with single-declaration exclusion cases
 - [x] 8 unit tests (all passing)
 - [x] SVG charts saved to `docs/system-documentation/US18/`

@@ -1,19 +1,3 @@
-"""
-US14 - Descriptive Statistical Analysis of Declarations.
-
-Reads the declarations CSV (one row per declaration) and, for each political
-agent, considers only their most recent declaration. Computes and prints:
-  - Measures of central tendency: mean, median, mode
-  - Non-central location: quartiles, deciles, percentiles
-  - Variability: range, IQR, sample variance, std deviation, coefficient of variation
-  - Shape: sample skewness and real kurtosis
-
-Produces two SVG charts saved to docs/system-documentation/US14/:
-  1. US14_histograms.svg -- side-by-side histograms of total income and total assets
-  2. US14_boxplots.svg   -- side-by-side boxplots with Tukey-fence outlier detection
-"""
-
-import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import statistics as st
@@ -21,33 +5,18 @@ from scipy import stats
 
 
 def load_data(path):
-    """
-    Reads the declarations CSV and returns a DataFrame with one row per agent
-    (the most recent declaration). Derives two aggregate columns:
-      total_income = gross_salary + side_income_consulting + side_income_board_memberships
-      total_assets = assets_in_real_estate + assets_in_vehicles + assets_in_stocks
-    """
     df = pd.read_csv(path)
-    df['declaration_date'] = pd.to_datetime(df['declaration_date'])
-    df_recent = (
-        df.sort_values('declaration_date', ascending=False)
-          .drop_duplicates(subset='agent_id', keep='first')
-          .reset_index(drop=True)
-    )
-    df_recent['total_income'] = (df_recent['gross_salary']
-                                 + df_recent['side_income_consulting']
-                                 + df_recent['side_income_board_memberships'])
-    df_recent['total_assets'] = (df_recent['assets_in_real_estate']
-                                 + df_recent['assets_in_vehicles']
-                                 + df_recent['assets_in_stocks'])
-    return df_recent
+    df = df.sort_values('declaration_date').drop_duplicates(subset='agent_id', keep='last')
+    df['total_income'] = (df['gross_salary']
+                          + df['side_income_consulting']
+                          + df['side_income_board_memberships'])
+    df['total_assets'] = (df['assets_in_real_estate']
+                          + df['assets_in_vehicles']
+                          + df['assets_in_stocks'])
+    return df
 
 
 def central_tendency(data):
-    """
-    Returns a dict with mean, median and mode for a pandas Series.
-    Keys: 'mean', 'median', 'mode'.
-    """
     return {
         'mean':   data.mean(),
         'median': data.median(),
@@ -56,11 +25,6 @@ def central_tendency(data):
 
 
 def compute_quantiles(data):
-    """
-    Returns a dict with quartiles, key deciles and key percentiles computed
-    via statistics.quantiles (exclusive method). Requires at least 2 data points.
-    Keys: 'q1', 'q2', 'q3', 'd1', 'd5', 'd9', 'p10', 'p25', 'p75', 'p90'.
-    """
     lst = data.tolist()
     quartiles   = st.quantiles(lst, n=4)
     deciles     = st.quantiles(lst, n=10)
@@ -74,11 +38,6 @@ def compute_quantiles(data):
 
 
 def variability(data):
-    """
-    Returns a dict with measures of variability for a pandas Series.
-    Keys: 'range', 'iqr', 'variance' (sample, ddof=1), 'std_dev' (sample), 'coef_variation'.
-    Q1 and Q3 are computed via statistics.quantiles for consistency with compute_quantiles.
-    """
     quartiles_v = st.quantiles(data.tolist(), n=4)
     q1, q3 = quartiles_v[0], quartiles_v[2]
     std_dev = data.std()
@@ -92,11 +51,6 @@ def variability(data):
 
 
 def shape_stats(data):
-    """
-    Returns a dict with sample skewness and real kurtosis for a pandas Series.
-    Uses bias=False (sample coefficient) and fisher=False (real kurtosis, not excess).
-    Keys: 'skewness', 'kurtosis'.
-    """
     return {
         'skewness': float(stats.skew(data, bias=False)),
         'kurtosis': float(stats.kurtosis(data, fisher=False)),
@@ -104,7 +58,6 @@ def shape_stats(data):
 
 
 def print_central_tendency(label, ct):
-    """Prints mean, median and mode for a given variable label."""
     print(f'{"="*55}')
     print(f'  {label.upper()}')
     print(f'{"="*55}')
@@ -115,7 +68,6 @@ def print_central_tendency(label, ct):
 
 
 def print_quantiles(label, q):
-    """Prints quartiles, key deciles and key percentiles for a given variable label."""
     print(f'{"="*55}')
     print(f'  {label.upper()} — Quantiles')
     print(f'{"="*55}')
@@ -135,7 +87,6 @@ def print_quantiles(label, q):
 
 
 def print_variability(label, v):
-    """Prints variability measures for a given variable label."""
     cv = v['coef_variation']
     print(f'{"="*55}')
     print(f'  {label.upper()} — Variability')
@@ -149,10 +100,6 @@ def print_variability(label, v):
 
 
 def print_shape(label, s):
-    """
-    Prints skewness and kurtosis coefficients with automatic textual interpretation
-    for a given variable label.
-    """
     skewness = s['skewness']
     kurtosis = s['kurtosis']
     if skewness > 0:
@@ -179,86 +126,49 @@ def print_shape(label, s):
 
 
 def plot_histograms(df, output_path):
-    """
-    Saves side-by-side histograms of total_income and total_assets as SVG.
-    Each histogram overlays vertical lines for the mean (red dashed) and median (orange).
-    """
-    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+    fig, axes = plt.subplots(1, 2)
     for variable, xlabel, ax in [
         ('total_income', 'Total Income (€)', axes[0]),
         ('total_assets', 'Total Assets (€)', axes[1]),
     ]:
-        data   = df[variable].dropna()
-        mean   = data.mean()
-        median = data.median()
-        ax.hist(data, bins='auto', color='steelblue', edgecolor='white', alpha=0.85)
-        ax.axvline(mean,   color='red',    linestyle='--', linewidth=1.5,
-                   label=f'Mean = {mean:,.0f} €')
-        ax.axvline(median, color='orange', linestyle='-',  linewidth=1.5,
-                   label=f'Median = {median:,.0f} €')
-        ax.set_title(f'Distribution of {xlabel}', fontsize=12)
-        ax.set_xlabel(xlabel, fontsize=10)
-        ax.set_ylabel('Absolute frequency', fontsize=10)
-        ax.legend(fontsize=9)
-        ax.grid(axis='y', linestyle='--', alpha=0.4)
-    plt.suptitle('US14 — Histograms: Total Income and Total Assets\n'
-                 '(most recent declaration per agent)', fontsize=13, y=1.02)
-    plt.tight_layout()
-    os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
-    plt.savefig(output_path, format='svg', bbox_inches='tight')
+        data = df[variable].dropna()
+        ax.hist(data, bins='auto')
+        ax.set_title(f'Distribution of {xlabel}')
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel('Absolute frequency')
+    plt.savefig(output_path)
     plt.show()
 
 
 def plot_boxplots(df, output_path):
-    """
-    Saves side-by-side boxplots of total_income and total_assets as SVG.
-    Outliers are detected using Tukey fences (Q1 - 1.5*IQR, Q3 + 1.5*IQR) and printed
-    to stdout. Q1 and Q3 are computed via statistics.quantiles.
-    """
-    fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+    fig, axes = plt.subplots(1, 2)
     for variable, ylabel, ax in [
         ('total_income', 'Total Income (€)', axes[0]),
         ('total_assets', 'Total Assets (€)', axes[1]),
     ]:
         data = df[variable].dropna()
-        ax.boxplot(data, vert=True, patch_artist=True,
-                   boxprops=dict(facecolor='lightsteelblue', color='steelblue'),
-                   medianprops=dict(color='red', linewidth=2),
-                   whiskerprops=dict(color='steelblue'),
-                   capprops=dict(color='steelblue'),
-                   flierprops=dict(marker='o', color='steelblue', alpha=0.5))
+        ax.boxplot(data)
         quartiles_b = st.quantiles(data.tolist(), n=4)
-        q1, q3      = quartiles_b[0], quartiles_b[2]
-        iqr         = q3 - q1
+        q1, q3 = quartiles_b[0], quartiles_b[2]
+        iqr = q3 - q1
         lower_fence = q1 - 1.5 * iqr
         upper_fence = q3 + 1.5 * iqr
-        outliers    = data[(data < lower_fence) | (data > upper_fence)]
-        ax.set_title(f'Boxplot — {ylabel}', fontsize=12)
-        ax.set_ylabel(ylabel, fontsize=10)
-        ax.set_xticks([])
-        ax.grid(axis='y', linestyle='--', alpha=0.4)
+        outliers = data[(data < lower_fence) | (data > upper_fence)]
+        ax.set_title(f'Boxplot — {ylabel}')
+        ax.set_ylabel(ylabel)
         print(f'{ylabel}: {len(outliers)} outlier(s) detected')
         if len(outliers) > 0:
             print(f'  Values: {sorted(outliers.tolist())}')
-    plt.suptitle('US14 — Boxplots: Total Income and Total Assets\n'
-                 '(most recent declaration per agent)', fontsize=13, y=1.02)
-    plt.tight_layout()
-    os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
-    plt.savefig(output_path, format='svg', bbox_inches='tight')
+    plt.savefig(output_path)
     plt.show()
 
 
 def full_summary(df):
-    """
-    Returns a DataFrame with all statistical measures for total_income and total_assets.
-    Rows: n, mean, median, mode, Q1, Q3, range, IQR, variance, std dev, CV, skewness, kurtosis.
-    Columns: 'Total Income', 'Total Assets'.
-    """
     summary = pd.DataFrame()
     for variable, label in [('total_income', 'Total Income'), ('total_assets', 'Total Assets')]:
-        data      = df[variable].dropna()
+        data = df[variable].dropna()
         quartiles = st.quantiles(data.tolist(), n=4)
-        s         = shape_stats(data)
+        s = shape_stats(data)
         summary[label] = pd.Series({
             'n (observations)'         : len(data),
             'Mean (x̄)'                : round(data.mean(), 2),
@@ -277,14 +187,9 @@ def full_summary(df):
     return summary
 
 
-def main():
-    import sys
-    csv_path = sys.argv[1] if len(sys.argv) > 1 else 'dataset1_declarations.csv'
-    docs_dir = os.path.join('docs', 'system-documentation', 'US14')
-
-    df = load_data(csv_path)
-    print('Number of political agents (most recent declaration):', len(df))
-    print(df[['agent_id', 'declaration_date', 'total_income', 'total_assets']].head().to_string())
+if __name__ == '__main__':
+    df = load_data('dataset1_declarations.csv')
+    print('Number of political agents:', len(df))
     print()
 
     for variable, label in [('total_income', 'Total Income'), ('total_assets', 'Total Assets')]:
@@ -294,14 +199,9 @@ def main():
         print_variability(label, variability(data))
         print_shape(label, shape_stats(data))
 
-    plot_histograms(df, os.path.join(docs_dir, 'US14_histograms.svg'))
-    plot_boxplots(df,   os.path.join(docs_dir, 'US14_boxplots.svg'))
+    plot_histograms(df, 'docs/system-documentation/US14/US14_histograms.svg')
+    plot_boxplots(df, 'docs/system-documentation/US14/US14_boxplots.svg')
 
     summary = full_summary(df)
     print('FULL STATISTICAL SUMMARY — US14')
-    print('=' * 60)
     print(summary.to_string())
-
-
-if __name__ == '__main__':
-    main()

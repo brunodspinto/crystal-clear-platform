@@ -33,8 +33,7 @@ The full implementation lives in `src/main/python/us17/top_companies.py`.
 | `aggregate_by_company(df)` | Sums `total_value_in_stocks` by `company_NIF`, returns sorted DataFrame (descending) |
 | `top_n(df_agg, n=10)` | Returns the top N companies by total share value |
 | `print_top_companies(df_top)` | Prints a ranked table to stdout |
-| `plot_top_companies(df_top, output_path)` | Saves a horizontal bar chart as SVG |
-| `main()` | Orchestrates all steps end-to-end |
+| `plot_top_companies(df_top, output_path)` | Saves a horizontal bar chart as SVG using `sns.barplot` (slide 11) |
 
 ### Test Data
 
@@ -57,11 +56,11 @@ After `load_data`, 7 unique (agent, company) pairs remain. After `aggregate_by_c
 
 ## 6. Integration and Demo
 
-- Consumes `dataset2_holdings.csv` (produced by US25). The script accepts the CSV path as an optional command-line argument:
+- Consumes `dataset2_holdings.csv` (produced by US25). The CSV path is hardcoded to `dataset2_holdings.csv`.
+- Run directly with:
   ```
-  py src/main/python/us17/top_companies.py dataset2_holdings.csv
+  py src/main/python/us17/top_companies.py
   ```
-  If no argument is given, it defaults to `dataset2_holdings.csv`.
 - Generated SVG is saved to `docs/system-documentation/US17/`.
 
 
