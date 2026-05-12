@@ -43,7 +43,6 @@ The full implementation lives in `src/main/python/us14/declaration_stats.py`.
 | `plot_histograms(df, output_path)` | Saves side-by-side histograms as SVG |
 | `plot_boxplots(df, output_path)` | Saves side-by-side boxplots as SVG with Tukey-fence outlier detection |
 | `full_summary(df)` | Returns a DataFrame with all statistical measures for both variables |
-| `main()` | Orchestrates all steps end-to-end |
 
 ### Test Data
 
@@ -67,12 +66,11 @@ After `load_data`, the 5 resulting agents have:
 
 ## 6. Integration and Demo
 
-- Consumes the CSV exported by US24. The output path is chosen by the user in US24 (e.g. `declarations.csv`).
-- The script accepts the CSV path as an optional command-line argument:
+- Consumes the CSV exported by US24. The CSV path is hardcoded to `dataset1_declarations.csv` (the reference dataset supplied with the project).
+- Run directly with:
   ```
-  py src/main/python/us14/declaration_stats.py declarations.csv
+  py src/main/python/us14/declaration_stats.py
   ```
-  If no argument is given, it defaults to `dataset1_declarations.csv` (the reference dataset supplied with the project).
 - Generated SVG files are saved to `docs/system-documentation/US14/`.
 
 
