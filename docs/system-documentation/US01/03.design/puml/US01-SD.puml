@@ -22,13 +22,22 @@ activate User
         UI --> User : shows available roles and requests selection
     deactivate UI
 
-    User -> UI : selects role and types data\n(fullName, email, password, identificationDocument)
+    User -> UI : selects role and types data\n(fullName, email, password)
     activate UI
         UI -> CTRL : isValidPassword(password)
         activate CTRL
             CTRL --> UI : true/false
         deactivate CTRL
-        UI --> User : shows data and requests confirmation
+        UI -> CTRL : requiresDocument(role)
+        activate CTRL
+            CTRL --> UI : true/false
+        deactivate CTRL
+        UI --> User : requests identification document (if required)
+    deactivate UI
+
+    User -> UI : types identification document (if required)
+    activate UI
+        UI --> User : shows all data and requests confirmation
     deactivate UI
 
     User -> UI : confirms data
