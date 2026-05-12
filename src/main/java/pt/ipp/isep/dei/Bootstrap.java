@@ -64,7 +64,7 @@ public class Bootstrap implements Runnable {
 
     private void addCitizens() {
         CitizenRepository citizenRepo = Repositories.getInstance().getCitizenRepository();
-        citizenRepo.save(new Citizen("citizen@this.app", "Active Citizen"));
+        citizenRepo.save(new Citizen("citizen@this.app", "Active Citizen", "CC123456789"));
     }
 
     private void addEthicsCommitteeMembers() {
@@ -84,12 +84,12 @@ public class Bootstrap implements Runnable {
         authenticationRepository.addUserRole(AuthenticationController.ROLE_JOURNALIST, AuthenticationController.ROLE_JOURNALIST);
         authenticationRepository.addUserRole(AuthenticationController.ROLE_ETHICS_COMMITTEE, AuthenticationController.ROLE_ETHICS_COMMITTEE);
 
-        authenticationRepository.addUserWithRole("Main Administrator", "admin@this.app", "admin", AuthenticationController.ROLE_ADMIN);
-        authenticationRepository.addUserWithRole("Employee", "employee@this.app", "employee", AuthenticationController.ROLE_EMPLOYEE);
-        authenticationRepository.addUserWithRole("Active Citizen", "citizen@this.app", "citizen", AuthenticationController.ROLE_CITIZEN);
+        authenticationRepository.addUserWithRole("Main Administrator", "admin@this.app", "ADM11ad", AuthenticationController.ROLE_ADMIN);
+        authenticationRepository.addUserWithRole("Employee", "employee@this.app", "EMP11em", AuthenticationController.ROLE_EMPLOYEE);
+        authenticationRepository.addUserWithRole("Active Citizen", "citizen@this.app", "CIT11ci", AuthenticationController.ROLE_CITIZEN);
         authenticationRepository.addUserWithRole("António Félix", "antonio@gov.pt", "AAA11bb", AuthenticationController.ROLE_POLITICAL_AGENT);
-        authenticationRepository.addUserWithRole("Product Owner", "po@this.app", "po", AuthenticationController.ROLE_PRODUCT_OWNER);
-        authenticationRepository.addUserWithRole("Journalist", "journalist@news.pt", "journalist", AuthenticationController.ROLE_JOURNALIST);
+        authenticationRepository.addUserWithRole("Product Owner", "po@this.app", "POW11po", AuthenticationController.ROLE_PRODUCT_OWNER);
+        authenticationRepository.addUserWithRole("Journalist", "journalist@news.pt", "JRN11jr", AuthenticationController.ROLE_JOURNALIST);
         authenticationRepository.addUserWithRole("Maria Sousa", "maria@ethics.pt", "AAA11bb", AuthenticationController.ROLE_ETHICS_COMMITTEE);
     }
 
