@@ -54,7 +54,7 @@ public class SubmitComplaintUI implements Runnable {
         System.out.printf("Complaint Date    : %s%n", complaintDate);
         System.out.printf("Description       : %s%n", description);
 
-        if (Utils.confirm("Confirm submission? (s/n)")) {
+        if (Utils.confirm("Confirm submission? (y/n)")) {
             submitData();
         } else {
             System.out.println("\nOperation cancelled.");

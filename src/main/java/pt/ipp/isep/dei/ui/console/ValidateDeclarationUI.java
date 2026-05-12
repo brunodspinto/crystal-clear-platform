@@ -51,13 +51,13 @@ public class ValidateDeclarationUI implements Runnable {
         List<Object[]> comments = new ArrayList<>();
 
         if (outcome == ValidationOutcome.RETURNED_FOR_CORRECTION) {
-            if (!Utils.confirm("Confirm rejection? (s/n)")) {
+            if (!Utils.confirm("Confirm rejection? (y/n)")) {
                 System.out.println("\nOperation cancelled.");
                 return;
             }
             collectComments(comments);
         } else {
-            if (!Utils.confirm("Confirm validation? (s/n)")) {
+            if (!Utils.confirm("Confirm validation? (y/n)")) {
                 System.out.println("\nOperation cancelled.");
                 return;
             }
@@ -91,6 +91,6 @@ public class ValidateDeclarationUI implements Runnable {
             String section = Utils.readLineFromConsole("Section: ");
             String comment = Utils.readLineFromConsole("Comment: ");
             comments.add(new Object[]{section, comment});
-        } while (Utils.confirm("Add comment for another section? (s/n)"));
+        } while (Utils.confirm("Add comment for another section? (y/n)"));
     }
 }

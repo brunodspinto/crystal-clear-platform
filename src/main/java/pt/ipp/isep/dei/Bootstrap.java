@@ -70,7 +70,11 @@ public class Bootstrap implements Runnable {
     private void addEthicsCommitteeMembers() {
         EthicsCommitteeMemberRepository repo =
                 Repositories.getInstance().getEthicsCommitteeMemberRepository();
-        repo.save(new EthicsCommitteeMember("Maria Sousa", "maria@ethics.pt"));
+        EthicsCommitteeMember member = new EthicsCommitteeMember("Maria Sousa", "maria@ethics.pt");
+        repo.save(member);
+
+        EthicsCommittee committee = new EthicsCommittee("National Ethics Committee");
+        committee.addMember(member);
     }
 
     private void addUsers() {

@@ -43,7 +43,7 @@ public class RegisterOrganizationUI implements Runnable {
         System.out.printf("Nature : %s%n", nature);
         System.out.printf("Type   : %s%n", selectedType);
 
-        if (Utils.confirm("Confirm registration? (s/n)")) {
+        if (Utils.confirm("Confirm registration? (y/n)")) {
             submitData();
         } else {
             System.out.println("\nOperation cancelled.");

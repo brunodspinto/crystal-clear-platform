@@ -20,6 +20,7 @@ public class Declaration {
     private DeclarationStatus status;
 
     private final List<PositionEntry> positionEntries;
+    private final List<Income> incomes;
     private final List<SubsidyEntry> subsidyEntries;
     private final List<AssetEntry> assetEntries;
     private final List<BusinessParticipation> businessParticipations;
@@ -49,6 +50,7 @@ public class Declaration {
         this.submissionDate = submissionDate;
         this.status = DeclarationStatus.PENDING;
         this.positionEntries = new ArrayList<>();
+        this.incomes = new ArrayList<>();
         this.subsidyEntries = new ArrayList<>();
         this.assetEntries = new ArrayList<>();
         this.businessParticipations = new ArrayList<>();
@@ -82,6 +84,10 @@ public class Declaration {
      * @param description  a description of the subsidy.
      * @param date         the date received.
      */
+    public void addIncome(Organization organization, double amount, String source, Date date) {
+        incomes.add(new Income(organization, amount, source, date));
+    }
+
     public void addSubsidyEntry(Organization organization, double amount, String description, Date date) {
         subsidyEntries.add(new SubsidyEntry(organization, amount, description, date));
     }
@@ -171,6 +177,7 @@ public class Declaration {
         sb.append(String.format("Declaration [%s | %s | %s]%n", type, submissionDate, status));
         sb.append(String.format("  Agent                 : %s%n", agent.getName()));
         sb.append(String.format("  Position entries      : %d%n", positionEntries.size()));
+        sb.append(String.format("  Income entries        : %d%n", incomes.size()));
         sb.append(String.format("  Subsidy entries       : %d%n", subsidyEntries.size()));
         sb.append(String.format("  Asset entries         : %d%n", assetEntries.size()));
         sb.append(String.format("  Business participations: %d%n", businessParticipations.size()));
@@ -195,6 +202,9 @@ public class Declaration {
 
     /** @return an unmodifiable copy of the position entries. */
     public List<PositionEntry> getPositionEntries() { return new ArrayList<>(positionEntries); }
+
+    /** @return an unmodifiable copy of the income entries. */
+    public List<Income> getIncomes() { return new ArrayList<>(incomes); }
 
     /** @return an unmodifiable copy of the subsidy entries. */
     public List<SubsidyEntry> getSubsidyEntries() { return new ArrayList<>(subsidyEntries); }
