@@ -113,6 +113,33 @@ public class RelationGraph {
         return m;
     }
 
+    /**
+     * Builds a Graphviz DOT representation of the graph. Nodes are entity ids,
+     * edges carry the relation label and weight. Designed to be piped into
+     * `dot -Tsvg` (or any other Graphviz layout engine) to produce a visual
+     * rendering of the relations network.
+     */
+    public String exportDot() {
+        StringBuilder dot = new StringBuilder();
+        dot.append("digraph RelationsGraph {\n");
+        dot.append("  rankdir=LR;\n");
+        dot.append("  node [shape=box, style=rounded, fontname=\"Helvetica\"];\n");
+        dot.append("  edge [fontname=\"Helvetica\", fontsize=10];\n");
+        for (String id : nodeIds) {
+            dot.append("  \"").append(id).append("\";\n");
+        }
+        for (int i = 0; i < nodeIds.size(); i++) {
+            for (Edge e : outgoing.get(i)) {
+                dot.append("  \"").append(e.getFromId()).append("\" -> \"")
+                        .append(e.getToId()).append("\"")
+                        .append(" [label=\"").append(e.getLabel())
+                        .append(" (").append(e.getWeight()).append(")\"];\n");
+            }
+        }
+        dot.append("}\n");
+        return dot.toString();
+    }
+
     private int indexOfNode(String id) {
         for (int i = 0; i < nodeIds.size(); i++) {
             if (nodeIds.get(i).equals(id)) {

@@ -9,12 +9,12 @@ participant ":AnalyseIncomeEvolutionController" as CTRL
 participant ":DeclarationRepository" as DR
 
 autonumber 9
- -> CTRL : getValidatedDeclarations(agent, startDate, endDate)
+ -> CTRL : getIncomeEvolution(agent, startDate, endDate)
 autonumber 9.1
 activate CTRL
-    group Get Validated Declarations
+    group Get Validated Declarations For Agent Between
 
-        CTRL -> DR : getValidatedDeclarations(agent, startDate, endDate)
+        CTRL -> DR : getValidatedDeclarationsForAgentBetween(agent, startDate, endDate)
         activate DR
 
             note right of DR

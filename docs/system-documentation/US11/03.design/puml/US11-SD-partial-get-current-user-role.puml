@@ -5,29 +5,43 @@ skinparam shadowing false
 
 autonumber
 
+participant ":ConsultAssetsUI" as UI
 participant ":ConsultAssetsController" as CTRL
-participant ":AuthenticationService" as AUTH
+participant ":AuthenticationRepository" as AUTH
+participant "session:UserSession" as SESS
 
-autonumber 7
- -> CTRL : getCurrentUserRole()
-autonumber 7.1
-activate CTRL
-    group Get Current User Role
+ -> UI : after fetching assetEntries
+activate UI
+
+    UI -> CTRL : isCurrentUserJournalist()
+    activate CTRL
 
         note right of CTRL
-            AC4: role decides whether
-            sensitive financial data is
-            masked (Citizen) or not (Journalist)
+            AC4: returns true when the
+            current session has the
+            Journalist role.
+            The UI uses this to mask or
+            show sensitive values.
         end note
 
-        CTRL -> AUTH : getCurrentUserRole()
+        CTRL -> AUTH : getCurrentUserSession()
         activate AUTH
-            AUTH --> CTRL : role
+            AUTH --> CTRL : session
         deactivate AUTH
 
-    end
-    autonumber 8
-    <-- CTRL : role
-deactivate CTRL
+        CTRL -> SESS : isLoggedIn()
+        activate SESS
+            SESS --> CTRL : true
+        deactivate SESS
+
+        CTRL -> SESS : getUserRoles()
+        activate SESS
+            SESS --> CTRL : roles
+        deactivate SESS
+
+        CTRL --> UI : isJournalist
+    deactivate CTRL
+
+deactivate UI
 
 @enduml

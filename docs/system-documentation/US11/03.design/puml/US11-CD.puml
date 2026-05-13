@@ -10,23 +10,30 @@ class ConsultAssetsUI {
 class ConsultAssetsController {
     + ConsultAssetsController()
     + getPoliticalAgents()
-    + getAssets(agent, referenceDate)
-    - maskIfCitizen(assets)
+    + getAssetsAt(agent, referenceDate)
+    + isCurrentUserJournalist()
 }
 
-class AuthenticationService {
-    + getCurrentUserRole()
+class AuthenticationRepository {
+    + getCurrentUserSession()
+}
+
+class UserSession {
+    + isLoggedIn()
+    + getUserRoles()
 }
 
 class PoliticalAgentRepository {
-    + getPoliticalAgents()
+    + getAll()
 }
 
 class DeclarationRepository {
-    + getValidatedDeclarationsUpTo(agent, referenceDate)
+    + getValidatedDeclarationsForAgentUpTo(agent, referenceDate)
 }
 
 class PoliticalAgent {
+    - name
+    - email
     - nationalIdentityCard
     - taxIdentificationNumber
 }
@@ -35,8 +42,7 @@ class "Declaration of Interests" as Declaration {
     - id
     - submissionDate
     - status
-    + getAssets()
-    + isValidatedOn(date)
+    + getAssetEntries()
 }
 
 enum DeclarationStatus {
@@ -45,9 +51,20 @@ enum DeclarationStatus {
     REJECTED
 }
 
-class Asset {
-    - acquisitionValue
-    - marketValue
+class AssetEntry {
+    - assetType
+    - assetValue
+    + getAssetType()
+    + getAssetValue()
+    + getRealEstate()
+    + getVehicleAsset()
+    + getStockAsset()
+}
+
+enum AssetType {
+    REAL_ESTATE
+    VEHICLES
+    STOCKS
 }
 
 class RealEstate {
@@ -55,38 +72,51 @@ class RealEstate {
     - municipality
 }
 
-enum Role {
-    ORDINARY_CITIZEN
-    JOURNALIST
+class VehicleAsset {
+}
+
+class StockAsset {
 }
 
 ConsultAssetsUI .> ConsultAssetsController
+ConsultAssetsUI ..> AssetEntry
+ConsultAssetsUI ..> RealEstate
+ConsultAssetsUI ..> VehicleAsset
+ConsultAssetsUI ..> StockAsset
+ConsultAssetsUI ..> AssetType
 
-ConsultAssetsController ..> AuthenticationService
+ConsultAssetsController ..> AuthenticationRepository
 ConsultAssetsController ..> PoliticalAgentRepository
 ConsultAssetsController ..> DeclarationRepository
 ConsultAssetsController ..> PoliticalAgent
 ConsultAssetsController ..> Declaration
-ConsultAssetsController ..> Asset
-ConsultAssetsController ..> Role
+ConsultAssetsController ..> AssetEntry
+ConsultAssetsController ..> UserSession
 
+AuthenticationRepository --> "0..1" UserSession : current >
 PoliticalAgentRepository --> "*" PoliticalAgent : agents
 DeclarationRepository --> "*" Declaration : declarations
 
 PoliticalAgent "1" -- "*" Declaration : submits >
 Declaration "*" -- "1" DeclarationStatus : has >
-Declaration "1" *-- "*" Asset : includes >
-Asset <|-- RealEstate
+Declaration "1" *-- "*" AssetEntry : declares >
+AssetEntry "*" -- "1" AssetType : has >
+AssetEntry "0..1" -- "0..1" RealEstate : details >
+AssetEntry "0..1" -- "0..1" VehicleAsset : details >
+AssetEntry "0..1" -- "0..1" StockAsset : details >
 
 note right of ConsultAssetsController
-    Masks acquisitionValue and
-    marketValue when role = Citizen (AC4)
+    AC4: isCurrentUserJournalist()
+    checks the session role.
+    The UI uses the boolean to
+    decide whether to mask
+    sensitive values.
 end note
 
-note bottom of Declaration
-    isValidatedOn(date):
-    status == VALIDATED &&
-    submissionDate <= date (AC2)
+note bottom of DeclarationRepository
+    AC2: returns only declarations
+    with status = VALIDATED and
+    submissionDate <= referenceDate
 end note
 
 @enduml

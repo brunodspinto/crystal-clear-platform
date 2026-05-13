@@ -14,7 +14,7 @@ autonumber 2.1
 activate CTRL
     group Get Political Agents
 
-        CTRL -> PAR : getPoliticalAgents()
+        CTRL -> PAR : getAll()
         activate PAR
             PAR --> CTRL : agents
         deactivate PAR

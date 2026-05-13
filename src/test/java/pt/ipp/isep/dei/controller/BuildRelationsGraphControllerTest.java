@@ -57,6 +57,35 @@ class BuildRelationsGraphControllerTest {
     }
 
     @Test
+    void ensureRenderGraphToSvgWritesFile() throws IOException {
+        Path relations = tempDir.resolve("relations.csv");
+        Files.writeString(relations,
+                "P-001;P-002;kinship;1.0\n" +
+                "P-001;O-001;employment;0.8\n");
+
+        GraphRepository repo = new GraphRepository();
+        BuildRelationsGraphController controller = new BuildRelationsGraphController(repo);
+        controller.buildFromCsv(relations.toString());
+
+        Path svg = tempDir.resolve("graph.svg");
+        String result = controller.renderGraphToSvg(svg.toString());
+
+        assertEquals(svg.toString(), result);
+        assertTrue(Files.exists(svg));
+        String content = Files.readString(svg);
+        assertTrue(content.contains("<svg "));
+        assertTrue(content.contains("kinship") || content.contains("employment"));
+    }
+
+    @Test
+    void ensureRenderGraphToSvgFailsWithoutGraph() {
+        GraphRepository repo = new GraphRepository();
+        BuildRelationsGraphController controller = new BuildRelationsGraphController(repo);
+        Path svg = tempDir.resolve("graph.svg");
+        assertThrows(IllegalStateException.class, () -> controller.renderGraphToSvg(svg.toString()));
+    }
+
+    @Test
     void ensureEmptyCsvProducesEmptyGraph() throws IOException {
         Path relations = tempDir.resolve("relations.csv");
         Files.writeString(relations, "");
