@@ -18,6 +18,7 @@
 | `RelationCsvParser` | `src/main/java/pt/ipp/isep/dei/domain/graph/RelationCsvParser.java` |
 | `IndexRegistry` | `src/main/java/pt/ipp/isep/dei/domain/graph/IndexRegistry.java` |
 | `AdjacencyMatrix` | `src/main/java/pt/ipp/isep/dei/domain/graph/AdjacencyMatrix.java` |
+| `LoadEntitiesFromCsvController` | `src/main/java/pt/ipp/isep/dei/controller/LoadEntitiesFromCsvController.java` |
 
 **`Entity`**: abstract base class with fields `id`, `type`, `startDate`, `endDate`. Equality uses `getClass()` so that a `Person` and an `Asset` with the same id are never considered equal.
 
@@ -51,8 +52,9 @@
 - `src/test/java/pt/ipp/isep/dei/domain/graph/RelationCsvParserTest.java`: 9 tests
 - `src/test/java/pt/ipp/isep/dei/domain/graph/IndexRegistryTest.java`: 8 tests
 - `src/test/java/pt/ipp/isep/dei/domain/graph/AdjacencyMatrixTest.java`: 9 tests
+- `src/test/java/pt/ipp/isep/dei/controller/LoadEntitiesFromCsvControllerTest.java`: 4 tests
 
-Total: 73 tests (all passing)
+Total: 77 tests (all passing)
 
 ## Checklist
 
@@ -65,4 +67,5 @@ Total: 73 tests (all passing)
 - [x] `RelationCsvParser` with weight parsing and malformed-line skipping
 - [x] `IndexRegistry` for id-to-index mapping
 - [x] `AdjacencyMatrix` square double matrix
-- [x] 73 unit tests (all passing)
+- [x] `LoadEntitiesFromCsvController` reads CSV and stores entities in the repository
+- [x] 77 unit tests (all passing)

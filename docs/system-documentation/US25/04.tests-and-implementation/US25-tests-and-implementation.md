@@ -106,6 +106,88 @@
     }
 
 
+### Controller-level tests (ExportHoldingsCsvControllerTest)
+
+**Test 9:** Check that the controller returns true on a successful export.
+
+    @Test
+    void ensureExportReturnsTrueOnSuccess() {
+        Path out = tempDir.resolve("holdings.csv");
+        boolean result = controller.exportToCsv(out.toString());
+        assertTrue(result);
+    }
+
+**Test 10:** Check that the controller returns false when the file path is invalid.
+
+    @Test
+    void ensureExportReturnsFalseOnInvalidPath() {
+        boolean result = controller.exportToCsv("/invalid/path/that/does/not/exist/holdings.csv");
+        assertFalse(result);
+    }
+
+**Test 11:** Check that the controller creates the output file on disk.
+
+    @Test
+    void ensureExportCreatesFile() {
+        Path out = tempDir.resolve("holdings.csv");
+        controller.exportToCsv(out.toString());
+        assertTrue(Files.exists(out));
+    }
+
+**Test 12:** Check that an empty repository produces only the header row.
+
+    @Test
+    void ensureEmptyRepositoryProducesOnlyHeader() throws IOException {
+        Path out = tempDir.resolve("holdings.csv");
+        controller.exportToCsv(out.toString());
+        List<String> lines = Files.readAllLines(out);
+        assertEquals(1, lines.size());
+        assertTrue(lines.get(0).contains("agent_id"));
+    }
+
+**Test 13:** Check that only VALIDATED declarations are exported.
+
+    @Test
+    void ensureOnlyValidatedDeclarationsAreExported() throws IOException {
+        Declaration validated = createValidatedDeclaration("111111111");
+        validated.addBusinessParticipation(createOrg("Corp"), 100000001L, 5000.0, 10.0);
+        repo.save(validated);
+        Declaration pending = new Declaration(DeclarationType.INITIAL, createAgent("222222222"), new Date());
+        pending.addBusinessParticipation(createOrg("Corp2"), 200000002L, 3000.0, 5.0);
+        repo.save(pending);
+        Path out = tempDir.resolve("holdings.csv");
+        controller.exportToCsv(out.toString());
+        List<String> lines = Files.readAllLines(out);
+        assertEquals(2, lines.size()); // header + 1 row from validated only
+    }
+
+**Test 14:** Check that the exported row contains the correct agent id.
+
+    @Test
+    void ensureExportedRowContainsCorrectAgentId() throws IOException {
+        Declaration d = createValidatedDeclaration("999999999");
+        d.addBusinessParticipation(createOrg("MegaCorp"), 987654321L, 50000.0, 25.0);
+        repo.save(d);
+        Path out = tempDir.resolve("holdings.csv");
+        controller.exportToCsv(out.toString());
+        List<String> lines = Files.readAllLines(out);
+        assertTrue(lines.get(1).startsWith("999999999,"));
+    }
+
+**Test 15:** Check that a validated declaration with no participations produces no data rows.
+
+    @Test
+    void ensureDeclarationWithNoParticipationsProducesNoDataRows() throws IOException {
+        Declaration d = createValidatedDeclaration("333333333");
+        repo.save(d);
+        Path out = tempDir.resolve("holdings.csv");
+        controller.exportToCsv(out.toString());
+        List<String> lines = Files.readAllLines(out);
+        assertEquals(1, lines.size());
+    }
+
+Total controller tests: 7 (all passing)
+
 ## 5. Construction (Implementation)
 
 ### Class HoldingsCsvExporter
