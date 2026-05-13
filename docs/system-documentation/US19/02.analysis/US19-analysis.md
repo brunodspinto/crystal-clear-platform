@@ -10,16 +10,16 @@ To fulfil this requirement, the core concept is an `Entity` hierarchy representi
 
 Four concrete subclasses extend `Entity`, each adding type-specific attributes:
 
-* **Person** — represents a human actor (politician, businessman, family member, advisor, ...):
+* **Person**: represents a human actor (politician, businessman, family member, advisor, ...):
   * `name`, `birthDate`, `nationality`
 
-* **Organization** — represents a legal or institutional body (company, NGO, political party, ...):
+* **Organization**: represents a legal or institutional body (company, NGO, political party, ...):
   * `name`, `organizationType`, `country`
 
-* **Position** — represents a role or job held within an organisation (public, business, political party, ...):
+* **Position**: represents a role or job held within an organisation (public, business, political party, ...):
   * `positionTitle`, `positionType`, `organizationId`
 
-* **Asset** — represents a declared asset (property, fund, company share, ...):
+* **Asset**: represents a declared asset (property, fund, company share, ...):
   * `assetType`, `country`, `estimatedValue`
 
 The `EntityCsvParser` is a utility class responsible for reading a CSV file and producing a `List<Entity>`. Each line in the CSV begins with the entity category (`person`, `organization`, `position`, or `asset`), followed by the seven fields defined in the specification.

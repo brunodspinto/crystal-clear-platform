@@ -1,0 +1,59 @@
+@startuml US01-CD
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+class RegisterUI {
+}
+
+class RegisterController {
+    + RegisterController()
+    + getAvailableRoles() : List<UserRole>
+    + requiresDocument(role : UserRole) : boolean
+    + getDocumentLabel(role : UserRole) : String
+    + isValidPassword(password : String) : boolean
+    + submitRequest(fullName : String, email : String, password : String, role : UserRole, identificationDocument : String) : boolean
+}
+
+class RegistrationRequest {
+    - fullName : String
+    - email : String
+    - password : String
+    - identificationDocument : String
+    - submissionDate : Date
+    - status : RegistrationStatus
+    + RegistrationRequest(fullName : String, email : String, password : String, role : UserRole, identificationDocument : String)
+    + {static} isValidPassword(password : String) : boolean
+    + getFullName() : String
+    + getEmail() : String
+    + getRole() : UserRole
+    + getStatus() : RegistrationStatus
+}
+
+class RegistrationRequestRepository {
+    + save(request : RegistrationRequest) : boolean
+    + getPendingRequests() : List<RegistrationRequest>
+}
+
+enum UserRole {
+    POLITICAL_AGENT
+    CITIZEN
+    JOURNALIST
+    ETHICS_COMMITTEE
+    ADMINISTRATOR
+}
+
+enum RegistrationStatus {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
+RegisterUI .> RegisterController
+RegisterController ..> RegistrationRequestRepository
+RegisterController ..> RegistrationRequest
+RegistrationRequest "1" --> "1" UserRole : role
+RegistrationRequest "1" --> "1" RegistrationStatus : status
+
+@enduml
