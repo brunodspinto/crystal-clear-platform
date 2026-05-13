@@ -38,29 +38,20 @@ activate ECM
         UI -> CTRL : getIntegratedSituation(agent, referenceDate)
         activate CTRL
 
-            CTRL -> CTRL : getValidatedDeclarationsUpTo(agent, referenceDate)
-            activate CTRL
-                ref over CTRL
-                    Get Validated Declarations Up To Date
-                end ref
-                CTRL --> CTRL : declarations
-            deactivate CTRL
+            ref over CTRL
+                Get Validated Declarations For Agent Up To
+            end ref
 
-            CTRL -> CTRL : aggregateIntegratedSituation(declarations)
-            activate CTRL
-                ref over CTRL
-                    Aggregate Integrated Situation
-                end ref
-                CTRL --> CTRL : situation
-            deactivate CTRL
-
-            CTRL --> UI : integrated situation
+            CTRL --> UI : declarations
         deactivate CTRL
 
         alt declarations is empty (AC3)
             UI --> ECM : shows "no validated declarations up to that date"
         else
-            UI --> ECM : shows integrated situation\n(positions, income, assets, participations)
+            ref over UI
+                Display Declarations
+            end ref
+            UI --> ECM : shows integrated situation\n(positions, incomes, subsidies, assets, participations)
         end
 
     deactivate UI

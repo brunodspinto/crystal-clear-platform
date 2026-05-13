@@ -5,35 +5,41 @@ skinparam shadowing false
 
 autonumber
 
-participant ":AnalyseIncomeEvolutionController" as CTRL
+actor "Journalist" as Journalist
+participant ":AnalyseIncomeEvolutionUI" as UI
 participant "d:Declaration" as DEC
 
 autonumber 11
- -> CTRL : collectIncomeData(declarations)
+ -> UI : display declarations
 autonumber 11.1
-activate CTRL
+activate UI
     group Collect Income Data
 
-        alt declarations is empty (AC5)
-            CTRL --> CTRL : empty list
-        else
-            loop for each d in declarations
-                CTRL -> DEC : getIncomes()
-                activate DEC
-                    DEC --> CTRL : incomes
-                deactivate DEC
+        loop for each d in declarations
+            UI -> DEC : getSubmissionDate()
+            activate DEC
+                DEC --> UI : submissionDate
+            deactivate DEC
 
-                CTRL -> DEC : getType()
-                activate DEC
-                    DEC --> CTRL : type
-                deactivate DEC
-            end
-            CTRL --> CTRL : declarationsWithIncome
+            UI -> DEC : getType()
+            activate DEC
+                DEC --> UI : type
+            deactivate DEC
+
+            UI -> DEC : getIncomes()
+            activate DEC
+                DEC --> UI : incomes
+            deactivate DEC
+
+            UI -> DEC : getSubsidyEntries()
+            activate DEC
+                DEC --> UI : subsidyEntries
+            deactivate DEC
         end
 
+        UI --> Journalist : shows declarations\nwith income evolution
+
     end
-    autonumber 12
-    <-- CTRL : declarationsWithIncome
-deactivate CTRL
+deactivate UI
 
 @enduml
