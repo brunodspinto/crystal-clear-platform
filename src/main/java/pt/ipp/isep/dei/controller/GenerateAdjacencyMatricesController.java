@@ -22,7 +22,7 @@ public class GenerateAdjacencyMatricesController {
         this.graphRepository = graphRepository;
     }
 
-    public List<LabeledAdjacencyMatrix> generate() {
+    public GenerationResult generate() {
         RelationGraph graph = graphRepository.getRelationGraph();
         if (graph == null) {
             throw new IllegalStateException("No relations graph available. Build the relations graph first (US20).");
@@ -31,6 +31,11 @@ public class GenerateAdjacencyMatricesController {
         IndexRegistry registry = new IndexRegistry();
         for (String nodeId : graph.nodes()) {
             registry.indexFor(nodeId);
+        }
+
+        List<String> nodeIds = new ArrayList<>();
+        for (int i = 0; i < registry.size(); i++) {
+            nodeIds.add(registry.idAt(i));
         }
 
         List<String> labels = new ArrayList<>();
@@ -47,7 +52,9 @@ public class GenerateAdjacencyMatricesController {
             AdjacencyMatrix m = graph.toAdjacencyMatrix(label, registry);
             matrices.add(new LabeledAdjacencyMatrix(label, m));
         }
-        return matrices;
+
+        AdjacencyMatrix global = buildGlobalMatrix(matrices, nodeIds.size());
+        return new GenerationResult(nodeIds, matrices, global);
     }
 
     public int countNonZeroEntries(AdjacencyMatrix matrix) {
@@ -60,5 +67,53 @@ public class GenerateAdjacencyMatricesController {
             }
         }
         return count;
+    }
+
+    // MDISC: the global matrix sums all per-label matrices.
+    // When multiple relations connect the same pair, their weights are summed.
+    private AdjacencyMatrix buildGlobalMatrix(List<LabeledAdjacencyMatrix> matrices, int n) {
+        if (n == 0) {
+            return null;
+        }
+        AdjacencyMatrix global = new AdjacencyMatrix(n);
+        for (LabeledAdjacencyMatrix lam : matrices) {
+            AdjacencyMatrix m = lam.getMatrix();
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    double add = m.getWeight(i, j);
+                    if (add != 0) {
+                        double existing = global.getWeight(i, j);
+                        global.addEdge(i, j, existing + add);
+                    }
+                }
+            }
+        }
+        return global;
+    }
+
+    public static class GenerationResult {
+        private final List<String> nodeIds;
+        private final List<LabeledAdjacencyMatrix> matrices;
+        private final AdjacencyMatrix globalMatrix;
+
+        public GenerationResult(List<String> nodeIds,
+                                List<LabeledAdjacencyMatrix> matrices,
+                                AdjacencyMatrix globalMatrix) {
+            this.nodeIds = new ArrayList<>(nodeIds);
+            this.matrices = new ArrayList<>(matrices);
+            this.globalMatrix = globalMatrix;
+        }
+
+        public List<String> getNodeIds() {
+            return new ArrayList<>(nodeIds);
+        }
+
+        public List<LabeledAdjacencyMatrix> getMatrices() {
+            return new ArrayList<>(matrices);
+        }
+
+        public AdjacencyMatrix getGlobalMatrix() {
+            return globalMatrix;
+        }
     }
 }
