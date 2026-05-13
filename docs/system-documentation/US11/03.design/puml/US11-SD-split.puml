@@ -35,40 +35,33 @@ activate Actor
     Actor -> UI : enters reference date
     activate UI
 
-        UI -> CTRL : getAssets(agent, referenceDate)
+        UI -> CTRL : getAssetsAt(agent, referenceDate)
         activate CTRL
 
-            CTRL -> CTRL : getCurrentUserRole()
-            activate CTRL
-                ref over CTRL
-                    Get Current User Role
-                end ref
-                CTRL --> CTRL : role
-            deactivate CTRL
+            ref over CTRL
+                Get Validated Declarations For Agent Up To
+            end ref
 
-            CTRL -> CTRL : getValidatedDeclarationsUpTo(agent, referenceDate)
-            activate CTRL
-                ref over CTRL
-                    Get Validated Declarations Up To Date
-                end ref
-                CTRL --> CTRL : declarations
-            deactivate CTRL
+            ref over CTRL
+                Collect Assets
+            end ref
 
-            CTRL -> CTRL : collectAssets(declarations, role)
-            activate CTRL
-                ref over CTRL
-                    Collect Assets
-                end ref
-                CTRL --> CTRL : assets
-            deactivate CTRL
-
-            CTRL --> UI : assets (masked if Citizen)
+            CTRL --> UI : assetEntries
         deactivate CTRL
 
         alt assets is empty (AC3)
             UI --> Actor : shows "no validated declarations up to that date"
         else
-            UI --> Actor : shows assets (masked if Citizen)
+            UI -> CTRL : isCurrentUserJournalist()
+            ref over CTRL
+                Check Current User Role
+            end ref
+
+            activate CTRL
+                CTRL --> UI : isJournalist
+            deactivate CTRL
+
+            UI --> Actor : shows assets\n(masked when not journalist)
         end
 
     deactivate UI

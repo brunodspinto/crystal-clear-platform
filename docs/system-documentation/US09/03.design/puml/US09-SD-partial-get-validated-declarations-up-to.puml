@@ -9,12 +9,12 @@ participant ":ConsultIntegratedSituationController" as CTRL
 participant ":DeclarationRepository" as DR
 
 autonumber 7
- -> CTRL : getValidatedDeclarationsUpTo(agent, referenceDate)
+ -> CTRL : getIntegratedSituation(agent, referenceDate)
 autonumber 7.1
 activate CTRL
-    group Get Validated Declarations Up To Date
+    group Get Validated Declarations For Agent Up To
 
-        CTRL -> DR : getValidatedDeclarationsUpTo(agent, referenceDate)
+        CTRL -> DR : getValidatedDeclarationsForAgentUpTo(agent, referenceDate)
         activate DR
 
             note right of DR

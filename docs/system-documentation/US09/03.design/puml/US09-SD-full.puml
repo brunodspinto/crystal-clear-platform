@@ -20,7 +20,7 @@ activate ECM
         UI -> CTRL : getPoliticalAgents()
         activate CTRL
 
-            CTRL -> PAR : getPoliticalAgents()
+            CTRL -> PAR : getAll()
             activate PAR
                 PAR --> CTRL : agents
             deactivate PAR
@@ -43,7 +43,7 @@ activate ECM
         UI -> CTRL : getIntegratedSituation(agent, referenceDate)
         activate CTRL
 
-            CTRL -> DR : getValidatedDeclarationsUpTo(agent, referenceDate)
+            CTRL -> DR : getValidatedDeclarationsForAgentUpTo(agent, referenceDate)
             activate DR
 
                 note right of DR
@@ -55,40 +55,40 @@ activate ECM
                 DR --> CTRL : declarations
             deactivate DR
 
-            alt declarations is empty (AC3)
-                CTRL --> UI : empty situation
-            else
-                loop for each d in declarations
-                    CTRL -> DEC : getPosition()
-                    activate DEC
-                        DEC --> CTRL : position
-                    deactivate DEC
-
-                    CTRL -> DEC : getIncomes()
-                    activate DEC
-                        DEC --> CTRL : incomes
-                    deactivate DEC
-
-                    CTRL -> DEC : getAssets()
-                    activate DEC
-                        DEC --> CTRL : assets
-                    deactivate DEC
-
-                    CTRL -> DEC : getBusinessParticipations()
-                    activate DEC
-                        DEC --> CTRL : participations
-                    deactivate DEC
-                end
-
-                CTRL --> UI : integrated situation
-            end
-
+            CTRL --> UI : declarations
         deactivate CTRL
 
         alt declarations is empty (AC3)
             UI --> ECM : shows "no validated declarations up to that date"
         else
-            UI --> ECM : shows integrated situation\n(positions, income, assets, participations)
+            loop for each d in declarations
+                UI -> DEC : getPositionEntries()
+                activate DEC
+                    DEC --> UI : positionEntries
+                deactivate DEC
+
+                UI -> DEC : getIncomes()
+                activate DEC
+                    DEC --> UI : incomes
+                deactivate DEC
+
+                UI -> DEC : getSubsidyEntries()
+                activate DEC
+                    DEC --> UI : subsidyEntries
+                deactivate DEC
+
+                UI -> DEC : getAssetEntries()
+                activate DEC
+                    DEC --> UI : assetEntries
+                deactivate DEC
+
+                UI -> DEC : getBusinessParticipations()
+                activate DEC
+                    DEC --> UI : participations
+                deactivate DEC
+            end
+
+            UI --> ECM : shows integrated situation\n(positions, incomes, subsidies, assets, participations)
         end
 
     deactivate UI

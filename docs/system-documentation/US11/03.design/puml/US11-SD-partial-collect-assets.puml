@@ -9,7 +9,7 @@ participant ":ConsultAssetsController" as CTRL
 participant "d:Declaration" as DEC
 
 autonumber 11
- -> CTRL : collectAssets(declarations, role)
+ -> CTRL : getAssetsAt(agent, referenceDate)
 autonumber 11.1
 activate CTRL
     group Collect Assets
@@ -18,23 +18,24 @@ activate CTRL
             CTRL --> CTRL : empty list
         else
             loop for each d in declarations
-                CTRL -> DEC : getAssets()
+                CTRL -> DEC : getAssetEntries()
                 activate DEC
-                    DEC --> CTRL : assets
+                    DEC --> CTRL : assetEntries
                 deactivate DEC
             end
 
-            note right of CTRL
-                AC4: if role = Citizen, mask
-                acquisitionValue and marketValue
-            end note
-
-            CTRL --> CTRL : assets (masked if Citizen)
+            CTRL --> CTRL : assetEntries
         end
 
     end
     autonumber 12
-    <-- CTRL : assets
+    <-- CTRL : assetEntries
 deactivate CTRL
+
+note over CTRL
+    AC4 (masking) is handled by
+    the UI using the boolean from
+    isCurrentUserJournalist().
+end note
 
 @enduml

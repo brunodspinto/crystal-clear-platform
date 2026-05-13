@@ -5,45 +5,46 @@ skinparam shadowing false
 
 autonumber
 
-participant ":ConsultIntegratedSituationController" as CTRL
+actor "Ethics Committee Member" as ECM
+participant ":ConsultIntegratedSituationUI" as UI
 participant "d:Declaration" as DEC
 
 autonumber 9
- -> CTRL : aggregateIntegratedSituation(declarations)
+ -> UI : display declarations
 autonumber 9.1
-activate CTRL
-    group Aggregate Integrated Situation
+activate UI
+    group Display Declarations
 
-        alt declarations is empty (AC3)
-            CTRL --> CTRL : empty situation
-        else
-            loop for each d in declarations
-                CTRL -> DEC : getPosition()
-                activate DEC
-                    DEC --> CTRL : position
-                deactivate DEC
+        loop for each d in declarations
+            UI -> DEC : getPositionEntries()
+            activate DEC
+                DEC --> UI : positionEntries
+            deactivate DEC
 
-                CTRL -> DEC : getIncomes()
-                activate DEC
-                    DEC --> CTRL : incomes
-                deactivate DEC
+            UI -> DEC : getIncomes()
+            activate DEC
+                DEC --> UI : incomes
+            deactivate DEC
 
-                CTRL -> DEC : getAssets()
-                activate DEC
-                    DEC --> CTRL : assets
-                deactivate DEC
+            UI -> DEC : getSubsidyEntries()
+            activate DEC
+                DEC --> UI : subsidyEntries
+            deactivate DEC
 
-                CTRL -> DEC : getBusinessParticipations()
-                activate DEC
-                    DEC --> CTRL : participations
-                deactivate DEC
-            end
-            CTRL --> CTRL : situation
+            UI -> DEC : getAssetEntries()
+            activate DEC
+                DEC --> UI : assetEntries
+            deactivate DEC
+
+            UI -> DEC : getBusinessParticipations()
+            activate DEC
+                DEC --> UI : participations
+            deactivate DEC
         end
 
+        UI --> ECM : shows positions, incomes,\nsubsidies, assets, participations
+
     end
-    autonumber 10
-    <-- CTRL : situation
-deactivate CTRL
+deactivate UI
 
 @enduml

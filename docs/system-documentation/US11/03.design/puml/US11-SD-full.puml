@@ -8,7 +8,7 @@ autonumber
 actor "Citizen / Journalist" as Actor
 participant ":ConsultAssetsUI" as UI
 participant ":ConsultAssetsController" as CTRL
-participant ":AuthenticationService" as AUTH
+participant ":AuthenticationRepository" as AUTH
 participant ":PoliticalAgentRepository" as PAR
 participant ":DeclarationRepository" as DR
 participant "d:Declaration" as DEC
@@ -21,7 +21,7 @@ activate Actor
         UI -> CTRL : getPoliticalAgents()
         activate CTRL
 
-            CTRL -> PAR : getPoliticalAgents()
+            CTRL -> PAR : getAll()
             activate PAR
                 PAR --> CTRL : agents
             deactivate PAR
@@ -41,15 +41,10 @@ activate Actor
     Actor -> UI : enters reference date
     activate UI
 
-        UI -> CTRL : getAssets(agent, referenceDate)
+        UI -> CTRL : getAssetsAt(agent, referenceDate)
         activate CTRL
 
-            CTRL -> AUTH : getCurrentUserRole()
-            activate AUTH
-                AUTH --> CTRL : role
-            deactivate AUTH
-
-            CTRL -> DR : getValidatedDeclarationsUpTo(agent, referenceDate)
+            CTRL -> DR : getValidatedDeclarationsForAgentUpTo(agent, referenceDate)
             activate DR
 
                 note right of DR
@@ -65,18 +60,13 @@ activate Actor
                 CTRL --> UI : empty list
             else
                 loop for each d in declarations
-                    CTRL -> DEC : getAssets()
+                    CTRL -> DEC : getAssetEntries()
                     activate DEC
-                        DEC --> CTRL : assets
+                        DEC --> CTRL : assetEntries
                     deactivate DEC
                 end
 
-                note right of CTRL
-                    AC4: if role = Citizen, mask
-                    acquisitionValue and marketValue
-                end note
-
-                CTRL --> UI : assets (masked if Citizen)
+                CTRL --> UI : assetEntries
             end
 
         deactivate CTRL
@@ -84,7 +74,24 @@ activate Actor
         alt assets is empty (AC3)
             UI --> Actor : shows "no validated declarations up to that date"
         else
-            UI --> Actor : shows assets (masked if Citizen)
+            UI -> CTRL : isCurrentUserJournalist()
+            activate CTRL
+
+                CTRL -> AUTH : getCurrentUserSession()
+                activate AUTH
+                    AUTH --> CTRL : session
+                deactivate AUTH
+
+                note right of CTRL
+                    AC4: true if session role
+                    contains "Journalist";
+                    false otherwise (Citizen).
+                end note
+
+                CTRL --> UI : isJournalist
+            deactivate CTRL
+
+            UI --> Actor : shows assets\n(masked when not journalist)
         end
 
     deactivate UI
