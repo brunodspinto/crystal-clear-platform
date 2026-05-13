@@ -8,6 +8,8 @@ import pt.ipp.isep.dei.domain.graph.RelationGraph;
 import pt.ipp.isep.dei.repository.GraphRepository;
 import pt.ipp.isep.dei.repository.Repositories;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,49 @@ public class BuildRelationsGraphController {
             }
         }
         return new BuildResult(edges.size(), graph.nodeCount(), labels);
+    }
+
+    /**
+     * Renders the current relations graph to an SVG file using Graphviz.
+     * Writes the DOT source next to the SVG and then invokes the `dot`
+     * binary to produce the visual rendering.
+     *
+     * @param outputSvgPath path where the SVG should be written.
+     * @return the path of the generated SVG file.
+     * @throws IOException if writing the DOT file fails.
+     * @throws IllegalStateException if no relations graph has been built yet.
+     * @throws RuntimeException if Graphviz is not available on the system.
+     */
+    public String renderGraphToSvg(String outputSvgPath) throws IOException {
+        RelationGraph graph = graphRepository.getRelationGraph();
+        if (graph == null) {
+            throw new IllegalStateException("No relations graph available. Build the relations graph first.");
+        }
+
+        String dotPath;
+        if (outputSvgPath.endsWith(".svg")) {
+            dotPath = outputSvgPath.substring(0, outputSvgPath.length() - 4) + ".dot";
+        } else {
+            dotPath = outputSvgPath + ".dot";
+        }
+        BufferedWriter writer = new BufferedWriter(new FileWriter(dotPath));
+        writer.write(graph.exportDot());
+        writer.close();
+
+        ProcessBuilder pb = new ProcessBuilder("dot", "-Tsvg", dotPath, "-o", outputSvgPath);
+        pb.redirectErrorStream(true);
+        try {
+            Process process = pb.start();
+            int code = process.waitFor();
+            if (code != 0) {
+                throw new RuntimeException("Graphviz 'dot' failed with exit code " + code
+                        + ". Is Graphviz installed? On macOS: brew install graphviz");
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Graph rendering was interrupted.", e);
+        }
+        return outputSvgPath;
     }
 
     public static class BuildResult {
