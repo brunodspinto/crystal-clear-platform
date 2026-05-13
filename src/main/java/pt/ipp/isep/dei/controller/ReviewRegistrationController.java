@@ -27,6 +27,11 @@ public class ReviewRegistrationController {
         this.authRepository = authRepository;
     }
 
+    /**
+     * Returns the list of registration requests that are still waiting for a decision.
+     *
+     * @return list of pending registration requests.
+     */
     public List<RegistrationRequest> getPendingRequests() {
         return repository.getPendingRequests();
     }
@@ -41,6 +46,12 @@ public class ReviewRegistrationController {
                 request.getPassword(), roleId);
     }
 
+    /**
+     * Rejects a registration request with a given reason.
+     *
+     * @param request the request to reject.
+     * @param reason  the reason for rejection.
+     */
     public void rejectRequest(RegistrationRequest request, String reason) {
         request.reject(reason);
     }

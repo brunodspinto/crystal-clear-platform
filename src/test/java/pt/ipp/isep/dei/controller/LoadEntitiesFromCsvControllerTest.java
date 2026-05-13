@@ -1,0 +1,59 @@
+package pt.ipp.isep.dei.controller;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import pt.ipp.isep.dei.repository.GraphRepository;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class LoadEntitiesFromCsvControllerTest {
+
+    private GraphRepository repo;
+    private LoadEntitiesFromCsvController controller;
+
+    @BeforeEach
+    void setUp() {
+        repo = new GraphRepository();
+        controller = new LoadEntitiesFromCsvController(repo);
+    }
+
+    private String resourcePath(String name) {
+        URL url = getClass().getClassLoader().getResource(name);
+        assertNotNull(url, "Test resource not found: " + name);
+        try {
+            return Paths.get(url.toURI()).toString();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    void ensureLoadEntitiesReturnsCorrectCount() throws IOException {
+        int count = controller.loadEntities(resourcePath("graph/entities_sample.csv"));
+        assertEquals(8, count);
+    }
+
+    @Test
+    void ensureLoadEntitiesStoresEntitiesInRepository() throws IOException {
+        controller.loadEntities(resourcePath("graph/entities_sample.csv"));
+        assertEquals(8, repo.getAll().size());
+    }
+
+    @Test
+    void ensureLoadEntitiesOnInvalidPathThrowsIOException() {
+        assertThrows(IOException.class, () ->
+                controller.loadEntities("nonexistent/path/file.csv"));
+    }
+
+    @Test
+    void ensureLoadEntitiesCalledTwiceAccumulatesEntities() throws IOException {
+        controller.loadEntities(resourcePath("graph/entities_sample.csv"));
+        controller.loadEntities(resourcePath("graph/entities_sample.csv"));
+        assertEquals(16, repo.getAll().size());
+    }
+}
