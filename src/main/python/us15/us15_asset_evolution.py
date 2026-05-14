@@ -262,7 +262,6 @@ if __name__ == "__main__":
     out_dir = os.path.normpath(OUTPUT_DIR)
     os.makedirs(out_dir, exist_ok=True)
 
-    prefix = os.path.join(out_dir, "us15_" + agent_id)
-    plot_gross_salary(data, agent_id, prefix + "_chart1_gross_salary.svg")
-    plot_side_income(data, agent_id, prefix + "_chart2_side_income.svg")
-    plot_assets(data, agent_id, prefix + "_chart3_assets.svg")
+    plot_gross_salary(data, agent_id, out_dir)
+    plot_side_income(data, agent_id, out_dir)
+    plot_assets(data, agent_id, out_dir)
