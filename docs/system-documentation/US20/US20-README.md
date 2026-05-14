@@ -14,8 +14,3 @@ Model the relations (edges) between the entities extracted by US19. Each relatio
 - `pt.ipp.isep.dei.domain.graph.RelationGraph` — adjacency-list aggregate, supports `addEdge`, `neighbors`, `nodes`. Skeleton only.
 - Tests in `EdgeTest`, `RelationGraphTest`.
 - See `04.tests-and-implementation/README.md` for the running checklist.
-
-## Next steps
-- `RelationType` enum once US19 lands and the taxonomy is fixed.
-- `RelationGraph#toAdjacencyMatrix()` — bridge to US21.
-- Decide directed vs undirected semantics (currently only `from -> to` is stored).
