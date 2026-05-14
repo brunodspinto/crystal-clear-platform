@@ -19,10 +19,17 @@ public class AnalyseIncomeEvolutionUI implements Runnable {
 
     private final AnalyseIncomeEvolutionController controller;
 
+    /**
+     * Creates the UI and initialises the controller using the singleton repositories.
+     */
     public AnalyseIncomeEvolutionUI() {
         controller = new AnalyseIncomeEvolutionController();
     }
 
+    /**
+     * Runs the flow: select agent, read start and end dates, fetch the
+     * validated declarations and present them chronologically.
+     */
     public void run() {
         System.out.println("\n\n--- Analyse Income Evolution -------------------");
 

@@ -14,18 +14,39 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller for US20 - Build the relations graph between entities by loading
+ * a CSV file. The resulting graph is stored in the {@link GraphRepository} and
+ * consumed by US21 (adjacency matrices), US22 (nepotism), and US23 (conflicts).
+ */
 public class BuildRelationsGraphController {
 
     private final GraphRepository graphRepository;
 
+    /**
+     * Creates a controller using the singleton repository.
+     */
     public BuildRelationsGraphController() {
         this.graphRepository = Repositories.getInstance().getGraphRepository();
     }
 
+    /**
+     * Creates a controller with an injected repository. Used in tests.
+     *
+     * @param graphRepository the graph repository.
+     */
     public BuildRelationsGraphController(GraphRepository graphRepository) {
         this.graphRepository = graphRepository;
     }
 
+    /**
+     * Parses a relations CSV, builds the {@link RelationGraph} and stores it
+     * in the repository for later use.
+     *
+     * @param filePath path to the relations CSV file.
+     * @return a {@link BuildResult} with edge count, node count and distinct labels.
+     * @throws IOException if the CSV cannot be read.
+     */
     public BuildResult buildFromCsv(String filePath) throws IOException {
         List<Edge> edges = RelationCsvParser.parse(filePath);
         List<Entity> entities = graphRepository.getAll();
@@ -64,9 +85,9 @@ public class BuildRelationsGraphController {
         } else {
             dotPath = outputSvgPath + ".dot";
         }
-        BufferedWriter writer = new BufferedWriter(new FileWriter(dotPath));
-        writer.write(graph.exportDot());
-        writer.close();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(dotPath))) {
+            writer.write(graph.exportDot());
+        }
 
         ProcessBuilder pb = new ProcessBuilder("dot", "-Tsvg", dotPath, "-o", outputSvgPath);
         pb.redirectErrorStream(true);
@@ -84,25 +105,45 @@ public class BuildRelationsGraphController {
         return outputSvgPath;
     }
 
+    /**
+     * Summary of a graph build operation. Holds the edge count, the number of
+     * distinct nodes, and the list of distinct relation labels encountered.
+     */
     public static class BuildResult {
         private final int edgeCount;
         private final int nodeCount;
         private final List<String> labels;
 
+        /**
+         * Creates a build result.
+         *
+         * @param edgeCount the number of edges loaded.
+         * @param nodeCount the number of distinct nodes registered.
+         * @param labels    the distinct labels encountered in the relations.
+         */
         public BuildResult(int edgeCount, int nodeCount, List<String> labels) {
             this.edgeCount = edgeCount;
             this.nodeCount = nodeCount;
             this.labels = new ArrayList<>(labels);
         }
 
+        /**
+         * @return the number of edges loaded from the CSV.
+         */
         public int getEdgeCount() {
             return edgeCount;
         }
 
+        /**
+         * @return the number of distinct nodes registered in the graph.
+         */
         public int getNodeCount() {
             return nodeCount;
         }
 
+        /**
+         * @return a new list with the distinct relation labels encountered.
+         */
         public List<String> getLabels() {
             return new ArrayList<>(labels);
         }

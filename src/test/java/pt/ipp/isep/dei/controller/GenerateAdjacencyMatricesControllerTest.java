@@ -31,7 +31,7 @@ class GenerateAdjacencyMatricesControllerTest {
         repo.setRelationGraph(graph);
         GenerateAdjacencyMatricesController controller = new GenerateAdjacencyMatricesController(repo);
 
-        List<LabeledAdjacencyMatrix> matrices = controller.generate();
+        List<LabeledAdjacencyMatrix> matrices = controller.generate().getMatrices();
         assertEquals(2, matrices.size());
         assertTrue(containsLabel(matrices, "kinship"));
         assertTrue(containsLabel(matrices, "employment"));
@@ -48,7 +48,7 @@ class GenerateAdjacencyMatricesControllerTest {
         repo.setRelationGraph(graph);
         GenerateAdjacencyMatricesController controller = new GenerateAdjacencyMatricesController(repo);
 
-        List<LabeledAdjacencyMatrix> matrices = controller.generate();
+        List<LabeledAdjacencyMatrix> matrices = controller.generate().getMatrices();
         assertEquals(2, controller.countNonZeroEntries(matrixFor(matrices, "kinship")));
         assertEquals(1, controller.countNonZeroEntries(matrixFor(matrices, "employment")));
     }
@@ -63,11 +63,51 @@ class GenerateAdjacencyMatricesControllerTest {
         repo.setRelationGraph(graph);
         GenerateAdjacencyMatricesController controller = new GenerateAdjacencyMatricesController(repo);
 
-        List<LabeledAdjacencyMatrix> matrices = controller.generate();
+        List<LabeledAdjacencyMatrix> matrices = controller.generate().getMatrices();
         int expectedSize = graph.nodeCount();
         for (LabeledAdjacencyMatrix entry : matrices) {
             assertEquals(expectedSize, entry.getMatrix().getSize());
         }
+    }
+
+    @Test
+    void ensureGlobalMatrixSumsWeightsAcrossLabels() {
+        RelationGraph graph = new RelationGraph();
+        graph.addEdge(new Edge("A", "B", "kinship", 0.5));
+        graph.addEdge(new Edge("A", "B", "employment", 0.7));
+        graph.addEdge(new Edge("B", "C", "kinship", 1.0));
+
+        GraphRepository repo = new GraphRepository();
+        repo.setRelationGraph(graph);
+        GenerateAdjacencyMatricesController controller = new GenerateAdjacencyMatricesController(repo);
+
+        GenerateAdjacencyMatricesController.GenerationResult result = controller.generate();
+        AdjacencyMatrix global = result.getGlobalMatrix();
+        List<String> nodeIds = result.getNodeIds();
+
+        int aIndex = nodeIds.indexOf("A");
+        int bIndex = nodeIds.indexOf("B");
+        int cIndex = nodeIds.indexOf("C");
+
+        assertEquals(1.2, global.getWeight(aIndex, bIndex), 0.0001);
+        assertEquals(1.0, global.getWeight(bIndex, cIndex), 0.0001);
+    }
+
+    @Test
+    void ensureNodeIdsExposedInOrder() {
+        RelationGraph graph = new RelationGraph();
+        graph.addEdge(new Edge("X", "Y", "kinship", 1.0));
+        graph.addEdge(new Edge("Y", "Z", "kinship", 1.0));
+
+        GraphRepository repo = new GraphRepository();
+        repo.setRelationGraph(graph);
+        GenerateAdjacencyMatricesController controller = new GenerateAdjacencyMatricesController(repo);
+
+        List<String> nodeIds = controller.generate().getNodeIds();
+        assertEquals(3, nodeIds.size());
+        assertTrue(nodeIds.contains("X"));
+        assertTrue(nodeIds.contains("Y"));
+        assertTrue(nodeIds.contains("Z"));
     }
 
     private boolean containsLabel(List<LabeledAdjacencyMatrix> matrices, String label) {

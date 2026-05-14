@@ -5,16 +5,28 @@ import pt.ipp.isep.dei.ui.console.utils.Utils;
 
 import java.io.IOException;
 
+/**
+ * UI for US20 - Build the relations graph from a CSV file. After the graph
+ * is built the user is offered the chance to render it to an SVG via
+ * Graphviz.
+ */
 public class BuildRelationsGraphUI implements Runnable {
 
     private static final String DEFAULT_OUTPUT_SVG = "docs/system-documentation/US20/us20_relations_graph.svg";
 
     private final BuildRelationsGraphController controller;
 
+    /**
+     * Creates the UI and initialises the controller using the singleton repository.
+     */
     public BuildRelationsGraphUI() {
         controller = new BuildRelationsGraphController();
     }
 
+    /**
+     * Runs the flow: read the CSV path, build the graph, print a summary and
+     * optionally render the graph to an SVG using Graphviz.
+     */
     @Override
     public void run() {
         System.out.println("\n\n--- Build Relations Graph (US20) ---");
