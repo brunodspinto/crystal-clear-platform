@@ -22,10 +22,18 @@ public class ConsultAssetsUI implements Runnable {
 
     private final ConsultAssetsController controller;
 
+    /**
+     * Creates the UI and initialises the controller using the singleton repositories.
+     */
     public ConsultAssetsUI() {
         controller = new ConsultAssetsController();
     }
 
+    /**
+     * Runs the flow: select agent, read reference date, fetch the asset
+     * entries, and display them. Sensitive values are masked when the
+     * current user is not a journalist (AC4).
+     */
     public void run() {
         System.out.println("\n\n--- Consult Assets ----------------------------");
 

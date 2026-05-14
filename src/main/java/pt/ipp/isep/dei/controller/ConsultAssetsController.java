@@ -14,14 +14,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-// US11 - controller to consult the assets of a political agent on a specific date.
-// Only validated declarations submitted on or before the reference date are considered.
+/**
+ * Controller for US11 - Consult the assets of a political agent on a specific
+ * date. Only validated declarations submitted on or before the reference date
+ * are considered. Sensitive values are masked for citizens (AC4); journalists
+ * see full details.
+ */
 public class ConsultAssetsController {
 
     private final PoliticalAgentRepository politicalAgentRepository;
     private final DeclarationRepository declarationRepository;
     private final AuthenticationRepository authenticationRepository;
 
+    /**
+     * Creates a controller using the singleton repositories.
+     */
     public ConsultAssetsController() {
         Repositories repos = Repositories.getInstance();
         this.politicalAgentRepository = repos.getPoliticalAgentRepository();
@@ -29,7 +36,13 @@ public class ConsultAssetsController {
         this.authenticationRepository = repos.getAuthenticationRepository();
     }
 
-    // used in tests
+    /**
+     * Creates a controller with injected repositories. Used in tests.
+     *
+     * @param politicalAgentRepository the political agent repository.
+     * @param declarationRepository    the declaration repository.
+     * @param authenticationRepository the authentication repository.
+     */
     public ConsultAssetsController(PoliticalAgentRepository politicalAgentRepository,
                                    DeclarationRepository declarationRepository,
                                    AuthenticationRepository authenticationRepository) {
@@ -38,10 +51,26 @@ public class ConsultAssetsController {
         this.authenticationRepository = authenticationRepository;
     }
 
+    /**
+     * Returns all registered political agents available for selection by the
+     * actor (AC1).
+     *
+     * @return list of {@link PoliticalAgent}.
+     */
     public List<PoliticalAgent> getPoliticalAgents() {
         return politicalAgentRepository.getAll();
     }
 
+    /**
+     * Returns the asset entries declared by the given agent up to the
+     * reference date, gathered across every validated declaration (AC2).
+     * Empty when no declarations match (AC3).
+     *
+     * @param agent         the selected political agent.
+     * @param referenceDate the date for which the assets are requested.
+     * @return list of matching {@link AssetEntry}; never null.
+     * @throws IllegalArgumentException if any argument is null.
+     */
     public List<AssetEntry> getAssetsAt(PoliticalAgent agent, Date referenceDate) {
         if (agent == null) {
             throw new IllegalArgumentException("Agent cannot be null.");
@@ -60,7 +89,14 @@ public class ConsultAssetsController {
         return assets;
     }
 
-    // AC4 - journalists see full values, citizens get sensitive values masked.
+    /**
+     * Returns whether the user currently logged in has the Journalist role.
+     * The UI uses this flag to honour AC4: journalists see full asset values,
+     * citizens see sensitive values masked.
+     *
+     * @return true if there is a logged-in user whose roles include
+     *         Journalist; false otherwise.
+     */
     public boolean isCurrentUserJournalist() {
         if (authenticationRepository == null) {
             return false;

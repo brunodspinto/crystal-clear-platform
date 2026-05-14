@@ -6,16 +6,28 @@ import pt.ipp.isep.dei.domain.graph.AdjacencyMatrix;
 
 import java.util.List;
 
+/**
+ * UI for US21 - Display the per-relation adjacency matrices, plus the global
+ * matrix, of the relations graph built in US20. Each matrix is printed in
+ * tabular form with the node ids as row and column headers.
+ */
 public class GenerateAdjacencyMatricesUI implements Runnable {
 
     private static final int CELL_WIDTH = 10;
 
     private final GenerateAdjacencyMatricesController controller;
 
+    /**
+     * Creates the UI and initialises the controller using the singleton repository.
+     */
     public GenerateAdjacencyMatricesUI() {
         controller = new GenerateAdjacencyMatricesController();
     }
 
+    /**
+     * Runs the flow: triggers the generation and prints each per-label
+     * matrix followed by the global matrix.
+     */
     @Override
     public void run() {
         System.out.println("\n\n--- Generate Adjacency Matrices (US21) ---");
