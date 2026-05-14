@@ -155,11 +155,6 @@ public class RegistrationRequest {
     }
 
     @Override
-    public int hashCode() {
-        return 31 * email.toLowerCase().hashCode() + role.hashCode();
-    }
-
-    @Override
     public String toString() {
         return String.format("RegistrationRequest{name='%s', email='%s', role=%s, status=%s}",
                 fullName, email, role, status);
