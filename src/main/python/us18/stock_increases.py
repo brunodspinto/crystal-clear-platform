@@ -53,12 +53,24 @@ def plot_top_increases(df_top, output_path):
     plt.title('US18 — Top 10 Stock Value Increases')
     plt.xlabel('Increase in Stock Value (€)')
     plt.ylabel('Agent / Company')
+    plt.tight_layout()
     plt.savefig(output_path)
     plt.show()
 
 
-def plot_evolution(df_evolution, output_path):
-    df_evolution.groupby('agent_id').boxplot(column='total_value_in_stocks', grid=False)
+def plot_evolution(df_top, output_path):
+    labels = [f'{row[0]}/{row[1]}' for row in df_top[['agent_id', 'company_NIF']].values]
+    fig, axes = plt.subplots(1, 2)
+    sns.barplot(x=df_top['initial_value'].tolist(), y=labels, color='steelblue', ax=axes[0])
+    axes[0].set_title('Initial Value')
+    axes[0].set_xlabel('Total Value in Stocks (€)')
+    axes[0].set_ylabel('Agent / Company')
+    sns.barplot(x=df_top['latest_value'].tolist(), y=labels, color='red', ax=axes[1])
+    axes[1].set_title('Latest Value')
+    axes[1].set_xlabel('Total Value in Stocks (€)')
+    axes[1].set_ylabel('Agent / Company')
+    plt.suptitle('US18 — Stock Value Evolution: Initial vs Latest')
+    plt.tight_layout()
     plt.savefig(output_path)
     plt.show()
 
@@ -69,4 +81,4 @@ if __name__ == '__main__':
     df_top = top_n_increases(df_inc, n=10)
     print_top_increases(df_top)
     plot_top_increases(df_top, 'docs/system-documentation/US18/US18_top_increases.svg')
-    plot_evolution(get_evolution(df, df_top), 'docs/system-documentation/US18/US18_evolution.svg')
+    plot_evolution(df_top, 'docs/system-documentation/US18/US18_evolution.svg')

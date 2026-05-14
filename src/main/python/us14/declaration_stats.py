@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import statistics as st
@@ -136,6 +137,7 @@ def plot_histograms(df, output_path):
         ax.set_title(f'Distribution of {xlabel}')
         ax.set_xlabel(xlabel)
         ax.set_ylabel('Absolute frequency')
+    plt.tight_layout()
     plt.savefig(output_path)
     plt.show()
 
@@ -148,8 +150,7 @@ def plot_boxplots(df, output_path):
     ]:
         data = df[variable].dropna()
         ax.boxplot(data)
-        quartiles_b = st.quantiles(data.tolist(), n=4)
-        q1, q3 = quartiles_b[0], quartiles_b[2]
+        q1, q3 = np.percentile(data, [25, 75])
         iqr = q3 - q1
         lower_fence = q1 - 1.5 * iqr
         upper_fence = q3 + 1.5 * iqr
@@ -159,6 +160,7 @@ def plot_boxplots(df, output_path):
         print(f'{ylabel}: {len(outliers)} outlier(s) detected')
         if len(outliers) > 0:
             print(f'  Values: {sorted(outliers.tolist())}')
+    plt.tight_layout()
     plt.savefig(output_path)
     plt.show()
 

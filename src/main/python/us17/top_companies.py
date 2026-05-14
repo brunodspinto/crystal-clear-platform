@@ -33,6 +33,7 @@ def plot_top_companies(df_top, output_path):
     plt.title('US17 — Top 10 Companies by Total Share Value')
     plt.xlabel('Total Value in Stocks (€)')
     plt.ylabel('Company NIF')
+    plt.tight_layout()
     plt.savefig(output_path)
     plt.show()
 
