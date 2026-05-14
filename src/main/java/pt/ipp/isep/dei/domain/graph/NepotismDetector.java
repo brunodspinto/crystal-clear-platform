@@ -173,13 +173,5 @@ public class NepotismDetector {
                     && appointed.equals(other.appointed)
                     && relationshipLabel.equals(other.relationshipLabel);
         }
-
-        @Override
-        public int hashCode() {
-            int result = appointer.hashCode();
-            result = 31 * result + appointed.hashCode();
-            result = 31 * result + relationshipLabel.hashCode();
-            return result;
-        }
     }
 }
