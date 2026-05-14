@@ -16,14 +16,28 @@ public class ExportDeclarationCsvController {
 
     private final DeclarationRepository declarationRepository;
 
+    /**
+     * Creates the controller using the default {@link DeclarationRepository} from {@link Repositories}.
+     */
     public ExportDeclarationCsvController() {
         this.declarationRepository = Repositories.getInstance().getDeclarationRepository();
     }
 
+    /**
+     * Creates the controller with an explicit repository, intended for testing.
+     *
+     * @param declarationRepository the declaration repository to use
+     */
     public ExportDeclarationCsvController(DeclarationRepository declarationRepository) {
         this.declarationRepository = declarationRepository;
     }
 
+    /**
+     * Exports all validated declarations to a CSV file at the given path.
+     *
+     * @param filePath path of the output CSV file
+     * @return {@code true} if the export succeeded; {@code false} if an I/O error occurred
+     */
     public boolean exportToCsv(String filePath) {
         List<Declaration> validated = declarationRepository.getDeclarationsByStatus(DeclarationStatus.VALIDATED);
         try {
