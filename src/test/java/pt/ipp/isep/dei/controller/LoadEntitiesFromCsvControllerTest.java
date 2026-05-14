@@ -35,13 +35,13 @@ class LoadEntitiesFromCsvControllerTest {
     @Test
     void ensureLoadEntitiesReturnsCorrectCount() throws IOException {
         int count = controller.loadEntities(resourcePath("graph/entities_sample.csv"));
-        assertEquals(8, count);
+        assertEquals(12, count);
     }
 
     @Test
     void ensureLoadEntitiesStoresEntitiesInRepository() throws IOException {
         controller.loadEntities(resourcePath("graph/entities_sample.csv"));
-        assertEquals(8, repo.getAll().size());
+        assertEquals(12, repo.getAll().size());
     }
 
     @Test
@@ -54,6 +54,6 @@ class LoadEntitiesFromCsvControllerTest {
     void ensureLoadEntitiesCalledTwiceAccumulatesEntities() throws IOException {
         controller.loadEntities(resourcePath("graph/entities_sample.csv"));
         controller.loadEntities(resourcePath("graph/entities_sample.csv"));
-        assertEquals(16, repo.getAll().size());
+        assertEquals(24, repo.getAll().size());
     }
 }

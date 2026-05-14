@@ -1,9 +1,13 @@
 # Entity CSV — format: category;id;type;startDate;endDate;field1;field2;field3
-person;P-001;politician;2020-01-01;2024-01-01;Alice Smith;1980-05-10;Portuguese
-person;P-002;businessman;;; Bob Jones;1975-03-22;British
-organization;O-001;company;2010-01-01;;Acme Corp;private;Portugal
-organization;O-002;NGO;2005-06-15;2022-12-31;Green Earth;foundation;Spain
-position;J-001;public;2019-03-01;2023-03-01;Minister of Finance;government;O-001
-position;J-002;business;2015-01-01;;Board Member;private;O-002
-asset;A-001;property;2015-01-01;;real_estate;Portugal;500000.0
-asset;A-002;fund;2018-06-01;2023-01-01;company;Luxembourg;1200000.50
+person;P-001;politician;2018-10-26;2024-03-10;António Silva;1970-04-12;Portuguese
+person;P-002;businessman;2010-01-01;;Bruno Silva;1975-08-22;Portuguese
+person;P-003;politician;2021-07-01;;Carlos Mendes;1968-11-03;Portuguese
+person;P-004;executive;2019-03-01;;Diana Fonseca;1980-06-17;Portuguese
+person;P-005;public_servant;2022-01-01;;Eduardo Santos;1985-02-28;Portuguese
+organization;O-001;public;2005-01-01;;Ministério da Economia;public;Portugal
+organization;O-002;company;2012-06-15;;TechCorp SA;private;Portugal
+organization;O-003;NGO;2008-03-01;;FundoBet;foundation;Portugal
+position;J-001;public;2020-01-01;;Secretário de Estado;government;O-001
+position;J-002;public;2021-07-01;;Diretor-Geral;government;O-001
+asset;A-001;property;2016-05-01;;real_estate;Lisboa;450000.0
+asset;A-002;stock;2019-01-01;;company;TechCorp;250000.0

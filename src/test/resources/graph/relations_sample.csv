@@ -1,7 +1,24 @@
 # Relations CSV — format: from_id;to_id;label;weight
-P-001;O-001;employment;1.0
-P-001;A-001;ownership;1.0
-P-002;O-002;employment;1.0
-P-002;A-002;ownership;1.0
-P-001;P-002;kinship;0.5
-O-001;O-002;membership;0.8
+# --- US22: nepotismo ---
+# P-001 nomeou P-002 (seu familiar)
+P-002;P-001;appointedBy;1.0
+P-001;P-002;relativeOf;1.0
+# P-003 nomeou P-004 (sua amiga)
+P-004;P-003;appointedBy;1.0
+P-003;P-004;friendOf;1.0
+# P-001 nomeou P-005 (seu associado)
+P-005;P-001;appointedBy;1.0
+P-001;P-005;associatedWith;1.0
+# --- US23 Q1/Q2: familiar com cargo (P-001 tem familiar P-002 com cargo J-001 no O-001) ---
+P-002;J-001;holdsPosition;1.0
+J-001;O-001;inOrganization;1.0
+# --- US23 Q3: funcionário público que influencia empresa (P-003 tem cargo J-002 em O-001 e influencia O-002) ---
+P-003;J-002;holdsPosition;1.0
+J-002;O-001;inOrganization;1.0
+P-003;O-002;influences;1.0
+# --- US23 Q4: associado com proprietário de bem (P-001 associado a P-005, P-005 tem A-001) ---
+P-005;A-001;ownerOf;1.0
+# --- US23 Q5: nomeado por membro de organização (P-004 nomeada por P-003, P-003 é membro de O-003) ---
+P-003;O-003;memberOf;1.0
+# --- asset adicional ---
+P-002;A-002;ownerOf;0.8
