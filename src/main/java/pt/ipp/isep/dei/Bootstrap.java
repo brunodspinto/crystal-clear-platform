@@ -7,6 +7,9 @@ import pt.ipp.isep.dei.repository.*;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * The type Bootstrap.
+ */
 public class Bootstrap implements Runnable {
 
     public void run() {

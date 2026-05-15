@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * Generates an SVG file visualising a heterogeneous multi-relational graph.
- *
+ * <p>
  * Entities are placed in a circular layout; each entity type uses a distinct
  * shape and colour. Every entity node and every edge label is wrapped in an
  * SVG hyperlink (<a href="#detail-ID">) so that clicking navigates to a
@@ -30,6 +30,14 @@ public class GraphSvgExporter {
 
     private GraphSvgExporter() {}
 
+    /**
+     * Export.
+     *
+     * @param entities the entities
+     * @param edges    the edges
+     * @param filePath the file path
+     * @throws IOException the io exception
+     */
     public static void export(List<Entity> entities, List<Edge> edges, String filePath) throws IOException {
         int detailRows = (int) Math.ceil((double) entities.size() / DETAIL_COLS);
         int totalHeight = DETAIL_START_Y + detailRows * DETAIL_ROW_H + 40;

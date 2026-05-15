@@ -17,6 +17,9 @@ public class DetectConflictsUI implements Runnable {
 
     private final DetectConflictsController controller;
 
+    /**
+     * Instantiates a new Detect conflicts ui.
+     */
     public DetectConflictsUI() {
         controller = new DetectConflictsController();
     }

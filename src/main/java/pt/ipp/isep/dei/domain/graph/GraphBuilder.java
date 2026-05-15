@@ -11,6 +11,13 @@ public class GraphBuilder {
 
     private GraphBuilder() {}
 
+    /**
+     * Build relation graph.
+     *
+     * @param entities the entities
+     * @param edges    the edges
+     * @return the relation graph
+     */
     public static RelationGraph build(List<Entity> entities, List<Edge> edges) {
         if (entities == null) {
             throw new IllegalArgumentException("entities must not be null");

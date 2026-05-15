@@ -5,10 +5,16 @@ import pt.ipp.isep.dei.ui.console.utils.Utils;
 
 import java.io.IOException;
 
+/**
+ * The type Load entities from csv ui.
+ */
 public class LoadEntitiesFromCsvUI implements Runnable {
 
     private final LoadEntitiesFromCsvController controller;
 
+    /**
+     * Instantiates a new Load entities from csv ui.
+     */
     public LoadEntitiesFromCsvUI() {
         controller = new LoadEntitiesFromCsvController();
     }

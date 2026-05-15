@@ -5,13 +5,19 @@ package pt.ipp.isep.dei.domain;
  */
 public enum AssetType {
 
-    /** Real estate property (urban or rural). */
+    /**
+     * Real estate property (urban or rural).
+     */
     REAL_ESTATE("Real Estate"),
 
-    /** Vehicles (cars, boats, aircraft, etc.). */
+    /**
+     * Vehicles (cars, boats, aircraft, etc.).
+     */
     VEHICLES("Vehicles"),
 
-    /** Stocks, shares, and financial instruments. */
+    /**
+     * Stocks, shares, and financial instruments.
+     */
     STOCKS("Stocks");
 
     private final String label;

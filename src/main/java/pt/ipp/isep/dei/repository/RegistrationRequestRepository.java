@@ -30,6 +30,10 @@ public class RegistrationRequestRepository {
 
     /**
      * Returns whether a registration request already exists for the given email and role.
+     *
+     * @param email the email
+     * @param role  the role
+     * @return the boolean
      */
     public boolean existsByEmailAndRole(String email, UserRole role) {
         for (RegistrationRequest r : requests) {
@@ -42,6 +46,8 @@ public class RegistrationRequestRepository {
 
     /**
      * Returns all requests with PENDING status.
+     *
+     * @return the pending requests
      */
     public List<RegistrationRequest> getPendingRequests() {
         List<RegistrationRequest> pending = new ArrayList<>();
@@ -55,6 +61,8 @@ public class RegistrationRequestRepository {
 
     /**
      * Returns all stored requests (any status).
+     *
+     * @return the all
      */
     public List<RegistrationRequest> getAll() {
         return new ArrayList<>(requests);

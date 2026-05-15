@@ -17,10 +17,10 @@ public class Complaint {
     /**
      * Creates a new Complaint.
      *
-     * @param description      a description of the reported behaviour.
-     * @param complaintDate    the date when the behaviour occurred (cannot be in the future).
-     * @param citizen          the citizen submitting the complaint.
-     * @param politicalAgent   the political agent being complained about.
+     * @param description       a description of the reported behaviour.
+     * @param complaintDate     the date when the behaviour occurred (cannot be in the future).
+     * @param citizen           the citizen submitting the complaint.
+     * @param politicalAgent    the political agent being complained about.
      * @param politicalFunction the function the agent held at the time of the behaviour.
      * @throws IllegalArgumentException if any argument is invalid.
      */
@@ -52,17 +52,46 @@ public class Complaint {
         this.politicalFunction = politicalFunction;
     }
 
-    /** @return the description of the reported behaviour. */
+    /**
+     * Gets description.
+     *
+     * @return the description of the reported behaviour.
+     */
     public String getDescription() { return description; }
-    /** @return the date when the behaviour occurred. */
+
+    /**
+     * Gets complaint date.
+     *
+     * @return the date when the behaviour occurred.
+     */
     public Date getComplaintDate() { return complaintDate; }
-    /** @return the date when the complaint was submitted (set automatically). */
+
+    /**
+     * Gets submission date.
+     *
+     * @return the date when the complaint was submitted (set automatically).
+     */
     public Date getSubmissionDate() { return submissionDate; }
-    /** @return the citizen who submitted the complaint. */
+
+    /**
+     * Gets citizen.
+     *
+     * @return the citizen who submitted the complaint.
+     */
     public Citizen getCitizen() { return citizen; }
-    /** @return the political agent being complained about. */
+
+    /**
+     * Gets political agent.
+     *
+     * @return the political agent being complained about.
+     */
     public PoliticalAgent getPoliticalAgent() { return politicalAgent; }
-    /** @return the political function the agent held at the time. */
+
+    /**
+     * Gets political function.
+     *
+     * @return the political function the agent held at the time.
+     */
     public PoliticalFunction getPoliticalFunction() { return politicalFunction; }
 
     @Override

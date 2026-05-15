@@ -24,6 +24,14 @@ public class DeclarationCsvExporter {
 
     private DeclarationCsvExporter() {}
 
+    /**
+     * Export boolean.
+     *
+     * @param declarations the declarations
+     * @param filePath     the file path
+     * @return the boolean
+     * @throws IOException the io exception
+     */
     public static boolean export(List<Declaration> declarations, String filePath) throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
             writer.println(HEADER);

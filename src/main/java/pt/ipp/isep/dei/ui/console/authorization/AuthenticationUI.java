@@ -15,9 +15,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * The type Authentication ui.
+ */
 public class AuthenticationUI implements Runnable {
     private final AuthenticationController ctrl;
 
+    /**
+     * Instantiates a new Authentication ui.
+     */
     public AuthenticationUI() {
         ctrl = new AuthenticationController();
     }

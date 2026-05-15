@@ -19,6 +19,9 @@ import java.util.List;
  */
 public class AdminUI implements Runnable {
 
+    /**
+     * Instantiates a new Admin ui.
+     */
     public AdminUI() {}
 
     public void run() {

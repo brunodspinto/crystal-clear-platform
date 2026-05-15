@@ -2,7 +2,7 @@ package pt.ipp.isep.dei.domain.graph;
 
 /**
  * A relation between two entities, identified by their ids.
- *
+ * <p>
  * The label is kept as a free-form string for now. Once US19's entity model
  * lands and the relation taxonomy stabilises, this will likely become an enum
  * (kinship, employment, ownership, membership, ...).
@@ -14,6 +14,14 @@ public class Edge {
     private final String label;
     private final double weight;
 
+    /**
+     * Instantiates a new Edge.
+     *
+     * @param fromId the from id
+     * @param toId   the to id
+     * @param label  the label
+     * @param weight the weight
+     */
     public Edge(String fromId, String toId, String label, double weight) {
         this.fromId = requireNonBlank(fromId, "fromId");
         this.toId = requireNonBlank(toId, "toId");
@@ -21,18 +29,38 @@ public class Edge {
         this.weight = weight;
     }
 
+    /**
+     * Gets from id.
+     *
+     * @return the from id
+     */
     public String getFromId() {
         return fromId;
     }
 
+    /**
+     * Gets to id.
+     *
+     * @return the to id
+     */
     public String getToId() {
         return toId;
     }
 
+    /**
+     * Gets label.
+     *
+     * @return the label
+     */
     public String getLabel() {
         return label;
     }
 
+    /**
+     * Gets weight.
+     *
+     * @return the weight
+     */
     public double getWeight() {
         return weight;
     }

@@ -8,8 +8,14 @@ import pt.ipp.isep.dei.ui.console.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Main menu ui.
+ */
 public class MainMenuUI implements Runnable {
 
+    /**
+     * Instantiates a new Main menu ui.
+     */
     public MainMenuUI() {
     }
 

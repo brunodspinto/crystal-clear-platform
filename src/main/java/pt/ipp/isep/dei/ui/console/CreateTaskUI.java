@@ -21,6 +21,9 @@ public class CreateTaskUI implements Runnable {
     private double taskCost;
     private String taskCategoryDescription;
 
+    /**
+     * Instantiates a new Create task ui.
+     */
     public CreateTaskUI() {
         controller = new CreateTaskController();
     }

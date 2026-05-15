@@ -32,6 +32,11 @@ public class SubmitDeclarationController {
 
     /**
      * Creates a controller with injected repositories (used in tests).
+     *
+     * @param organizationRepository   the organization repository
+     * @param declarationRepository    the declaration repository
+     * @param politicalAgentRepository the political agent repository
+     * @param authenticationRepository the authentication repository
      */
     public SubmitDeclarationController(OrganizationRepository organizationRepository,
                                         DeclarationRepository declarationRepository,
@@ -83,21 +88,13 @@ public class SubmitDeclarationController {
      * Submits a Declaration of Interests on behalf of the currently logged-in Political Agent.
      * The declaration is created with PENDING status and the current date as submissionDate.
      *
-     * @param type                 the declaration type.
-     * @param positionEntries      list of position entry data arrays; each array contains:
-     *                             [Organization, String functionDesignation, PositionNature, Double grossSalary,
-     *                              Double sideIncomeConsulting, Double sideIncomeBoardMemberships,
-     *                              Date startDate, Date endDate].
-     * @param subsidyEntries       list of subsidy entry data arrays; each array contains:
-     *                             [Organization, Double amount, String description, Date date].
-     * @param assetEntries         list of asset entry data arrays; each array contains:
-     *                             [AssetType, Double assetValue, Object detail].
-     * @param businessParticipations list of holding data arrays; each array contains:
-     *                             [Organization, Long companyNIF, Double totalValue, Double percentage].
-     * @param attachments          list of attachment data arrays; each array contains:
-     *                             [String fileName, Date uploadDate].
-     * @return {@code true} if the declaration was saved successfully;
-     *         {@code false} if the political agent was not found in the system.
+     * @param type                   the declaration type.
+     * @param positionEntries        list of position entry data arrays; each array contains:                             [Organization, String functionDesignation, PositionNature, Double grossSalary,                              Double sideIncomeConsulting, Double sideIncomeBoardMemberships,                              Date startDate, Date endDate].
+     * @param subsidyEntries         list of subsidy entry data arrays; each array contains:                             [Organization, Double amount, String description, Date date].
+     * @param assetEntries           list of asset entry data arrays; each array contains:                             [AssetType, Double assetValue, Object detail].
+     * @param businessParticipations list of holding data arrays; each array contains:                             [Organization, Long companyNIF, Double totalValue, Double percentage].
+     * @param attachments            list of attachment data arrays; each array contains:                             [String fileName, Date uploadDate].
+     * @return {@code true} if the declaration was saved successfully;         {@code false} if the political agent was not found in the system.
      */
     public boolean submitDeclaration(DeclarationType type,
                                       List<Object[]> positionEntries,

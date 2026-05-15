@@ -16,14 +16,28 @@ public class ExportDeclarationCsvController {
 
     private final DeclarationRepository declarationRepository;
 
+    /**
+     * Instantiates a new Export declaration csv controller.
+     */
     public ExportDeclarationCsvController() {
         this.declarationRepository = Repositories.getInstance().getDeclarationRepository();
     }
 
+    /**
+     * Instantiates a new Export declaration csv controller.
+     *
+     * @param declarationRepository the declaration repository
+     */
     public ExportDeclarationCsvController(DeclarationRepository declarationRepository) {
         this.declarationRepository = declarationRepository;
     }
 
+    /**
+     * Export to csv boolean.
+     *
+     * @param filePath the file path
+     * @return the boolean
+     */
     public boolean exportToCsv(String filePath) {
         List<Declaration> validated = declarationRepository.getDeclarationsByStatus(DeclarationStatus.VALIDATED);
         try {

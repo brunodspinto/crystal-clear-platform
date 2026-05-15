@@ -1,9 +1,19 @@
 package pt.ipp.isep.dei.domain;
 
+/**
+ * The type Citizen.
+ */
 public class Citizen extends User {
 
     private final String nationalIdCardNumber;
 
+    /**
+     * Instantiates a new Citizen.
+     *
+     * @param email                the email
+     * @param name                 the name
+     * @param nationalIdCardNumber the national id card number
+     */
     public Citizen(String email, String name, String nationalIdCardNumber) {
         super(name, email);
         if (nationalIdCardNumber == null || nationalIdCardNumber.isBlank())
@@ -11,6 +21,11 @@ public class Citizen extends User {
         this.nationalIdCardNumber = nationalIdCardNumber;
     }
 
+    /**
+     * Gets national id card number.
+     *
+     * @return the national id card number
+     */
     public String getNationalIdCardNumber() { return nationalIdCardNumber; }
 
     @Override

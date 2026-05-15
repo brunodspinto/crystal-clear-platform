@@ -60,14 +60,14 @@ public class Declaration {
     /**
      * Adds a position entry to the declaration.
      *
-     * @param organization              the organization where the position is held.
-     * @param functionDesignation                  the function performed.
-     * @param nature                    the nature of the position.
-     * @param grossSalary               the annual gross salary.
-     * @param sideIncomeConsulting      consulting side income.
+     * @param organization               the organization where the position is held.
+     * @param functionDesignation        the function performed.
+     * @param nature                     the nature of the position.
+     * @param grossSalary                the annual gross salary.
+     * @param sideIncomeConsulting       consulting side income.
      * @param sideIncomeBoardMemberships board membership side income.
-     * @param startDate                 the start date.
-     * @param endDate                   the end date, or {@code null} if still active.
+     * @param startDate                  the start date.
+     * @param endDate                    the end date, or {@code null} if still active.
      */
     public void addPositionEntry(Organization organization, String functionDesignation, PositionNature nature,
                                   double grossSalary, double sideIncomeConsulting,
@@ -81,13 +81,21 @@ public class Declaration {
      *
      * @param organization the organization from which the subsidy was received.
      * @param amount       the subsidy amount.
-     * @param description  a description of the subsidy.
+     * @param source       the source
      * @param date         the date received.
      */
     public void addIncome(Organization organization, double amount, String source, Date date) {
         incomes.add(new Income(organization, amount, source, date));
     }
 
+    /**
+     * Add subsidy entry.
+     *
+     * @param organization the organization
+     * @param amount       the amount
+     * @param description  the description
+     * @param date         the date
+     */
     public void addSubsidyEntry(Organization organization, double amount, String description, Date date) {
         subsidyEntries.add(new SubsidyEntry(organization, amount, description, date));
     }
@@ -185,37 +193,81 @@ public class Declaration {
         return sb.toString();
     }
 
-    /** @return the unique identifier of this declaration. */
+    /**
+     * Gets id.
+     *
+     * @return the unique identifier of this declaration.
+     */
     public UUID getId() { return id; }
 
-    /** @return the political agent who submitted the declaration. */
+    /**
+     * Gets agent.
+     *
+     * @return the political agent who submitted the declaration.
+     */
     public PoliticalAgent getAgent() { return agent; }
 
-    /** @return the type of this declaration. */
+    /**
+     * Gets type.
+     *
+     * @return the type of this declaration.
+     */
     public DeclarationType getType() { return type; }
 
-    /** @return the submission date. */
+    /**
+     * Gets submission date.
+     *
+     * @return the submission date.
+     */
     public Date getSubmissionDate() { return submissionDate; }
 
-    /** @return the current status of the declaration. */
+    /**
+     * Gets status.
+     *
+     * @return the current status of the declaration.
+     */
     public DeclarationStatus getStatus() { return status; }
 
-    /** @return an unmodifiable copy of the position entries. */
+    /**
+     * Gets position entries.
+     *
+     * @return an unmodifiable copy of the position entries.
+     */
     public List<PositionEntry> getPositionEntries() { return new ArrayList<>(positionEntries); }
 
-    /** @return an unmodifiable copy of the income entries. */
+    /**
+     * Gets incomes.
+     *
+     * @return an unmodifiable copy of the income entries.
+     */
     public List<Income> getIncomes() { return new ArrayList<>(incomes); }
 
-    /** @return an unmodifiable copy of the subsidy entries. */
+    /**
+     * Gets subsidy entries.
+     *
+     * @return an unmodifiable copy of the subsidy entries.
+     */
     public List<SubsidyEntry> getSubsidyEntries() { return new ArrayList<>(subsidyEntries); }
 
-    /** @return an unmodifiable copy of the asset entries. */
+    /**
+     * Gets asset entries.
+     *
+     * @return an unmodifiable copy of the asset entries.
+     */
     public List<AssetEntry> getAssetEntries() { return new ArrayList<>(assetEntries); }
 
-    /** @return an unmodifiable copy of the business participations. */
+    /**
+     * Gets business participations.
+     *
+     * @return an unmodifiable copy of the business participations.
+     */
     public List<BusinessParticipation> getBusinessParticipations() { return new ArrayList<>(businessParticipations); }
 
-    /** @return an unmodifiable copy of the attachments. */
+    /**
+     * Gets attachments.
+     *
+     * @return an unmodifiable copy of the attachments.
+     */
     public List<Attachment> getAttachments() { return new ArrayList<>(attachments); }
 
     @Override

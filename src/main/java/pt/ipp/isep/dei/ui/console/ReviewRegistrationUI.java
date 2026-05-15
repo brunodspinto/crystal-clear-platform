@@ -14,6 +14,9 @@ public class ReviewRegistrationUI implements Runnable {
 
     private final ReviewRegistrationController controller;
 
+    /**
+     * Instantiates a new Review registration ui.
+     */
     public ReviewRegistrationUI() {
         controller = new ReviewRegistrationController();
     }

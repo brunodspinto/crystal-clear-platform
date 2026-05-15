@@ -32,6 +32,11 @@ public class ValidateDeclarationController {
 
     /**
      * Creates a controller with injected repositories (used in tests).
+     *
+     * @param declarationRepository           the declaration repository
+     * @param validationRecordRepository      the validation record repository
+     * @param ethicsCommitteeMemberRepository the ethics committee member repository
+     * @param authenticationRepository        the authentication repository
      */
     public ValidateDeclarationController(DeclarationRepository declarationRepository,
                                           ValidationRecordRepository validationRecordRepository,
@@ -79,10 +84,8 @@ public class ValidateDeclarationController {
      *
      * @param declaration the declaration to validate.
      * @param outcome     the validation outcome.
-     * @param comments    list of comment arrays [String section, String comment];
-     *                    only used when outcome is RETURNED_FOR_CORRECTION.
-     * @return {@code true} if successful; {@code false} if the declaration is not PENDING
-     *         or the authenticated member was not found.
+     * @param comments    list of comment arrays [String section, String comment];                    only used when outcome is RETURNED_FOR_CORRECTION.
+     * @return {@code true} if successful; {@code false} if the declaration is not PENDING         or the authenticated member was not found.
      */
     public boolean processValidation(Declaration declaration, ValidationOutcome outcome,
                                       List<Object[]> comments) {

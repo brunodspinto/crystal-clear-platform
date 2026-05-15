@@ -16,6 +16,9 @@ public class DetectNepotismUI implements Runnable {
 
     private final DetectNepotismController controller;
 
+    /**
+     * Instantiates a new Detect nepotism ui.
+     */
     public DetectNepotismUI() {
         controller = new DetectNepotismController();
     }

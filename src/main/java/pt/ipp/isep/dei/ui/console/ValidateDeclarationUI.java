@@ -17,6 +17,9 @@ public class ValidateDeclarationUI implements Runnable {
 
     private final ValidateDeclarationController controller;
 
+    /**
+     * Instantiates a new Validate declaration ui.
+     */
     public ValidateDeclarationUI() {
         controller = new ValidateDeclarationController();
     }

@@ -94,8 +94,7 @@ public class ConsultAssetsController {
      * The UI uses this flag to honour AC4: journalists see full asset values,
      * citizens see sensitive values masked.
      *
-     * @return true if there is a logged-in user whose roles include
-     *         Journalist; false otherwise.
+     * @return true if there is a logged-in user whose roles include         Journalist; false otherwise.
      */
     public boolean isCurrentUserJournalist() {
         if (authenticationRepository == null) {

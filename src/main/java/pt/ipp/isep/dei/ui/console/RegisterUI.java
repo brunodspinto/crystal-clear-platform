@@ -13,6 +13,9 @@ public class RegisterUI implements Runnable {
 
     private final RegisterController controller;
 
+    /**
+     * Instantiates a new Register ui.
+     */
     public RegisterUI() {
         controller = new RegisterController();
     }

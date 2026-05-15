@@ -28,10 +28,18 @@ public class ValidationComment {
         this.comment = comment;
     }
 
-    /** @return the section of the declaration that contains the inconsistency. */
+    /**
+     * Gets section.
+     *
+     * @return the section of the declaration that contains the inconsistency.
+     */
     public String getSection() { return section; }
 
-    /** @return the description of the inconsistency. */
+    /**
+     * Gets comment.
+     *
+     * @return the description of the inconsistency.
+     */
     public String getComment() { return comment; }
 
     @Override

@@ -5,13 +5,19 @@ package pt.ipp.isep.dei.domain;
  */
 public enum DeclarationType {
 
-    /** Submitted when beginning a term of office. */
+    /**
+     * Submitted when beginning a term of office.
+     */
     INITIAL("Initial"),
 
-    /** Submitted annually while performing a political function. */
+    /**
+     * Submitted annually while performing a political function.
+     */
     REGULAR("Regular"),
 
-    /** Submitted when significant changes occur or when requested by the ethics committee. */
+    /**
+     * Submitted when significant changes occur or when requested by the ethics committee.
+     */
     EXCEPTIONAL("Exceptional");
 
     private final String label;

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Aggregate for US20. Stores edges produced by US19's entity extraction
  * and exposes projections used by US21/US22/US23.
- *
+ * <p>
  * Backed by parallel ArrayLists (one with node ids, one with the
  * corresponding outgoing edges), keeping the implementation within
  * the PPROG-level Collections coverage.
@@ -17,6 +17,11 @@ public class RelationGraph {
     private final List<String> nodeIds = new ArrayList<>();
     private final List<List<Edge>> outgoing = new ArrayList<>();
 
+    /**
+     * Add edge.
+     *
+     * @param e the e
+     */
     public void addEdge(Edge e) {
         if (e == null) {
             throw new IllegalArgumentException("edge must not be null");
@@ -37,6 +42,8 @@ public class RelationGraph {
      * Registers a node with no outgoing edges. Useful when an entity from
      * US19 has no relations yet but should still appear in queries that
      * iterate every known node.
+     *
+     * @param id the id
      */
     public void addNode(String id) {
         if (id == null || id.isBlank()) {
@@ -47,6 +54,12 @@ public class RelationGraph {
         }
     }
 
+    /**
+     * Neighbors list.
+     *
+     * @param id the id
+     * @return the list
+     */
     public List<Edge> neighbors(String id) {
         int i = indexOfNode(id);
         if (i < 0) {
@@ -55,10 +68,20 @@ public class RelationGraph {
         return Collections.unmodifiableList(outgoing.get(i));
     }
 
+    /**
+     * Nodes list.
+     *
+     * @return the list
+     */
     public List<String> nodes() {
         return new ArrayList<>(nodeIds);
     }
 
+    /**
+     * Node count int.
+     *
+     * @return the int
+     */
     public int nodeCount() {
         return nodeIds.size();
     }
@@ -67,6 +90,9 @@ public class RelationGraph {
      * Bridge for US21. Builds a square AdjacencyMatrix containing every edge
      * stored in this graph, regardless of label. The given registry is used
      * to map entity ids to row/column indexes.
+     *
+     * @param registry the registry
+     * @return the adjacency matrix
      */
     public AdjacencyMatrix toAdjacencyMatrix(IndexRegistry registry) {
         if (registry == null) {
@@ -89,6 +115,10 @@ public class RelationGraph {
     /**
      * Same as {@link #toAdjacencyMatrix(IndexRegistry)} but only includes the
      * edges whose label matches {@code label}.
+     *
+     * @param label    the label
+     * @param registry the registry
+     * @return the adjacency matrix
      */
     public AdjacencyMatrix toAdjacencyMatrix(String label, IndexRegistry registry) {
         if (label == null || label.isBlank()) {
@@ -118,6 +148,8 @@ public class RelationGraph {
      * edges carry the relation label and weight. Designed to be piped into
      * `dot -Tsvg` (or any other Graphviz layout engine) to produce a visual
      * rendering of the relations network.
+     *
+     * @return the string
      */
     public String exportDot() {
         StringBuilder dot = new StringBuilder();

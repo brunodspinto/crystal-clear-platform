@@ -40,8 +40,7 @@ public class GenerateAdjacencyMatricesController {
      * repository. Produces one matrix per distinct relation label plus a
      * global matrix that sums all of them.
      *
-     * @return a {@link GenerationResult} with ordered node ids, per-label
-     *         matrices and the global matrix.
+     * @return a {@link GenerationResult} with ordered node ids, per-label         matrices and the global matrix.
      * @throws IllegalStateException if no relations graph has been built yet.
      */
     public GenerationResult generate() {
@@ -153,6 +152,8 @@ public class GenerateAdjacencyMatricesController {
         }
 
         /**
+         * Gets node ids.
+         *
          * @return a new list with the ordered node ids.
          */
         public List<String> getNodeIds() {
@@ -160,6 +161,8 @@ public class GenerateAdjacencyMatricesController {
         }
 
         /**
+         * Gets matrices.
+         *
          * @return a new list with the per-label matrices.
          */
         public List<LabeledAdjacencyMatrix> getMatrices() {
@@ -167,8 +170,9 @@ public class GenerateAdjacencyMatricesController {
         }
 
         /**
-         * @return the global matrix summing all per-label matrices; null when
-         *         there are no nodes.
+         * Gets global matrix.
+         *
+         * @return the global matrix summing all per-label matrices; null when         there are no nodes.
          */
         public AdjacencyMatrix getGlobalMatrix() {
             return globalMatrix;

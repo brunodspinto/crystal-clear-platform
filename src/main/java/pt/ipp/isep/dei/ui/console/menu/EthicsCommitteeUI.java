@@ -15,6 +15,9 @@ import java.util.List;
  */
 public class EthicsCommitteeUI implements Runnable {
 
+    /**
+     * Instantiates a new Ethics committee ui.
+     */
     public EthicsCommitteeUI() {}
 
     @Override

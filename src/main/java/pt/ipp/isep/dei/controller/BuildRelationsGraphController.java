@@ -70,8 +70,6 @@ public class BuildRelationsGraphController {
      * @param outputSvgPath path where the SVG should be written.
      * @return the path of the generated SVG file.
      * @throws IOException if writing the DOT file fails.
-     * @throws IllegalStateException if no relations graph has been built yet.
-     * @throws RuntimeException if Graphviz is not available on the system.
      */
     public String renderGraphToSvg(String outputSvgPath) throws IOException {
         RelationGraph graph = graphRepository.getRelationGraph();
@@ -128,6 +126,8 @@ public class BuildRelationsGraphController {
         }
 
         /**
+         * Gets edge count.
+         *
          * @return the number of edges loaded from the CSV.
          */
         public int getEdgeCount() {
@@ -135,6 +135,8 @@ public class BuildRelationsGraphController {
         }
 
         /**
+         * Gets node count.
+         *
          * @return the number of distinct nodes registered in the graph.
          */
         public int getNodeCount() {
@@ -142,6 +144,8 @@ public class BuildRelationsGraphController {
         }
 
         /**
+         * Gets labels.
+         *
          * @return a new list with the distinct relation labels encountered.
          */
         public List<String> getLabels() {

@@ -28,10 +28,18 @@ public class Attachment {
         this.uploadDate = uploadDate;
     }
 
-    /** @return the name of the uploaded file. */
+    /**
+     * Gets file name.
+     *
+     * @return the name of the uploaded file.
+     */
     public String getFileName() { return fileName; }
 
-    /** @return the date the file was uploaded. */
+    /**
+     * Gets upload date.
+     *
+     * @return the date the file was uploaded.
+     */
     public Date getUploadDate() { return uploadDate; }
 
     @Override
