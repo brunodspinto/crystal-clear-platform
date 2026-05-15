@@ -1,7 +1,6 @@
 package pt.ipp.isep.dei.domain.graph;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -61,9 +60,9 @@ public class RelationGraph {
     public List<Edge> neighbors(String id) {
         int i = indexOfNode(id);
         if (i < 0) {
-            return List.of();
+            return new ArrayList<>();
         }
-        return Collections.unmodifiableList(outgoing.get(i));
+        return new ArrayList<>(outgoing.get(i));
     }
 
     /**

@@ -5,6 +5,7 @@ import pt.ipp.isep.dei.domain.RegistrationRequest;
 import pt.ipp.isep.dei.domain.UserRole;
 import pt.ipp.isep.dei.ui.console.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,9 +38,10 @@ public class ReviewRegistrationUI implements Runnable {
 
         printDetails(selected);
 
-        int decision = Utils.showAndSelectIndex(
-                List.of("Accept", "Reject"),
-                "\nDecision:");
+        List<String> options = new ArrayList<>();
+        options.add("Accept");
+        options.add("Reject");
+        int decision = Utils.showAndSelectIndex(options, "\nDecision:");
 
         if (decision == 0) {
             controller.approveRequest(selected);
