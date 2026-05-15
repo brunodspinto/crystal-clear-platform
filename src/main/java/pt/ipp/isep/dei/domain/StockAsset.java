@@ -20,7 +20,11 @@ public class StockAsset {
         this.description = description;
     }
 
-    /** @return the description of the stock or financial instrument. */
+    /**
+     * Gets description.
+     *
+     * @return the description of the stock or financial instrument.
+     */
     public String getDescription() {
         return description;
     }

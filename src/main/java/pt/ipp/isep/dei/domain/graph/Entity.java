@@ -1,5 +1,8 @@
 package pt.ipp.isep.dei.domain.graph;
 
+/**
+ * The type Entity.
+ */
 public abstract class Entity {
 
     private final String id;
@@ -7,6 +10,14 @@ public abstract class Entity {
     private final String startDate;
     private final String endDate;
 
+    /**
+     * Instantiates a new Entity.
+     *
+     * @param id        the id
+     * @param type      the type
+     * @param startDate the start date
+     * @param endDate   the end date
+     */
     protected Entity(String id, String type, String startDate, String endDate) {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("id must not be blank");
@@ -20,18 +31,38 @@ public abstract class Entity {
         this.endDate = endDate == null ? "" : endDate;
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Gets type.
+     *
+     * @return the type
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Gets start date.
+     *
+     * @return the start date
+     */
     public String getStartDate() {
         return startDate;
     }
 
+    /**
+     * Gets end date.
+     *
+     * @return the end date
+     */
     public String getEndDate() {
         return endDate;
     }

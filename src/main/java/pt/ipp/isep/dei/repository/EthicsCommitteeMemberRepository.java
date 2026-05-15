@@ -13,6 +13,9 @@ public class EthicsCommitteeMemberRepository {
 
     private final List<EthicsCommitteeMember> members;
 
+    /**
+     * Instantiates a new Ethics committee member repository.
+     */
     public EthicsCommitteeMemberRepository() {
         members = new ArrayList<>();
     }

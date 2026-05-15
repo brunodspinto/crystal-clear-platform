@@ -16,11 +16,20 @@ public class ReviewRegistrationController {
     private final RegistrationRequestRepository repository;
     private final AuthenticationRepository authRepository;
 
+    /**
+     * Instantiates a new Review registration controller.
+     */
     public ReviewRegistrationController() {
         this.repository = Repositories.getInstance().getRegistrationRequestRepository();
         this.authRepository = Repositories.getInstance().getAuthenticationRepository();
     }
 
+    /**
+     * Instantiates a new Review registration controller.
+     *
+     * @param repository     the repository
+     * @param authRepository the auth repository
+     */
     public ReviewRegistrationController(RegistrationRequestRepository repository,
                                         AuthenticationRepository authRepository) {
         this.repository = repository;
@@ -38,6 +47,8 @@ public class ReviewRegistrationController {
 
     /**
      * Approves the request and creates an authenticated user account with the requested role (AC3).
+     *
+     * @param request the request
      */
     public void approveRequest(RegistrationRequest request) {
         request.approve();

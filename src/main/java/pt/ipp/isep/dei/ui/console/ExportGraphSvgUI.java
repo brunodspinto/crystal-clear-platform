@@ -10,6 +10,9 @@ public class ExportGraphSvgUI implements Runnable {
 
     private final ExportGraphSvgController controller;
 
+    /**
+     * Instantiates a new Export graph svg ui.
+     */
     public ExportGraphSvgUI() {
         controller = new ExportGraphSvgController();
     }

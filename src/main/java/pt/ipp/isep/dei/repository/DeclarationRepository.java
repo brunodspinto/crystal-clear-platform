@@ -90,7 +90,15 @@ public class DeclarationRepository {
         return result;
     }
 
-    // US10 - validated declarations of an agent between startDate and endDate (inclusive), ordered chronologically.
+    /**
+     * Gets validated declarations for agent between.
+     *
+     * @param agent     the agent
+     * @param startDate the start date
+     * @param endDate   the end date
+     * @return the validated declarations for agent between
+     */
+// US10 - validated declarations of an agent between startDate and endDate (inclusive), ordered chronologically.
     public List<Declaration> getValidatedDeclarationsForAgentBetween(PoliticalAgent agent,
                                                                      Date startDate,
                                                                      Date endDate) {

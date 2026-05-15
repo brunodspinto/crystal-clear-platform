@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Reads relations between entities from a CSV file and produces a list of
  * Edge instances. Format: from_id;to_id;label;weight
- *
+ * <p>
  * Lines that are empty or start with '#' are ignored. Lines that have less
  * than 4 fields, or whose weight cannot be parsed as a double, are skipped.
  */
@@ -17,6 +17,13 @@ public class RelationCsvParser {
 
     private RelationCsvParser() {}
 
+    /**
+     * Parse list.
+     *
+     * @param filePath the file path
+     * @return the list
+     * @throws IOException the io exception
+     */
     public static List<Edge> parse(String filePath) throws IOException {
         List<Edge> edges = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {

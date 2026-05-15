@@ -12,6 +12,9 @@ import java.util.List;
  */
 public class JournalistUI implements Runnable {
 
+    /**
+     * Instantiates a new Journalist ui.
+     */
     public JournalistUI() {}
 
     @Override

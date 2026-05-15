@@ -1,11 +1,19 @@
 package pt.ipp.isep.dei.domain;
 
+/**
+ * The type Employee.
+ */
 public class Employee {
     private final String email;
     private String name;
     private String position;
     private String phone;
 
+    /**
+     * Instantiates a new Employee.
+     *
+     * @param email the email
+     */
     public Employee(String email) {
         if (email == null || email.isBlank()) {
             throw new IllegalArgumentException("Email cannot be null or empty");
@@ -25,6 +33,12 @@ public class Employee {
         return email.equals(employee.email);
     }
 
+    /**
+     * Has email boolean.
+     *
+     * @param email the email
+     * @return the boolean
+     */
     public boolean hasEmail(String email) {
         return this.email.equals(email);
     }

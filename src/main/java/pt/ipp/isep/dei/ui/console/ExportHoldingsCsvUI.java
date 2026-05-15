@@ -10,6 +10,9 @@ public class ExportHoldingsCsvUI implements Runnable {
 
     private final ExportHoldingsCsvController controller;
 
+    /**
+     * Instantiates a new Export holdings csv ui.
+     */
     public ExportHoldingsCsvUI() {
         controller = new ExportHoldingsCsvController();
     }

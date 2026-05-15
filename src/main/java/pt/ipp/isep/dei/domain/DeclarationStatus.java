@@ -5,13 +5,19 @@ package pt.ipp.isep.dei.domain;
  */
 public enum DeclarationStatus {
 
-    /** The declaration has been submitted and is awaiting validation by the Ethics Committee. */
+    /**
+     * The declaration has been submitted and is awaiting validation by the Ethics Committee.
+     */
     PENDING("Pending"),
 
-    /** The declaration has been validated by the Ethics Committee. */
+    /**
+     * The declaration has been validated by the Ethics Committee.
+     */
     VALIDATED("Validated"),
 
-    /** The declaration has been rejected by the Ethics Committee and returned for correction. */
+    /**
+     * The declaration has been rejected by the Ethics Committee and returned for correction.
+     */
     REJECTED("Rejected");
 
     private final String label;

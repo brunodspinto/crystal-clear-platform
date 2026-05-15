@@ -59,6 +59,9 @@ public class RegistrationRequest {
     /**
      * Validates the password format: exactly 7 alphanumeric characters,
      * at least 3 uppercase letters, and at least 2 digits.
+     *
+     * @param password the password
+     * @return the boolean
      */
     public static boolean isValidPassword(String password) {
         if (password == null || password.length() != 7) {
@@ -80,34 +83,74 @@ public class RegistrationRequest {
         return upperCount >= 3 && digitCount >= 2;
     }
 
+    /**
+     * Gets full name.
+     *
+     * @return the full name
+     */
     public String getFullName() {
         return fullName;
     }
 
+    /**
+     * Gets email.
+     *
+     * @return the email
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Gets password.
+     *
+     * @return the password
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * Gets role.
+     *
+     * @return the role
+     */
     public UserRole getRole() {
         return role;
     }
 
+    /**
+     * Gets identification document.
+     *
+     * @return the identification document
+     */
     public String getIdentificationDocument() {
         return identificationDocument;
     }
 
+    /**
+     * Gets submission date.
+     *
+     * @return the submission date
+     */
     public Date getSubmissionDate() {
         return new Date(submissionDate.getTime());
     }
 
+    /**
+     * Gets status.
+     *
+     * @return the status
+     */
     public RegistrationStatus getStatus() {
         return status;
     }
 
+    /**
+     * Gets rejection reason.
+     *
+     * @return the rejection reason
+     */
     public String getRejectionReason() {
         return rejectionReason;
     }

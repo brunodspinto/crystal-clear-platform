@@ -1,5 +1,8 @@
 package pt.ipp.isep.dei.domain;
 
+/**
+ * The type Task.
+ */
 public class Task {
     private final String reference;
     private String description;
@@ -12,6 +15,18 @@ public class Task {
 
     private Employee employee;
 
+    /**
+     * Instantiates a new Task.
+     *
+     * @param reference            the reference
+     * @param description          the description
+     * @param informalDescription  the informal description
+     * @param technicalDescription the technical description
+     * @param duration             the duration
+     * @param cost                 the cost
+     * @param taskCategory         the task category
+     * @param employee             the employee
+     */
     public Task(String reference, String description, String informalDescription, String technicalDescription,
                 int duration, double cost, TaskCategory taskCategory, Employee employee) {
 

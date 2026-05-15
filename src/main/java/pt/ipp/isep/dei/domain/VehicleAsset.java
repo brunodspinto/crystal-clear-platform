@@ -20,7 +20,11 @@ public class VehicleAsset {
         this.description = description;
     }
 
-    /** @return the description of the vehicle. */
+    /**
+     * Gets description.
+     *
+     * @return the description of the vehicle.
+     */
     public String getDescription() {
         return description;
     }

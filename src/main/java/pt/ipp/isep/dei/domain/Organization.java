@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * The type Organization.
+ */
 public class Organization {
     private final String vatNumber;
     private final List<Employee> employees;
@@ -19,6 +22,10 @@ public class Organization {
     /**
      * Constructor for US04 — registers an organization with a name, nature and type.
      * The vatNumber is generated internally as a UUID.
+     *
+     * @param name   the name
+     * @param nature the nature
+     * @param type   the type
      */
     public Organization(String name, String nature, OrganizationType type) {
         if (name == null || name.isBlank()) {
@@ -101,12 +108,20 @@ public class Organization {
         this.nature = nature;
     }
 
-    /** @return the VAT number of the organization. */
+    /**
+     * Gets vat number.
+     *
+     * @return the VAT number of the organization.
+     */
     public String getVatNumber() {
         return vatNumber;
     }
 
-    /** @return the name of the organization. */
+    /**
+     * Gets name.
+     *
+     * @return the name of the organization.
+     */
     public String getName() {
         return name;
     }
@@ -123,7 +138,11 @@ public class Organization {
         this.name = name;
     }
 
-    /** @return the website URL of the organization, or {@code null} if not set. */
+    /**
+     * Gets website.
+     *
+     * @return the website URL of the organization, or {@code null} if not set.
+     */
     public String getWebsite() {
         return website;
     }
@@ -137,7 +156,11 @@ public class Organization {
         this.website = website;
     }
 
-    /** @return the phone number of the organization, or {@code null} if not set. */
+    /**
+     * Gets phone.
+     *
+     * @return the phone number of the organization, or {@code null} if not set.
+     */
     public String getPhone() {
         return phone;
     }
@@ -151,7 +174,11 @@ public class Organization {
         this.phone = phone;
     }
 
-    /** @return the email address of the organization, or {@code null} if not set. */
+    /**
+     * Gets email.
+     *
+     * @return the email address of the organization, or {@code null} if not set.
+     */
     public String getEmail() {
         return email;
     }

@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Controller responsible for consulting the integrated situation of a political agent
  * on a given reference date (US09).
- *
+ * <p>
  * The integrated situation is the set of validated declarations submitted by the agent
  * on or before the reference date. The UI is responsible for combining the entries
  * (positions, subsidies, assets, business participations) of those declarations into a

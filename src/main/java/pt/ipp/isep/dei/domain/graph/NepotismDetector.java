@@ -22,9 +22,21 @@ public class NepotismDetector {
     /*  Relation-label constants                                           */
     /* ------------------------------------------------------------------ */
 
+    /**
+     * The constant REL_APPOINTED_BY.
+     */
     public static final String REL_APPOINTED_BY    = "appointedBy";
+    /**
+     * The constant REL_RELATIVE_OF.
+     */
     public static final String REL_RELATIVE_OF     = "relativeOf";
+    /**
+     * The constant REL_FRIEND_OF.
+     */
     public static final String REL_FRIEND_OF       = "friendOf";
+    /**
+     * The constant REL_ASSOCIATED_WITH.
+     */
     public static final String REL_ASSOCIATED_WITH = "associatedWith";
 
     /* ------------------------------------------------------------------ */
@@ -122,6 +134,13 @@ public class NepotismDetector {
         private final String appointed;
         private final String relationshipLabel;
 
+        /**
+         * Instantiates a new Nepotism pair.
+         *
+         * @param appointer         the appointer
+         * @param appointed         the appointed
+         * @param relationshipLabel the relationship label
+         */
         public NepotismPair(String appointer, String appointed, String relationshipLabel) {
             if (appointer == null || appointer.isBlank()) {
                 throw new IllegalArgumentException("appointer must not be blank");
@@ -137,19 +156,28 @@ public class NepotismDetector {
             this.relationshipLabel = relationshipLabel;
         }
 
-        /** @return the person who performed the appointment */
+        /**
+         * Gets appointer.
+         *
+         * @return the person who performed the appointment
+         */
         public String getAppointer() {
             return appointer;
         }
 
-        /** @return the person who was appointed */
+        /**
+         * Gets appointed.
+         *
+         * @return the person who was appointed
+         */
         public String getAppointed() {
             return appointed;
         }
 
         /**
-         * @return the personal-relationship label that flags this as nepotism
-         *         ({@code relativeOf}, {@code friendOf}, or {@code associatedWith})
+         * Gets relationship label.
+         *
+         * @return the personal-relationship label that flags this as nepotism         ({@code relativeOf}, {@code friendOf}, or {@code associatedWith})
          */
         public String getRelationshipLabel() {
             return relationshipLabel;

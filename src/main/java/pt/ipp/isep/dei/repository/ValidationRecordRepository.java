@@ -12,6 +12,9 @@ public class ValidationRecordRepository {
 
     private final List<ValidationRecord> records;
 
+    /**
+     * Instantiates a new Validation record repository.
+     */
     public ValidationRecordRepository() {
         records = new ArrayList<>();
     }

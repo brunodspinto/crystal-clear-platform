@@ -6,10 +6,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Entity csv parser.
+ */
 public class EntityCsvParser {
 
     private EntityCsvParser() {}
 
+    /**
+     * Parse list.
+     *
+     * @param filePath the file path
+     * @return the list
+     * @throws IOException the io exception
+     */
     public static List<Entity> parse(String filePath) throws IOException {
         List<Entity> entities = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
