@@ -17,6 +17,7 @@ def quartis(values):
 
 def plot_boxplot(df, output_path):
     df.groupby("role").boxplot()
+    plt.tight_layout()
     plt.savefig(output_path)
 
 
