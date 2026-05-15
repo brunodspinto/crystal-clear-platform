@@ -4,10 +4,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Generates an SVG file visualising a heterogeneous multi-relational graph.
@@ -34,6 +32,35 @@ public class GraphSvgExporter {
     private static final int EDGE_LABEL_STAGGER = 14;
 
     private GraphSvgExporter() {}
+
+    /**
+     * Stores the position of a node on the SVG canvas.
+     */
+    private static class NodePos {
+        private final String id;
+        private final double x;
+        private final double y;
+
+        NodePos(String id, double x, double y) {
+            this.id = id;
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    /**
+     * Stores how many edges already exist for the same ordered pair of endpoints.
+     * Used to stagger labels when several edges share the same midpoint.
+     */
+    private static class PairCount {
+        private final String pair;
+        private int count;
+
+        PairCount(String pair, int count) {
+            this.pair = pair;
+            this.count = count;
+        }
+    }
 
     /**
      * Export.
@@ -91,27 +118,26 @@ public class GraphSvgExporter {
     }
 
     private static void writeEdges(PrintWriter w, List<Entity> entities, List<Edge> edges) {
-        Map<String, double[]> pos = positions(entities);
-        Map<String, Integer> pairCounter = new HashMap<>();
+        ArrayList<NodePos> pos = positions(entities);
+        ArrayList<PairCount> pairCounter = new ArrayList<>();
         for (Edge edge : edges) {
-            double[] from = pos.get(edge.getFromId());
-            double[] to = pos.get(edge.getToId());
+            NodePos from = findPos(pos, edge.getFromId());
+            NodePos to = findPos(pos, edge.getToId());
             if (from == null || to == null) continue;
 
             String pairKey = pairKey(edge.getFromId(), edge.getToId());
-            int idx = pairCounter.getOrDefault(pairKey, 0);
-            pairCounter.put(pairKey, idx + 1);
+            int idx = incrementPairCount(pairCounter, pairKey);
 
-            double dx = to[0] - from[0];
-            double dy = to[1] - from[1];
+            double dx = to.x - from.x;
+            double dy = to.y - from.y;
             double len = Math.max(1.0, Math.sqrt(dx * dx + dy * dy));
             double ux = dx / len;
             double uy = dy / len;
 
-            double x1 = from[0] + ux * NODE_SIZE;
-            double y1 = from[1] + uy * NODE_SIZE;
-            double x2 = to[0] - ux * NODE_SIZE;
-            double y2 = to[1] - uy * NODE_SIZE;
+            double x1 = from.x + ux * NODE_SIZE;
+            double y1 = from.y + uy * NODE_SIZE;
+            double x2 = to.x - ux * NODE_SIZE;
+            double y2 = to.y - uy * NODE_SIZE;
 
             double mx = (x1 + x2) / 2.0;
             double my = (y1 + y2) / 2.0;
@@ -149,12 +175,12 @@ public class GraphSvgExporter {
     }
 
     private static void writeNodes(PrintWriter w, List<Entity> entities) {
-        Map<String, double[]> pos = positions(entities);
+        ArrayList<NodePos> pos = positions(entities);
         for (Entity entity : entities) {
-            double[] p = pos.get(entity.getId());
+            NodePos p = findPos(pos, entity.getId());
             if (p == null) continue;
-            double x = p[0];
-            double y = p[1];
+            double x = p.x;
+            double y = p.y;
             String color = colorFor(entity);
             String detailId = "detail-" + sanitize(entity.getId());
             String tooltip = buildTooltip(entity);
@@ -262,9 +288,9 @@ public class GraphSvgExporter {
      * Inner ring holds persons, then organizations, positions and assets outward.
      * This avoids overlap between categories and reduces edge crossings.
      */
-    private static Map<String, double[]> positions(List<Entity> entities) {
-        Map<String, double[]> map = new HashMap<>();
-        if (entities.isEmpty()) return map;
+    private static ArrayList<NodePos> positions(List<Entity> entities) {
+        ArrayList<NodePos> list = new ArrayList<>();
+        if (entities.isEmpty()) return list;
 
         List<Entity> persons = new ArrayList<>();
         List<Entity> orgs = new ArrayList<>();
@@ -285,16 +311,16 @@ public class GraphSvgExporter {
         sortById(assets);
         sortById(other);
 
-        placeRing(map, persons, RING_RADII[0]);
-        placeRing(map, orgs, RING_RADII[1]);
-        placeRing(map, positionList, RING_RADII[2]);
+        placeRing(list, persons, RING_RADII[0]);
+        placeRing(list, orgs, RING_RADII[1]);
+        placeRing(list, positionList, RING_RADII[2]);
 
         List<Entity> outer = new ArrayList<>();
         outer.addAll(assets);
         outer.addAll(other);
-        placeRing(map, outer, RING_RADII[3]);
+        placeRing(list, outer, RING_RADII[3]);
 
-        return map;
+        return list;
     }
 
     /**
@@ -314,17 +340,43 @@ public class GraphSvgExporter {
 
     /**
      * Distributes the given entities evenly around a circle of the given radius
-     * centred at (CX, CY) and stores each resulting (x, y) in the map.
+     * centred at (CX, CY) and appends each resulting NodePos to the list.
      */
-    private static void placeRing(Map<String, double[]> map, List<Entity> ring, int radius) {
+    private static void placeRing(ArrayList<NodePos> list, List<Entity> ring, int radius) {
         int n = ring.size();
         if (n == 0) return;
         for (int i = 0; i < n; i++) {
             double angle = 2 * Math.PI * i / n - Math.PI / 2;
             double x = CX + radius * Math.cos(angle);
             double y = CY + radius * Math.sin(angle);
-            map.put(ring.get(i).getId(), new double[]{x, y});
+            list.add(new NodePos(ring.get(i).getId(), x, y));
         }
+    }
+
+    /**
+     * Returns the NodePos with the given id, or null if not present.
+     */
+    private static NodePos findPos(List<NodePos> list, String id) {
+        for (NodePos np : list) {
+            if (np.id.equals(id)) return np;
+        }
+        return null;
+    }
+
+    /**
+     * Increments the count for the given pair key and returns the previous count.
+     * If the key is not present, adds a new entry with count 1 and returns 0.
+     */
+    private static int incrementPairCount(List<PairCount> counts, String pair) {
+        for (PairCount pc : counts) {
+            if (pc.pair.equals(pair)) {
+                int previous = pc.count;
+                pc.count = previous + 1;
+                return previous;
+            }
+        }
+        counts.add(new PairCount(pair, 1));
+        return 0;
     }
 
     private static String colorFor(Entity entity) {
