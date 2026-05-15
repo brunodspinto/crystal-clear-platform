@@ -7,73 +7,168 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The type Entity csv parser.
+ * Reads entities from a CSV file and produces a list of Entity instances.
+ * <p>
+ * Auto-detects the field separator (',' or ';'), an optional header line,
+ * and whether the first column holds the entity category. When the category
+ * column is absent it is inferred from the identifier prefix:
+ * P then person, O then organization, J then position, A then asset.
+ * Lines that are empty or start with '#' are ignored.
  */
 public class EntityCsvParser {
 
     private EntityCsvParser() {}
 
     /**
-     * Parse list.
+     * Parses the given CSV file and returns the list of entities.
      *
      * @param filePath the file path
-     * @return the list
-     * @throws IOException the io exception
+     * @return the list of entities found in the file
+     * @throws IOException if the file cannot be read
      */
     public static List<Entity> parse(String filePath) throws IOException {
         List<Entity> entities = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                line = line.trim();
-                if (line.isEmpty() || line.startsWith("#")) {
-                    continue;
-                }
-                Entity entity = parseLine(line);
-                if (entity != null) {
-                    entities.add(entity);
-                }
+        ArrayList<String> dataLines = readDataLines(filePath);
+        if (dataLines.isEmpty()) return entities;
+
+        char separator = detectSeparator(dataLines.get(0));
+        int start = 0;
+        if (looksLikeHeader(dataLines.get(0), separator)) {
+            start = 1;
+        }
+        for (int i = start; i < dataLines.size(); i++) {
+            Entity entity = parseLine(dataLines.get(i), separator);
+            if (entity != null) {
+                entities.add(entity);
             }
         }
         return entities;
     }
 
-    private static Entity parseLine(String line) {
-        String[] parts = line.split(";", -1);
+    /**
+     * Reads the file and returns every line that is not empty or a comment.
+     */
+    private static ArrayList<String> readDataLines(String filePath) throws IOException {
+        ArrayList<String> lines = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String trimmed = line.trim();
+                if (trimmed.isEmpty() || trimmed.startsWith("#")) {
+                    continue;
+                }
+                lines.add(trimmed);
+            }
+        }
+        return lines;
+    }
+
+    /**
+     * Returns ';' when the line has at least as many semicolons as commas,
+     * otherwise returns ','.
+     */
+    private static char detectSeparator(String line) {
+        int semis = 0;
+        int commas = 0;
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+            if (c == ';') semis++;
+            else if (c == ',') commas++;
+        }
+        if (semis >= commas) return ';';
+        return ',';
+    }
+
+    /**
+     * Returns true when the first field of the line looks like a column name
+     * (such as "id", "category", "type") rather than a data value.
+     */
+    private static boolean looksLikeHeader(String line, char separator) {
+        int sepIdx = line.indexOf(separator);
+        String firstField;
+        if (sepIdx == -1) firstField = line;
+        else firstField = line.substring(0, sepIdx);
+        firstField = firstField.trim().toLowerCase();
+        if (isKnownCategory(firstField)) return false;
+        return firstField.equals("id") || firstField.equals("category")
+                || firstField.equals("type") || firstField.equals("name");
+    }
+
+    /**
+     * Parses one data line into an Entity, or returns null if the line is
+     * malformed or refers to an unknown category.
+     */
+    private static Entity parseLine(String line, char separator) {
+        String[] parts = line.split(String.valueOf(separator), -1);
         if (parts.length < 5) {
             return null;
         }
-        String category = parts[0].trim().toLowerCase();
-        String id = parts[1].trim();
-        String type = parts[2].trim();
-        String startDate = parts[3].trim();
-        String endDate = parts[4].trim();
+
+        String firstField = parts[0].trim().toLowerCase();
+        boolean hasCategoryColumn = isKnownCategory(firstField);
+
+        int offset;
+        String category;
+        if (hasCategoryColumn) {
+            category = firstField;
+            offset = 1;
+        } else {
+            category = inferCategoryFromId(parts[0].trim());
+            offset = 0;
+        }
+        if (category == null) return null;
+        if (parts.length < offset + 7) return null;
+
+        String id = parts[offset].trim();
+        String type = parts[offset + 1].trim();
+        String startDate = parts[offset + 2].trim();
+        String endDate = parts[offset + 3].trim();
 
         switch (category) {
             case "person":
-                if (parts.length < 8) return null;
                 return new Person(id, type, startDate, endDate,
-                        parts[5].trim(), parts[6].trim(), parts[7].trim());
+                        parts[offset + 4].trim(), parts[offset + 5].trim(), parts[offset + 6].trim());
             case "organization":
-                if (parts.length < 8) return null;
                 return new Organization(id, type, startDate, endDate,
-                        parts[5].trim(), parts[6].trim(), parts[7].trim());
+                        parts[offset + 4].trim(), parts[offset + 5].trim(), parts[offset + 6].trim());
             case "position":
-                if (parts.length < 8) return null;
                 return new Position(id, type, startDate, endDate,
-                        parts[5].trim(), parts[6].trim(), parts[7].trim());
+                        parts[offset + 4].trim(), parts[offset + 5].trim(), parts[offset + 6].trim());
             case "asset":
-                if (parts.length < 8) return null;
                 double value;
                 try {
-                    value = Double.parseDouble(parts[7].trim());
+                    value = Double.parseDouble(parts[offset + 6].trim());
                 } catch (NumberFormatException e) {
                     value = 0.0;
                 }
                 return new Asset(id, type, startDate, endDate,
-                        parts[5].trim(), parts[6].trim(), value);
+                        parts[offset + 4].trim(), parts[offset + 5].trim(), value);
             default:
                 return null;
+        }
+    }
+
+    /**
+     * Returns true when the lowercased value matches a known entity category.
+     */
+    private static boolean isKnownCategory(String value) {
+        return value.equals("person") || value.equals("organization")
+                || value.equals("position") || value.equals("asset");
+    }
+
+    /**
+     * Maps the first character of an identifier to a known category, or
+     * returns null when no convention matches.
+     */
+    private static String inferCategoryFromId(String id) {
+        if (id.isEmpty()) return null;
+        char prefix = Character.toUpperCase(id.charAt(0));
+        switch (prefix) {
+            case 'P': return "person";
+            case 'O': return "organization";
+            case 'J': return "position";
+            case 'A': return "asset";
+            default:  return null;
         }
     }
 }

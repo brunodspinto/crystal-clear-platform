@@ -8,42 +8,98 @@ import java.util.List;
 
 /**
  * Reads relations between entities from a CSV file and produces a list of
- * Edge instances. Format: from_id;to_id;label;weight
+ * Edge instances.
  * <p>
- * Lines that are empty or start with '#' are ignored. Lines that have less
- * than 4 fields, or whose weight cannot be parsed as a double, are skipped.
+ * Auto-detects the field separator (',' or ';') and an optional header line.
+ * Expected schema after detection: from_id, to_id, label, weight.
+ * Lines that are empty or start with '#' are ignored. Lines with fewer than
+ * four fields, blank ids or labels, or an unparseable weight are skipped.
  */
 public class RelationCsvParser {
 
     private RelationCsvParser() {}
 
     /**
-     * Parse list.
+     * Parses the given CSV file and returns the list of edges.
      *
      * @param filePath the file path
-     * @return the list
-     * @throws IOException the io exception
+     * @return the list of edges found in the file
+     * @throws IOException if the file cannot be read
      */
     public static List<Edge> parse(String filePath) throws IOException {
         List<Edge> edges = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                line = line.trim();
-                if (line.isEmpty() || line.startsWith("#")) {
-                    continue;
-                }
-                Edge edge = parseLine(line);
-                if (edge != null) {
-                    edges.add(edge);
-                }
+        ArrayList<String> dataLines = readDataLines(filePath);
+        if (dataLines.isEmpty()) return edges;
+
+        char separator = detectSeparator(dataLines.get(0));
+        int start = 0;
+        if (looksLikeHeader(dataLines.get(0), separator)) {
+            start = 1;
+        }
+        for (int i = start; i < dataLines.size(); i++) {
+            Edge edge = parseLine(dataLines.get(i), separator);
+            if (edge != null) {
+                edges.add(edge);
             }
         }
         return edges;
     }
 
-    private static Edge parseLine(String line) {
-        String[] parts = line.split(";", -1);
+    /**
+     * Reads the file and returns every line that is not empty or a comment.
+     */
+    private static ArrayList<String> readDataLines(String filePath) throws IOException {
+        ArrayList<String> lines = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String trimmed = line.trim();
+                if (trimmed.isEmpty() || trimmed.startsWith("#")) {
+                    continue;
+                }
+                lines.add(trimmed);
+            }
+        }
+        return lines;
+    }
+
+    /**
+     * Returns ';' when the line has at least as many semicolons as commas,
+     * otherwise returns ','.
+     */
+    private static char detectSeparator(String line) {
+        int semis = 0;
+        int commas = 0;
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+            if (c == ';') semis++;
+            else if (c == ',') commas++;
+        }
+        if (semis >= commas) return ';';
+        return ',';
+    }
+
+    /**
+     * Returns true when the first field of the line looks like a column name
+     * for a relations file (such as "from_id", "source", "from").
+     */
+    private static boolean looksLikeHeader(String line, char separator) {
+        int sepIdx = line.indexOf(separator);
+        String firstField;
+        if (sepIdx == -1) firstField = line;
+        else firstField = line.substring(0, sepIdx);
+        firstField = firstField.trim().toLowerCase();
+        return firstField.equals("from_id") || firstField.equals("from")
+                || firstField.equals("source") || firstField.equals("src")
+                || firstField.equals("origin");
+    }
+
+    /**
+     * Parses one data line into an Edge, or returns null if the line is
+     * malformed or any required field is blank.
+     */
+    private static Edge parseLine(String line, char separator) {
+        String[] parts = line.split(String.valueOf(separator), -1);
         if (parts.length < 4) {
             return null;
         }
