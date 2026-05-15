@@ -25,7 +25,7 @@ class EntityCsvParserTest {
     @Test
     void ensureSampleFileLoadsAllEntities() throws IOException {
         List<Entity> entities = EntityCsvParser.parse(resourcePath("graph/entities_sample.csv"));
-        assertEquals(8, entities.size());
+        assertEquals(12, entities.size());
     }
 
     @Test
@@ -36,10 +36,10 @@ class EntityCsvParserTest {
                 .findFirst()
                 .orElseThrow();
         assertEquals("politician", person.getType());
-        assertEquals("2020-01-01", person.getStartDate());
-        assertEquals("2024-01-01", person.getEndDate());
-        assertEquals("Alice Smith", person.getName());
-        assertEquals("1980-05-10", person.getBirthDate());
+        assertEquals("2018-10-26", person.getStartDate());
+        assertEquals("2024-03-10", person.getEndDate());
+        assertEquals("António Silva", person.getName());
+        assertEquals("1970-04-12", person.getBirthDate());
         assertEquals("Portuguese", person.getNationality());
     }
 
@@ -50,9 +50,9 @@ class EntityCsvParserTest {
                 .filter(e -> e.getId().equals("O-001"))
                 .findFirst()
                 .orElseThrow();
-        assertEquals("company", org.getType());
-        assertEquals("Acme Corp", org.getName());
-        assertEquals("private", org.getOrganizationType());
+        assertEquals("public", org.getType());
+        assertEquals("Ministério da Economia", org.getName());
+        assertEquals("public", org.getOrganizationType());
         assertEquals("Portugal", org.getCountry());
     }
 
@@ -64,7 +64,7 @@ class EntityCsvParserTest {
                 .findFirst()
                 .orElseThrow();
         assertEquals("public", pos.getType());
-        assertEquals("Minister of Finance", pos.getPositionTitle());
+        assertEquals("Secretário de Estado", pos.getPositionTitle());
         assertEquals("government", pos.getPositionType());
         assertEquals("O-001", pos.getOrganizationId());
     }
@@ -78,8 +78,8 @@ class EntityCsvParserTest {
                 .orElseThrow();
         assertEquals("property", asset.getType());
         assertEquals("real_estate", asset.getAssetType());
-        assertEquals("Portugal", asset.getCountry());
-        assertEquals(500000.0, asset.getEstimatedValue());
+        assertEquals("Lisboa", asset.getCountry());
+        assertEquals(450000.0, asset.getEstimatedValue());
     }
 
     @Test
@@ -91,6 +91,6 @@ class EntityCsvParserTest {
     @Test
     void ensureInvalidCategoryIsSkipped() throws IOException {
         List<Entity> entities = EntityCsvParser.parse(resourcePath("graph/entities_sample.csv"));
-        assertEquals(8, entities.size());
+        assertEquals(12, entities.size());
     }
 }
