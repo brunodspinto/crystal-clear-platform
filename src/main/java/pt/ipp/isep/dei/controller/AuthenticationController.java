@@ -23,7 +23,9 @@ public class AuthenticationController {
      * Role identifier for political agents (US06).
      */
     public static final String ROLE_POLITICAL_AGENT = "POLITICAL_AGENT";
-/** Role identifier for journalists (US10). */
+    /**
+     * Role identifier for journalists (US10).
+     */
     public static final String ROLE_JOURNALIST = "JOURNALIST";
     /**
      * Role identifier for ethics committee members (US08).
@@ -43,13 +45,13 @@ public class AuthenticationController {
     /**
      * Do login boolean.
      *
-     * @param email the email
-     * @param pwd   the pwd
+     * @param email    the email
+     * @param password the password
      * @return the boolean
      */
-    public boolean doLogin(String email, String pwd) {
+    public boolean doLogin(String email, String password) {
         try {
-            return authenticationRepository.doLogin(email, pwd);
+            return authenticationRepository.doLogin(email, password);
         } catch (IllegalArgumentException ex) {
             return false;
         }

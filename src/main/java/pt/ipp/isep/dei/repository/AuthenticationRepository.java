@@ -19,12 +19,12 @@ public class AuthenticationRepository {
     /**
      * Do login boolean.
      *
-     * @param email the email
-     * @param pwd   the pwd
+     * @param email    the email
+     * @param password the password
      * @return the boolean
      */
-    public boolean doLogin(String email, String pwd) {
-        return authenticationFacade.doLogin(email, pwd).isLoggedIn();
+    public boolean doLogin(String email, String password) {
+        return authenticationFacade.doLogin(email, password).isLoggedIn();
     }
 
     /**
@@ -57,13 +57,13 @@ public class AuthenticationRepository {
     /**
      * Add user with role boolean.
      *
-     * @param name   the name
-     * @param email  the email
-     * @param pwd    the pwd
-     * @param roleId the role id
+     * @param name     the name
+     * @param email    the email
+     * @param password the password
+     * @param roleId   the role id
      * @return the boolean
      */
-    public boolean addUserWithRole(String name, String email, String pwd, String roleId) {
-        return authenticationFacade.addUserWithRole(name, email, pwd, roleId);
+    public boolean addUserWithRole(String name, String email, String password, String roleId) {
+        return authenticationFacade.addUserWithRole(name, email, password, roleId);
     }
 }

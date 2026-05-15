@@ -85,13 +85,10 @@ public class ConflictDetector {
         requireGraph(graph);
         List<Chain> results = new ArrayList<>();
         for (String personA : graph.nodes()) {
-            for (Edge relEdge : graph.neighbors(personA)) {
-                if (!REL_RELATIVE_OF.equals(relEdge.getLabel())) continue;
+            for (Edge relEdge : edgesWithLabel(graph, personA, REL_RELATIVE_OF)) {
                 String personB = relEdge.getToId();
-                for (Edge posEdge : graph.neighbors(personB)) {
-                    if (!REL_HOLDS_POSITION.equals(posEdge.getLabel())) continue;
-                    String position = posEdge.getToId();
-                    results.add(Chain.of(personA, personB, position));
+                for (Edge posEdge : edgesWithLabel(graph, personB, REL_HOLDS_POSITION)) {
+                    results.add(Chain.of(personA, personB, posEdge.getToId()));
                 }
             }
         }
@@ -114,14 +111,11 @@ public class ConflictDetector {
         requireGraph(graph);
         List<Chain> results = new ArrayList<>();
         for (String personA : graph.nodes()) {
-            for (Edge relEdge : graph.neighbors(personA)) {
-                if (!REL_RELATIVE_OF.equals(relEdge.getLabel())) continue;
+            for (Edge relEdge : edgesWithLabel(graph, personA, REL_RELATIVE_OF)) {
                 String personB = relEdge.getToId();
-                for (Edge posEdge : graph.neighbors(personB)) {
-                    if (!REL_HOLDS_POSITION.equals(posEdge.getLabel())) continue;
+                for (Edge posEdge : edgesWithLabel(graph, personB, REL_HOLDS_POSITION)) {
                     String position = posEdge.getToId();
-                    for (Edge orgEdge : graph.neighbors(position)) {
-                        if (!REL_IN_ORGANIZATION.equals(orgEdge.getLabel())) continue;
+                    for (Edge orgEdge : edgesWithLabel(graph, position, REL_IN_ORGANIZATION)) {
                         String org = orgEdge.getToId();
                         if (organisationId == null || organisationId.isBlank()
                                 || org.equals(organisationId)) {
@@ -152,12 +146,9 @@ public class ConflictDetector {
             List<String> publicOrgs = new ArrayList<>();
             List<String> positions  = new ArrayList<>();
 
-            // collect all public organisations this person is linked to via a position
-            for (Edge posEdge : graph.neighbors(personA)) {
-                if (!REL_HOLDS_POSITION.equals(posEdge.getLabel())) continue;
+            for (Edge posEdge : edgesWithLabel(graph, personA, REL_HOLDS_POSITION)) {
                 String position = posEdge.getToId();
-                for (Edge orgEdge : graph.neighbors(position)) {
-                    if (!REL_IN_ORGANIZATION.equals(orgEdge.getLabel())) continue;
+                for (Edge orgEdge : edgesWithLabel(graph, position, REL_IN_ORGANIZATION)) {
                     publicOrgs.add(orgEdge.getToId());
                     positions.add(position);
                 }
@@ -165,15 +156,11 @@ public class ConflictDetector {
 
             if (publicOrgs.isEmpty()) continue;
 
-            // collect all companies this person influences
             List<String> companies = new ArrayList<>();
-            for (Edge infEdge : graph.neighbors(personA)) {
-                if (REL_INFLUENCES.equals(infEdge.getLabel())) {
-                    companies.add(infEdge.getToId());
-                }
+            for (Edge infEdge : edgesWithLabel(graph, personA, REL_INFLUENCES)) {
+                companies.add(infEdge.getToId());
             }
 
-            // emit a chain for each (org, company) pair
             for (int i = 0; i < publicOrgs.size(); i++) {
                 for (String company : companies) {
                     results.add(Chain.of(publicOrgs.get(i), positions.get(i),
@@ -195,13 +182,10 @@ public class ConflictDetector {
         requireGraph(graph);
         List<Chain> results = new ArrayList<>();
         for (String personA : graph.nodes()) {
-            for (Edge assocEdge : graph.neighbors(personA)) {
-                if (!REL_ASSOCIATED_WITH.equals(assocEdge.getLabel())) continue;
+            for (Edge assocEdge : edgesWithLabel(graph, personA, REL_ASSOCIATED_WITH)) {
                 String personB = assocEdge.getToId();
-                for (Edge ownEdge : graph.neighbors(personB)) {
-                    if (!REL_OWNER_OF.equals(ownEdge.getLabel())) continue;
-                    String asset = ownEdge.getToId();
-                    results.add(Chain.of(personA, personB, asset));
+                for (Edge ownEdge : edgesWithLabel(graph, personB, REL_OWNER_OF)) {
+                    results.add(Chain.of(personA, personB, ownEdge.getToId()));
                 }
             }
         }
@@ -220,13 +204,10 @@ public class ConflictDetector {
         requireGraph(graph);
         List<Chain> results = new ArrayList<>();
         for (String personA : graph.nodes()) {
-            for (Edge apptEdge : graph.neighbors(personA)) {
-                if (!REL_APPOINTED_BY.equals(apptEdge.getLabel())) continue;
+            for (Edge apptEdge : edgesWithLabel(graph, personA, REL_APPOINTED_BY)) {
                 String personB = apptEdge.getToId();
-                for (Edge memEdge : graph.neighbors(personB)) {
-                    if (!REL_MEMBER_OF.equals(memEdge.getLabel())) continue;
-                    String org = memEdge.getToId();
-                    results.add(Chain.of(personA, personB, org));
+                for (Edge memEdge : edgesWithLabel(graph, personB, REL_MEMBER_OF)) {
+                    results.add(Chain.of(personA, personB, memEdge.getToId()));
                 }
             }
         }
@@ -241,6 +222,16 @@ public class ConflictDetector {
         if (graph == null) {
             throw new IllegalArgumentException("graph must not be null");
         }
+    }
+
+    private static List<Edge> edgesWithLabel(RelationGraph graph, String nodeId, String label) {
+        List<Edge> result = new ArrayList<>();
+        for (Edge edge : graph.neighbors(nodeId)) {
+            if (label.equals(edge.getLabel())) {
+                result.add(edge);
+            }
+        }
+        return result;
     }
 
     /* ------------------------------------------------------------------ */
