@@ -23,13 +23,7 @@ public class AuthenticationController {
      * Role identifier for political agents (US06).
      */
     public static final String ROLE_POLITICAL_AGENT = "POLITICAL_AGENT";
-    /**
-     * Role identifier for product owners (US24).
-     */
-    public static final String ROLE_PRODUCT_OWNER = "PRODUCT_OWNER";
-    /**
-     * Role identifier for journalists (US10).
-     */
+/** Role identifier for journalists (US10). */
     public static final String ROLE_JOURNALIST = "JOURNALIST";
     /**
      * Role identifier for ethics committee members (US08).

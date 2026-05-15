@@ -11,12 +11,16 @@ public class ExportDeclarationCsvUI implements Runnable {
     private final ExportDeclarationCsvController controller;
 
     /**
-     * Instantiates a new Export declaration csv ui.
+     * Creates the UI and initialises its controller.
      */
     public ExportDeclarationCsvUI() {
         controller = new ExportDeclarationCsvController();
     }
 
+    /**
+     * Prompts the administrator for an output file path and triggers the CSV export.
+     * Prints a success or failure message to the console depending on the outcome.
+     */
     @Override
     public void run() {
         System.out.println("\n\n--- Export Declaration Dataset to CSV ---");

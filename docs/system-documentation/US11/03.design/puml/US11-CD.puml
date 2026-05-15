@@ -45,7 +45,7 @@ class "Declaration of Interests" as Declaration {
     + getAssetEntries()
 }
 
-enum DeclarationStatus {
+enum DeclarationStatus <<enumeration>> {
     PENDING
     VALIDATED
     REJECTED
@@ -61,7 +61,7 @@ class AssetEntry {
     + getStockAsset()
 }
 
-enum AssetType {
+enum AssetType <<enumeration>> {
     REAL_ESTATE
     VEHICLES
     STOCKS
