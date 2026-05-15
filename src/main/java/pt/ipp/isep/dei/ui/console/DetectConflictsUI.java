@@ -7,13 +7,37 @@ import pt.ipp.isep.dei.ui.console.utils.Utils;
 import java.util.List;
 
 /**
- * Console UI for US23 – Detect potential (indirect) conflicts of interest.
+ * Console UI for US23 – Detect potential indirect conflicts of interest
+ * and indirect nepotism through multi-step relation chains.
  *
- * <p>The user selects one of the predefined questions (AC1). After the query
- * runs, each detected chain is printed showing its full path and, clearly
- * labelled, its first and last entities (AC2).</p>
+ * <p>Unlike US22 (which checks a single direct appointment edge), US23
+ * traverses multi-hop paths in the graph to surface situations that are
+ * not obvious from individual declarations:</p>
+ * <ul>
+ *   <li><strong>Indirect nepotism</strong> – a relative holds a position,
+ *       or holds a position inside a specific organisation.</li>
+ *   <li><strong>Conflict of interest</strong> – a public official influences
+ *       a private company, is associated with an asset owner, or was
+ *       appointed by a member of an organisation.</li>
+ * </ul>
+ *
+ * <p>The user selects one of the predefined questions (AC1). For every
+ * detected chain the first and last entities are shown (AC2).</p>
  */
 public class DetectConflictsUI implements Runnable {
+
+    /**
+     * Short category labels shown next to each question number so the user
+     * immediately understands what type of situation each query looks for.
+     * Order must match {@link DetectConflictsController} QUERY_* constants.
+     */
+    private static final String[] QUERY_CATEGORIES = {
+        "[Indirect nepotism]      ",
+        "[Indirect nepotism]      ",
+        "[Conflict of interest]   ",
+        "[Conflict of interest]   ",
+        "[Conflict of interest]   "
+    };
 
     private final DetectConflictsController controller;
 
@@ -26,20 +50,25 @@ public class DetectConflictsUI implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("\n\n--- Detect Conflicts of Interest (US23) ---");
+        System.out.println("\n\n--- US23: Indirect Nepotism & Conflicts of Interest ---");
+        System.out.println("Analyses multi-hop relation chains in the loaded graph.");
+        System.out.println("Select the type of situation to investigate:");
+        System.out.println("-------------------------------------------------------");
 
-        // show the available questions and let the user pick one
         List<String> questions = controller.getAvailableQuestions();
-        System.out.println("\nSelect a question:");
         for (int i = 0; i < questions.size(); i++) {
-            System.out.println("  " + (i + 1) + ". " + questions.get(i));
+            System.out.println("  " + (i + 1) + ". "
+                    + QUERY_CATEGORIES[i] + questions.get(i));
         }
+        System.out.println();
 
-        int choice = Utils.readIntegerFromConsole("Enter question number (1-" + questions.size() + "): ");
+        int choice = Utils.readIntegerFromConsole(
+                "Enter question number (1-" + questions.size() + "): ");
         int queryIndex = choice - 1;
 
         if (queryIndex < 0 || queryIndex >= questions.size()) {
-            System.out.println("\nInvalid selection. Please choose a number between 1 and " + questions.size() + ".");
+            System.out.println("\nInvalid selection. Please choose a number between 1 and "
+                    + questions.size() + ".");
             return;
         }
 
@@ -50,7 +79,6 @@ public class DetectConflictsUI implements Runnable {
                     "Enter organisation ID to filter (leave blank for any): ");
         }
 
-        // run the query
         List<Chain> chains;
         try {
             chains = controller.runQuery(queryIndex, organisationId);
@@ -59,19 +87,21 @@ public class DetectConflictsUI implements Runnable {
             return;
         }
 
-        // display results
-        System.out.println("\nQuestion: " + questions.get(queryIndex));
+        System.out.println("\nQuestion : " + questions.get(queryIndex));
+        System.out.println("Category : " + QUERY_CATEGORIES[queryIndex].trim());
+
         if (chains.isEmpty()) {
-            System.out.println("No conflicts detected for this query.");
+            System.out.println("Result   : No situations detected for this query.");
             return;
         }
 
-        System.out.println("Detected chains (" + chains.size() + "):\n");
+        System.out.println("Result   : " + chains.size() + " chain(s) detected.\n");
+
         for (int i = 0; i < chains.size(); i++) {
             Chain chain = chains.get(i);
-            System.out.println("  Chain #" + (i + 1) + ": " + chain);
-            System.out.println("    First entity : " + chain.getFirst());
-            System.out.println("    Last  entity : " + chain.getLast());
+            System.out.println("  Chain #" + (i + 1) + "  " + chain);
+            System.out.println("    First entity (origin)      : " + chain.getFirst());
+            System.out.println("    Last  entity (destination) : " + chain.getLast());
         }
     }
 }
