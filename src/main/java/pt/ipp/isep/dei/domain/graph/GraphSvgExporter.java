@@ -4,7 +4,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -21,16 +20,17 @@ import java.util.Map;
  */
 public class GraphSvgExporter {
 
-    private static final int WIDTH = 1100;
-    private static final int GRAPH_AREA_HEIGHT = 820;
+    private static final int WIDTH = 1200;
+    private static final int GRAPH_AREA_HEIGHT = 980;
     private static final int CX = WIDTH / 2;
-    private static final int CY = 430;
-    private static final int RADIUS = 340;
-    private static final int NODE_SIZE = 28;
+    private static final int CY = 490;
+    private static final int[] RING_RADII = {160, 250, 340, 430};
+    private static final int NODE_SIZE = 26;
+    private static final int LABEL_RADIAL_OFFSET = 14;
     private static final int DETAIL_ROW_H = 90;
     private static final int DETAIL_START_Y = GRAPH_AREA_HEIGHT + 30;
     private static final int DETAIL_COLS = 4;
-    private static final int DETAIL_COL_W = 270;
+    private static final int DETAIL_COL_W = 290;
     private static final int EDGE_LABEL_STAGGER = 14;
 
     private GraphSvgExporter() {}
@@ -74,7 +74,7 @@ public class GraphSvgExporter {
         w.println("</defs>");
         w.println("<style>");
         w.println("  text { font-family: Arial, sans-serif; }");
-        w.println("  .node-label { font-size: 11px; fill: #222; text-anchor: middle; pointer-events: none; }");
+        w.println("  .node-label { font-size: 11px; fill: #222; pointer-events: none; }");
         w.println("  .edge-label { font-size: 10px; fill: #555; text-anchor: middle; }");
         w.println("  .detail-title { font-size: 13px; font-weight: bold; fill: #333; }");
         w.println("  .detail-body { font-size: 11px; fill: #555; }");
@@ -102,31 +102,44 @@ public class GraphSvgExporter {
             int idx = pairCounter.getOrDefault(pairKey, 0);
             pairCounter.put(pairKey, idx + 1);
 
-            double mx = (from[0] + to[0]) / 2.0;
-            double my = (from[1] + to[1]) / 2.0;
             double dx = to[0] - from[0];
             double dy = to[1] - from[1];
             double len = Math.max(1.0, Math.sqrt(dx * dx + dy * dy));
-            double nx = -dy / len;
-            double ny = dx / len;
+            double ux = dx / len;
+            double uy = dy / len;
+
+            double x1 = from[0] + ux * NODE_SIZE;
+            double y1 = from[1] + uy * NODE_SIZE;
+            double x2 = to[0] - ux * NODE_SIZE;
+            double y2 = to[1] - uy * NODE_SIZE;
+
+            double mx = (x1 + x2) / 2.0;
+            double my = (y1 + y2) / 2.0;
+            double nx = -uy;
+            double ny = ux;
             int sign = (idx % 2 == 0) ? 1 : -1;
             double offset = sign * ((idx + 1) / 2) * EDGE_LABEL_STAGGER;
             double lx = mx + nx * offset;
-            double ly = my + ny * offset;
+            double ly = my + ny * offset - 3;
+
+            double angleDeg = Math.toDegrees(Math.atan2(dy, dx));
+            if (angleDeg > 90) angleDeg -= 180;
+            else if (angleDeg < -90) angleDeg += 180;
 
             String edgeId = "rel-" + sanitize(edge.getFromId()) + "-" + sanitize(edge.getToId())
                     + "-" + sanitize(edge.getLabel());
 
             w.printf(Locale.ROOT, "<line x1=\"%.1f\" y1=\"%.1f\" x2=\"%.1f\" y2=\"%.1f\" "
                     + "stroke=\"#999\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/>%n",
-                    from[0], from[1], to[0], to[1]);
+                    x1, y1, x2, y2);
 
             w.printf("<a href=\"#detail-%s\" xlink:href=\"#detail-%s\">%n", edgeId, edgeId);
             w.printf(Locale.ROOT, "  <title>%s → %s | %s (weight: %.2f)</title>%n",
                     xmlEscape(edge.getFromId()), xmlEscape(edge.getToId()),
                     xmlEscape(edge.getLabel()), edge.getWeight());
-            w.printf(Locale.ROOT, "  <text x=\"%.1f\" y=\"%.1f\" class=\"edge-label\">%s</text>%n",
-                    lx, ly, xmlEscape(edge.getLabel()));
+            w.printf(Locale.ROOT, "  <text x=\"%.1f\" y=\"%.1f\" class=\"edge-label\" "
+                            + "transform=\"rotate(%.1f %.1f %.1f)\">%s</text>%n",
+                    lx, ly, angleDeg, lx, ly, xmlEscape(edge.getLabel()));
             w.println("</a>");
         }
     }
@@ -146,11 +159,22 @@ public class GraphSvgExporter {
             String detailId = "detail-" + sanitize(entity.getId());
             String tooltip = buildTooltip(entity);
 
+            double dx = x - CX;
+            double dy = y - CY;
+            double dist = Math.max(1.0, Math.sqrt(dx * dx + dy * dy));
+            double offset = NODE_SIZE + LABEL_RADIAL_OFFSET;
+            double labelX = x + (dx / dist) * offset;
+            double labelY = y + (dy / dist) * offset + 4;
+            String anchor = "middle";
+            if (dx / dist > 0.4) anchor = "start";
+            else if (dx / dist < -0.4) anchor = "end";
+
             w.printf("<a href=\"#%s\" xlink:href=\"#%s\">%n", detailId, detailId);
             w.printf("  <title>%s</title>%n", xmlEscape(tooltip));
             drawShape(w, entity, x, y, color);
-            w.printf(Locale.ROOT, "  <text x=\"%.1f\" y=\"%.1f\" class=\"node-label\">%s</text>%n",
-                    x, y + NODE_SIZE + 13, xmlEscape(shortLabel(entity)));
+            w.printf(Locale.ROOT, "  <text x=\"%.1f\" y=\"%.1f\" class=\"node-label\" "
+                            + "text-anchor=\"%s\">%s</text>%n",
+                    labelX, labelY, anchor, xmlEscape(shortLabel(entity)));
             w.println("</a>");
         }
     }
@@ -233,30 +257,73 @@ public class GraphSvgExporter {
 
     // -------------------------------------------------------------------------
 
+    /**
+     * Places entities on concentric rings, one ring per category.
+     * Inner ring holds persons, then organizations, positions and assets outward.
+     * This avoids overlap between categories and reduces edge crossings.
+     */
     private static Map<String, double[]> positions(List<Entity> entities) {
         Map<String, double[]> map = new HashMap<>();
-        int n = entities.size();
-        if (n == 0) return map;
-        List<Entity> sorted = new ArrayList<>(entities);
-        sorted.sort(Comparator
-                .comparingInt((Entity e) -> categoryOrder(e))
-                .thenComparing(Entity::getId));
-        for (int i = 0; i < n; i++) {
-            double angle = 2 * Math.PI * i / n - Math.PI / 2;
-            double x = CX + RADIUS * Math.cos(angle);
-            double y = CY + RADIUS * Math.sin(angle);
-            map.put(sorted.get(i).getId(), new double[]{x, y});
+        if (entities.isEmpty()) return map;
+
+        List<Entity> persons = new ArrayList<>();
+        List<Entity> orgs = new ArrayList<>();
+        List<Entity> positionList = new ArrayList<>();
+        List<Entity> assets = new ArrayList<>();
+        List<Entity> other = new ArrayList<>();
+        for (Entity e : entities) {
+            String cat = entityCategory(e);
+            if (cat.equals("person")) persons.add(e);
+            else if (cat.equals("organization")) orgs.add(e);
+            else if (cat.equals("position")) positionList.add(e);
+            else if (cat.equals("asset")) assets.add(e);
+            else other.add(e);
         }
+        sortById(persons);
+        sortById(orgs);
+        sortById(positionList);
+        sortById(assets);
+        sortById(other);
+
+        placeRing(map, persons, RING_RADII[0]);
+        placeRing(map, orgs, RING_RADII[1]);
+        placeRing(map, positionList, RING_RADII[2]);
+
+        List<Entity> outer = new ArrayList<>();
+        outer.addAll(assets);
+        outer.addAll(other);
+        placeRing(map, outer, RING_RADII[3]);
+
         return map;
     }
 
-    private static int categoryOrder(Entity entity) {
-        switch (entityCategory(entity)) {
-            case "person":       return 0;
-            case "organization": return 1;
-            case "position":     return 2;
-            case "asset":        return 3;
-            default:             return 4;
+    /**
+     * Sorts a list of entities by their identifier using insertion sort.
+     */
+    private static void sortById(List<Entity> list) {
+        for (int i = 1; i < list.size(); i++) {
+            Entity current = list.get(i);
+            int j = i - 1;
+            while (j >= 0 && list.get(j).getId().compareTo(current.getId()) > 0) {
+                list.set(j + 1, list.get(j));
+                j--;
+            }
+            list.set(j + 1, current);
+        }
+    }
+
+    /**
+     * Distributes the given entities evenly around a circle of the given radius
+     * centred at (CX, CY) and stores each resulting (x, y) in the map.
+     */
+    private static void placeRing(Map<String, double[]> map, List<Entity> ring, int radius) {
+        int n = ring.size();
+        if (n == 0) return;
+        for (int i = 0; i < n; i++) {
+            double angle = 2 * Math.PI * i / n - Math.PI / 2;
+            double x = CX + radius * Math.cos(angle);
+            double y = CY + radius * Math.sin(angle);
+            map.put(ring.get(i).getId(), new double[]{x, y});
         }
     }
 

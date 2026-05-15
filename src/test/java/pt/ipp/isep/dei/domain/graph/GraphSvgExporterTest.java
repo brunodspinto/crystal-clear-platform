@@ -122,7 +122,7 @@ class GraphSvgExporterTest {
         List<Edge> edges = Collections.singletonList(new Edge("P-1", "O-1", "employment", 1.0));
         GraphSvgExporter.export(entities, edges, out.toString());
         String content = Files.readString(out);
-        assertTrue(content.contains("id=\"detail-rel-P-1-O-1\""));
+        assertTrue(content.contains("id=\"detail-rel-P-1-O-1-employment\""));
     }
 
     @Test
