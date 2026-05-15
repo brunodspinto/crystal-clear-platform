@@ -39,13 +39,13 @@ class "Declaration of Interests" as Declaration {
     + getSubmissionDate()
 }
 
-enum DeclarationStatus {
+enum DeclarationStatus <<enumeration>> {
     PENDING
     VALIDATED
     REJECTED
 }
 
-enum DeclarationType {
+enum DeclarationType <<enumeration>> {
     INITIAL
     REGULAR
     EXCEPTIONAL
