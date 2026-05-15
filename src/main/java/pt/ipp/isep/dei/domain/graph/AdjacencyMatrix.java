@@ -44,7 +44,7 @@ public class AdjacencyMatrix {
      * @param weight the weight
      */
     public void addEdge(int from, int to, double weight) {
-        // TODO: decide if we treat the graph as directed or undirected here
+        checkBounds(from, to);
         weights[from][to] = weight;
     }
 
@@ -56,7 +56,15 @@ public class AdjacencyMatrix {
      * @return the weight
      */
     public double getWeight(int from, int to) {
+        checkBounds(from, to);
         return weights[from][to];
+    }
+
+    private void checkBounds(int from, int to) {
+        if (from < 0 || from >= size || to < 0 || to >= size) {
+            throw new IllegalArgumentException(
+                    "Index out of bounds: from=" + from + " to=" + to + " size=" + size);
+        }
     }
 
     /**

@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class GenerateAdjacencyMatricesUI implements Runnable {
 
-    private static final int CELL_WIDTH = 10;
+    private static final int MATRIX_CELL_CHAR_WIDTH = 10;
 
     private final GenerateAdjacencyMatricesController controller;
 
@@ -85,11 +85,11 @@ public class GenerateAdjacencyMatricesUI implements Runnable {
     }
 
     private String pad(String s) {
-        if (s.length() >= CELL_WIDTH) {
-            return s.substring(0, CELL_WIDTH - 1) + " ";
+        if (s.length() >= MATRIX_CELL_CHAR_WIDTH) {
+            return s.substring(0, MATRIX_CELL_CHAR_WIDTH - 1) + " ";
         }
         StringBuilder out = new StringBuilder(s);
-        while (out.length() < CELL_WIDTH) {
+        while (out.length() < MATRIX_CELL_CHAR_WIDTH) {
             out.append(" ");
         }
         return out.toString();
