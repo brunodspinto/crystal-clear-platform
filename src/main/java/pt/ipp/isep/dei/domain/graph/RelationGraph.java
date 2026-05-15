@@ -31,11 +31,9 @@ public class RelationGraph {
             fromIndex = registerNode(e.getFromId());
         }
         outgoing.get(fromIndex).add(e);
-        // make sure the target node is at least registered, even with no outgoing edges
         if (indexOfNode(e.getToId()) < 0) {
             registerNode(e.getToId());
         }
-        // TODO: directed vs undirected — for now we only store from -> to
     }
 
     /**

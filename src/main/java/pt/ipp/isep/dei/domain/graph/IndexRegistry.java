@@ -49,7 +49,7 @@ public class IndexRegistry {
         if (id == null) {
             return false;
         }
-        return ids.indexOf(id) >= 0;
+        return ids.contains(id);
     }
 
     /**
