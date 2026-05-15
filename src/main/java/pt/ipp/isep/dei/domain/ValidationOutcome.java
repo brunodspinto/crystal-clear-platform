@@ -5,10 +5,14 @@ package pt.ipp.isep.dei.domain;
  */
 public enum ValidationOutcome {
 
-    /** The declaration was found correct and has been validated. */
+    /**
+     * The declaration was found correct and has been validated.
+     */
     VALIDATED("Validated"),
 
-    /** The declaration contains inconsistencies and has been returned for correction. */
+    /**
+     * The declaration contains inconsistencies and has been returned for correction.
+     */
     RETURNED_FOR_CORRECTION("Returned for Correction");
 
     private final String label;

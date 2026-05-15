@@ -10,11 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Controller for US23 – Detect potential (indirect) conflicts of interest.
- *
- * <p>Exposes the list of available questions (AC1) and delegates the
- * actual graph traversal to {@link ConflictDetector}. The UI selects a
- * question by index and calls {@link #runQuery(int, String)}.</p>
+ * The type Detect conflicts controller.
  */
 public class DetectConflictsController {
 
@@ -22,10 +18,25 @@ public class DetectConflictsController {
     /*  Question catalogue (AC1 – at least 5)                             */
     /* ------------------------------------------------------------------ */
 
+    /**
+     * The constant QUERY_RELATIVES_IN_POSITIONS.
+     */
     public static final int QUERY_RELATIVES_IN_POSITIONS        = 0;
+    /**
+     * The constant QUERY_RELATIVES_IN_ORGANISATION.
+     */
     public static final int QUERY_RELATIVES_IN_ORGANISATION     = 1;
+    /**
+     * The constant QUERY_PUBLIC_OFFICIALS_INFLUENCING.
+     */
     public static final int QUERY_PUBLIC_OFFICIALS_INFLUENCING  = 2;
+    /**
+     * The constant QUERY_ASSOCIATED_WITH_ASSET_OWNERS.
+     */
     public static final int QUERY_ASSOCIATED_WITH_ASSET_OWNERS  = 3;
+    /**
+     * The constant QUERY_APPOINTED_BY_ORG_MEMBERS.
+     */
     public static final int QUERY_APPOINTED_BY_ORG_MEMBERS      = 4;
 
     private static final String[] QUESTION_LABELS = {
@@ -43,12 +54,19 @@ public class DetectConflictsController {
     private final GraphRepository graphRepository;
     private final ConflictDetector detector;
 
+    /**
+     * Instantiates a new Detect conflicts controller.
+     */
     public DetectConflictsController() {
         this.graphRepository = Repositories.getInstance().getGraphRepository();
         this.detector = new ConflictDetector();
     }
 
-    /** Constructor used in unit tests to inject dependencies. */
+    /**
+     * Constructor used in unit tests to inject dependencies.  @param graphRepository the graph repository
+     *
+     * @param graphRepository the graph repository
+     */
     public DetectConflictsController(GraphRepository graphRepository) {
         this.graphRepository = graphRepository;
         this.detector = new ConflictDetector();
@@ -62,6 +80,8 @@ public class DetectConflictsController {
      * Returns a copy of the question catalogue.
      * The returned list index corresponds to the {@code queryIndex} parameter
      * of {@link #runQuery(int, String)}.
+     *
+     * @return the available questions
      */
     public List<String> getAvailableQuestions() {
         List<String> list = new ArrayList<>();
@@ -74,9 +94,8 @@ public class DetectConflictsController {
     /**
      * Runs the selected query and returns the detected chains.
      *
-     * @param queryIndex      index into {@link #getAvailableQuestions()}
-     * @param organisationId  only used by {@link #QUERY_RELATIVES_IN_ORGANISATION};
-     *                        pass null or blank to match any organisation
+     * @param queryIndex     index into {@link #getAvailableQuestions()}
+     * @param organisationId only used by {@link #QUERY_RELATIVES_IN_ORGANISATION};                        pass null or blank to match any organisation
      * @return list of detected chains (may be empty)
      * @throws IllegalStateException    if no relations graph has been built yet
      * @throws IllegalArgumentException if {@code queryIndex} is out of range

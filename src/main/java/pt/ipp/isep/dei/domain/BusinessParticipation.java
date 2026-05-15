@@ -14,8 +14,8 @@ public class BusinessParticipation {
     /**
      * Creates a new BusinessParticipation.
      *
-     * @param organization      the company in which participation is held.
-     * @param companyNIF        the tax identification number (NIF) of the company.
+     * @param organization       the company in which participation is held.
+     * @param companyNIF         the tax identification number (NIF) of the company.
      * @param totalValueInStocks the total declared value of stocks held; must be non-negative.
      * @param companyPercentage  the percentage of the company held; must be between 0 and 100.
      * @throws IllegalArgumentException if any argument is invalid.
@@ -37,16 +37,32 @@ public class BusinessParticipation {
         this.companyPercentage = companyPercentage;
     }
 
-    /** @return the company in which participation is held. */
+    /**
+     * Gets organization.
+     *
+     * @return the company in which participation is held.
+     */
     public Organization getOrganization() { return organization; }
 
-    /** @return the NIF of the company. */
+    /**
+     * Gets company nif.
+     *
+     * @return the NIF of the company.
+     */
     public long getCompanyNIF() { return companyNIF; }
 
-    /** @return the total declared value of stocks held. */
+    /**
+     * Gets total value in stocks.
+     *
+     * @return the total declared value of stocks held.
+     */
     public double getTotalValueInStocks() { return totalValueInStocks; }
 
-    /** @return the ownership percentage of the company. */
+    /**
+     * Gets company percentage.
+     *
+     * @return the ownership percentage of the company.
+     */
     public double getCompanyPercentage() { return companyPercentage; }
 
     @Override

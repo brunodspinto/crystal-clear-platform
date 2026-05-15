@@ -4,15 +4,25 @@ package pt.ipp.isep.dei.domain;
  * Represents the type of an organization that can be registered in the system.
  */
 public enum OrganizationType {
-    /** A private or public company. */
+    /**
+     * A private or public company.
+     */
     COMPANY("Company"),
-    /** A political party. */
+    /**
+     * A political party.
+     */
     POLITICAL_PARTY("Political Party"),
-    /** A non-profit foundation. */
+    /**
+     * A non-profit foundation.
+     */
     FOUNDATION("Foundation"),
-    /** A public or private institute. */
+    /**
+     * A public or private institute.
+     */
     INSTITUTE("Institute"),
-    /** A civil or professional association. */
+    /**
+     * A civil or professional association.
+     */
     ASSOCIATION("Association");
 
     private final String label;

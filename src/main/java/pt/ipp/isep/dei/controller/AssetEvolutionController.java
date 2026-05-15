@@ -31,6 +31,9 @@ public class AssetEvolutionController {
 
     /**
      * Creates a controller with injected repositories (used in tests).
+     *
+     * @param politicalAgentRepository the political agent repository
+     * @param declarationRepository    the declaration repository
      */
     public AssetEvolutionController(PoliticalAgentRepository politicalAgentRepository,
                                      DeclarationRepository declarationRepository) {

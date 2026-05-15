@@ -21,12 +21,17 @@ public class DetectNepotismController {
     private final GraphRepository graphRepository;
     private final NepotismDetector detector;
 
+    /**
+     * Instantiates a new Detect nepotism controller.
+     */
     public DetectNepotismController() {
         this.graphRepository = Repositories.getInstance().getGraphRepository();
         this.detector = new NepotismDetector();
     }
 
-    /** Constructor used in unit tests to inject dependencies. */
+    /**
+     * Constructor used in unit tests to inject dependencies.  @param graphRepository the graph repository
+     */
     public DetectNepotismController(GraphRepository graphRepository) {
         this.graphRepository = graphRepository;
         this.detector = new NepotismDetector();

@@ -2,7 +2,7 @@ package pt.ipp.isep.dei.repository;
 
 /**
  * Inspired on https://refactoring.guru/design-patterns/singleton/java/example
- *
+ * <p>
  * The Repositories class works as a Singleton. It defines the getInstance method that serves as an alternative
  * to the constructor and lets client classes access the same instance of this class over and over.
  */
@@ -41,6 +41,8 @@ public class Repositories {
      * This is the static method that controls the access to the singleton instance.
      * On the first run, it creates a singleton object and places it into the static attribute.
      * On subsequent runs, it returns the existing object stored in the static attribute.
+     *
+     * @return the instance
      */
     public static Repositories getInstance() {
         if (instance == null) {
@@ -51,14 +53,29 @@ public class Repositories {
         return instance;
     }
 
+    /**
+     * Gets organization repository.
+     *
+     * @return the organization repository
+     */
     public OrganizationRepository getOrganizationRepository() {
         return organizationRepository;
     }
 
+    /**
+     * Gets task category repository.
+     *
+     * @return the task category repository
+     */
     public TaskCategoryRepository getTaskCategoryRepository() {
         return taskCategoryRepository;
     }
 
+    /**
+     * Gets authentication repository.
+     *
+     * @return the authentication repository
+     */
     public AuthenticationRepository getAuthenticationRepository() {
         return authenticationRepository;
     }
@@ -99,18 +116,38 @@ public class Repositories {
         return declarationRepository;
     }
 
+    /**
+     * Gets graph repository.
+     *
+     * @return the graph repository
+     */
     public GraphRepository getGraphRepository() {
         return graphRepository;
     }
 
+    /**
+     * Gets ethics committee member repository.
+     *
+     * @return the ethics committee member repository
+     */
     public EthicsCommitteeMemberRepository getEthicsCommitteeMemberRepository() {
         return ethicsCommitteeMemberRepository;
     }
 
+    /**
+     * Gets validation record repository.
+     *
+     * @return the validation record repository
+     */
     public ValidationRecordRepository getValidationRecordRepository() {
         return validationRecordRepository;
     }
 
+    /**
+     * Gets registration request repository.
+     *
+     * @return the registration request repository
+     */
     public RegistrationRequestRepository getRegistrationRequestRepository() {
         return registrationRequestRepository;
     }

@@ -11,7 +11,7 @@ import java.util.List;
  * Pure Fabrication responsible for writing the holdings dataset to a CSV file
  * following the format of Table 3 (Holdings Dataset):
  * agent_id, company_NIF, total_value_in_stocks, company_percentage, declaration_date.
- *
+ * <p>
  * One row is produced per (declaration, business-participation) pair.
  */
 public class HoldingsCsvExporter {
@@ -24,6 +24,14 @@ public class HoldingsCsvExporter {
 
     private HoldingsCsvExporter() {}
 
+    /**
+     * Export boolean.
+     *
+     * @param declarations the declarations
+     * @param filePath     the file path
+     * @return the boolean
+     * @throws IOException the io exception
+     */
     public static boolean export(List<Declaration> declarations, String filePath) throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
             writer.println(HEADER);

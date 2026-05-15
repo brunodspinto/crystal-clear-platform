@@ -16,16 +16,26 @@ public class RegisterController {
 
     private final RegistrationRequestRepository registrationRequestRepository;
 
+    /**
+     * Instantiates a new Register controller.
+     */
     public RegisterController() {
         this.registrationRequestRepository = Repositories.getInstance().getRegistrationRequestRepository();
     }
 
+    /**
+     * Instantiates a new Register controller.
+     *
+     * @param registrationRequestRepository the registration request repository
+     */
     public RegisterController(RegistrationRequestRepository registrationRequestRepository) {
         this.registrationRequestRepository = registrationRequestRepository;
     }
 
     /**
      * Returns the list of roles available for registration.
+     *
+     * @return the available roles
      */
     public List<UserRole> getAvailableRoles() {
         List<UserRole> roles = new ArrayList<>(Arrays.asList(UserRole.values()));
@@ -35,6 +45,9 @@ public class RegisterController {
 
     /**
      * Returns whether the given role requires an identification document.
+     *
+     * @param role the role
+     * @return the boolean
      */
     public boolean requiresDocument(UserRole role) {
         return role == UserRole.JOURNALIST || role == UserRole.CITIZEN;
@@ -42,6 +55,9 @@ public class RegisterController {
 
     /**
      * Returns the label describing what document is required for the given role.
+     *
+     * @param role the role
+     * @return the document label
      */
     public String getDocumentLabel(UserRole role) {
         if (role == UserRole.JOURNALIST) {
@@ -55,6 +71,9 @@ public class RegisterController {
 
     /**
      * Validates the password format without creating a full request.
+     *
+     * @param password the password
+     * @return the boolean
      */
     public boolean isValidPassword(String password) {
         return RegistrationRequest.isValidPassword(password);

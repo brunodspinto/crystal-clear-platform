@@ -1,9 +1,17 @@
 package pt.ipp.isep.dei.domain;
 
+/**
+ * The type Task category.
+ */
 public class TaskCategory {
 
     private final String description;
 
+    /**
+     * Instantiates a new Task category.
+     *
+     * @param description the description
+     */
     public TaskCategory(String description) {
         if (description == null || description.isBlank()) {
             throw new IllegalArgumentException("Description cannot be null or empty");

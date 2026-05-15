@@ -1,7 +1,13 @@
 package pt.ipp.isep.dei.ui.console;
 
+/**
+ * The type Dev team ui.
+ */
 public class DevTeamUI implements Runnable {
 
+    /**
+     * Instantiates a new Dev team ui.
+     */
     public DevTeamUI() {}
 
     public void run() {

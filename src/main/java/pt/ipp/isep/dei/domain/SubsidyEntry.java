@@ -40,16 +40,32 @@ public class SubsidyEntry {
         this.date = date;
     }
 
-    /** @return the organization from which the subsidy was received. */
+    /**
+     * Gets organization.
+     *
+     * @return the organization from which the subsidy was received.
+     */
     public Organization getOrganization() { return organization; }
 
-    /** @return the subsidy amount. */
+    /**
+     * Gets amount.
+     *
+     * @return the subsidy amount.
+     */
     public double getAmount() { return amount; }
 
-    /** @return the description of the subsidy. */
+    /**
+     * Gets description.
+     *
+     * @return the description of the subsidy.
+     */
     public String getDescription() { return description; }
 
-    /** @return the date the subsidy was received. */
+    /**
+     * Gets date.
+     *
+     * @return the date the subsidy was received.
+     */
     public Date getDate() { return date; }
 
     @Override

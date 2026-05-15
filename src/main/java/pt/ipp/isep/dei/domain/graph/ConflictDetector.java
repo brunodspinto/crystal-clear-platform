@@ -33,14 +33,41 @@ public class ConflictDetector {
     /*  Relation-label constants (must match the values used in the CSV)   */
     /* ------------------------------------------------------------------ */
 
+    /**
+     * The constant REL_RELATIVE_OF.
+     */
     public static final String REL_RELATIVE_OF     = "relativeOf";
+    /**
+     * The constant REL_FRIEND_OF.
+     */
     public static final String REL_FRIEND_OF       = "friendOf";
+    /**
+     * The constant REL_ASSOCIATED_WITH.
+     */
     public static final String REL_ASSOCIATED_WITH = "associatedWith";
+    /**
+     * The constant REL_APPOINTED_BY.
+     */
     public static final String REL_APPOINTED_BY    = "appointedBy";
+    /**
+     * The constant REL_HOLDS_POSITION.
+     */
     public static final String REL_HOLDS_POSITION  = "holdsPosition";
+    /**
+     * The constant REL_IN_ORGANIZATION.
+     */
     public static final String REL_IN_ORGANIZATION = "inOrganization";
+    /**
+     * The constant REL_INFLUENCES.
+     */
     public static final String REL_INFLUENCES      = "influences";
+    /**
+     * The constant REL_MEMBER_OF.
+     */
     public static final String REL_MEMBER_OF       = "memberOf";
+    /**
+     * The constant REL_OWNER_OF.
+     */
     public static final String REL_OWNER_OF        = "ownerOf";
 
     /* ------------------------------------------------------------------ */
@@ -50,6 +77,9 @@ public class ConflictDetector {
     /**
      * Q1 – Persons who have a relative holding any position.
      * Chain: personA --relativeOf--> personB --holdsPosition--> position
+     *
+     * @param graph the graph
+     * @return the list
      */
     public List<Chain> findPersonsWithRelativesInPositions(RelationGraph graph) {
         requireGraph(graph);
@@ -73,7 +103,11 @@ public class ConflictDetector {
      * organisation (the organisation id is supplied as a filter; pass null or
      * blank to match any organisation).
      * Chain: personA --relativeOf--> personB --holdsPosition--> position
-     *                                                          --inOrganization--> org
+     * --inOrganization--> org
+     *
+     * @param graph          the graph
+     * @param organisationId the organisation id
+     * @return the list
      */
     public List<Chain> findPersonsWithRelativesInOrganisation(RelationGraph graph,
                                                                String organisationId) {
@@ -104,9 +138,12 @@ public class ConflictDetector {
      * Q3 – Persons holding a position in a public organisation who also
      * influence a company.
      * Chain: personA --holdsPosition--> position --inOrganization--> org
-     *        personA --influences--> company
+     * personA --influences--> company
      * (Both arms start at personA; the chain reported is
      * org ← position ← personA → company so first=org, last=company.)
+     *
+     * @param graph the graph
+     * @return the list
      */
     public List<Chain> findPublicOfficialsThatInfluenceCompanies(RelationGraph graph) {
         requireGraph(graph);
@@ -150,6 +187,9 @@ public class ConflictDetector {
     /**
      * Q4 – Persons who are associated with someone who owns an asset.
      * Chain: personA --associatedWith--> personB --ownerOf--> asset
+     *
+     * @param graph the graph
+     * @return the list
      */
     public List<Chain> findPersonsAssociatedWithAssetOwners(RelationGraph graph) {
         requireGraph(graph);
@@ -172,6 +212,9 @@ public class ConflictDetector {
      * Q5 – Persons appointed by someone who is a member of the same
      * organisation as the appointer.
      * Chain: personA --appointedBy--> personB --memberOf--> org
+     *
+     * @param graph the graph
+     * @return the list
      */
     public List<Chain> findPersonsAppointedByOrganisationMembers(RelationGraph graph) {
         requireGraph(graph);
@@ -217,7 +260,11 @@ public class ConflictDetector {
             this.entityIds = new ArrayList<>(entityIds);
         }
 
-        /** Factory for a vararg sequence of ids (minimum 2). */
+        /**
+         * Factory for a vararg sequence of ids (minimum 2).  @param ids the ids
+         *
+         * @return the chain
+         */
         public static Chain of(String... ids) {
             if (ids == null || ids.length < 2) {
                 throw new IllegalArgumentException("a chain needs at least two entity ids");
@@ -229,17 +276,29 @@ public class ConflictDetector {
             return new Chain(list);
         }
 
-        /** @return the id of the first entity in the chain (AC2). */
+        /**
+         * Gets first.
+         *
+         * @return the id of the first entity in the chain (AC2).
+         */
         public String getFirst() {
             return entityIds.get(0);
         }
 
-        /** @return the id of the last entity in the chain (AC2). */
+        /**
+         * Gets last.
+         *
+         * @return the id of the last entity in the chain (AC2).
+         */
         public String getLast() {
             return entityIds.get(entityIds.size() - 1);
         }
 
-        /** @return all entity ids in the chain, in order. */
+        /**
+         * Gets all.
+         *
+         * @return all entity ids in the chain, in order.
+         */
         public List<String> getAll() {
             return new ArrayList<>(entityIds);
         }

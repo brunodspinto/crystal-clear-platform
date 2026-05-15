@@ -59,8 +59,7 @@ public class AnalyseIncomeEvolutionController {
      * @param startDate the start of the period.
      * @param endDate   the end of the period.
      * @return list of matching declarations sorted by submission date.
-     * @throws IllegalArgumentException if any argument is null or if
-     *                                  startDate is after endDate (AC2).
+     * @throws IllegalArgumentException if any argument is null or if                                  startDate is after endDate (AC2).
      */
     public List<Declaration> getIncomeEvolution(PoliticalAgent agent, Date startDate, Date endDate) {
         if (agent == null) {

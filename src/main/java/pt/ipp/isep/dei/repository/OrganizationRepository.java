@@ -8,13 +8,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Organization repository.
+ */
 public class OrganizationRepository {
     private final List<Organization> organizations;
 
+    /**
+     * Instantiates a new Organization repository.
+     */
     public OrganizationRepository() {
         organizations = new ArrayList<>();
     }
 
+    /**
+     * Gets organization by employee.
+     *
+     * @param employee the employee
+     * @return the organization by employee
+     */
     public Optional<Organization> getOrganizationByEmployee(Employee employee) {
         Optional<Organization> returnOrganization = Optional.empty();
 
@@ -27,6 +39,12 @@ public class OrganizationRepository {
         return returnOrganization;
     }
 
+    /**
+     * Gets organization by employee email.
+     *
+     * @param email the email
+     * @return the organization by employee email
+     */
     public Optional<Organization> getOrganizationByEmployeeEmail(String email) {
         Optional<Organization> returnOrganization = Optional.empty();
 
@@ -39,6 +57,12 @@ public class OrganizationRepository {
         return returnOrganization;
     }
 
+    /**
+     * Add optional.
+     *
+     * @param organization the organization
+     * @return the optional
+     */
     public Optional<Organization> add(Organization organization) {
         Optional<Organization> newOrganization = Optional.empty();
         boolean operationSuccess = false;

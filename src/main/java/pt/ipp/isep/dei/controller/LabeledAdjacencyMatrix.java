@@ -31,6 +31,8 @@ public class LabeledAdjacencyMatrix {
     }
 
     /**
+     * Gets label.
+     *
      * @return the relation label.
      */
     public String getLabel() {
@@ -38,6 +40,8 @@ public class LabeledAdjacencyMatrix {
     }
 
     /**
+     * Gets matrix.
+     *
      * @return the adjacency matrix for this relation.
      */
     public AdjacencyMatrix getMatrix() {

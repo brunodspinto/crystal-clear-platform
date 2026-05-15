@@ -12,6 +12,9 @@ import java.util.List;
  */
 public class PoliticalAgentUI implements Runnable {
 
+    /**
+     * Instantiates a new Political agent ui.
+     */
     public PoliticalAgentUI() {}
 
     /**

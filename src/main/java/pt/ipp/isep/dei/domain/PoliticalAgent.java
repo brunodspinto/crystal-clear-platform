@@ -2,6 +2,9 @@ package pt.ipp.isep.dei.domain;
 
 import java.util.Date;
 
+/**
+ * The type Political agent.
+ */
 public class PoliticalAgent extends User {
 
     private final String nationalIdentityCard;
@@ -9,6 +12,16 @@ public class PoliticalAgent extends User {
     private final Date mandateStart;
     private final Date mandateEnd;
 
+    /**
+     * Instantiates a new Political agent.
+     *
+     * @param name                    the name
+     * @param email                   the email
+     * @param nationalIdentityCard    the national identity card
+     * @param taxIdentificationNumber the tax identification number
+     * @param mandateStart            the mandate start
+     * @param mandateEnd              the mandate end
+     */
     public PoliticalAgent(String name, String email, String nationalIdentityCard,
                           String taxIdentificationNumber, Date mandateStart, Date mandateEnd) {
         super(name, email);
@@ -24,9 +37,32 @@ public class PoliticalAgent extends User {
         this.mandateEnd = mandateEnd;
     }
 
+    /**
+     * Gets national identity card.
+     *
+     * @return the national identity card
+     */
     public String getNationalIdentityCard() { return nationalIdentityCard; }
+
+    /**
+     * Gets tax identification number.
+     *
+     * @return the tax identification number
+     */
     public String getTaxIdentificationNumber() { return taxIdentificationNumber; }
+
+    /**
+     * Gets mandate start.
+     *
+     * @return the mandate start
+     */
     public Date getMandateStart() { return mandateStart; }
+
+    /**
+     * Gets mandate end.
+     *
+     * @return the mandate end
+     */
     public Date getMandateEnd() { return mandateEnd; }
 
     @Override

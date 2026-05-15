@@ -71,19 +71,39 @@ public class AssetEntry {
         }
     }
 
-    /** @return the category of the asset. */
+    /**
+     * Gets asset type.
+     *
+     * @return the category of the asset.
+     */
     public AssetType getAssetType() { return assetType; }
 
-    /** @return the declared value of the asset. */
+    /**
+     * Gets asset value.
+     *
+     * @return the declared value of the asset.
+     */
     public double getAssetValue() { return assetValue; }
 
-    /** @return the real estate detail, or {@code null} if the type is not REAL_ESTATE. */
+    /**
+     * Gets real estate.
+     *
+     * @return the real estate detail, or {@code null} if the type is not REAL_ESTATE.
+     */
     public RealEstate getRealEstate() { return realEstate; }
 
-    /** @return the vehicle detail, or {@code null} if the type is not VEHICLES. */
+    /**
+     * Gets vehicle asset.
+     *
+     * @return the vehicle detail, or {@code null} if the type is not VEHICLES.
+     */
     public VehicleAsset getVehicleAsset() { return vehicleAsset; }
 
-    /** @return the stock detail, or {@code null} if the type is not STOCKS. */
+    /**
+     * Gets stock asset.
+     *
+     * @return the stock detail, or {@code null} if the type is not STOCKS.
+     */
     public StockAsset getStockAsset() { return stockAsset; }
 
     @Override

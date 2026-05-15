@@ -3,13 +3,16 @@ package pt.ipp.isep.dei.domain.graph;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
  * Generates an SVG file visualising a heterogeneous multi-relational graph.
- *
+ * <p>
  * Entities are placed in a circular layout; each entity type uses a distinct
  * shape and colour. Every entity node and every edge label is wrapped in an
  * SVG hyperlink (<a href="#detail-ID">) so that clicking navigates to a
@@ -18,18 +21,28 @@ import java.util.Map;
  */
 public class GraphSvgExporter {
 
-    private static final int CX = 450;
-    private static final int CY = 350;
-    private static final int RADIUS = 270;
-    private static final int WIDTH = 900;
+    private static final int WIDTH = 1100;
+    private static final int GRAPH_AREA_HEIGHT = 820;
+    private static final int CX = WIDTH / 2;
+    private static final int CY = 430;
+    private static final int RADIUS = 340;
     private static final int NODE_SIZE = 28;
     private static final int DETAIL_ROW_H = 90;
-    private static final int DETAIL_START_Y = 730;
-    private static final int DETAIL_COLS = 3;
-    private static final int DETAIL_COL_W = 290;
+    private static final int DETAIL_START_Y = GRAPH_AREA_HEIGHT + 30;
+    private static final int DETAIL_COLS = 4;
+    private static final int DETAIL_COL_W = 270;
+    private static final int EDGE_LABEL_STAGGER = 14;
 
     private GraphSvgExporter() {}
 
+    /**
+     * Export.
+     *
+     * @param entities the entities
+     * @param edges    the edges
+     * @param filePath the file path
+     * @throws IOException the io exception
+     */
     public static void export(List<Entity> entities, List<Edge> edges, String filePath) throws IOException {
         int detailRows = (int) Math.ceil((double) entities.size() / DETAIL_COLS);
         int totalHeight = DETAIL_START_Y + detailRows * DETAIL_ROW_H + 40;
@@ -71,34 +84,55 @@ public class GraphSvgExporter {
     }
 
     private static void writeTitle(PrintWriter w) {
-        w.println("<rect x=\"0\" y=\"0\" width=\"900\" height=\"700\" fill=\"#f8f9fa\"/>");
+        w.printf("<rect x=\"0\" y=\"0\" width=\"%d\" height=\"%d\" fill=\"#f8f9fa\"/>%n",
+                WIDTH, GRAPH_AREA_HEIGHT);
         w.printf("<text x=\"%d\" y=\"30\" class=\"section-title\" text-anchor=\"middle\">"
                 + "Heterogeneous Multi-Relational Graph</text>%n", WIDTH / 2);
     }
 
     private static void writeEdges(PrintWriter w, List<Entity> entities, List<Edge> edges) {
         Map<String, double[]> pos = positions(entities);
+        Map<String, Integer> pairCounter = new HashMap<>();
         for (Edge edge : edges) {
             double[] from = pos.get(edge.getFromId());
             double[] to = pos.get(edge.getToId());
             if (from == null || to == null) continue;
 
+            String pairKey = pairKey(edge.getFromId(), edge.getToId());
+            int idx = pairCounter.getOrDefault(pairKey, 0);
+            pairCounter.put(pairKey, idx + 1);
+
             double mx = (from[0] + to[0]) / 2.0;
             double my = (from[1] + to[1]) / 2.0;
-            String edgeId = "rel-" + sanitize(edge.getFromId()) + "-" + sanitize(edge.getToId());
+            double dx = to[0] - from[0];
+            double dy = to[1] - from[1];
+            double len = Math.max(1.0, Math.sqrt(dx * dx + dy * dy));
+            double nx = -dy / len;
+            double ny = dx / len;
+            int sign = (idx % 2 == 0) ? 1 : -1;
+            double offset = sign * ((idx + 1) / 2) * EDGE_LABEL_STAGGER;
+            double lx = mx + nx * offset;
+            double ly = my + ny * offset;
 
-            w.printf("<line x1=\"%.1f\" y1=\"%.1f\" x2=\"%.1f\" y2=\"%.1f\" "
+            String edgeId = "rel-" + sanitize(edge.getFromId()) + "-" + sanitize(edge.getToId())
+                    + "-" + sanitize(edge.getLabel());
+
+            w.printf(Locale.ROOT, "<line x1=\"%.1f\" y1=\"%.1f\" x2=\"%.1f\" y2=\"%.1f\" "
                     + "stroke=\"#999\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/>%n",
                     from[0], from[1], to[0], to[1]);
 
             w.printf("<a href=\"#detail-%s\" xlink:href=\"#detail-%s\">%n", edgeId, edgeId);
-            w.printf("  <title>%s → %s | %s (weight: %.2f)</title>%n",
+            w.printf(Locale.ROOT, "  <title>%s → %s | %s (weight: %.2f)</title>%n",
                     xmlEscape(edge.getFromId()), xmlEscape(edge.getToId()),
                     xmlEscape(edge.getLabel()), edge.getWeight());
-            w.printf("  <text x=\"%.1f\" y=\"%.1f\" class=\"edge-label\">%s</text>%n",
-                    mx, my - 5, xmlEscape(edge.getLabel()));
+            w.printf(Locale.ROOT, "  <text x=\"%.1f\" y=\"%.1f\" class=\"edge-label\">%s</text>%n",
+                    lx, ly, xmlEscape(edge.getLabel()));
             w.println("</a>");
         }
+    }
+
+    private static String pairKey(String a, String b) {
+        return (a.compareTo(b) < 0) ? a + "|" + b : b + "|" + a;
     }
 
     private static void writeNodes(PrintWriter w, List<Entity> entities) {
@@ -115,7 +149,7 @@ public class GraphSvgExporter {
             w.printf("<a href=\"#%s\" xlink:href=\"#%s\">%n", detailId, detailId);
             w.printf("  <title>%s</title>%n", xmlEscape(tooltip));
             drawShape(w, entity, x, y, color);
-            w.printf("  <text x=\"%.1f\" y=\"%.1f\" class=\"node-label\">%s</text>%n",
+            w.printf(Locale.ROOT, "  <text x=\"%.1f\" y=\"%.1f\" class=\"node-label\">%s</text>%n",
                     x, y + NODE_SIZE + 13, xmlEscape(shortLabel(entity)));
             w.println("</a>");
         }
@@ -126,22 +160,22 @@ public class GraphSvgExporter {
         int s = NODE_SIZE;
         switch (cat) {
             case "person":
-                w.printf("  <circle cx=\"%.1f\" cy=\"%.1f\" r=\"%d\" fill=\"%s\" stroke=\"#555\" stroke-width=\"1.5\"/>%n",
+                w.printf(Locale.ROOT, "  <circle cx=\"%.1f\" cy=\"%.1f\" r=\"%d\" fill=\"%s\" stroke=\"#555\" stroke-width=\"1.5\"/>%n",
                         x, y, s, color);
                 break;
             case "organization":
-                w.printf("  <rect x=\"%.1f\" y=\"%.1f\" width=\"%d\" height=\"%d\" rx=\"4\" fill=\"%s\" stroke=\"#555\" stroke-width=\"1.5\"/>%n",
+                w.printf(Locale.ROOT, "  <rect x=\"%.1f\" y=\"%.1f\" width=\"%d\" height=\"%d\" rx=\"4\" fill=\"%s\" stroke=\"#555\" stroke-width=\"1.5\"/>%n",
                         x - s, y - s, s * 2, s * 2, color);
                 break;
             case "position":
                 double px = x, py = y;
-                String pts = String.format("%.1f,%.1f %.1f,%.1f %.1f,%.1f %.1f,%.1f",
+                String pts = String.format(Locale.ROOT, "%.1f,%.1f %.1f,%.1f %.1f,%.1f %.1f,%.1f",
                         px, py - s, px + s, py, px, py + s, px - s, py);
                 w.printf("  <polygon points=\"%s\" fill=\"%s\" stroke=\"#555\" stroke-width=\"1.5\"/>%n", pts, color);
                 break;
             case "asset":
             default:
-                String tpts = String.format("%.1f,%.1f %.1f,%.1f %.1f,%.1f",
+                String tpts = String.format(Locale.ROOT, "%.1f,%.1f %.1f,%.1f %.1f,%.1f",
                         x, y - s, x + s, y + s, x - s, y + s);
                 w.printf("  <polygon points=\"%s\" fill=\"%s\" stroke=\"#555\" stroke-width=\"1.5\"/>%n", tpts, color);
                 break;
@@ -149,8 +183,8 @@ public class GraphSvgExporter {
     }
 
     private static void writeDetailSection(PrintWriter w, List<Entity> entities, List<Edge> edges) {
-        w.printf("<line x1=\"20\" y1=\"%d\" x2=\"880\" y2=\"%d\" stroke=\"#ccc\" stroke-width=\"1\"/>%n",
-                DETAIL_START_Y - 20, DETAIL_START_Y - 20);
+        w.printf("<line x1=\"20\" y1=\"%d\" x2=\"%d\" y2=\"%d\" stroke=\"#ccc\" stroke-width=\"1\"/>%n",
+                DETAIL_START_Y - 20, WIDTH - 20, DETAIL_START_Y - 20);
         w.printf("<text x=\"20\" y=\"%d\" class=\"section-title\">Entity &amp; Relation Details</text>%n",
                 DETAIL_START_Y + 10);
 
@@ -181,9 +215,10 @@ public class GraphSvgExporter {
         w.printf("<text x=\"20\" y=\"%d\" class=\"section-title\">Relations</text>%n", edgeDetailY);
         edgeDetailY += 20;
         for (Edge edge : edges) {
-            String edgeId = "rel-" + sanitize(edge.getFromId()) + "-" + sanitize(edge.getToId());
+            String edgeId = "rel-" + sanitize(edge.getFromId()) + "-" + sanitize(edge.getToId())
+                    + "-" + sanitize(edge.getLabel());
             w.printf("<g id=\"detail-%s\">%n", edgeId);
-            w.printf("  <text x=\"20\" y=\"%d\" class=\"detail-body\">%s → %s | label: %s | weight: %.2f</text>%n",
+            w.printf(Locale.ROOT, "  <text x=\"20\" y=\"%d\" class=\"detail-body\">%s → %s | label: %s | weight: %.2f</text>%n",
                     edgeDetailY,
                     xmlEscape(edge.getFromId()), xmlEscape(edge.getToId()),
                     xmlEscape(edge.getLabel()), edge.getWeight());
@@ -202,13 +237,27 @@ public class GraphSvgExporter {
         Map<String, double[]> map = new HashMap<>();
         int n = entities.size();
         if (n == 0) return map;
+        List<Entity> sorted = new ArrayList<>(entities);
+        sorted.sort(Comparator
+                .comparingInt((Entity e) -> categoryOrder(e))
+                .thenComparing(Entity::getId));
         for (int i = 0; i < n; i++) {
             double angle = 2 * Math.PI * i / n - Math.PI / 2;
             double x = CX + RADIUS * Math.cos(angle);
             double y = CY + RADIUS * Math.sin(angle);
-            map.put(entities.get(i).getId(), new double[]{x, y});
+            map.put(sorted.get(i).getId(), new double[]{x, y});
         }
         return map;
+    }
+
+    private static int categoryOrder(Entity entity) {
+        switch (entityCategory(entity)) {
+            case "person":       return 0;
+            case "organization": return 1;
+            case "position":     return 2;
+            case "asset":        return 3;
+            default:             return 4;
+        }
     }
 
     private static String colorFor(Entity entity) {

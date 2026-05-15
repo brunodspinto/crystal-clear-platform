@@ -12,6 +12,9 @@ import java.util.List;
  */
 public class CitizenUI implements Runnable {
 
+    /**
+     * Instantiates a new Citizen ui.
+     */
     public CitizenUI() {}
 
     /**

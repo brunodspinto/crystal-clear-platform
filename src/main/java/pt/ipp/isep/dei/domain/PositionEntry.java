@@ -20,14 +20,14 @@ public class PositionEntry {
     /**
      * Creates a new PositionEntry.
      *
-     * @param organization              the organization where the position is held.
-     * @param functionDesignation       the function performed at the organization.
-     * @param nature                    the legal nature of the position (public, private, social).
-     * @param grossSalary               the annual gross salary; must be non-negative.
-     * @param sideIncomeConsulting      consulting side income; must be non-negative.
+     * @param organization               the organization where the position is held.
+     * @param functionDesignation        the function performed at the organization.
+     * @param nature                     the legal nature of the position (public, private, social).
+     * @param grossSalary                the annual gross salary; must be non-negative.
+     * @param sideIncomeConsulting       consulting side income; must be non-negative.
      * @param sideIncomeBoardMemberships board membership side income; must be non-negative.
-     * @param startDate                 the start date of the position; cannot be null.
-     * @param endDate                   the end date of the position; may be null if still active.
+     * @param startDate                  the start date of the position; cannot be null.
+     * @param endDate                    the end date of the position; may be null if still active.
      * @throws IllegalArgumentException if any required argument is invalid.
      */
     public PositionEntry(Organization organization, String functionDesignation, PositionNature nature,
@@ -64,28 +64,60 @@ public class PositionEntry {
         this.endDate = endDate;
     }
 
-    /** @return the organization where the position is held. */
+    /**
+     * Gets organization.
+     *
+     * @return the organization where the position is held.
+     */
     public Organization getOrganization() { return organization; }
 
-    /** @return the function designation. */
+    /**
+     * Gets function designation.
+     *
+     * @return the function designation.
+     */
     public String getFunctionDesignation() { return functionDesignation; }
 
-    /** @return the legal nature of the position. */
+    /**
+     * Gets nature.
+     *
+     * @return the legal nature of the position.
+     */
     public PositionNature getNature() { return nature; }
 
-    /** @return the annual gross salary. */
+    /**
+     * Gets gross salary.
+     *
+     * @return the annual gross salary.
+     */
     public double getGrossSalary() { return grossSalary; }
 
-    /** @return the consulting side income. */
+    /**
+     * Gets side income consulting.
+     *
+     * @return the consulting side income.
+     */
     public double getSideIncomeConsulting() { return sideIncomeConsulting; }
 
-    /** @return the board memberships side income. */
+    /**
+     * Gets side income board memberships.
+     *
+     * @return the board memberships side income.
+     */
     public double getSideIncomeBoardMemberships() { return sideIncomeBoardMemberships; }
 
-    /** @return the start date of the position. */
+    /**
+     * Gets start date.
+     *
+     * @return the start date of the position.
+     */
     public Date getStartDate() { return startDate; }
 
-    /** @return the end date of the position, or {@code null} if still active. */
+    /**
+     * Gets end date.
+     *
+     * @return the end date of the position, or {@code null} if still active.
+     */
     public Date getEndDate() { return endDate; }
 
     @Override

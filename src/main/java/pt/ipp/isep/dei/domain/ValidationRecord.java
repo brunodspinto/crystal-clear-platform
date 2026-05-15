@@ -58,19 +58,39 @@ public class ValidationRecord {
         comments.add(new ValidationComment(section, comment));
     }
 
-    /** @return the Ethics Committee Member who performed the validation. */
+    /**
+     * Gets member.
+     *
+     * @return the Ethics Committee Member who performed the validation.
+     */
     public EthicsCommitteeMember getMember() { return member; }
 
-    /** @return the declaration that was validated. */
+    /**
+     * Gets declaration.
+     *
+     * @return the declaration that was validated.
+     */
     public Declaration getDeclaration() { return declaration; }
 
-    /** @return the date of the validation action. */
+    /**
+     * Gets validation date.
+     *
+     * @return the date of the validation action.
+     */
     public Date getValidationDate() { return validationDate; }
 
-    /** @return the outcome of the validation. */
+    /**
+     * Gets outcome.
+     *
+     * @return the outcome of the validation.
+     */
     public ValidationOutcome getOutcome() { return outcome; }
 
-    /** @return a defensive copy of the list of comments. */
+    /**
+     * Gets comments.
+     *
+     * @return a defensive copy of the list of comments.
+     */
     public List<ValidationComment> getComments() { return new ArrayList<>(comments); }
 
     @Override

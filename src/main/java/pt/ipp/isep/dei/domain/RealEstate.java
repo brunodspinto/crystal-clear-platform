@@ -26,12 +26,20 @@ public class RealEstate {
         this.municipality = municipality;
     }
 
-    /** @return the description of the property. */
+    /**
+     * Gets description.
+     *
+     * @return the description of the property.
+     */
     public String getDescription() {
         return description;
     }
 
-    /** @return the municipality where the property is located. */
+    /**
+     * Gets municipality.
+     *
+     * @return the municipality where the property is located.
+     */
     public String getMunicipality() {
         return municipality;
     }
