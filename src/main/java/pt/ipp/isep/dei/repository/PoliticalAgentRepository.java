@@ -5,7 +5,6 @@ import pt.ipp.isep.dei.domain.PoliticalAgent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.List;
 
 /**
  * Repository for storing and retrieving {@link PoliticalAgent} instances.

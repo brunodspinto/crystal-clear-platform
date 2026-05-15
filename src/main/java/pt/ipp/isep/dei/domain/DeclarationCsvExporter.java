@@ -22,8 +22,17 @@ public class DeclarationCsvExporter {
     private static final DateTimeFormatter DATE_FMT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+    /** Utility class — do not instantiate. */
     private DeclarationCsvExporter() {}
 
+    /**
+     * Writes the given declarations to a CSV file at the specified path.
+     *
+     * @param declarations list of declarations to export
+     * @param filePath     path of the output CSV file
+     * @return {@code true} if the file was written successfully
+     * @throws IOException if an I/O error occurs while writing the file
+     */
     public static boolean export(List<Declaration> declarations, String filePath) throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
             writer.println(HEADER);
@@ -34,6 +43,12 @@ public class DeclarationCsvExporter {
         return true;
     }
 
+    /**
+     * Converts a single declaration into a comma-separated row string.
+     *
+     * @param d the declaration to convert
+     * @return a CSV-formatted string representing the declaration
+     */
     private static String toCsvRow(Declaration d) {
         String role = "";
         String institution = "";
