@@ -11,9 +11,13 @@ import java.util.List;
  * Edge instances.
  * <p>
  * Auto-detects the field separator (',' or ';') and an optional header line.
- * Expected schema after detection: from_id, to_id, label, weight.
- * Lines that are empty or start with '#' are ignored. Lines with fewer than
- * four fields, blank ids or labels, or an unparseable weight are skipped.
+ * Two schemas are accepted:
+ * the legacy four-column form (from_id, to_id, label, weight) and the
+ * seven-column form (id, type, startDate, endDate, entity1, entity2, weight)
+ * in which entity1 and entity2 are read as the edge endpoints, type as the
+ * label, and weight as the edge weight.
+ * Lines that are empty or start with '#' are ignored. Lines with too few
+ * fields, blank ids or labels, or an unparseable weight are skipped.
  */
 public class RelationCsvParser {
 
@@ -81,7 +85,7 @@ public class RelationCsvParser {
 
     /**
      * Returns true when the first field of the line looks like a column name
-     * for a relations file (such as "from_id", "source", "from").
+     * for a relations file.
      */
     private static boolean looksLikeHeader(String line, char separator) {
         int sepIdx = line.indexOf(separator);
@@ -91,26 +95,44 @@ public class RelationCsvParser {
         firstField = firstField.trim().toLowerCase();
         return firstField.equals("from_id") || firstField.equals("from")
                 || firstField.equals("source") || firstField.equals("src")
-                || firstField.equals("origin");
+                || firstField.equals("origin") || firstField.equals("id");
     }
 
     /**
      * Parses one data line into an Edge, or returns null if the line is
-     * malformed or any required field is blank.
+     * malformed or any required field is blank. Four-column lines use the
+     * legacy schema; lines with seven or more columns use the extended
+     * schema where parts[4] is fromId, parts[5] is toId, parts[1] is the
+     * label, and parts[6] is the weight.
      */
     private static Edge parseLine(String line, char separator) {
         String[] parts = line.split(String.valueOf(separator), -1);
         if (parts.length < 4) {
             return null;
         }
-        String fromId = parts[0].trim();
-        String toId = parts[1].trim();
-        String label = parts[2].trim();
+
+        String fromId;
+        String toId;
+        String label;
         double weight;
-        try {
-            weight = Double.parseDouble(parts[3].trim());
-        } catch (NumberFormatException e) {
-            return null;
+        if (parts.length >= 7) {
+            fromId = parts[4].trim();
+            toId = parts[5].trim();
+            label = parts[1].trim();
+            try {
+                weight = Double.parseDouble(parts[6].trim());
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        } else {
+            fromId = parts[0].trim();
+            toId = parts[1].trim();
+            label = parts[2].trim();
+            try {
+                weight = Double.parseDouble(parts[3].trim());
+            } catch (NumberFormatException e) {
+                return null;
+            }
         }
         if (fromId.isBlank() || toId.isBlank() || label.isBlank()) {
             return null;
