@@ -2,6 +2,7 @@ package pt.ipp.isep.dei.ui.console;
 
 import pt.ipp.isep.dei.controller.AnalyseIncomeEvolutionController;
 import pt.ipp.isep.dei.domain.Declaration;
+import pt.ipp.isep.dei.domain.Income;
 import pt.ipp.isep.dei.domain.PoliticalAgent;
 import pt.ipp.isep.dei.domain.PositionEntry;
 import pt.ipp.isep.dei.domain.SubsidyEntry;
@@ -81,7 +82,18 @@ public class AnalyseIncomeEvolutionUI implements Runnable {
     private void showDeclaration(Declaration d) {
         System.out.println("\n>>> " + d);
         showPositions(d.getPositionEntries());
+        showIncomes(d.getIncomes());
         showSubsidies(d.getSubsidyEntries());
+    }
+
+    private void showIncomes(List<Income> entries) {
+        if (entries.isEmpty()) {
+            return;
+        }
+        System.out.println("  Incomes:");
+        for (Income e : entries) {
+            System.out.println("    - " + e);
+        }
     }
 
     private void showPositions(List<PositionEntry> entries) {
