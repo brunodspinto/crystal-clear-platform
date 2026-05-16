@@ -14,7 +14,6 @@ import pt.isep.lei.esoft.auth.domain.model.Email;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Controller responsible for handling the submission of a citizen complaint (US12).
@@ -85,11 +84,11 @@ public class SubmitComplaintController {
     public boolean submitComplaint(String description, Date complaintDate,
                                    PoliticalAgent politicalAgent, PoliticalFunction politicalFunction) {
         Email email = authenticationRepository.getCurrentUserSession().getUserId();
-        Optional<Citizen> citizen = citizenRepository.getCitizenByEmail(email.getEmail());
-        if (citizen.isEmpty()) {
+        Citizen citizen = citizenRepository.getCitizenByEmail(email.getEmail());
+        if (citizen == null) {
             return false;
         }
-        Complaint complaint = new Complaint(description, complaintDate, citizen.get(),
+        Complaint complaint = new Complaint(description, complaintDate, citizen,
                 politicalAgent, politicalFunction);
         return complaintRepository.save(complaint);
     }

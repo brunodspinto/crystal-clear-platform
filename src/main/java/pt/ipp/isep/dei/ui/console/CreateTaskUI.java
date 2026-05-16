@@ -5,7 +5,6 @@ import pt.ipp.isep.dei.domain.Task;
 import pt.ipp.isep.dei.domain.TaskCategory;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 /**
@@ -41,10 +40,10 @@ public class CreateTaskUI implements Runnable {
     }
 
     private void submitData() {
-        Optional<Task> task = getController().createTask(taskReference, taskDescription, taskInformalDescription,
+        Task task = getController().createTask(taskReference, taskDescription, taskInformalDescription,
                 taskTechnicalDescription, taskDuration, taskCost, taskCategoryDescription);
 
-        if (task.isPresent()) {
+        if (task != null) {
             System.out.println("\nTask successfully created!");
         } else {
             System.out.println("\nTask not created!");

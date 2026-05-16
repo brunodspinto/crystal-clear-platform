@@ -5,9 +5,6 @@ package pt.ipp.isep.dei.domain;
  */
 public class Employee {
     private final String email;
-    private String name;
-    private String position;
-    private String phone;
 
     /**
      * Instantiates a new Employee.

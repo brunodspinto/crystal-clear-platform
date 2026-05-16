@@ -54,7 +54,8 @@ public class RelationCsvParser {
      */
     private static ArrayList<String> readDataLines(String filePath) throws IOException {
         ArrayList<String> lines = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        BufferedReader reader = new BufferedReader(new FileReader(filePath));
+        try {
             String line;
             while ((line = reader.readLine()) != null) {
                 String trimmed = line.trim();
@@ -63,6 +64,8 @@ public class RelationCsvParser {
                 }
                 lines.add(trimmed);
             }
+        } finally {
+            reader.close();
         }
         return lines;
     }

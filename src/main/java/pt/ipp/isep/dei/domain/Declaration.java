@@ -3,7 +3,6 @@ package pt.ipp.isep.dei.domain;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Represents a Declaration of Interests submitted by a Political Agent.
@@ -13,7 +12,9 @@ import java.util.UUID;
  */
 public class Declaration {
 
-    private final UUID id = UUID.randomUUID();
+    private static int nextId = 1;
+
+    private final String id;
     private final PoliticalAgent agent;
     private final DeclarationType type;
     private final Date submissionDate;
@@ -45,6 +46,8 @@ public class Declaration {
         if (submissionDate == null) {
             throw new IllegalArgumentException("Submission date cannot be null.");
         }
+        this.id = "DECL-" + nextId;
+        nextId = nextId + 1;
         this.type = type;
         this.agent = agent;
         this.submissionDate = submissionDate;
@@ -77,11 +80,16 @@ public class Declaration {
     }
 
     /**
-     * Adds a subsidy entry to the declaration.
+     * Adds an income entry to the declaration.
+     * <p>
+     * An {@link Income} represents an earning received from an organization (e.g. salary
+     * complements, fees, royalties), characterized by its {@code source}. It is a distinct
+     * concept from a {@link SubsidyEntry}, which represents a non-reciprocal support or
+     * subsidy granted to the agent and is characterized by its {@code description}.
      *
-     * @param organization the organization from which the subsidy was received.
-     * @param amount       the subsidy amount.
-     * @param source       the source
+     * @param organization the organization that paid the income.
+     * @param amount       the income amount.
+     * @param source       the source of the income (e.g. consulting, royalties).
      * @param date         the date received.
      */
     public void addIncome(Organization organization, double amount, String source, Date date) {
@@ -89,12 +97,15 @@ public class Declaration {
     }
 
     /**
-     * Add subsidy entry.
+     * Adds a subsidy entry to the declaration.
+     * <p>
+     * A {@link SubsidyEntry} represents a non-reciprocal support or subsidy received from
+     * an organization. It is a distinct concept from {@link Income} (see {@link #addIncome}).
      *
-     * @param organization the organization
-     * @param amount       the amount
-     * @param description  the description
-     * @param date         the date
+     * @param organization the organization from which the subsidy was received.
+     * @param amount       the subsidy amount.
+     * @param description  a description of the subsidy.
+     * @param date         the date received.
      */
     public void addSubsidyEntry(Organization organization, double amount, String description, Date date) {
         subsidyEntries.add(new SubsidyEntry(organization, amount, description, date));
@@ -198,7 +209,7 @@ public class Declaration {
      *
      * @return the unique identifier of this declaration.
      */
-    public UUID getId() { return id; }
+    public String getId() { return id; }
 
     /**
      * Gets agent.

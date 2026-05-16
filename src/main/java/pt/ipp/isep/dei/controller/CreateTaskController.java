@@ -11,7 +11,6 @@ import pt.ipp.isep.dei.repository.TaskCategoryRepository;
 import pt.isep.lei.esoft.auth.domain.model.Email;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * The type Create task controller.
@@ -77,7 +76,7 @@ public class CreateTaskController {
     }
 
     /**
-     * Create task optional.
+     * Creates a task in the organization that employs the currently authenticated employee.
      *
      * @param reference               the reference
      * @param description             the description
@@ -86,25 +85,23 @@ public class CreateTaskController {
      * @param duration                the duration
      * @param cost                    the cost
      * @param taskCategoryDescription the task category description
-     * @return the optional
+     * @return the created Task, or {@code null} if no organization employs the user
+     *         or the task already exists.
      */
-    public Optional<Task> createTask(String reference, String description, String informalDescription,
-                                     String technicalDescription, int duration, double cost,
-                                     String taskCategoryDescription) {
+    public Task createTask(String reference, String description, String informalDescription,
+                           String technicalDescription, int duration, double cost,
+                           String taskCategoryDescription) {
 
         TaskCategory taskCategory = getTaskCategoryByDescription(taskCategoryDescription);
 
         Employee employee = getEmployeeFromSession();
-        Optional<Organization> organization = getOrganizationRepository().getOrganizationByEmployee(employee);
+        Organization organization = getOrganizationRepository().getOrganizationByEmployee(employee);
 
-        Optional<Task> newTask = Optional.empty();
-
-        if (organization.isPresent()) {
-            newTask = organization.get()
-                    .createTask(reference, description, informalDescription, technicalDescription, duration, cost,
-                            taskCategory, employee);
+        if (organization == null) {
+            return null;
         }
-        return newTask;
+        return organization.createTask(reference, description, informalDescription,
+                technicalDescription, duration, cost, taskCategory, employee);
     }
 
     private Employee getEmployeeFromSession() {

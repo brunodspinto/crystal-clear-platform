@@ -8,8 +8,7 @@ import pt.ipp.isep.dei.domain.PoliticalAgent;
 import pt.ipp.isep.dei.domain.PositionEntry;
 import pt.ipp.isep.dei.ui.console.utils.Utils;
 
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -25,8 +24,8 @@ import java.util.List;
  */
 public class AssetEvolutionUI implements Runnable {
 
-    private static final DateTimeFormatter DATE_FMT =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final SimpleDateFormat DATE_FMT =
+            new SimpleDateFormat("yyyy-MM-dd");
 
     private final AssetEvolutionController controller;
 
@@ -90,8 +89,7 @@ public class AssetEvolutionUI implements Runnable {
         System.out.println("-".repeat(header.length()));
 
         for (Declaration d : declarations) {
-            String date = d.getSubmissionDate().toInstant()
-                    .atZone(ZoneId.systemDefault()).toLocalDate().format(DATE_FMT);
+            String date = DATE_FMT.format(d.getSubmissionDate());
 
             double grossSalary = 0, consulting = 0, board = 0;
             for (PositionEntry pe : d.getPositionEntries()) {

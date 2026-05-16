@@ -3,8 +3,7 @@ package pt.ipp.isep.dei.domain;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -19,8 +18,8 @@ public class HoldingsCsvExporter {
     private static final String HEADER =
             "agent_id,company_NIF,total_value_in_stocks,company_percentage,declaration_date";
 
-    private static final DateTimeFormatter DATE_FMT =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final SimpleDateFormat DATE_FMT =
+            new SimpleDateFormat("yyyy-MM-dd");
 
     private HoldingsCsvExporter() {}
 
@@ -33,21 +32,23 @@ public class HoldingsCsvExporter {
      * @throws IOException the io exception
      */
     public static boolean export(List<Declaration> declarations, String filePath) throws IOException {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
+        PrintWriter writer = new PrintWriter(new FileWriter(filePath));
+        try {
             writer.println(HEADER);
             for (Declaration d : declarations) {
                 for (BusinessParticipation bp : d.getBusinessParticipations()) {
                     writer.println(toCsvRow(d, bp));
                 }
             }
+        } finally {
+            writer.close();
         }
         return true;
     }
 
     private static String toCsvRow(Declaration d, BusinessParticipation bp) {
         String agentId = d.getAgent().getTaxIdentificationNumber();
-        String date = d.getSubmissionDate().toInstant()
-                .atZone(ZoneId.systemDefault()).toLocalDate().format(DATE_FMT);
+        String date = DATE_FMT.format(d.getSubmissionDate());
         return String.join(",",
                 agentId,
                 String.valueOf(bp.getCompanyNIF()),

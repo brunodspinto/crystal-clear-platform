@@ -5,8 +5,6 @@ import pt.ipp.isep.dei.domain.Employee;
 import pt.ipp.isep.dei.domain.Organization;
 import pt.ipp.isep.dei.domain.OrganizationType;
 
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class OrganizationRepositoryTest {
@@ -16,9 +14,9 @@ class OrganizationRepositoryTest {
         OrganizationRepository organizationRepository = new OrganizationRepository();
         Organization organization = new Organization("123456789", "Test Org", "www.test.com", "912345678", "test@test.com");
 
-        Optional<Organization> returnOrganization = organizationRepository.add(organization);
+        Organization returnOrganization = organizationRepository.add(organization);
 
-        assertEquals(organization, returnOrganization.get());
+        assertEquals(organization, returnOrganization);
     }
 
     @Test
@@ -29,9 +27,9 @@ class OrganizationRepositoryTest {
         organization.addEmployee(employee);
         organizationRepository.add(organization);
 
-        Optional<Organization> result = organizationRepository.getOrganizationByEmployee(employee);
+        Organization result = organizationRepository.getOrganizationByEmployee(employee);
 
-        assertEquals(organization, result.get());
+        assertEquals(organization, result);
     }
 
     @Test
@@ -43,9 +41,9 @@ class OrganizationRepositoryTest {
         organizationRepository.add(organization);
 
         Employee employee2 = new Employee("jane.doe@this.company.com");
-        Optional<Organization> result = organizationRepository.getOrganizationByEmployee(employee2);
+        Organization result = organizationRepository.getOrganizationByEmployee(employee2);
 
-        assertTrue(result.isEmpty());
+        assertNull(result);
     }
 
     @Test
@@ -56,10 +54,10 @@ class OrganizationRepositoryTest {
         organization.addEmployee(employee);
         organizationRepository.add(organization);
 
-        Optional<Organization> result =
+        Organization result =
                 organizationRepository.getOrganizationByEmployeeEmail("john.doe@this.company.com");
 
-        assertEquals(organization, result.get());
+        assertEquals(organization, result);
     }
 
     @Test
@@ -71,14 +69,14 @@ class OrganizationRepositoryTest {
 
         organizationRepository.add(organization);
 
-        Optional<Organization> returnOrganization =
+        Organization returnOrganization =
                 organizationRepository.getOrganizationByEmployeeEmail("john.doe@this.company.com");
 
         //Assert
         //Make sure both represents the same object
-        assertEquals(organization, returnOrganization.get());
+        assertEquals(organization, returnOrganization);
         //Make sure it is a clone (different memory addresses)
-        assertNotSame(organization, returnOrganization.get());
+        assertNotSame(organization, returnOrganization);
     }
 
     @Test
@@ -89,9 +87,9 @@ class OrganizationRepositoryTest {
         organization.addEmployee(employee);
         organizationRepository.add(organization);
 
-        Optional<Organization> result = organizationRepository.add(organization);
+        Organization result = organizationRepository.add(organization);
 
-        assertTrue(result.isEmpty());
+        assertNull(result);
     }
 
     // --- US04 Tests (save + existsByNameAndType) ---

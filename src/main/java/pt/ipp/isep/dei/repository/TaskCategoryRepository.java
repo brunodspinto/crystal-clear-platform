@@ -4,7 +4,6 @@ import pt.ipp.isep.dei.domain.TaskCategory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * The type Task category repository.
@@ -40,30 +39,24 @@ public class TaskCategoryRepository {
     }
 
     /**
-     * Add optional.
+     * Adds a task category if no duplicate exists.
      *
-     * @param taskCategory the task category
-     * @return the optional
+     * @param taskCategory the task category to add.
+     * @return the stored (cloned) task category if added; {@code null} if a duplicate exists.
      */
-    public Optional<TaskCategory> add(TaskCategory taskCategory) {
-        Optional<TaskCategory> newTaskCategory = Optional.empty();
-        boolean operationSuccess = false;
-
-        if (validateTaskCategory(taskCategory)) {
-            newTaskCategory = Optional.of(taskCategory.clone());
-            operationSuccess = taskCategories.add(newTaskCategory.get());
+    public TaskCategory add(TaskCategory taskCategory) {
+        if (!validateTaskCategory(taskCategory)) {
+            return null;
         }
-
-        if (!operationSuccess) {
-            newTaskCategory = Optional.empty();
+        TaskCategory clone = taskCategory.clone();
+        if (taskCategories.add(clone)) {
+            return clone;
         }
-
-        return newTaskCategory;
+        return null;
     }
 
     private boolean validateTaskCategory(TaskCategory taskCategory) {
-        boolean isValid = !taskCategories.contains(taskCategory);
-        return isValid;
+        return !taskCategories.contains(taskCategory);
     }
 
     /**

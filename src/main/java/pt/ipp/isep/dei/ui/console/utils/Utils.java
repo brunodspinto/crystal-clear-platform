@@ -165,7 +165,7 @@ public class Utils {
         int value;
         do {
             input = Utils.readLineFromConsole("Type your option: ");
-            value = Integer.valueOf(input);
+            value = Integer.parseInt(input);
         } while (value < 0 || value > list.size());
 
         if (value == 0) {
@@ -187,7 +187,7 @@ public class Utils {
         do {
             input = Utils.readLineFromConsole("Type your option: ");
             try {
-                value = Integer.valueOf(input);
+                value = Integer.parseInt(input);
             } catch (NumberFormatException ex) {
                 value = -1;
             }

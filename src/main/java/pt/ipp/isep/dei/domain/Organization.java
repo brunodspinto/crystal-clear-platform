@@ -2,13 +2,13 @@ package pt.ipp.isep.dei.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 /**
  * The type Organization.
  */
 public class Organization {
+    private static int nextGeneratedVat = 1;
+
     private final String vatNumber;
     private final List<Employee> employees;
     private final List<Task> tasks;
@@ -21,7 +21,7 @@ public class Organization {
 
     /**
      * Constructor for US04 — registers an organization with a name, nature and type.
-     * The vatNumber is generated internally as a UUID.
+     * The vatNumber is generated internally using a static counter.
      *
      * @param name   the name
      * @param nature the nature
@@ -37,7 +37,8 @@ public class Organization {
         if (type == null) {
             throw new IllegalArgumentException("Type cannot be null");
         }
-        this.vatNumber = UUID.randomUUID().toString();
+        this.vatNumber = "GEN-" + nextGeneratedVat;
+        nextGeneratedVat = nextGeneratedVat + 1;
         this.name = name;
         this.nature = nature;
         this.type = type;
@@ -258,25 +259,26 @@ public class Organization {
      * @param cost                 The cost of the task to be created.
      * @param taskCategory         The task category of the task to be created.
      * @param employee             The employee of the task to be created.
-     * @return An Optional containing the created Task, or empty if it fails.
+     * @return the created Task, or {@code null} if the employee does not belong to the
+     *         organization or the task already exists.
      */
-    public Optional<Task> createTask(String reference, String description, String informalDescription,
-                                     String technicalDescription, int duration, double cost,
-                                     TaskCategory taskCategory, Employee employee) {
+    public Task createTask(String reference, String description, String informalDescription,
+                           String technicalDescription, int duration, double cost,
+                           TaskCategory taskCategory, Employee employee) {
 
         if (!employees.contains(employee)) {
-            return Optional.empty();
+            return null;
         }
 
         Task task = new Task(reference, description, informalDescription,
                 technicalDescription, duration, cost, taskCategory, employee);
 
         if (tasks.contains(task)) {
-            return Optional.empty();
+            return null;
         }
 
         tasks.add(task);
-        return Optional.of(task);
+        return task;
     }
 
     /**

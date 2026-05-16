@@ -2,8 +2,6 @@ package pt.ipp.isep.dei.domain;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 // Tests for US04 constructor (name, nature, type) are at the bottom of this file.
@@ -66,13 +64,12 @@ class OrganizationTest {
         Task expected = new Task("Task Description", "Task Category Description", "informal description",
                 "technical description", 1, 1d, taskCategory, employee);
 
-        Optional<Task> task =
+        Task task =
                 organization.createTask("Task Description", "Task Category Description", "informal description",
                         "technical description", 1, 1d, taskCategory, employee);
 
         assertNotNull(task);
-        assertTrue(task.isPresent());
-        assertEquals(expected, task.get());
+        assertEquals(expected, task);
     }
 
     @Test
@@ -85,17 +82,17 @@ class OrganizationTest {
         TaskCategory taskCategory = new TaskCategory("Task Category Description");
 
         //Add the first task
-        Optional<Task> originalTask =
+        Task originalTask =
                 organization.createTask("Task Description", "Task Category Description", "informal description",
                         "technical description", 1, 1d, taskCategory, employee);
 
         //Act
-        Optional<Task> duplicateTask =
+        Task duplicateTask =
                 organization.createTask("Task Description", "Task Category Description", "informal description",
                         "technical description", 1, 1d, taskCategory, employee);
 
         //Assert
-        assertTrue(duplicateTask.isEmpty());
+        assertNull(duplicateTask);
     }
 
 

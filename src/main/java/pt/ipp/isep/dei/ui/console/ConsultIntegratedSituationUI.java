@@ -20,8 +20,6 @@ import java.util.List;
 public class ConsultIntegratedSituationUI implements Runnable {
 
     private final ConsultIntegratedSituationController controller;
-    private PoliticalAgent selectedAgent;
-    private Date referenceDate;
 
     /**
      * Creates the UI and initializes the controller using the singleton repositories.
@@ -36,13 +34,13 @@ public class ConsultIntegratedSituationUI implements Runnable {
     public void run() {
         System.out.println("\n\n--- Consult Integrated Situation ---------------");
 
-        selectedAgent = displayAndSelectPoliticalAgent();
+        PoliticalAgent selectedAgent = displayAndSelectPoliticalAgent();
         if (selectedAgent == null) {
             System.out.println("\nOperation cancelled.");
             return;
         }
 
-        referenceDate = Utils.readDateFromConsole("Reference date (dd-MM-yyyy): ");
+        Date referenceDate = Utils.readDateFromConsole("Reference date (dd-MM-yyyy): ");
 
         List<Declaration> declarations = controller.getIntegratedSituation(selectedAgent, referenceDate);
         if (declarations.isEmpty()) {
@@ -51,7 +49,7 @@ public class ConsultIntegratedSituationUI implements Runnable {
             return;
         }
 
-        showHeader(declarations.size());
+        showHeader(selectedAgent, referenceDate, declarations.size());
         for (Declaration d : declarations) {
             showDeclaration(d);
         }
@@ -66,9 +64,9 @@ public class ConsultIntegratedSituationUI implements Runnable {
         return (PoliticalAgent) Utils.showAndSelectOne(agents, "Select a political agent:");
     }
 
-    private void showHeader(int count) {
+    private void showHeader(PoliticalAgent agent, Date referenceDate, int count) {
         System.out.println("\n--- Integrated Situation ---");
-        System.out.printf("Political Agent : %s%n", selectedAgent.getName());
+        System.out.printf("Political Agent : %s%n", agent.getName());
         System.out.printf("Reference Date  : %s%n", referenceDate);
         System.out.printf("Validated decls.: %d%n", count);
     }

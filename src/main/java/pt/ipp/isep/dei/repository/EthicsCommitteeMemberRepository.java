@@ -4,7 +4,6 @@ import pt.ipp.isep.dei.domain.EthicsCommitteeMember;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Repository for storing and retrieving {@link EthicsCommitteeMember} instances.
@@ -38,15 +37,15 @@ public class EthicsCommitteeMemberRepository {
      * Finds a member by email address (case-insensitive).
      *
      * @param email the email to search for.
-     * @return an {@link Optional} containing the member, or empty if not found.
+     * @return the member, or {@code null} if not found.
      */
-    public Optional<EthicsCommitteeMember> getByEmail(String email) {
+    public EthicsCommitteeMember getByEmail(String email) {
         for (EthicsCommitteeMember m : members) {
             if (m.hasEmail(email)) {
-                return Optional.of(m);
+                return m;
             }
         }
-        return Optional.empty();
+        return null;
     }
 
     /**

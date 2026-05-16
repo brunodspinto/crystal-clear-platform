@@ -3,8 +3,7 @@ package pt.ipp.isep.dei.domain;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -19,8 +18,8 @@ public class DeclarationCsvExporter {
             "side_income_board_memberships,assets_in_real_estate," +
             "assets_in_vehicles,assets_in_stocks";
 
-    private static final DateTimeFormatter DATE_FMT =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final SimpleDateFormat DATE_FMT =
+            new SimpleDateFormat("yyyy-MM-dd");
 
     /** Utility class — do not instantiate. */
     private DeclarationCsvExporter() {}
@@ -34,11 +33,14 @@ public class DeclarationCsvExporter {
      * @throws IOException if an I/O error occurs while writing the file
      */
     public static boolean export(List<Declaration> declarations, String filePath) throws IOException {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
+        PrintWriter writer = new PrintWriter(new FileWriter(filePath));
+        try {
             writer.println(HEADER);
             for (Declaration d : declarations) {
                 writer.println(toCsvRow(d));
             }
+        } finally {
+            writer.close();
         }
         return true;
     }
@@ -71,16 +73,16 @@ public class DeclarationCsvExporter {
                 case REAL_ESTATE: realEstate += a.getAssetValue(); break;
                 case VEHICLES:    vehicles   += a.getAssetValue(); break;
                 case STOCKS:      stocks     += a.getAssetValue(); break;
+                default: throw new IllegalArgumentException("Unhandled asset type: " + a.getAssetType());
             }
         }
-        String date = d.getSubmissionDate().toInstant()
-                .atZone(ZoneId.systemDefault()).toLocalDate().format(DATE_FMT);
+        String date = DATE_FMT.format(d.getSubmissionDate());
         return String.join(",",
                 d.getAgent().getTaxIdentificationNumber(),
                 role,
                 d.getType().toString().toLowerCase(),
                 date,
-                d.getId().toString(),
+                d.getId(),
                 institution,
                 String.valueOf(grossSalary),
                 String.valueOf(sideIncomeConsulting),

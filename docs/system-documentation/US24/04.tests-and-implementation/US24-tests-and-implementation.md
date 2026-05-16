@@ -134,6 +134,7 @@ public class DeclarationCsvExporter {
                 case REAL_ESTATE: realEstate += a.getAssetValue(); break;
                 case VEHICLES:    vehicles   += a.getAssetValue(); break;
                 case STOCKS:      stocks     += a.getAssetValue(); break;
+                default: throw new IllegalArgumentException("Unhandled asset type: " + a.getAssetType());
             }
         }
         String date = d.getSubmissionDate().toInstant()

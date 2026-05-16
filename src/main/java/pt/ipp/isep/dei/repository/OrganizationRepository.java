@@ -6,7 +6,6 @@ import pt.ipp.isep.dei.domain.OrganizationType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * The type Organization repository.
@@ -25,14 +24,14 @@ public class OrganizationRepository {
      * Gets organization by employee.
      *
      * @param employee the employee
-     * @return the organization by employee
+     * @return the organization that employs the given employee, or {@code null} if none.
      */
-    public Optional<Organization> getOrganizationByEmployee(Employee employee) {
-        Optional<Organization> returnOrganization = Optional.empty();
+    public Organization getOrganizationByEmployee(Employee employee) {
+        Organization returnOrganization = null;
 
         for (Organization organization : organizations) {
             if (organization.employs(employee)) {
-                returnOrganization = Optional.of(organization);
+                returnOrganization = organization;
             }
         }
 
@@ -43,14 +42,14 @@ public class OrganizationRepository {
      * Gets organization by employee email.
      *
      * @param email the email
-     * @return the organization by employee email
+     * @return the organization with an employee matching the email, or {@code null} if none.
      */
-    public Optional<Organization> getOrganizationByEmployeeEmail(String email) {
-        Optional<Organization> returnOrganization = Optional.empty();
+    public Organization getOrganizationByEmployeeEmail(String email) {
+        Organization returnOrganization = null;
 
         for (Organization organization : organizations) {
             if (organization.anyEmployeeHasEmail(email)) {
-                returnOrganization = Optional.of(organization);
+                returnOrganization = organization;
             }
         }
 
@@ -58,26 +57,20 @@ public class OrganizationRepository {
     }
 
     /**
-     * Add optional.
+     * Adds an organization if no duplicate (by equals) already exists.
      *
-     * @param organization the organization
-     * @return the optional
+     * @param organization the organization to add.
+     * @return the stored (cloned) organization if added; {@code null} if a duplicate exists.
      */
-    public Optional<Organization> add(Organization organization) {
-        Optional<Organization> newOrganization = Optional.empty();
-        boolean operationSuccess = false;
-
-        if (validateOrganization(organization)) {
-            newOrganization = Optional.of(organization.clone());
-            operationSuccess = organizations.add(newOrganization.get());
+    public Organization add(Organization organization) {
+        if (!validateOrganization(organization)) {
+            return null;
         }
-
-        if (!operationSuccess) {
-            newOrganization = Optional.empty();
+        Organization clone = organization.clone();
+        if (organizations.add(clone)) {
+            return clone;
         }
-
-        return newOrganization;
-
+        return null;
     }
 
     private boolean validateOrganization(Organization organization) {

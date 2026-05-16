@@ -7,7 +7,6 @@ import pt.isep.lei.esoft.auth.domain.model.Email;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Controller responsible for handling the validation of a Declaration of Interests (US08).
@@ -119,8 +118,6 @@ public class ValidateDeclarationController {
      */
     private EthicsCommitteeMember getCurrentEthicsCommitteeMember() {
         Email email = authenticationRepository.getCurrentUserSession().getUserId();
-        Optional<EthicsCommitteeMember> member =
-                ethicsCommitteeMemberRepository.getByEmail(email.getEmail());
-        return member.orElse(null);
+        return ethicsCommitteeMemberRepository.getByEmail(email.getEmail());
     }
 }

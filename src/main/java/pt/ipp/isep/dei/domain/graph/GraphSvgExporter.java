@@ -75,7 +75,8 @@ public class GraphSvgExporter {
         int detailRows = (int) Math.ceil((double) entities.size() / DETAIL_COLS);
         int totalHeight = DETAIL_START_Y + detailRows * DETAIL_ROW_H + 40;
 
-        try (PrintWriter w = new PrintWriter(new FileWriter(filePath))) {
+        PrintWriter w = new PrintWriter(new FileWriter(filePath));
+        try {
             writeHeader(w, totalHeight);
             writeStyles(w);
             writeTitle(w);
@@ -83,6 +84,8 @@ public class GraphSvgExporter {
             writeNodes(w, entities);
             writeDetailSection(w, entities, edges);
             writeFooter(w);
+        } finally {
+            w.close();
         }
     }
 

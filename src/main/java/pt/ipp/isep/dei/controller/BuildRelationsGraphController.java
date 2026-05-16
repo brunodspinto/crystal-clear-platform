@@ -83,8 +83,11 @@ public class BuildRelationsGraphController {
         } else {
             dotPath = outputSvgPath + ".dot";
         }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(dotPath))) {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(dotPath));
+        try {
             writer.write(graph.exportDot());
+        } finally {
+            writer.close();
         }
 
         ProcessBuilder pb = new ProcessBuilder("dot", "-Tsvg", dotPath, "-o", outputSvgPath);

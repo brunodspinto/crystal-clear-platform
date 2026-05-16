@@ -4,7 +4,6 @@ import pt.ipp.isep.dei.domain.Citizen;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Repository for storing and retrieving {@link Citizen} instances.
@@ -37,14 +36,14 @@ public class CitizenRepository {
      * Finds a citizen by email address (case-insensitive).
      *
      * @param email the email to search for.
-     * @return an {@link Optional} containing the citizen, or empty if not found.
+     * @return the citizen, or {@code null} if not found.
      */
-    public Optional<Citizen> getCitizenByEmail(String email) {
+    public Citizen getCitizenByEmail(String email) {
         for (Citizen c : citizens) {
             if (c.hasEmail(email)) {
-                return Optional.of(c);
+                return c;
             }
         }
-        return Optional.empty();
+        return null;
     }
 }
