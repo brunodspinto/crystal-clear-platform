@@ -85,11 +85,11 @@
 public boolean submitComplaint(String description, Date complaintDate,
                                PoliticalAgent politicalAgent, PoliticalFunction politicalFunction) {
     Email email = authenticationRepository.getCurrentUserSession().getUserId();
-    Optional<Citizen> citizen = citizenRepository.getCitizenByEmail(email.getEmail());
-    if (citizen.isEmpty()) {
+    Citizen citizen = citizenRepository.getCitizenByEmail(email.getEmail());
+    if (citizen == null) {
         return false;
     }
-    Complaint complaint = new Complaint(description, complaintDate, citizen.get(),
+    Complaint complaint = new Complaint(description, complaintDate, citizen,
             politicalAgent, politicalFunction);
     return complaintRepository.save(complaint);
 }

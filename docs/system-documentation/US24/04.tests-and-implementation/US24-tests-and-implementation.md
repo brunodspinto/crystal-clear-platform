@@ -97,17 +97,20 @@ public class DeclarationCsvExporter {
             "side_income_board_memberships,assets_in_real_estate," +
             "assets_in_vehicles,assets_in_stocks";
 
-    private static final DateTimeFormatter DATE_FMT =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final SimpleDateFormat DATE_FMT =
+            new SimpleDateFormat("yyyy-MM-dd");
 
     private DeclarationCsvExporter() {}
 
     public static boolean export(List<Declaration> declarations, String filePath) throws IOException {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
+        PrintWriter writer = new PrintWriter(new FileWriter(filePath));
+        try {
             writer.println(HEADER);
             for (Declaration d : declarations) {
                 writer.println(toCsvRow(d));
             }
+        } finally {
+            writer.close();
         }
         return true;
     }
@@ -137,14 +140,13 @@ public class DeclarationCsvExporter {
                 default: throw new IllegalArgumentException("Unhandled asset type: " + a.getAssetType());
             }
         }
-        String date = d.getSubmissionDate().toInstant()
-                .atZone(ZoneId.systemDefault()).toLocalDate().format(DATE_FMT);
+        String date = DATE_FMT.format(d.getSubmissionDate());
         return String.join(",",
                 d.getAgent().getTaxIdentificationNumber(),
                 role,
                 d.getType().toString().toLowerCase(),
                 date,
-                d.getId().toString(),
+                d.getId(),
                 institution,
                 String.valueOf(grossSalary),
                 String.valueOf(sideIncomeConsulting),
@@ -170,15 +172,20 @@ public boolean exportToCsv(String filePath) {
 }
 ```
 
-### Declaration (UUID id field)
+### Declaration (id field)
 
-A `UUID id` field is added to `Declaration`, generated at construction time:
+A `String id` field is added to `Declaration`, generated at construction time using a static counter:
 
 ```java
-private final UUID id = UUID.randomUUID();
+private static int nextId = 1;
+private final String id;
 
-public UUID getId() { 
-    return id; 
+// inside the constructor:
+this.id = "DECL-" + nextId;
+nextId = nextId + 1;
+
+public String getId() {
+    return id;
 }
 ```
 

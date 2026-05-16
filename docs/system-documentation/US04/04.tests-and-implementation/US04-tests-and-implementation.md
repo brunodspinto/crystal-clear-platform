@@ -101,7 +101,8 @@ public Organization(String name, String nature, OrganizationType type) {
     if (type == null) {
         throw new IllegalArgumentException("Type cannot be null");
     }
-    this.vatNumber = UUID.randomUUID().toString();
+    this.vatNumber = "GEN-" + nextGeneratedVat;
+    nextGeneratedVat = nextGeneratedVat + 1;
     this.name = name;
     this.nature = nature;
     this.type = type;
@@ -146,4 +147,4 @@ public boolean save(Organization organization) {
 ## 7. Observations
 
 * The `nature` field indicates the legal nature of the organization (e.g. "public", "private", "social") and cannot be null or empty (AC4).
-* The internal `vatNumber` is generated as a UUID when using the US04 constructor, since this use case does not require a VAT number.
+* The internal `vatNumber` is generated using a static counter (`"GEN-" + nextGeneratedVat`) when using the US04 constructor, since this use case does not require a VAT number.
