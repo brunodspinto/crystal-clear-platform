@@ -66,7 +66,11 @@ After `load_data`, 7 unique (agent, company) pairs remain. After `aggregate_by_c
 
 ## 7. Observations
 
-- "Most recent declaration" is interpreted per (agent, company) pair: for each unique combination of agent and company, only the row with the latest `declaration_date` is kept.
+- **Interpretation of "most recent declaration"** (US wording: *"For each political actor, only the most recent declaration will be considered"*): the holdings dataset (Table 3 of the assignment) has one row per (agent, company, date) and has no `declaration_id` to join several holding rows into a single declaration. Two readings are possible:
+  - (a) keep only the latest snapshot per (agent, company) pair — what this implementation does;
+  - (b) collapse each agent to a single most-recent date and keep all the holdings of that date.
+  
+  Reading (a) is preferred because the holdings CSV does not record which rows were filed together; without that grouping, (b) would arbitrarily drop holdings that the agent still owns just because a single different holding was updated later. (a) preserves every agent's current portfolio and is what the chart consumer expects to see.
 - `statistics.quantiles` is not used here; no minimum data-point constraint applies.
 - I/O and plotting functions (`load_data`, `plot_top_companies`) are not covered by unit tests per project guidelines.
 

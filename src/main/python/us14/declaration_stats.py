@@ -1,8 +1,13 @@
+import math
+import sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import statistics as st
 from scipy import stats
+
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
 
 
 def load_data(path):
@@ -58,13 +63,53 @@ def shape_stats(data):
     }
 
 
-def print_central_tendency(label, ct):
+def sturges_classes(n):
+    return int(1 + 3.3 * math.log10(n))
+
+
+def frequency_table(data):
+    n = len(data)
+    c = sturges_classes(n)
+    counts, edges = np.histogram(data, bins=c)
+    rows = []
+    cum_abs = 0
+    for i in range(c):
+        n_i = int(counts[i])
+        f_i = n_i / n
+        cum_abs += n_i
+        rows.append({
+            'class':       f'[{edges[i]:,.2f}, {edges[i+1]:,.2f}' + (']' if i == c - 1 else '['),
+            'midpoint':    (edges[i] + edges[i+1]) / 2,
+            'abs_freq':    n_i,
+            'rel_freq':    f_i,
+            'cum_abs':     cum_abs,
+            'cum_rel':     cum_abs / n,
+        })
+    return pd.DataFrame(rows)
+
+
+def modal_class(data):
+    table = frequency_table(data)
+    idx = table['abs_freq'].idxmax()
+    return {
+        'class':    table.loc[idx, 'class'],
+        'midpoint': table.loc[idx, 'midpoint'],
+        'abs_freq': table.loc[idx, 'abs_freq'],
+        'rel_freq': table.loc[idx, 'rel_freq'],
+    }
+
+
+def print_central_tendency(label, ct, modal=None):
     print(f'{"="*55}')
     print(f'  {label.upper()}')
     print(f'{"="*55}')
     print(f'  Mean     (x̄)  : {ct["mean"]:>15,.2f} €')
     print(f'  Median   (x̃)  : {ct["median"]:>15,.2f} €')
-    print(f'  Mode          : {ct["mode"]:>15,.2f} €')
+    if modal is not None:
+        print(f'  Modal class   : {modal["class"]}')
+        print(f'  Class midpoint: {modal["midpoint"]:>15,.2f} €  (freq: {modal["abs_freq"]})')
+    else:
+        print(f'  Mode          : {ct["mode"]:>15,.2f} €')
     print()
 
 
@@ -196,10 +241,15 @@ if __name__ == '__main__':
 
     for variable, label in [('total_income', 'Total Income'), ('total_assets', 'Total Assets')]:
         data = df[variable].dropna()
-        print_central_tendency(label, central_tendency(data))
+        print_central_tendency(label, central_tendency(data), modal=modal_class(data))
         print_quantiles(label, compute_quantiles(data))
         print_variability(label, variability(data))
         print_shape(label, shape_stats(data))
+        print(f'{"="*55}')
+        print(f'  {label.upper()} — Frequency Table (Sturges)')
+        print(f'{"="*55}')
+        print(frequency_table(data).to_string(index=False))
+        print()
 
     plot_histograms(df, 'docs/system-documentation/US14/US14_histograms.svg')
     plot_boxplots(df, 'docs/system-documentation/US14/US14_boxplots.svg')

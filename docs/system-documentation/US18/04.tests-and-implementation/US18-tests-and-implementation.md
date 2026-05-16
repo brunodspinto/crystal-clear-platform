@@ -36,7 +36,7 @@ The full implementation lives in `src/main/python/us18/stock_increases.py`.
 | `get_evolution(df, df_top)` | Returns all historical rows from `df` for the (agent, company) pairs in `df_top` using set-based boolean filtering |
 | `print_top_increases(df_top)` | Prints a ranked table of the top pairs and their increases to stdout |
 | `plot_top_increases(df_top, output_path)` | Saves a horizontal bar chart of the top 10 increases as SVG using `sns.barplot` (slide 11) |
-| `plot_evolution(df_evolution, output_path)` | Saves boxplots of `total_value_in_stocks` grouped by `agent_id` showing value distribution using `df.groupby().boxplot()` (slide 39) |
+| `plot_evolution(df_evolution, df_top, output_path)` | Saves a line chart with `declaration_date` on the X axis and `total_value_in_stocks` on the Y axis, with one line per (agent, company) pair in the top 10, showing the full temporal evolution from initial to most recent declaration |
 
 ### Test Data
 
@@ -56,7 +56,7 @@ After `compute_increases`: 4 rows (A002/C003 and A004/C005 excluded), sorted des
 ### Output Charts (SVG)
 
 - `docs/system-documentation/US18/US18_top_increases.svg` — bar chart of the top 10 (agent, company) pairs by stock value increase
-- `docs/system-documentation/US18/US18_evolution.svg` — boxplots of `total_value_in_stocks` grouped by agent, showing distribution of values over time
+- `docs/system-documentation/US18/US18_evolution.svg` — line chart showing the value trajectory over time (one line per top pair), produced from the full historical rows returned by `get_evolution`
 
 
 ## 6. Integration and Demo
@@ -85,7 +85,7 @@ After `compute_increases`: 4 rows (A002/C003 and A004/C005 excluded), sorted des
 - [x] `get_evolution` — retrieves full history for top pairs
 - [x] `print_top_increases` — ranked table to stdout
 - [x] `plot_top_increases` — horizontal bar chart → SVG
-- [x] `plot_evolution` — boxplots grouped by agent (`df.groupby().boxplot()`, slide 39) → SVG
+- [x] `plot_evolution` — line chart of value over time, one line per top-10 pair (uses full history returned by `get_evolution`) → SVG
 - [x] `sample_holdings.csv` — 4-agent/5-company test dataset with single-declaration exclusion cases
 - [x] 8 unit tests (all passing)
 - [x] SVG charts saved to `docs/system-documentation/US18/`
