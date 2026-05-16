@@ -6,8 +6,8 @@ _Specifies functionalities that:
 &nbsp; &nbsp; (i) are common across several US/UC;  
 &nbsp; &nbsp; (ii) are not related to US/UC, namely: Audit, Reporting and Security._
 
-* **Security/Authentication:** All users who wish to use the application must be authenticated. The system enforces strict password rules: passwords must contain exactly seven alphanumeric characters, including exactly three capital letters and two digits.
-* **Access Control:** The information provided and the operations available within the system vary depending on the specific type of user (e.g., Administrator, Political Agent, Citizen).
+* **Security/Authentication:** All users who wish to use the application must be authenticated. Each user has a password of seven alphanumeric characters, including three capital letters and two digits.
+* **Access Control:** The information provided and the operations available within the system vary depending on the specific type of user (e.g., Administrator, Political Agent, Citizen, Journalist, Ethics Committee Member, Product Owner).
 
 ## Usability
 
@@ -17,20 +17,19 @@ documentation; consistency and standards._
 
 * **Documentation Language:** The application documentation (including requirements, analysis, and design artifacts) must be written entirely in English.
 * **User Interface:** Interaction with the system should be straightforward, providing clear prompts and feedback during Input/Output operations to prevent user errors.
+* **User Manual:** A stand-alone user manual, written in English and structured according to user-guide best practices, must be produced and made available with the platform.
 
 ## Reliability
 
 _Refers to the integrity, compliance and interoperability of the software. The requirements to be considered are: frequency and severity of failure, possibility of recovery, possibility of prediction, accuracy, average time between failures._
 
 * **Data Integrity:** The validation of business rules must be rigorously respected when recording and updating data within the system to prevent corrupt or invalid states.
-* **Data Persistence:** The application must employ object serialization to guarantee the persistence of the data between successive runs (i.e., data must not be lost when the application restarts).
 
 ## Performance
 
 _Evaluates the performance requirements of the software, namely: response time, start-up time, recovery time, memory consumption, CPU usage, load capacity and application availability._
 
-* **Serialization Efficiency:** The system should be able to serialize and deserialize objects during start-up and shutdown without causing excessive delays to the user experience.
-* **Responsiveness:** As a pedagogical Java application, it should handle in-memory data operations swiftly, maintaining a low response time for daily operations.
+* **Responsiveness:** As a pedagogical Java application, the system should handle in-memory data operations swiftly, maintaining a low response time for daily operations.
 
 ## Supportability
 
@@ -66,7 +65,6 @@ _Specifies or constraints the features inherent to the interaction of the
 system being developed with other external systems._
 
 * **User Interaction:** The primary interface for this sprint relies on a console-based Input/Output system to interact with the actors.
-* **External Systems:** No external database management systems are required at this stage, as data persistence is handled via local object serialization.
 
 ### Physical Constraints
 
