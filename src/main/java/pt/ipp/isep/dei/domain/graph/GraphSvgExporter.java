@@ -18,18 +18,19 @@ import java.util.Locale;
  */
 public class GraphSvgExporter {
 
-    private static final int WIDTH = 1200;
-    private static final int GRAPH_AREA_HEIGHT = 980;
+    private static final int WIDTH = 1400;
+    private static final int GRAPH_AREA_HEIGHT = 1180;
     private static final int CX = WIDTH / 2;
-    private static final int CY = 490;
-    private static final int[] RING_RADII = {160, 250, 340, 430};
-    private static final int NODE_SIZE = 26;
-    private static final int LABEL_RADIAL_OFFSET = 14;
+    private static final int CY = 600;
+    private static final int[] RING_RADII = {140, 280, 400, 520};
+    private static final int NODE_SIZE = 24;
+    private static final int LABEL_RADIAL_OFFSET = 36;
     private static final int DETAIL_ROW_H = 90;
     private static final int DETAIL_START_Y = GRAPH_AREA_HEIGHT + 30;
     private static final int DETAIL_COLS = 4;
     private static final int DETAIL_COL_W = 290;
-    private static final int EDGE_LABEL_STAGGER = 14;
+    private static final int EDGE_LABEL_STAGGER = 22;
+    private static final int TITLE_BAND_HEIGHT = 60;
 
     private GraphSvgExporter() {}
 
@@ -144,13 +145,11 @@ public class GraphSvgExporter {
             double nx = -uy;
             double ny = ux;
             int sign = (idx % 2 == 0) ? 1 : -1;
-            double offset = sign * ((idx + 1) / 2) * EDGE_LABEL_STAGGER;
+            double offset = sign * (10 + ((idx + 1) / 2) * EDGE_LABEL_STAGGER);
             double lx = mx + nx * offset;
             double ly = my + ny * offset - 3;
 
-            double angleDeg = Math.toDegrees(Math.atan2(dy, dx));
-            if (angleDeg > 90) angleDeg -= 180;
-            else if (angleDeg < -90) angleDeg += 180;
+            double angleDeg = 0.0;
 
             String edgeId = "rel-" + sanitize(edge.getFromId()) + "-" + sanitize(edge.getToId())
                     + "-" + sanitize(edge.getLabel());
@@ -191,6 +190,12 @@ public class GraphSvgExporter {
             double offset = NODE_SIZE + LABEL_RADIAL_OFFSET;
             double labelX = x + (dx / dist) * offset;
             double labelY = y + (dy / dist) * offset + 4;
+            if (labelY < TITLE_BAND_HEIGHT) {
+                labelY = TITLE_BAND_HEIGHT;
+            }
+            if (labelY > GRAPH_AREA_HEIGHT - 30) {
+                labelY = GRAPH_AREA_HEIGHT - 30;
+            }
             String anchor = "middle";
             if (dx / dist > 0.4) anchor = "start";
             else if (dx / dist < -0.4) anchor = "end";
