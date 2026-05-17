@@ -3,14 +3,16 @@ package pt.ipp.isep.dei.controller;
 import pt.ipp.isep.dei.domain.graph.Edge;
 import pt.ipp.isep.dei.domain.graph.Entity;
 import pt.ipp.isep.dei.domain.graph.EntityCsvParser;
-import pt.ipp.isep.dei.domain.graph.GraphSvgExporter;
+import pt.ipp.isep.dei.domain.graph.GraphDotExporter;
 import pt.ipp.isep.dei.domain.graph.RelationCsvParser;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
 /**
- * Controller for US26 - Export the graph as an SVG file with clickable hyperlinks.
+ * Controller for US26 - Export the graph as an SVG file using Graphviz.
  */
 public class ExportGraphSvgController {
 
@@ -20,7 +22,7 @@ public class ExportGraphSvgController {
     public ExportGraphSvgController() {}
 
     /**
-     * Builds the graph from two CSV files and exports it as an SVG file.
+     * Builds the graph from two CSV files and exports it as an SVG file via Graphviz.
      *
      * @param entitiesCsvPath  path to the CSV file with entities.
      * @param relationsCsvPath path to the CSV file with relations.
@@ -32,7 +34,35 @@ public class ExportGraphSvgController {
             throws IOException {
         List<Entity> entities = EntityCsvParser.parse(entitiesCsvPath);
         List<Edge> edges = RelationCsvParser.parse(relationsCsvPath);
-        GraphSvgExporter.export(entities, edges, outputSvgPath);
+
+        String dotPath;
+        if (outputSvgPath.endsWith(".svg")) {
+            dotPath = outputSvgPath.substring(0, outputSvgPath.length() - 4) + ".dot";
+        } else {
+            dotPath = outputSvgPath + ".dot";
+        }
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(dotPath));
+        try {
+            writer.write(GraphDotExporter.export(entities, edges));
+        } finally {
+            writer.close();
+        }
+
+        ProcessBuilder pb = new ProcessBuilder("dot", "-Tsvg", dotPath, "-o", outputSvgPath);
+        pb.redirectErrorStream(true);
+        try {
+            Process process = pb.start();
+            int code = process.waitFor();
+            if (code != 0) {
+                throw new RuntimeException("Graphviz 'dot' failed with exit code " + code
+                        + ". Is Graphviz installed? On macOS: brew install graphviz");
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Graph rendering was interrupted.", e);
+        }
+
         return entities.size();
     }
 }

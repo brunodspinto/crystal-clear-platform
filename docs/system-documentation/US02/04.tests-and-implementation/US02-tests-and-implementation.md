@@ -30,10 +30,14 @@
 | `ensureApproveAlreadyApprovedThrows` | Approving an already-approved request throws `IllegalStateException` |
 | `ensureRejectAlreadyRejectedThrows` | Rejecting an already-rejected request throws `IllegalStateException` |
 | `ensureMultiplePendingRequestsAllReturned` | All pending requests are returned when multiple exist |
+| `ensureApproveCitizenRequestSetsStatusApproved` | Approving a CITIZEN request sets its status to APPROVED |
+| `ensureApproveJournalistRequestSetsStatusApproved` | Approving a JOURNALIST request sets its status to APPROVED |
+| `ensureApproveEthicsCommitteeRequestSetsStatusApproved` | Approving an ETHICS_COMMITTEE request sets its status to APPROVED |
+| `ensureApproveAdministratorRequestSetsStatusApproved` | Approving an ADMINISTRATOR request sets its status to APPROVED |
 
 ## Checklist
 
 - [x] `ReviewRegistrationController`: list pending, approve (creates user account), reject with reason
 - [x] `ReviewRegistrationUI`: request list, detail view, accept/reject decision, mandatory reason
 - [x] `AdminUI`: "Review Registration Requests" option wired up
-- [x] 11 unit tests (all passing)
+- [x] 15 unit tests (all passing)
