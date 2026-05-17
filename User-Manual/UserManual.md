@@ -28,6 +28,7 @@ To install and run the platform, your machine must have:
 - **Maven:** 3.6 or newer
 - **Python:** 3.10 or newer (only for statistical features)
 - **Python packages:** `pandas`, `matplotlib`, `scipy`
+- **Graphviz:** 2.40 or newer (required by the relations graph rendering — the `dot` binary must be on the system PATH)
 - **Git:** 2.30 or newer
 - **RAM:** 4 GB (8 GB recommended)
 - **Disk:** 500 MB free
@@ -38,7 +39,13 @@ To install and run the platform, your machine must have:
 2. Enter the project folder: `cd HEREISLAPR`
 3. Build the application: `mvn clean package`
 4. Install Python dependencies: `pip install -r requirements.txt`
-5. Run the platform: `java -jar target/project-template-1.0-SNAPSHOT-jar-with-dependencies.jar`
+5. Install Graphviz:
+   - macOS: `brew install graphviz`
+   - Linux (Debian/Ubuntu): `sudo apt install graphviz`
+   - Windows: download the installer from https://graphviz.org/download/ and make sure the `dot` binary is added to the system PATH.
+6. Run the platform: `java -jar target/project-template-1.0-SNAPSHOT-jar-with-dependencies.jar`
+
+If the "Build the relations graph" option in the Admin menu fails with a message about Graphviz, it means the `dot` binary is missing from the PATH — install Graphviz as shown above and run the option again.
 
 ---
 
