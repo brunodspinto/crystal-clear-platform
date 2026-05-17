@@ -41,10 +41,10 @@ public class DetectConflictsController {
 
     private static final String[] QUESTION_LABELS = {
         "Which individuals have relatives who hold prominent positions?",
-        "Which individuals have relatives who hold prominent positions in a specific organisation?",
-        "Which individuals holding positions in public organisations influence companies?",
-        "Which individuals are associated with persons who own assets?",
-        "Which individuals were appointed by members of an organisation?"
+        "Which individuals have relatives in a specific organisation?",
+        "Which individuals in public organisations influence companies?",
+        "Which individuals are associated with asset owners?",
+        "Which individuals were appointed by organization members?"
     };
 
     /* ------------------------------------------------------------------ */
