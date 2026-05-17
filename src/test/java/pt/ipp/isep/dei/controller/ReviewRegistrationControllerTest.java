@@ -142,4 +142,10 @@ class ReviewRegistrationControllerTest {
         controller.approveRequest(r);
         assertEquals(RegistrationStatus.APPROVED, r.getStatus());
     }
+
+    @Test
+    void ensureDefaultConstructorInitialisesRepositoriesFromSingleton() {
+        ReviewRegistrationController defaultController = new ReviewRegistrationController();
+        assertNotNull(defaultController.getPendingRequests());
+    }
 }
