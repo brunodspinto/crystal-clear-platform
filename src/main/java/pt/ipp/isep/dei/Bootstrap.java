@@ -110,6 +110,10 @@ public class Bootstrap implements Runnable {
                 60000.0, 5000.0, 2000.0, new Date(), null);
         d.addAssetEntry(AssetType.REAL_ESTATE, 250000.0, new RealEstate("Apartment", "Lisbon"));
         d.addAssetEntry(AssetType.VEHICLES, 25000.0, new VehicleAsset("Toyota Corolla"));
+        Organization techCorp = new Organization("TechCorp", "private", OrganizationType.COMPANY);
+        d.addBusinessParticipation(techCorp, 500000001L, 15000.0, 10.5);
+        Organization greenFund = new Organization("GreenFund", "social", OrganizationType.FOUNDATION);
+        d.addBusinessParticipation(greenFund, 600000002L, 8000.0, 5.0);
         d.setStatus(DeclarationStatus.VALIDATED);
         declarationRepo.save(d);
     }
