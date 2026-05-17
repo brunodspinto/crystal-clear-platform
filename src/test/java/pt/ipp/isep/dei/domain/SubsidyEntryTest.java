@@ -8,60 +8,58 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SubsidyEntryTest {
 
-    private static final Date DATE = new Date(0);
+    private static final Date DATE = new Date();
 
-    private Organization createOrg() {
-        return new Organization("Foundation X", "public", OrganizationType.FOUNDATION);
+    private Organization org() {
+        return new Organization("Foundation", "public", OrganizationType.FOUNDATION);
     }
 
     // -------------------------------------------------------------------------
-    // Construction
+    // Construction – happy path
     // -------------------------------------------------------------------------
 
     @Test
-    void ensureSubsidyEntryCreationWorks() {
-        SubsidyEntry se = new SubsidyEntry(createOrg(), 5000.0, "Research grant", DATE);
-        assertNotNull(se);
+    void ensureCreationWorks() {
+        assertDoesNotThrow(() -> new SubsidyEntry(org(), 1500.0, "Research grant", DATE));
     }
 
     @Test
-    void ensureSubsidyEntryFailsWithNullOrganization() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new SubsidyEntry(null, 5000.0, "Grant", DATE));
-    }
-
-    @Test
-    void ensureSubsidyEntryFailsWithNegativeAmount() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new SubsidyEntry(createOrg(), -1.0, "Grant", DATE));
-    }
-
-    @Test
-    void ensureSubsidyEntryFailsWithNullDescription() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new SubsidyEntry(createOrg(), 5000.0, null, DATE));
-    }
-
-    @Test
-    void ensureSubsidyEntryFailsWithBlankDescription() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new SubsidyEntry(createOrg(), 5000.0, "   ", DATE));
-    }
-
-    @Test
-    void ensureSubsidyEntryFailsWithNullDate() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new SubsidyEntry(createOrg(), 5000.0, "Grant", null));
+    void ensureCreationWithZeroAmountWorks() {
+        assertDoesNotThrow(() -> new SubsidyEntry(org(), 0.0, "No-cost grant", DATE));
     }
 
     // -------------------------------------------------------------------------
-    // Zero amount is valid (AC4)
+    // Construction – guards
     // -------------------------------------------------------------------------
 
     @Test
-    void ensureZeroAmountIsValid() {
-        SubsidyEntry se = new SubsidyEntry(createOrg(), 0.0, "In-kind support", DATE);
-        assertEquals(0.0, se.getAmount());
+    void ensureNullOrganizationThrows() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new SubsidyEntry(null, 1500.0, "Grant", DATE));
+    }
+
+    @Test
+    void ensureNegativeAmountThrows() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new SubsidyEntry(org(), -0.01, "Grant", DATE));
+    }
+
+    @Test
+    void ensureNullDescriptionThrows() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new SubsidyEntry(org(), 1000.0, null, DATE));
+    }
+
+    @Test
+    void ensureBlankDescriptionThrows() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new SubsidyEntry(org(), 1000.0, "   ", DATE));
+    }
+
+    @Test
+    void ensureNullDateThrows() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new SubsidyEntry(org(), 1000.0, "Grant", null));
     }
 
     // -------------------------------------------------------------------------
@@ -69,13 +67,27 @@ class SubsidyEntryTest {
     // -------------------------------------------------------------------------
 
     @Test
-    void ensureGettersReturnCorrectValues() {
-        Organization org = createOrg();
-        SubsidyEntry se = new SubsidyEntry(org, 1500.0, "Travel grant", DATE);
+    void ensureGetOrganizationReturnsCorrectValue() {
+        Organization o = org();
+        SubsidyEntry se = new SubsidyEntry(o, 500.0, "Prize", DATE);
+        assertEquals(o, se.getOrganization());
+    }
 
-        assertEquals(org, se.getOrganization());
-        assertEquals(1500.0, se.getAmount());
-        assertEquals("Travel grant", se.getDescription());
+    @Test
+    void ensureGetAmountReturnsCorrectValue() {
+        SubsidyEntry se = new SubsidyEntry(org(), 2500.0, "Grant", DATE);
+        assertEquals(2500.0, se.getAmount(), 0.001);
+    }
+
+    @Test
+    void ensureGetDescriptionReturnsCorrectValue() {
+        SubsidyEntry se = new SubsidyEntry(org(), 100.0, "Travel subsidy", DATE);
+        assertEquals("Travel subsidy", se.getDescription());
+    }
+
+    @Test
+    void ensureGetDateReturnsCorrectValue() {
+        SubsidyEntry se = new SubsidyEntry(org(), 100.0, "Grant", DATE);
         assertEquals(DATE, se.getDate());
     }
 }
