@@ -110,4 +110,36 @@ class ReviewRegistrationControllerTest {
         List<RegistrationRequest> pending = controller.getPendingRequests();
         assertEquals(2, pending.size());
     }
+
+    @Test
+    void ensureApproveCitizenRequestSetsStatusApproved() {
+        RegistrationRequest r = makeRequest("citizen.review@gov.pt", UserRole.CITIZEN);
+        repository.save(r);
+        controller.approveRequest(r);
+        assertEquals(RegistrationStatus.APPROVED, r.getStatus());
+    }
+
+    @Test
+    void ensureApproveJournalistRequestSetsStatusApproved() {
+        RegistrationRequest r = makeRequest("journalist.review@gov.pt", UserRole.JOURNALIST);
+        repository.save(r);
+        controller.approveRequest(r);
+        assertEquals(RegistrationStatus.APPROVED, r.getStatus());
+    }
+
+    @Test
+    void ensureApproveEthicsCommitteeRequestSetsStatusApproved() {
+        RegistrationRequest r = makeRequest("ethics.review@gov.pt", UserRole.ETHICS_COMMITTEE);
+        repository.save(r);
+        controller.approveRequest(r);
+        assertEquals(RegistrationStatus.APPROVED, r.getStatus());
+    }
+
+    @Test
+    void ensureApproveAdministratorRequestSetsStatusApproved() {
+        RegistrationRequest r = makeRequest("admin.review@gov.pt", UserRole.ADMINISTRATOR);
+        repository.save(r);
+        controller.approveRequest(r);
+        assertEquals(RegistrationStatus.APPROVED, r.getStatus());
+    }
 }
