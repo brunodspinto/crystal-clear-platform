@@ -8,140 +8,111 @@ hide circle
 
 package "pt.ipp.isep.dei.domain" {
 
+    ' -- user hierarchy ----------------------------------------------------
+    abstract class User {
+        # name
+        # email
+        + getName()
+        + getEmail()
+        + hasEmail(email)
+    }
+
     class PoliticalAgent {
-        - name : String
-        - email : String
-        - nationalIdentityCard : String
-        - taxIdentificationNumber : String {id}
-        - mandateStart : Date
-        - mandateEnd : Date
-        + getName() : String
-        + getEmail() : String
-        + getNationalIdentityCard() : String
-        + getTaxIdentificationNumber() : String
+        - nationalIdentityCard
+        - taxIdentificationNumber {id}
+        - mandateStart
+        - mandateEnd
+        + getNationalIdentityCard()
+        + getTaxIdentificationNumber()
     }
 
     class Citizen {
-        - email : String
-        - name : String
-        + getEmail() : String
-        + getName() : String
-        + hasEmail(email : String) : boolean
+        - nationalIdCardNumber
+        + getNationalIdCardNumber()
     }
 
-    ' ── complaint ────────────────────────────────────────────────────────
+    class EthicsCommitteeMember {
+    }
+
+    User <|-- PoliticalAgent
+    User <|-- Citizen
+    User <|-- EthicsCommitteeMember
+
+    ' -- registration ------------------------------------------------------
+    class RegistrationRequest {
+        - fullName
+        - email
+        - password
+        - identificationDocument
+        - submissionDate
+        - status
+        - rejectionReason
+        + approve()
+        + reject(reason)
+        + getRole()
+        + getStatus()
+    }
+
+    enum UserRole <<enumeration>> {
+        POLITICAL_AGENT
+        CITIZEN
+        JOURNALIST
+        ADMINISTRATOR
+        ETHICS_COMMITTEE_MEMBER
+    }
+
+    enum RegistrationStatus <<enumeration>> {
+        PENDING
+        APPROVED
+        REJECTED
+    }
+
+    RegistrationRequest --> UserRole : requestedRole
+    RegistrationRequest --> RegistrationStatus : hasStatus
+
+    ' -- complaint ---------------------------------------------------------
     class Complaint {
-        - description : String
-        - complaintDate : Date
-        - submissionDate : Date
-        + getDescription() : String
-        + getCitizen() : Citizen
-        + getPoliticalAgent() : PoliticalAgent
+        - description
+        - complaintDate
+        - submissionDate
+        + getDescription()
+        + getCitizen()
+        + getPoliticalAgent()
     }
 
-    ' ── declaration aggregate ────────────────────────────────────────────
+    enum PoliticalFunction <<enumeration>> {
+        MINISTER
+        DEPUTY
+        COUNCILLOR
+        PARISH_COUNCIL_PRESIDENT
+        MAYOR
+    }
+
+    Citizen "1" -- "0..*" Complaint : submits
+    Complaint "0..*" -- "1" PoliticalAgent : targets
+    Complaint "0..*" -- "1" PoliticalFunction : references
+
+    ' -- declaration aggregate --------------------------------------------
     class Declaration {
-        - id : UUID
-        - submissionDate : Date
-        + getId() : UUID
-        + getType() : DeclarationType
-        + getStatus() : DeclarationStatus
-        + setStatus(status : DeclarationStatus)
+        - id
+        - submissionDate
+        + getId()
+        + getType()
+        + getStatus()
+        + setStatus(status)
         + addPositionEntry(...)
+        + addIncome(...)
         + addSubsidyEntry(...)
         + addAssetEntry(...)
         + addBusinessParticipation(...)
         + addAttachment(...)
+        + getPositionEntries()
+        + getIncomes()
+        + getSubsidyEntries()
+        + getAssetEntries()
+        + getBusinessParticipations()
     }
 
-    class PositionEntry {
-        - functionDesignation : String
-        - grossSalary : double
-        - sideIncomeConsulting : double
-        - sideIncomeBoardMemberships : double
-        - startDate : Date
-        - endDate : Date
-        + getOrganization() : Organization
-        + getNature() : PositionNature
-    }
-
-    class SubsidyEntry {
-        - amount : double
-        - description : String
-        - date : Date
-        + getOrganization() : Organization
-        + getAmount() : double
-    }
-
-    class AssetEntry {
-        - assetValue : double
-        + getAssetType() : AssetType
-        + getAssetValue() : double
-        + getRealEstate() : RealEstate
-        + getVehicleAsset() : VehicleAsset
-        + getStockAsset() : StockAsset
-    }
-
-    class BusinessParticipation {
-        - companyNIF : long
-        - totalValueInStocks : double
-        - companyPercentage : double
-        + getOrganization() : Organization
-        + getCompanyNIF() : long
-    }
-
-    class Attachment {
-        - fileName : String
-        - uploadDate : Date
-        + getFileName() : String
-        + getUploadDate() : Date
-    }
-
-    ' ── organisation ─────────────────────────────────────────────────────
-    class Organization {
-        - vatNumber : String
-        - name : String
-        - nature : String
-        - website : String
-        - phone : String
-        - email : String
-        + getName() : String
-        + getType() : OrganizationType
-        + addEmployee(employee : Employee) : boolean
-    }
-
-    class Employee {
-        - email : String
-        - name : String
-        - position : String
-        - phone : String
-        + hasEmail(email : String) : boolean
-    }
-
-    ' ── asset detail classes ─────────────────────────────────────────────
-    class RealEstate {
-        - description : String
-        - municipality : String
-        + getDescription() : String
-        + getMunicipality() : String
-    }
-
-    class VehicleAsset {
-        - description : String
-        + getDescription() : String
-    }
-
-    class StockAsset {
-        - description : String
-        + getDescription() : String
-    }
-
-    ' ── utilities ────────────────────────────────────────────────────────
-    class DeclarationCsvExporter <<utility>> {
-        + {static} export(declarations : List<Declaration>, filePath : String) : boolean
-    }
-
-    ' ── enumerations ─────────────────────────────────────────────────────
     enum DeclarationType <<enumeration>> {
         INITIAL
         REGULAR
@@ -154,12 +125,167 @@ package "pt.ipp.isep.dei.domain" {
         REJECTED
     }
 
-    enum PoliticalFunction <<enumeration>> {
-        MINISTER
-        DEPUTY
-        COUNCILLOR
-        PARISH_COUNCIL_PRESIDENT
-        MAYOR
+    class PositionEntry {
+        - functionDesignation
+        - grossSalary
+        - sideIncomeConsulting
+        - sideIncomeBoardMemberships
+        - startDate
+        - endDate
+        + getOrganization()
+        + getNature()
+    }
+
+    class Income {
+        - amount
+        - source
+        - date
+        + getOrganization()
+        + getAmount()
+        + getSource()
+        + getDate()
+    }
+
+    class SubsidyEntry {
+        - amount
+        - description
+        - date
+        + getOrganization()
+        + getAmount()
+    }
+
+    class AssetEntry {
+        - assetValue
+        + getAssetType()
+        + getAssetValue()
+        + getRealEstate()
+        + getVehicleAsset()
+        + getStockAsset()
+    }
+
+    class BusinessParticipation {
+        - companyNIF
+        - totalValueInStocks
+        - companyPercentage
+        + getOrganization()
+        + getCompanyNIF()
+    }
+
+    class Attachment {
+        - fileName
+        - uploadDate
+        + getFileName()
+        + getUploadDate()
+    }
+
+    enum PositionNature <<enumeration>> {
+        PUBLIC
+        PRIVATE
+        SOCIAL
+    }
+
+    enum AssetType <<enumeration>> {
+        REAL_ESTATE
+        VEHICLES
+        STOCKS
+    }
+
+    PoliticalAgent "1" -- "0..*" Declaration : submits
+    Declaration --> DeclarationType : classifiedAs
+    Declaration --> DeclarationStatus : hasStatus
+    Declaration "1" *-- "0..*" PositionEntry : positions
+    Declaration "1" *-- "0..*" Income : incomes
+    Declaration "1" *-- "0..*" SubsidyEntry : subsidies
+    Declaration "1" *-- "0..*" AssetEntry : assets
+    Declaration "1" *-- "0..*" BusinessParticipation : participations
+    Declaration "1" *-- "0..*" Attachment : attachments
+
+    PositionEntry "0..*" --> "1" Organization : heldAt
+    PositionEntry --> PositionNature : nature
+    Income "0..*" --> "1" Organization : paidBy
+    SubsidyEntry "0..*" --> "1" Organization : receivedFrom
+    BusinessParticipation "0..*" --> "1" Organization : heldIn
+
+    ' -- asset detail classes ({xor}: exactly one is non-null) ------------
+    class RealEstate {
+        - description
+        - municipality
+        + getDescription()
+        + getMunicipality()
+    }
+
+    class VehicleAsset {
+        - description
+        + getDescription()
+    }
+
+    class StockAsset {
+        - description
+        + getDescription()
+    }
+
+    AssetEntry --> AssetType : classifiedAs
+    AssetEntry "1" o-- "0..1" RealEstate : detail
+    AssetEntry "1" o-- "0..1" VehicleAsset : detail
+    AssetEntry "1" o-- "0..1" StockAsset : detail
+    note "{xor}\nexactly one detail\nper AssetType" as XOR
+    RealEstate . XOR
+    VehicleAsset . XOR
+    StockAsset . XOR
+
+    ' -- validation (US08) ------------------------------------------------
+    class ValidationRecord {
+        - validationDate
+        + getMember()
+        + getDeclaration()
+        + getOutcome()
+        + getComments()
+    }
+
+    class ValidationComment {
+        - section
+        - comment
+        + getSection()
+        + getComment()
+    }
+
+    enum ValidationOutcome <<enumeration>> {
+        VALIDATED
+        RETURNED_FOR_CORRECTION
+    }
+
+    class EthicsCommittee {
+        - name
+        + getName()
+        + getMembers()
+        + addMember(member)
+    }
+
+    EthicsCommittee "1" *-- "0..*" EthicsCommitteeMember : composedOf
+    ValidationRecord "0..*" --> "1" EthicsCommitteeMember : signedBy
+    ValidationRecord "0..*" --> "1" Declaration : reviews
+    ValidationRecord --> ValidationOutcome : hasOutcome
+    ValidationRecord "1" *-- "0..*" ValidationComment : comments
+
+    ' -- organisation -----------------------------------------------------
+    class Organization {
+        - vatNumber
+        - name
+        - nature
+        - website
+        - phone
+        - email
+        + getName()
+        + getType()
+        + addEmployee(employee)
+    }
+
+    class Employee {
+        - email
+        - name
+        - position
+        - phone
+        + hasEmail(email)
     }
 
     enum OrganizationType <<enumeration>> {
@@ -170,150 +296,15 @@ package "pt.ipp.isep.dei.domain" {
         ASSOCIATION
     }
 
-    enum AssetType <<enumeration>> {
-        REAL_ESTATE
-        VEHICLES
-        STOCKS
-    }
-
-    enum PositionNature <<enumeration>> {
-        PUBLIC
-        PRIVATE
-        SOCIAL
-    }
-
-    ' ── complaint associations ───────────────────────────────────────────
-    Citizen "1" -- "0..*" Complaint : submits
-    Complaint "0..*" -- "1" PoliticalAgent : targets
-    Complaint "0..*" -- "1" PoliticalFunction : references
-
-    ' ── declaration associations ─────────────────────────────────────────
-    PoliticalAgent "1" -- "0..*" Declaration : submits
-    Declaration --> DeclarationType : classifiedAs
-    Declaration --> DeclarationStatus : hasStatus
-    Declaration "1" *-- "0..*" PositionEntry : positions
-    Declaration "1" *-- "0..*" SubsidyEntry : subsidies
-    Declaration "1" *-- "0..*" AssetEntry : assets
-    Declaration "1" *-- "0..*" BusinessParticipation : participations
-    Declaration "1" *-- "0..*" Attachment : attachments
-
-    ' ── entry associations ───────────────────────────────────────────────
-    PositionEntry "0..*" --> "1" Organization : heldAt
-    PositionEntry --> PositionNature : nature
-    SubsidyEntry "0..*" --> "1" Organization : receivedFrom
-    BusinessParticipation "0..*" --> "1" Organization : heldIn
-
-    ' ── asset detail associations ({xor}: exactly one is non-null) ───────
-    AssetEntry --> AssetType : classifiedAs
-    AssetEntry "1" o-- "0..1" RealEstate : detail
-    AssetEntry "1" o-- "0..1" VehicleAsset : detail
-    AssetEntry "1" o-- "0..1" StockAsset : detail
-    note "{xor}\nexactly one detail\nper AssetType" as XOR
-    RealEstate . XOR
-    VehicleAsset . XOR
-    StockAsset . XOR
-
-    ' ── organisation associations ────────────────────────────────────────
     Organization --> OrganizationType : classifiedAs
     Organization "1" *-- "0..*" Employee : employs
 
-    ' ── utility usage ────────────────────────────────────────────────────
+    ' -- utility ----------------------------------------------------------
+    class DeclarationCsvExporter <<utility>> {
+        + {static} export(declarations, filePath)
+    }
+
     DeclarationCsvExporter ..> Declaration : exports
-}
-
-package "pt.ipp.isep.dei.domain.graph" {
-
-    note "Standalone graph sub-system.\nEntities are identified by String id\n(not linked to domain PoliticalAgent)." as GraphNote
-
-    abstract class Entity {
-        - id : String
-        - type : String
-        - startDate : String
-        - endDate : String
-        + getId() : String
-        + getType() : String
-        + getStartDate() : String
-        + getEndDate() : String
-    }
-
-    class Person {
-        - name : String
-        - birthDate : String
-        - nationality : String
-        + getName() : String
-        + getBirthDate() : String
-        + getNationality() : String
-    }
-
-    class Organization {
-        - name : String
-        - organizationType : String
-        - country : String
-        + getName() : String
-        + getOrganizationType() : String
-        + getCountry() : String
-    }
-
-    class Position {
-        - positionTitle : String
-        - positionType : String
-        - organizationId : String
-        + getPositionTitle() : String
-        + getPositionType() : String
-        + getOrganizationId() : String
-    }
-
-    class Asset {
-        - assetType : String
-        - country : String
-        - estimatedValue : double
-        + getAssetType() : String
-        + getCountry() : String
-        + getEstimatedValue() : double
-    }
-
-    class Edge {
-        - fromId : String
-        - toId : String
-        - label : String
-        - weight : double
-        + fromId() : String
-        + toId() : String
-        + label() : String
-        + weight() : double
-    }
-
-    class RelationGraph {
-        - adj : Map<String, List<Edge>>
-        + addEdge(e : Edge)
-        + neighbors(id : String) : List<Edge>
-        + nodes() : Set<String>
-        + nodeCount() : int
-    }
-
-    class AdjacencyMatrix {
-        - size : int
-        - weights : double[][]
-        + getSize() : int
-        + addEdge(from : int, to : int, weight : double)
-        + getWeight(from : int, to : int) : double
-        + hasEdge(from : int, to : int) : boolean
-    }
-
-    class EntityCsvParser <<utility>> {
-        + {static} parse(filePath : String) : List<Entity>
-    }
-
-    ' ── inheritance ──────────────────────────────────────────────────────
-    Entity <|-- Person
-    Entity <|-- Organization
-    Entity <|-- Position
-    Entity <|-- Asset
-
-    ' ── graph associations ───────────────────────────────────────────────
-    RelationGraph "1" *-- "0..*" Edge : contains
-
-    EntityCsvParser ..> Entity : creates
 }
 
 @enduml
