@@ -191,4 +191,98 @@ class SubmitDeclarationControllerTest {
         declRepo.save(new Declaration(DeclarationType.EXCEPTIONAL, agent, NOW));
         assertEquals(3, declRepo.getAll().size());
     }
+
+    // -------------------------------------------------------------------------
+    // submitDeclaration - full controller path with authenticated session
+    // -------------------------------------------------------------------------
+
+    private SubmitDeclarationController loginAndBuildCtrl(String email) {
+        pt.ipp.isep.dei.repository.AuthenticationRepository authRepo =
+                pt.ipp.isep.dei.repository.Repositories.getInstance().getAuthenticationRepository();
+        authRepo.doLogout();
+        authRepo.addUserRole(AuthenticationController.ROLE_POLITICAL_AGENT, "Political Agent");
+        authRepo.addUserWithRole("Agent Test", email, "Agent123*",
+                AuthenticationController.ROLE_POLITICAL_AGENT);
+        authRepo.doLogin(email, "Agent123*");
+
+        PoliticalAgent loggedAgent = new PoliticalAgent("Agent Test", email,
+                "22222222", "222222222", NOW, null);
+        agentRepo.save(loggedAgent);
+
+        return new SubmitDeclarationController(orgRepo, declRepo, agentRepo, authRepo);
+    }
+
+    @Test
+    void ensureSubmitDeclarationReturnsTrueWhenAgentLoggedIn() {
+        SubmitDeclarationController controller = loginAndBuildCtrl("agent.submit1@test.com");
+        boolean ok = controller.submitDeclaration(DeclarationType.INITIAL,
+                new java.util.ArrayList<>(), new java.util.ArrayList<>(),
+                new java.util.ArrayList<>(), new java.util.ArrayList<>(),
+                new java.util.ArrayList<>());
+        assertTrue(ok);
+    }
+
+    @Test
+    void ensureSubmitDeclarationPersistsDeclarationInRepository() {
+        SubmitDeclarationController controller = loginAndBuildCtrl("agent.submit2@test.com");
+        int before = declRepo.getAll().size();
+        controller.submitDeclaration(DeclarationType.REGULAR,
+                new java.util.ArrayList<>(), new java.util.ArrayList<>(),
+                new java.util.ArrayList<>(), new java.util.ArrayList<>(),
+                new java.util.ArrayList<>());
+        assertEquals(before + 1, declRepo.getAll().size());
+    }
+
+    @Test
+    void ensureSubmitDeclarationWithAllSectionsPopulatesDeclaration() {
+        SubmitDeclarationController controller = loginAndBuildCtrl("agent.submit3@test.com");
+
+        java.util.List<Object[]> positions = new java.util.ArrayList<>();
+        positions.add(new Object[]{parliament, "Deputy", PositionNature.PUBLIC,
+                60000.0, 5000.0, 2000.0, NOW, null});
+
+        java.util.List<Object[]> subsidies = new java.util.ArrayList<>();
+        subsidies.add(new Object[]{parliament, 2000.0, "Grant", NOW});
+
+        java.util.List<Object[]> assets = new java.util.ArrayList<>();
+        assets.add(new Object[]{AssetType.REAL_ESTATE, 300000.0, new RealEstate("Villa", "Porto")});
+
+        java.util.List<Object[]> participations = new java.util.ArrayList<>();
+        participations.add(new Object[]{parliament, 987654321L, 5000.0, 5.0});
+
+        java.util.List<Object[]> attachments = new java.util.ArrayList<>();
+        attachments.add(new Object[]{"doc.pdf", NOW});
+
+        boolean ok = controller.submitDeclaration(DeclarationType.EXCEPTIONAL,
+                positions, subsidies, assets, participations, attachments);
+        assertTrue(ok);
+
+        Declaration saved = declRepo.getAll().get(declRepo.getAll().size() - 1);
+        assertEquals(1, saved.getPositionEntries().size());
+        assertEquals(1, saved.getSubsidyEntries().size());
+        assertEquals(1, saved.getAssetEntries().size());
+        assertEquals(1, saved.getBusinessParticipations().size());
+        assertEquals(1, saved.getAttachments().size());
+    }
+
+    @Test
+    void ensureSubmitDeclarationReturnsFalseWhenAgentNotRegistered() {
+        pt.ipp.isep.dei.repository.AuthenticationRepository authRepo =
+                pt.ipp.isep.dei.repository.Repositories.getInstance().getAuthenticationRepository();
+        authRepo.doLogout();
+        authRepo.addUserRole(AuthenticationController.ROLE_POLITICAL_AGENT, "Political Agent");
+        String email = "agent.submit4.unknown@test.com";
+        authRepo.addUserWithRole("Unknown Agent", email, "Agent123*",
+                AuthenticationController.ROLE_POLITICAL_AGENT);
+        authRepo.doLogin(email, "Agent123*");
+
+        SubmitDeclarationController controller =
+                new SubmitDeclarationController(orgRepo, declRepo, agentRepo, authRepo);
+
+        boolean ok = controller.submitDeclaration(DeclarationType.INITIAL,
+                new java.util.ArrayList<>(), new java.util.ArrayList<>(),
+                new java.util.ArrayList<>(), new java.util.ArrayList<>(),
+                new java.util.ArrayList<>());
+        assertEquals(false, ok);
+    }
 }

@@ -248,5 +248,86 @@ class ValidateDeclarationControllerTest {
         processValidation(d, ValidationOutcome.VALIDATED, new ArrayList<>());
         assertEquals(0, ctrl().getPendingDeclarations().size());
     }
+
+    // -------------------------------------------------------------------------
+    // processValidation - full controller path with authenticated session
+    // -------------------------------------------------------------------------
+
+    private ValidateDeclarationController loginAndBuildCtrl(String email) {
+        AuthenticationRepository authRepo =
+                Repositories.getInstance().getAuthenticationRepository();
+        authRepo.doLogout();
+        authRepo.addUserRole(AuthenticationController.ROLE_ETHICS_COMMITTEE, "Ethics Committee");
+        authRepo.addUserWithRole("Ethics Member", email, "Ethics123*",
+                AuthenticationController.ROLE_ETHICS_COMMITTEE);
+        authRepo.doLogin(email, "Ethics123*");
+
+        EthicsCommitteeMember loggedMember = new EthicsCommitteeMember("Ethics Member", email);
+        memberRepo.save(loggedMember);
+
+        return new ValidateDeclarationController(declRepo, recordRepo, memberRepo, authRepo);
+    }
+
+    @Test
+    void ensureRealProcessValidationReturnsTrueOnValidatedOutcome() {
+        ValidateDeclarationController controller = loginAndBuildCtrl("ethics.proc1@test.com");
+        Declaration d = pendingDeclaration();
+        declRepo.save(d);
+        boolean ok = controller.processValidation(d, ValidationOutcome.VALIDATED, new ArrayList<>());
+        assertTrue(ok);
+        assertEquals(DeclarationStatus.VALIDATED, d.getStatus());
+    }
+
+    @Test
+    void ensureRealProcessValidationReturnsTrueOnReturnedForCorrection() {
+        ValidateDeclarationController controller = loginAndBuildCtrl("ethics.proc2@test.com");
+        Declaration d = pendingDeclaration();
+        declRepo.save(d);
+        List<Object[]> comments = new ArrayList<>();
+        comments.add(new Object[]{"Income", "missing salary detail"});
+        boolean ok = controller.processValidation(d, ValidationOutcome.RETURNED_FOR_CORRECTION, comments);
+        assertTrue(ok);
+        assertEquals(DeclarationStatus.REJECTED, d.getStatus());
+        assertEquals(1, recordRepo.getAll().size());
+    }
+
+    @Test
+    void ensureRealProcessValidationReturnsFalseWhenNotPending() {
+        ValidateDeclarationController controller = loginAndBuildCtrl("ethics.proc3@test.com");
+        Declaration d = pendingDeclaration();
+        d.setStatus(ValidationOutcome.VALIDATED);
+        declRepo.save(d);
+        boolean ok = controller.processValidation(d, ValidationOutcome.VALIDATED, new ArrayList<>());
+        assertFalse(ok);
+    }
+
+    @Test
+    void ensureRealProcessValidationReturnsFalseWhenMemberNotRegistered() {
+        AuthenticationRepository authRepo =
+                Repositories.getInstance().getAuthenticationRepository();
+        authRepo.doLogout();
+        authRepo.addUserRole(AuthenticationController.ROLE_ETHICS_COMMITTEE, "Ethics Committee");
+        String email = "ethics.proc4.unknown@test.com";
+        authRepo.addUserWithRole("Unknown Ethics", email, "Ethics123*",
+                AuthenticationController.ROLE_ETHICS_COMMITTEE);
+        authRepo.doLogin(email, "Ethics123*");
+
+        ValidateDeclarationController controller =
+                new ValidateDeclarationController(declRepo, recordRepo, memberRepo, authRepo);
+
+        Declaration d = pendingDeclaration();
+        declRepo.save(d);
+        boolean ok = controller.processValidation(d, ValidationOutcome.VALIDATED, new ArrayList<>());
+        assertFalse(ok);
+    }
+
+    @Test
+    void ensureRealProcessValidationWithNullCommentsDoesNotThrow() {
+        ValidateDeclarationController controller = loginAndBuildCtrl("ethics.proc5@test.com");
+        Declaration d = pendingDeclaration();
+        declRepo.save(d);
+        boolean ok = controller.processValidation(d, ValidationOutcome.RETURNED_FOR_CORRECTION, null);
+        assertTrue(ok);
+    }
 }
 
