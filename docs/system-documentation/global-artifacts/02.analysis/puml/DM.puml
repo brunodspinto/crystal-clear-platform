@@ -113,7 +113,6 @@ enum DeclarationStatus {
 }
 
 class PositionEntry {
-    nature
     grossSalary
     sideIncomeConsulting
     sideIncomeBoardMemberships
@@ -121,9 +120,16 @@ class PositionEntry {
     endDate
 }
 
+enum PositionNature {
+    PUBLIC
+    PRIVATE
+    SOCIAL
+}
+
 class Income {
     amount
     source
+    institution
     date
 }
 
@@ -285,6 +291,7 @@ Declaration "1" *-- "*" Attachment : has >
 
 PositionEntry "*" -- "1" Organization : held at >
 PositionEntry "*" -- "1" Function : performs >
+PositionEntry "*" -- "1" PositionNature : has >
 
 Organization "*" -- "1" OrganizationType : classified as >
 
@@ -306,6 +313,10 @@ ValidationRecord "1" *-- "*" ValidationComment : contains >
 Citizen "1" -- "*" Complaint : submits >
 Complaint "*" -- "1" PoliticalAgent : targets >
 Complaint "*" -- "1" PoliticalFunction : references >
+
+Journalist "*" -- "*" PoliticalAgent : analyses income of >
+Journalist "*" -- "*" PoliticalAgent : consults assets of >
+Citizen "*" -- "*" PoliticalAgent : consults assets of >
 
 User "1" -- "*" AuditLog : generates >
 
