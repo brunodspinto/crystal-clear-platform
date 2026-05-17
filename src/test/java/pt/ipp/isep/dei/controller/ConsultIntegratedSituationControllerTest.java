@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -179,6 +180,15 @@ class ConsultIntegratedSituationControllerTest {
         List<Declaration> result = controller.getIntegratedSituation(joao, date(2024, Calendar.DECEMBER, 31));
 
         assertEquals(3, result.size());
+    }
+
+    @Test
+    void ensureControllerCanBeCreatedWithDefaultConstructor() {
+        ConsultIntegratedSituationController controller =
+                new ConsultIntegratedSituationController();
+
+        assertNotNull(controller);
+        assertNotNull(controller.getPoliticalAgents());
     }
 
     @Test

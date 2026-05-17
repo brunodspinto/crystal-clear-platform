@@ -20,6 +20,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -222,6 +223,40 @@ class ConsultAssetsControllerTest {
         List<AssetEntry> result = controller.getAssetsAt(joao, date(2024, Calendar.DECEMBER, 31));
 
         assertEquals(3, result.size());
+    }
+
+    @Test
+    void ensureControllerCanBeCreatedWithDefaultConstructor() {
+        ConsultAssetsController controller = new ConsultAssetsController();
+
+        assertNotNull(controller);
+        assertNotNull(controller.getPoliticalAgents());
+    }
+
+    @Test
+    void ensureIsCurrentUserJournalistReturnsFalseAfterLogout() {
+        AuthenticationRepository authRepo = new AuthenticationRepository();
+        authRepo.addUserRole(AuthenticationController.ROLE_JOURNALIST,
+                AuthenticationController.ROLE_JOURNALIST);
+        authRepo.addUserWithRole("J. Out", "out@news.pt", "JRN22jr",
+                AuthenticationController.ROLE_JOURNALIST);
+        authRepo.doLogin("out@news.pt", "JRN22jr");
+        authRepo.doLogout();
+
+        ConsultAssetsController controller =
+                new ConsultAssetsController(new PoliticalAgentRepository(), new DeclarationRepository(), authRepo);
+
+        assertFalse(controller.isCurrentUserJournalist());
+    }
+
+    @Test
+    void ensureIsCurrentUserJournalistReturnsFalseWhenNoSession() {
+        AuthenticationRepository authRepo = new AuthenticationRepository();
+
+        ConsultAssetsController controller =
+                new ConsultAssetsController(new PoliticalAgentRepository(), new DeclarationRepository(), authRepo);
+
+        assertFalse(controller.isCurrentUserJournalist());
     }
 
     @Test
