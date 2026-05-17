@@ -1,71 +1,151 @@
-# US19 - Tests and Implementation
+# US19 - Load Entities from CSV File
 
-## Implementation
+## 4. Tests
 
-### Classes
+**Test 1:** Check that loading a valid CSV file returns the correct number of entities.
 
-| Class | Path |
-|-------|------|
-| `Entity` | `src/main/java/pt/ipp/isep/dei/domain/graph/Entity.java` |
-| `Person` | `src/main/java/pt/ipp/isep/dei/domain/graph/Person.java` |
-| `Organization` | `src/main/java/pt/ipp/isep/dei/domain/graph/Organization.java` |
-| `Position` | `src/main/java/pt/ipp/isep/dei/domain/graph/Position.java` |
-| `Asset` | `src/main/java/pt/ipp/isep/dei/domain/graph/Asset.java` |
-| `Edge` | `src/main/java/pt/ipp/isep/dei/domain/graph/Edge.java` |
-| `RelationGraph` | `src/main/java/pt/ipp/isep/dei/domain/graph/RelationGraph.java` |
-| `GraphBuilder` | `src/main/java/pt/ipp/isep/dei/domain/graph/GraphBuilder.java` |
-| `EntityCsvParser` | `src/main/java/pt/ipp/isep/dei/domain/graph/EntityCsvParser.java` |
-| `RelationCsvParser` | `src/main/java/pt/ipp/isep/dei/domain/graph/RelationCsvParser.java` |
-| `IndexRegistry` | `src/main/java/pt/ipp/isep/dei/domain/graph/IndexRegistry.java` |
-| `AdjacencyMatrix` | `src/main/java/pt/ipp/isep/dei/domain/graph/AdjacencyMatrix.java` |
-| `LoadEntitiesFromCsvController` | `src/main/java/pt/ipp/isep/dei/controller/LoadEntitiesFromCsvController.java` |
+```java
+@Test
+void ensureLoadEntitiesReturnsCorrectCount() throws IOException {
+    int count = controller.loadEntities(resourcePath("graph/entities_sample.csv"));
+    assertEquals(12, count);
+}
+```
 
-**`Entity`**: abstract base class with fields `id`, `type`, `startDate`, `endDate`. Equality uses `getClass()` so that a `Person` and an `Asset` with the same id are never considered equal.
+**Test 2:** Check that entities are stored in the repository after loading.
 
-**`Person`, `Organization`, `Position`, `Asset`**: concrete subclasses of `Entity`, each adding type-specific fields.
+```java
+@Test
+void ensureLoadEntitiesStoresEntitiesInRepository() throws IOException {
+    controller.loadEntities(resourcePath("graph/entities_sample.csv"));
+    assertEquals(12, repo.getAll().size());
+}
+```
 
-**`Edge`**: immutable relation between two entity ids, with `label` and `weight`. Validates that all string fields are non-blank on construction.
+**Test 3:** Check that an invalid file path throws IOException.
 
-**`RelationGraph`**: directed graph backed by parallel `ArrayList`s (nodeIds + outgoing edges). Supports `addNode()`, `addEdge()`, `neighbors()`, and conversion to `AdjacencyMatrix`.
+```java
+@Test
+void ensureLoadEntitiesOnInvalidPathThrowsIOException() {
+    assertThrows(IOException.class, () ->
+            controller.loadEntities("nonexistent/path/file.csv"));
+}
+```
 
-**`GraphBuilder`**: static factory that registers all entities as nodes and then adds all edges into a `RelationGraph`.
+**Test 4:** Check that a Person entity is parsed correctly from CSV.
 
-**`EntityCsvParser`**: reads a CSV file and produces a `List<Entity>`. Format per line: `category;id;type;startDate;endDate;...`. Skips blank lines, comment lines, and malformed lines.
+```java
+@Test
+void ensurePersonsAreParsedCorrectly() throws IOException {
+    List<Entity> entities = EntityCsvParser.parse(resourcePath("graph/entities_sample.csv"));
+    Person person = (Person) entities.stream()
+            .filter(e -> e.getId().equals("P-001"))
+            .findFirst()
+            .orElseThrow();
+    assertEquals("politician", person.getType());
+    assertEquals("António Silva", person.getName());
+    assertEquals("Portuguese", person.getNationality());
+}
+```
 
-**`RelationCsvParser`**: reads a CSV file and produces a `List<Edge>`. Format: `from_id;to_id;label;weight`. Skips malformed lines.
+**Test 5:** Check that blank lines and comments in the CSV file are ignored.
 
-**`IndexRegistry`**: maps entity ids to integer indices for use in adjacency matrices.
+```java
+@Test
+void ensureCommentsAndBlankLinesAreIgnored() throws IOException {
+    List<Entity> entities = EntityCsvParser.parse(resourcePath("graph/entities_sample.csv"));
+    assertTrue(entities.stream().noneMatch(e -> e.getId().startsWith("#")));
+}
+```
 
-**`AdjacencyMatrix`**: square matrix of `double` values representing edge weights.
+**Test 6:** Check that it is not possible to create an Entity with a blank id.
 
-## Tests
+```java
+@Test
+void ensureBlankIdIsNotAllowed() {
+    assertThrows(IllegalArgumentException.class, () ->
+            new Person("", "politician", "2020-01-01", "2024-01-01", "Name", "1990-01-01", "Portuguese"));
+}
+```
 
-- `src/test/java/pt/ipp/isep/dei/domain/graph/EntityTest.java`: 3 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/PersonTest.java`: 4 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/OrganizationTest.java`: 4 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/PositionTest.java`: 4 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/AssetTest.java`: 4 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/EdgeTest.java`: 3 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/RelationGraphTest.java`: 11 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/GraphBuilderTest.java`: 7 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/EntityCsvParserTest.java`: 7 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/RelationCsvParserTest.java`: 9 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/IndexRegistryTest.java`: 8 tests
-- `src/test/java/pt/ipp/isep/dei/domain/graph/AdjacencyMatrixTest.java`: 9 tests
-- `src/test/java/pt/ipp/isep/dei/controller/LoadEntitiesFromCsvControllerTest.java`: 4 tests
 
-Total: 77 tests (all passing)
+## 5. Construction (Implementation)
 
-## Checklist
+### Class Entity
 
-- [x] `Entity` abstract class with id/type/startDate/endDate and getClass()-based equality
-- [x] `Person`, `Organization`, `Position`, `Asset` concrete subclasses
-- [x] `Edge` immutable value object with blank-field validation
-- [x] `RelationGraph` with parallel ArrayList structure
-- [x] `GraphBuilder` static factory
-- [x] `EntityCsvParser` with category dispatch and malformed-line skipping
-- [x] `RelationCsvParser` with weight parsing and malformed-line skipping
-- [x] `IndexRegistry` for id-to-index mapping
-- [x] `AdjacencyMatrix` square double matrix
-- [x] `LoadEntitiesFromCsvController` reads CSV and stores entities in the repository
-- [x] 77 unit tests (all passing)
+```java
+public abstract class Entity {
+
+    private final String id;
+    private final String type;
+    private final String startDate;
+    private final String endDate;
+
+    protected Entity(String id, String type, String startDate, String endDate) {
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException("id must not be blank");
+        }
+        if (type == null || type.isBlank()) {
+            throw new IllegalArgumentException("type must not be blank");
+        }
+        this.id = id;
+        this.type = type;
+        this.startDate = startDate == null ? "" : startDate;
+        this.endDate = endDate == null ? "" : endDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Entity entity = (Entity) o;
+        return id.equals(entity.id);
+    }
+
+    public abstract String getDetails();
+}
+```
+
+### Class EntityCsvParser
+
+```java
+public static List<Entity> parse(String filePath) throws IOException {
+    List<Entity> entities = new ArrayList<>();
+    ArrayList<String> dataLines = readDataLines(filePath);
+    if (dataLines.isEmpty()) return entities;
+
+    char separator = detectSeparator(dataLines.get(0));
+    int start = looksLikeHeader(dataLines.get(0), separator) ? 1 : 0;
+    for (int i = start; i < dataLines.size(); i++) {
+        Entity entity = parseLine(dataLines.get(i), separator);
+        if (entity != null) {
+            entities.add(entity);
+        }
+    }
+    return entities;
+}
+```
+
+### Class LoadEntitiesFromCsvController
+
+```java
+public int loadEntities(String filePath) throws IOException {
+    List<Entity> entities = EntityCsvParser.parse(filePath);
+    graphRepository.addAll(entities);
+    return entities.size();
+}
+```
+
+
+## 6. Integration and Demo
+
+* A new option was added to the main menu to load entities from a CSV file.
+
+* After loading, the user is offered the option to render the entity graph to an SVG file using Graphviz.
+
+* For demo purposes, a sample CSV file is provided at `src/test/resources/graph/entities_sample.csv`.
+
+
+## 7. Observations
+
+n/a
