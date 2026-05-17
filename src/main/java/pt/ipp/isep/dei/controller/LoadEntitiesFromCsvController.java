@@ -2,10 +2,14 @@ package pt.ipp.isep.dei.controller;
 
 import pt.ipp.isep.dei.domain.graph.Entity;
 import pt.ipp.isep.dei.domain.graph.EntityCsvParser;
+import pt.ipp.isep.dei.domain.graph.GraphDotExporter;
 import pt.ipp.isep.dei.repository.GraphRepository;
 import pt.ipp.isep.dei.repository.Repositories;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,5 +46,47 @@ public class LoadEntitiesFromCsvController {
         List<Entity> entities = EntityCsvParser.parse(filePath);
         graphRepository.addAll(entities);
         return entities.size();
+    }
+
+    /**
+     * Renders the loaded entities as an SVG file using Graphviz.
+     * Produces a nodes-only graph (no edges) showing all entity types with their distinct shapes.
+     *
+     * @param outputSvgPath path where the SVG should be written.
+     * @return the path of the generated SVG file.
+     * @throws IOException if writing the DOT file fails.
+     */
+    public String renderEntitiesToSvg(String outputSvgPath) throws IOException {
+        List<Entity> entities = graphRepository.getAll();
+        String dot = GraphDotExporter.export(entities, new ArrayList<>());
+
+        String dotPath;
+        if (outputSvgPath.endsWith(".svg")) {
+            dotPath = outputSvgPath.substring(0, outputSvgPath.length() - 4) + ".dot";
+        } else {
+            dotPath = outputSvgPath + ".dot";
+        }
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(dotPath));
+        try {
+            writer.write(dot);
+        } finally {
+            writer.close();
+        }
+
+        ProcessBuilder pb = new ProcessBuilder("dot", "-Tsvg", dotPath, "-o", outputSvgPath);
+        pb.redirectErrorStream(true);
+        try {
+            Process process = pb.start();
+            int code = process.waitFor();
+            if (code != 0) {
+                throw new RuntimeException("Graphviz 'dot' failed with exit code " + code
+                        + ". Is Graphviz installed?");
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Graph rendering was interrupted.", e);
+        }
+        return outputSvgPath;
     }
 }
