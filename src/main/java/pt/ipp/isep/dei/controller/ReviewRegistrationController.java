@@ -68,13 +68,6 @@ public class ReviewRegistrationController {
     }
 
     private static String roleIdFor(UserRole role) {
-        switch (role) {
-            case POLITICAL_AGENT:   return AuthenticationController.ROLE_POLITICAL_AGENT;
-            case CITIZEN:           return AuthenticationController.ROLE_CITIZEN;
-            case JOURNALIST:        return AuthenticationController.ROLE_JOURNALIST;
-            case ETHICS_COMMITTEE:  return AuthenticationController.ROLE_ETHICS_COMMITTEE;
-            case ADMINISTRATOR:     return AuthenticationController.ROLE_ADMIN;
-            default:                return role.name();
-        }
+        return role.name();
     }
 }
