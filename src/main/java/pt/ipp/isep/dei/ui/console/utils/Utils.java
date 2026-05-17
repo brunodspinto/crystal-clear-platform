@@ -60,6 +60,18 @@ public class Utils {
      * @param prompt the prompt
      * @return the double
      */
+    static public long readLongFromConsole(String prompt) {
+        do {
+            try {
+                String input = readLineFromConsole(prompt);
+                long value = Long.parseLong(input);
+                return value;
+            } catch (NumberFormatException ex) {
+                Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } while (true);
+    }
+
     static public double readDoubleFromConsole(String prompt) {
         do {
             try {
@@ -165,7 +177,11 @@ public class Utils {
         int value;
         do {
             input = Utils.readLineFromConsole("Type your option: ");
-            value = Integer.parseInt(input);
+            try {
+                value = Integer.parseInt(input);
+            } catch (NumberFormatException ex) {
+                value = -1;
+            }
         } while (value < 0 || value > list.size());
 
         if (value == 0) {

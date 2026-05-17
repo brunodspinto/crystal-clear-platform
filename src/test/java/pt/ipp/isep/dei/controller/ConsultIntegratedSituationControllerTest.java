@@ -4,7 +4,10 @@ import org.junit.jupiter.api.Test;
 import pt.ipp.isep.dei.domain.Declaration;
 import pt.ipp.isep.dei.domain.DeclarationStatus;
 import pt.ipp.isep.dei.domain.DeclarationType;
+import pt.ipp.isep.dei.domain.Organization;
+import pt.ipp.isep.dei.domain.OrganizationType;
 import pt.ipp.isep.dei.domain.PoliticalAgent;
+import pt.ipp.isep.dei.domain.PositionNature;
 import pt.ipp.isep.dei.repository.DeclarationRepository;
 import pt.ipp.isep.dei.repository.PoliticalAgentRepository;
 
@@ -136,5 +139,72 @@ class ConsultIntegratedSituationControllerTest {
 
         assertThrows(IllegalArgumentException.class,
                 () -> controller.getIntegratedSituation(agentJoao(), null));
+    }
+
+    @Test
+    void ensureRejectedDeclarationsAreIgnored() {
+        PoliticalAgent joao = agentJoao();
+        DeclarationRepository declRepo = new DeclarationRepository();
+
+        Declaration rejected = new Declaration(DeclarationType.REGULAR, joao, date(2024, Calendar.MARCH, 1));
+        rejected.setStatus(DeclarationStatus.REJECTED);
+        declRepo.save(rejected);
+
+        ConsultIntegratedSituationController controller =
+                new ConsultIntegratedSituationController(new PoliticalAgentRepository(), declRepo);
+
+        List<Declaration> result = controller.getIntegratedSituation(joao, date(2024, Calendar.DECEMBER, 31));
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void ensureValidatedDeclarationsOfAllTypesAreReturned() {
+        PoliticalAgent joao = agentJoao();
+        DeclarationRepository declRepo = new DeclarationRepository();
+
+        Declaration initial = new Declaration(DeclarationType.INITIAL, joao, date(2024, Calendar.JANUARY, 10));
+        initial.setStatus(DeclarationStatus.VALIDATED);
+        Declaration regular = validatedDeclaration(joao, date(2024, Calendar.MAY, 10));
+        Declaration exceptional = new Declaration(DeclarationType.EXCEPTIONAL, joao, date(2024, Calendar.JULY, 10));
+        exceptional.setStatus(DeclarationStatus.VALIDATED);
+
+        declRepo.save(initial);
+        declRepo.save(regular);
+        declRepo.save(exceptional);
+
+        ConsultIntegratedSituationController controller =
+                new ConsultIntegratedSituationController(new PoliticalAgentRepository(), declRepo);
+
+        List<Declaration> result = controller.getIntegratedSituation(joao, date(2024, Calendar.DECEMBER, 31));
+
+        assertEquals(3, result.size());
+    }
+
+    @Test
+    void ensureReturnedDeclarationsExposeTheirEntries() {
+        PoliticalAgent joao = agentJoao();
+        DeclarationRepository declRepo = new DeclarationRepository();
+
+        Declaration d = new Declaration(DeclarationType.REGULAR, joao, date(2024, Calendar.MARCH, 1));
+        Organization org = new Organization("Acme Lda", "Private",
+                OrganizationType.COMPANY);
+        d.addPositionEntry(org, "Director", PositionNature.PUBLIC,
+                50000.0, 0.0, 0.0,
+                date(2023, Calendar.JANUARY, 1), null);
+        d.addIncome(org, 1500.0, "Royalties", date(2024, Calendar.FEBRUARY, 1));
+        d.addSubsidyEntry(org, 200.0, "Travel subsidy", date(2024, Calendar.FEBRUARY, 15));
+        d.setStatus(DeclarationStatus.VALIDATED);
+        declRepo.save(d);
+
+        ConsultIntegratedSituationController controller =
+                new ConsultIntegratedSituationController(new PoliticalAgentRepository(), declRepo);
+
+        List<Declaration> result = controller.getIntegratedSituation(joao, date(2024, Calendar.DECEMBER, 31));
+
+        assertEquals(1, result.size());
+        assertEquals(1, result.get(0).getPositionEntries().size());
+        assertEquals(1, result.get(0).getIncomes().size());
+        assertEquals(1, result.get(0).getSubsidyEntries().size());
     }
 }

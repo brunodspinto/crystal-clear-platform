@@ -8,7 +8,9 @@ import pt.ipp.isep.dei.domain.DeclarationStatus;
 import pt.ipp.isep.dei.domain.DeclarationType;
 import pt.ipp.isep.dei.domain.PoliticalAgent;
 import pt.ipp.isep.dei.domain.RealEstate;
+import pt.ipp.isep.dei.domain.StockAsset;
 import pt.ipp.isep.dei.domain.VehicleAsset;
+import pt.ipp.isep.dei.repository.AuthenticationRepository;
 import pt.ipp.isep.dei.repository.DeclarationRepository;
 import pt.ipp.isep.dei.repository.PoliticalAgentRepository;
 
@@ -152,5 +154,89 @@ class ConsultAssetsControllerTest {
                 new ConsultAssetsController(new PoliticalAgentRepository(), new DeclarationRepository(), null);
 
         assertFalse(controller.isCurrentUserJournalist());
+    }
+
+    @Test
+    void ensureIsCurrentUserJournalistReturnsTrueWhenJournalistLoggedIn() {
+        AuthenticationRepository authRepo = new AuthenticationRepository();
+        authRepo.addUserRole(AuthenticationController.ROLE_JOURNALIST,
+                AuthenticationController.ROLE_JOURNALIST);
+        authRepo.addUserWithRole("J. Reporter", "journ@news.pt", "JRN11jr",
+                AuthenticationController.ROLE_JOURNALIST);
+        authRepo.doLogin("journ@news.pt", "JRN11jr");
+
+        ConsultAssetsController controller =
+                new ConsultAssetsController(new PoliticalAgentRepository(), new DeclarationRepository(), authRepo);
+
+        assertTrue(controller.isCurrentUserJournalist());
+    }
+
+    @Test
+    void ensureIsCurrentUserJournalistReturnsFalseWhenCitizenLoggedIn() {
+        AuthenticationRepository authRepo = new AuthenticationRepository();
+        authRepo.addUserRole(AuthenticationController.ROLE_CITIZEN,
+                AuthenticationController.ROLE_CITIZEN);
+        authRepo.addUserWithRole("C. Public", "cit@mail.pt", "CIT11ci",
+                AuthenticationController.ROLE_CITIZEN);
+        authRepo.doLogin("cit@mail.pt", "CIT11ci");
+
+        ConsultAssetsController controller =
+                new ConsultAssetsController(new PoliticalAgentRepository(), new DeclarationRepository(), authRepo);
+
+        assertFalse(controller.isCurrentUserJournalist());
+    }
+
+    @Test
+    void ensureRejectedDeclarationsAreIgnored() {
+        PoliticalAgent joao = agentJoao();
+        DeclarationRepository declRepo = new DeclarationRepository();
+
+        Declaration rejected = new Declaration(DeclarationType.REGULAR, joao, date(2024, Calendar.MARCH, 1));
+        rejected.addAssetEntry(AssetType.REAL_ESTATE, 50000.0, new RealEstate("Flat", "Lisboa"));
+        rejected.setStatus(DeclarationStatus.REJECTED);
+        declRepo.save(rejected);
+
+        ConsultAssetsController controller =
+                new ConsultAssetsController(new PoliticalAgentRepository(), declRepo, null);
+
+        List<AssetEntry> result = controller.getAssetsAt(joao, date(2024, Calendar.DECEMBER, 31));
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void ensureAllAssetTypesAreReturnedFromSameDeclaration() {
+        PoliticalAgent joao = agentJoao();
+        DeclarationRepository declRepo = new DeclarationRepository();
+
+        Declaration d = new Declaration(DeclarationType.REGULAR, joao, date(2024, Calendar.MARCH, 1));
+        d.addAssetEntry(AssetType.REAL_ESTATE, 250000.0, new RealEstate("House", "Porto"));
+        d.addAssetEntry(AssetType.VEHICLES, 18000.0, new VehicleAsset("Renault Clio"));
+        d.addAssetEntry(AssetType.STOCKS, 75000.0, new StockAsset("Galp"));
+        d.setStatus(DeclarationStatus.VALIDATED);
+        declRepo.save(d);
+
+        ConsultAssetsController controller =
+                new ConsultAssetsController(new PoliticalAgentRepository(), declRepo, null);
+
+        List<AssetEntry> result = controller.getAssetsAt(joao, date(2024, Calendar.DECEMBER, 31));
+
+        assertEquals(3, result.size());
+    }
+
+    @Test
+    void ensureDeclarationOnTheReferenceDateIsIncluded() {
+        PoliticalAgent joao = agentJoao();
+        DeclarationRepository declRepo = new DeclarationRepository();
+
+        Date referenceDate = date(2024, Calendar.JUNE, 30);
+        declRepo.save(validatedDeclarationWithRealEstate(joao, referenceDate, 100000.0));
+
+        ConsultAssetsController controller =
+                new ConsultAssetsController(new PoliticalAgentRepository(), declRepo, null);
+
+        List<AssetEntry> result = controller.getAssetsAt(joao, referenceDate);
+
+        assertEquals(1, result.size());
     }
 }
