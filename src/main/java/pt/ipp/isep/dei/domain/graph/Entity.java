@@ -9,6 +9,7 @@ public abstract class Entity {
     private final String type;
     private final String startDate;
     private final String endDate;
+    private String url;
 
     /**
      * Instantiates a new Entity.
@@ -29,6 +30,7 @@ public abstract class Entity {
         this.type = type;
         this.startDate = startDate == null ? "" : startDate;
         this.endDate = endDate == null ? "" : endDate;
+        this.url = "";
     }
 
     /**
@@ -65,6 +67,31 @@ public abstract class Entity {
      */
     public String getEndDate() {
         return endDate;
+    }
+
+    /**
+     * Returns a human-readable summary of the entity's specific fields for display in tooltips.
+     *
+     * @return the detail string
+     */
+    public abstract String getDetails();
+
+    /**
+     * Gets url.
+     *
+     * @return the url
+     */
+    public String getUrl() {
+        return url;
+    }
+
+    /**
+     * Sets url.
+     *
+     * @param url the url
+     */
+    public void setUrl(String url) {
+        this.url = url == null ? "" : url;
     }
 
     @Override

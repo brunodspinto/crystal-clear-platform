@@ -56,6 +56,14 @@ public class Person extends Entity {
     }
 
     @Override
+    public String getDetails() {
+        StringBuilder sb = new StringBuilder("Name: ").append(name);
+        if (!birthDate.isEmpty()) sb.append(" | Born: ").append(birthDate);
+        if (!nationality.isEmpty()) sb.append(" | Nationality: ").append(nationality);
+        return sb.toString();
+    }
+
+    @Override
     public String toString() {
         return "Person{id='" + getId() + "', name='" + name + "', birthDate='" + birthDate + "', nationality='" + nationality + "'}";
     }

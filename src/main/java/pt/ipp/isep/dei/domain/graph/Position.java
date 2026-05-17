@@ -56,6 +56,14 @@ public class Position extends Entity {
     }
 
     @Override
+    public String getDetails() {
+        StringBuilder sb = new StringBuilder("Title: ").append(positionTitle);
+        if (!positionType.isEmpty()) sb.append(" | Position type: ").append(positionType);
+        if (!organizationId.isEmpty()) sb.append(" | Organization: ").append(organizationId);
+        return sb.toString();
+    }
+
+    @Override
     public String toString() {
         return "Position{id='" + getId() + "', positionTitle='" + positionTitle + "', positionType='" + positionType + "', organizationId='" + organizationId + "'}";
     }

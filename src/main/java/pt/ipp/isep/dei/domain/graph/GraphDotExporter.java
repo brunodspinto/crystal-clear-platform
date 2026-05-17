@@ -30,13 +30,20 @@ public class GraphDotExporter {
             dot.append(" [label=\"").append(escape(shortLabel(entity))).append("\"");
             dot.append(", shape=").append(shapeFor(entity));
             dot.append(", fillcolor=\"").append(colorFor(entity)).append("\"");
-            dot.append(", style=filled];\n");
+            dot.append(", style=filled");
+            dot.append(", tooltip=\"").append(escape(tooltipFor(entity))).append("\"");
+            if (!entity.getUrl().isEmpty()) {
+                dot.append(", URL=\"").append(escape(entity.getUrl())).append("\"");
+            }
+            dot.append("];\n");
         }
 
         for (Edge edge : edges) {
             dot.append("  \"").append(escape(edge.getFromId())).append("\" -> \"");
             dot.append(escape(edge.getToId())).append("\"");
-            dot.append(" [label=\"").append(escape(edge.getLabel())).append("\"];\n");
+            dot.append(" [label=\"").append(escape(edge.getLabel())).append("\"");
+            dot.append(", tooltip=\"").append(escape(tooltipFor(edge))).append("\"");
+            dot.append("];\n");
         }
 
         dot.append("}\n");
@@ -65,6 +72,23 @@ public class GraphDotExporter {
         if (entity instanceof Position)     return ((Position) entity).getPositionTitle();
         if (entity instanceof Asset)        return ((Asset) entity).getAssetType();
         return entity.getId();
+    }
+
+    private static String tooltipFor(Entity entity) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ID: ").append(entity.getId());
+        sb.append(" | Type: ").append(entity.getType());
+        if (!entity.getStartDate().isEmpty()) sb.append(" | Start: ").append(entity.getStartDate());
+        if (!entity.getEndDate().isEmpty()) sb.append(" | End: ").append(entity.getEndDate());
+        sb.append(" | ").append(entity.getDetails());
+        return sb.toString();
+    }
+
+    private static String tooltipFor(Edge edge) {
+        return "Relation: " + edge.getLabel()
+                + " | From: " + edge.getFromId()
+                + " | To: " + edge.getToId()
+                + " | Weight: " + edge.getWeight();
     }
 
     private static String escape(String s) {

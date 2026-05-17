@@ -126,17 +126,22 @@ public class EntityCsvParser {
         String type = parts[offset + 1].trim();
         String startDate = parts[offset + 2].trim();
         String endDate = parts[offset + 3].trim();
+        String url = parts.length > offset + 7 ? parts[offset + 7].trim() : "";
 
+        Entity entity;
         switch (category) {
             case "person":
-                return new Person(id, type, startDate, endDate,
+                entity = new Person(id, type, startDate, endDate,
                         parts[offset + 4].trim(), parts[offset + 5].trim(), parts[offset + 6].trim());
+                break;
             case "organization":
-                return new Organization(id, type, startDate, endDate,
+                entity = new Organization(id, type, startDate, endDate,
                         parts[offset + 4].trim(), parts[offset + 5].trim(), parts[offset + 6].trim());
+                break;
             case "position":
-                return new Position(id, type, startDate, endDate,
+                entity = new Position(id, type, startDate, endDate,
                         parts[offset + 4].trim(), parts[offset + 5].trim(), parts[offset + 6].trim());
+                break;
             case "asset":
                 double value;
                 try {
@@ -144,11 +149,16 @@ public class EntityCsvParser {
                 } catch (NumberFormatException e) {
                     value = 0.0;
                 }
-                return new Asset(id, type, startDate, endDate,
+                entity = new Asset(id, type, startDate, endDate,
                         parts[offset + 4].trim(), parts[offset + 5].trim(), value);
+                break;
             default:
                 return null;
         }
+        if (!url.isEmpty()) {
+            entity.setUrl(url);
+        }
+        return entity;
     }
 
     /**

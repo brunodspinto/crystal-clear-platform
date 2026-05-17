@@ -56,6 +56,14 @@ public class Asset extends Entity {
     }
 
     @Override
+    public String getDetails() {
+        StringBuilder sb = new StringBuilder("Asset type: ").append(assetType);
+        if (!country.isEmpty()) sb.append(" | Country: ").append(country);
+        sb.append(" | Value: ").append(estimatedValue);
+        return sb.toString();
+    }
+
+    @Override
     public String toString() {
         return "Asset{id='" + getId() + "', assetType='" + assetType + "', country='" + country + "', estimatedValue=" + estimatedValue + "}";
     }

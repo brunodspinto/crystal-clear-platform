@@ -37,7 +37,7 @@ public class GraphRepository {
      * @return the all
      */
     public List<Entity> getAll() {
-        return List.copyOf(entities);
+        return new ArrayList<>(entities);
     }
 
     /**

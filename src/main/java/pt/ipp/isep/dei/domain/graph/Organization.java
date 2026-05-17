@@ -56,6 +56,14 @@ public class Organization extends Entity {
     }
 
     @Override
+    public String getDetails() {
+        StringBuilder sb = new StringBuilder("Name: ").append(name);
+        if (!organizationType.isEmpty()) sb.append(" | Org type: ").append(organizationType);
+        if (!country.isEmpty()) sb.append(" | Country: ").append(country);
+        return sb.toString();
+    }
+
+    @Override
     public String toString() {
         return "Organization{id='" + getId() + "', name='" + name + "', organizationType='" + organizationType + "', country='" + country + "'}";
     }

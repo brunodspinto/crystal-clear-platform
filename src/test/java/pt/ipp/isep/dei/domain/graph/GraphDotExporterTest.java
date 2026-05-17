@@ -74,4 +74,45 @@ class GraphDotExporterTest {
         String dot = GraphDotExporter.export(entities, new ArrayList<>());
         assertTrue(dot.contains("\\\""));
     }
+
+    @Test
+    void ensureEntityNodeContainsTooltipWithDetails() {
+        List<Entity> entities = new ArrayList<>();
+        entities.add(new Person("P-001", "politician", "2020-01-01", "", "Alice", "1980-01-01", "PT"));
+        String dot = GraphDotExporter.export(entities, new ArrayList<>());
+        assertTrue(dot.contains("tooltip="));
+        assertTrue(dot.contains("Alice"));
+        assertTrue(dot.contains("politician"));
+    }
+
+    @Test
+    void ensureEdgeContainsTooltipWithDetails() {
+        List<Entity> entities = new ArrayList<>();
+        entities.add(new Person("P-001", "politician", "", "", "Alice", "", ""));
+        entities.add(new Organization("O-001", "company", "", "", "Acme", "private", "PT"));
+        List<Edge> edges = new ArrayList<>();
+        edges.add(new Edge("P-001", "O-001", "employment", 0.8));
+        String dot = GraphDotExporter.export(entities, edges);
+        assertTrue(dot.contains("tooltip="));
+        assertTrue(dot.contains("employment"));
+        assertTrue(dot.contains("0.8"));
+    }
+
+    @Test
+    void ensureNodeWithUrlContainsUrlAttribute() {
+        List<Entity> entities = new ArrayList<>();
+        Person person = new Person("P-001", "politician", "", "", "Alice", "", "");
+        person.setUrl("https://example.com/alice");
+        entities.add(person);
+        String dot = GraphDotExporter.export(entities, new ArrayList<>());
+        assertTrue(dot.contains("URL=\"https://example.com/alice\""));
+    }
+
+    @Test
+    void ensureNodeWithoutUrlOmitsUrlAttribute() {
+        List<Entity> entities = new ArrayList<>();
+        entities.add(new Person("P-001", "politician", "", "", "Alice", "", ""));
+        String dot = GraphDotExporter.export(entities, new ArrayList<>());
+        assertFalse(dot.contains("URL="));
+    }
 }
