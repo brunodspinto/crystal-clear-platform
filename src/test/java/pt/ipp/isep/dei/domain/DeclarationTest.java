@@ -257,4 +257,117 @@ class DeclarationTest {
         Declaration d = new Declaration(DeclarationType.INITIAL, createAgent(), NOW);
         assertTrue(d.getDetails().contains("Agent Name"));
     }
+
+    // -------------------------------------------------------------------------
+    // Defensive copies for all section lists
+    // -------------------------------------------------------------------------
+    private PoliticalAgent agent() {
+        return new PoliticalAgent("Agent", "agent@gov.pt",
+                "12345678", "123456789", NOW, null);
+    }
+
+    private Organization org() {
+        return new Organization("TechCorp", "private", OrganizationType.COMPANY);
+    }
+
+    private Declaration declaration() {
+        return new Declaration(DeclarationType.INITIAL, agent(), NOW);
+    }
+
+
+    @Test
+    void ensureGetSubsidyEntriesReturnsDefensiveCopy() {
+        Declaration d = declaration();
+        d.addSubsidyEntry(org(), 500.0, "Grant", NOW);
+        assertNotSame(d.getSubsidyEntries(), d.getSubsidyEntries());
+    }
+
+    @Test
+    void ensureGetAssetEntriesReturnsDefensiveCopy() {
+        Declaration d = declaration();
+        d.addAssetEntry(AssetType.REAL_ESTATE, 100000.0, new RealEstate("Flat", "Braga"));
+        assertNotSame(d.getAssetEntries(), d.getAssetEntries());
+    }
+
+    @Test
+    void ensureGetBusinessParticipationsReturnsDefensiveCopy() {
+        Declaration d = declaration();
+        d.addBusinessParticipation(org(), 123456789L, 5000.0, 5.0);
+        assertNotSame(d.getBusinessParticipations(), d.getBusinessParticipations());
+    }
+
+    @Test
+    void ensureGetAttachmentsReturnsDefensiveCopy() {
+        Declaration d = declaration();
+        d.addAttachment("doc.pdf", NOW);
+        assertNotSame(d.getAttachments(), d.getAttachments());
+    }
+
+    @Test
+    void ensureGetIncomesReturnsDefensiveCopy() {
+        Declaration d = declaration();
+        d.addIncome(org(), 2000.0, "Consulting", NOW);
+        assertNotSame(d.getIncomes(), d.getIncomes());
+    }
+
+    // -------------------------------------------------------------------------
+    // addIncome
+    // -------------------------------------------------------------------------
+
+    @Test
+    void ensureAddIncomeStoresEntry() {
+        Declaration d = declaration();
+        d.addIncome(org(), 2000.0, "Consulting", NOW);
+        assertEquals(1, d.getIncomes().size());
+    }
+
+    @Test
+    void ensureAddMultipleIncomesStoresAll() {
+        Declaration d = declaration();
+        d.addIncome(org(), 1000.0, "Consulting", NOW);
+        d.addIncome(org(), 2000.0, "Board fee", NOW);
+        assertEquals(2, d.getIncomes().size());
+    }
+
+    @Test
+    void ensureIncomesListStartsEmpty() {
+        Declaration d = declaration();
+        assertTrue(d.getIncomes().isEmpty());
+    }
+
+    // -------------------------------------------------------------------------
+    // toString
+    // -------------------------------------------------------------------------
+
+    @Test
+    void ensureToStringIsNonBlank() {
+        Declaration d = declaration();
+        assertFalse(d.toString().isBlank());
+    }
+
+    @Test
+    void ensureToStringContainsAgentName() {
+        Declaration d = declaration();
+        assertTrue(d.toString().contains("Agent"));
+    }
+
+    @Test
+    void ensureToStringContainsDeclarationType() {
+        Declaration d = declaration();
+        assertTrue(d.toString().contains("INITIAL") || d.toString().contains("Initial"));
+    }
+
+    // -------------------------------------------------------------------------
+    // getId
+    // -------------------------------------------------------------------------
+
+    @Test
+    void ensureGetIdIsNotNull() {
+        assertNotNull(declaration().getId());
+    }
+
+    @Test
+    void ensureTwoDeclarationsHaveDifferentIds() {
+        assertNotEquals(declaration().getId(), declaration().getId());
+    }
 }
