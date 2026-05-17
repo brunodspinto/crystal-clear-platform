@@ -104,12 +104,9 @@ public class SubmitDeclarationUI implements Runnable {
                 controller.getPositionNatures(), "Select nature:");
         if (nature == null) return null;
 
-        double grossSalary = Double.parseDouble(
-                Utils.readLineFromConsole("Annual gross salary: "));
-        double sideIncomeConsulting = Double.parseDouble(
-                Utils.readLineFromConsole("Side income - consulting (0 if none): "));
-        double sideIncomeBoardMemberships = Double.parseDouble(
-                Utils.readLineFromConsole("Side income - board memberships (0 if none): "));
+        double grossSalary = Utils.readDoubleFromConsole("Annual gross salary: ");
+        double sideIncomeConsulting = Utils.readDoubleFromConsole("Side income - consulting (0 if none): ");
+        double sideIncomeBoardMemberships = Utils.readDoubleFromConsole("Side income - board memberships (0 if none): ");
         Date startDate = Utils.readDateFromConsole("Start date (dd-MM-yyyy): ");
         Date endDate = null;
         if (!Utils.confirm("Is the position still active? (y/n)")) {
@@ -137,7 +134,7 @@ public class SubmitDeclarationUI implements Runnable {
         Organization org = (Organization) Utils.showAndSelectOne(orgs, "Select source organization:");
         if (org == null) return null;
 
-        double amount = Double.parseDouble(Utils.readLineFromConsole("Amount: "));
+        double amount = Utils.readDoubleFromConsole("Amount: ");
         String description = Utils.readLineFromConsole("Description: ");
         Date date = Utils.readDateFromConsole("Date received (dd-MM-yyyy): ");
 
@@ -162,7 +159,7 @@ public class SubmitDeclarationUI implements Runnable {
                 controller.getAssetTypes(), "Select asset type:");
         if (assetType == null) return null;
 
-        double assetValue = Double.parseDouble(Utils.readLineFromConsole("Asset value: "));
+        double assetValue = Utils.readDoubleFromConsole("Asset value: ");
 
         Object detail;
         switch (assetType) {
@@ -204,9 +201,9 @@ public class SubmitDeclarationUI implements Runnable {
         Organization org = (Organization) Utils.showAndSelectOne(orgs, "Select company:");
         if (org == null) return null;
 
-        long companyNIF = Long.parseLong(Utils.readLineFromConsole("Company NIF: "));
-        double totalValue = Double.parseDouble(Utils.readLineFromConsole("Total value in stocks: "));
-        double percentage = Double.parseDouble(Utils.readLineFromConsole("Company percentage (%): "));
+        long companyNIF = Utils.readLongFromConsole("Company NIF: ");
+        double totalValue = Utils.readDoubleFromConsole("Total value in stocks: ");
+        double percentage = Utils.readDoubleFromConsole("Company percentage (%): ");
 
         return new Object[]{org, companyNIF, totalValue, percentage};
     }
