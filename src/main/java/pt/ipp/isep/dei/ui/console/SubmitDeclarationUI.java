@@ -246,7 +246,7 @@ public class SubmitDeclarationUI implements Runnable {
             } else {
                 System.out.println("\nDeclaration not submitted. Political agent not found in session.");
             }
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | NullPointerException e) {
             System.out.println("\nInvalid declaration data: " + e.getMessage());
             System.out.println("Operation cancelled.");
         }
