@@ -237,13 +237,18 @@ public class SubmitDeclarationUI implements Runnable {
     }
 
     private void submitData() {
-        boolean success = controller.submitDeclaration(
-                selectedType, positionEntries, subsidyEntries,
-                assetEntries, businessParticipations, attachments);
-        if (success) {
-            System.out.println("\nDeclaration successfully submitted! Status: PENDING.");
-        } else {
-            System.out.println("\nDeclaration not submitted. Political agent not found in session.");
+        try {
+            boolean success = controller.submitDeclaration(
+                    selectedType, positionEntries, subsidyEntries,
+                    assetEntries, businessParticipations, attachments);
+            if (success) {
+                System.out.println("\nDeclaration successfully submitted! Status: PENDING.");
+            } else {
+                System.out.println("\nDeclaration not submitted. Political agent not found in session.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("\nInvalid declaration data: " + e.getMessage());
+            System.out.println("Operation cancelled.");
         }
     }
 }
