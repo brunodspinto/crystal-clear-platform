@@ -66,20 +66,25 @@ public class ValidateDeclarationUI implements Runnable {
             }
         }
 
-        boolean success = controller.processValidation(selected, outcome, comments);
+        try {
+            boolean success = controller.processValidation(selected, outcome, comments);
 
-        if (success) {
-            if (outcome == ValidationOutcome.VALIDATED) {
-                System.out.println("\nDeclaration successfully validated. Status: VALIDATED.");
+            if (success) {
+                if (outcome == ValidationOutcome.VALIDATED) {
+                    System.out.println("\nDeclaration successfully validated. Status: VALIDATED.");
+                } else {
+                    System.out.printf("\nDeclaration rejected with %d comment(s). Status: REJECTED.%n",
+                            comments.size());
+                    System.out.println("Declaration returned to Political Agent for correction.");
+                }
             } else {
-                System.out.printf("\nDeclaration rejected with %d comment(s). Status: REJECTED.%n",
-                        comments.size());
-                System.out.println("Declaration returned to Political Agent for correction.");
+                System.out.println("\nOperation failed. Declaration may no longer be in PENDING status " +
+                        "or authenticated member not found.");
             }
-        } else {
-            System.out.println("\nOperation failed. Declaration may no longer be in PENDING status " +
-                    "or authenticated member not found.");
-        }
+        }catch (IllegalArgumentException e) {
+            System.out.println("\nInvalid validation data: " + e.getMessage());
+            System.out.println("Operation cancelled.");
+            }
     }
 
     /**
