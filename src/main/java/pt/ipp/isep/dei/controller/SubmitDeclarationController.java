@@ -4,6 +4,7 @@ import pt.ipp.isep.dei.domain.*;
 import pt.ipp.isep.dei.repository.*;
 import pt.isep.lei.esoft.auth.domain.model.Email;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -62,7 +63,14 @@ public class SubmitDeclarationController {
      * @return list of {@link Organization}.
      */
     public List<Organization> getOrganizations() {
-        return organizationRepository.getOrganizations();
+        List<Organization> all = organizationRepository.getOrganizations();
+        List<Organization> filtered = new ArrayList<>();
+        for (Organization org : all) {
+            if (org.getType() != null) {
+                filtered.add(org);
+            }
+        }
+        return filtered;
     }
 
     /**
