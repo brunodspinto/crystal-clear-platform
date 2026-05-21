@@ -32,6 +32,29 @@ public class GraphBuilder {
         for (Edge edge : edges) {
             graph.addEdge(edge);
         }
+        for (Edge edge : edges) {
+            if (isSymmetricLabel(edge.getLabel()) && !hasReverse(edges, edge)) {
+                graph.addEdge(new Edge(edge.getToId(), edge.getFromId(),
+                        edge.getLabel(), edge.getWeight()));
+            }
+        }
         return graph;
+    }
+
+    private static boolean isSymmetricLabel(String label) {
+        return "relativeOf".equals(label)
+                || "friendOf".equals(label)
+                || "associatedWith".equals(label);
+    }
+
+    private static boolean hasReverse(List<Edge> edges, Edge e) {
+        for (Edge other : edges) {
+            if (other.getFromId().equals(e.getToId())
+                    && other.getToId().equals(e.getFromId())
+                    && other.getLabel().equals(e.getLabel())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
