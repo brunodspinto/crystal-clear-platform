@@ -32,8 +32,8 @@ Other software classes (i.e. Pure Fabrication) identified:
 
 ## 3.2. Sequence Diagram (SD)
 
-![US02-SD](svg/US02-SD.svg)
+![US02-SD](svg/US02_SD.svg)
 
 ## 3.3. Class Diagram (CD)
 
-![US02-CD](svg/US02-CD.svg)
+![US02-CD](svg/US02_CD.svg)
