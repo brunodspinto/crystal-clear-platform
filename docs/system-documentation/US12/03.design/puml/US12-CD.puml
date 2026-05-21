@@ -18,7 +18,13 @@ class AuthenticationRepository {
     + getCurrentUserSession() : UserSession
 }
 
+class UserSession {
+    + getUserId() : Email
+}
 
+class Email {
+    + getEmail() : String
+}
 
 class PoliticalAgentRepository {
     + getAll() : List<PoliticalAgent>
@@ -74,7 +80,12 @@ SubmitComplaintController ..> PoliticalAgentRepository
 SubmitComplaintController ..> CitizenRepository
 SubmitComplaintController ..> ComplaintRepository
 SubmitComplaintController ..> AuthenticationRepository
+SubmitComplaintController ..> UserSession
+SubmitComplaintController ..> Email
 SubmitComplaintController ..> Complaint
+
+AuthenticationRepository --> "0..1" UserSession : current >
+UserSession ..> Email
 
 ComplaintRepository "1" --> "*" Complaint : complaints
 

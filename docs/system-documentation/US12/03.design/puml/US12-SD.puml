@@ -10,6 +10,8 @@ participant ":SubmitComplaintUI" as UI
 participant ":SubmitComplaintController" as CTRL
 participant ":PoliticalAgentRepository" as PAR
 participant ":AuthenticationRepository" as AR
+participant "session:UserSession" as SESS
+participant "email:Email" as EML
 participant ":CitizenRepository" as CitR
 participant ":ComplaintRepository" as CR
 participant "cpl:Complaint" as CPL
@@ -58,12 +60,22 @@ activate C
         UI -> CTRL : submitComplaint(description, date, politicalAgent, politicalFunction)
         activate CTRL
 
-            CTRL -> AR : getCurrentUserSession().getUserId()
+            CTRL -> AR : getCurrentUserSession()
             activate AR
-                AR --> CTRL : email
+                AR --> CTRL : session
             deactivate AR
 
-            CTRL -> CitR : getCitizenByEmail(email)
+            CTRL -> SESS : getUserId()
+            activate SESS
+                SESS --> CTRL : email
+            deactivate SESS
+
+            CTRL -> EML : getEmail()
+            activate EML
+                EML --> CTRL : emailAddress
+            deactivate EML
+
+            CTRL -> CitR : getCitizenByEmail(emailAddress)
             activate CitR
                 CitR --> CTRL : citizen
             deactivate CitR
