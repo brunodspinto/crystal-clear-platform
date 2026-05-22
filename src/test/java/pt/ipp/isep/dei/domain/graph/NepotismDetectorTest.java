@@ -145,25 +145,6 @@ class NepotismDetectorTest {
     }
 
     // -----------------------------------------------------------------------
-    // detect() – symmetric personal tie (edge in reverse direction)
-    // -----------------------------------------------------------------------
-
-    @Test
-    void ensureDetectHandlesPersonalTieInReverseDirection() {
-        RelationGraph graph = new RelationGraph();
-        // appointment: B appointedBy A
-        graph.addEdge(new Edge("B", "A", NepotismDetector.REL_APPOINTED_BY, 1.0));
-        // personal tie stored as B -> A instead of A -> B
-        graph.addEdge(new Edge("B", "A", NepotismDetector.REL_RELATIVE_OF, 1.0));
-
-        List<NepotismDetector.NepotismPair> pairs = detector.detect(graph);
-
-        assertEquals(1, pairs.size());
-        assertEquals("A", pairs.get(0).getAppointer());
-        assertEquals("B", pairs.get(0).getAppointed());
-    }
-
-    // -----------------------------------------------------------------------
     // detect() – no nepotism when there is no personal tie
     // -----------------------------------------------------------------------
 

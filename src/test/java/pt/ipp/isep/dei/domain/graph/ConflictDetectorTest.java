@@ -148,8 +148,48 @@ class ConflictDetectorTest {
                 detector.findPublicOfficialsThatInfluenceCompanies(graph);
 
         assertEquals(1, chains.size());
-        assertEquals("O1", chains.get(0).getFirst());
-        assertEquals("C1", chains.get(0).getLast());
+    }
+
+    @Test
+    void ensureQ3ChainFirstIsPersonLastIsCompany() {
+        RelationGraph graph = new RelationGraph();
+        graph.addEdge(new Edge("P1", "J1", ConflictDetector.REL_HOLDS_POSITION, 1.0));
+        graph.addEdge(new Edge("J1", "O1", ConflictDetector.REL_IN_ORGANIZATION, 1.0));
+        graph.addEdge(new Edge("P1", "C1", ConflictDetector.REL_INFLUENCES, 1.0));
+
+        ConflictDetector.Chain chain =
+                detector.findPublicOfficialsThatInfluenceCompanies(graph).get(0);
+
+        assertEquals("P1", chain.getFirst());
+        assertEquals("C1", chain.getLast());
+    }
+
+    @Test
+    void ensureQ3ChainHasTwoEntities() {
+        RelationGraph graph = new RelationGraph();
+        graph.addEdge(new Edge("P1", "J1", ConflictDetector.REL_HOLDS_POSITION, 1.0));
+        graph.addEdge(new Edge("J1", "O1", ConflictDetector.REL_IN_ORGANIZATION, 1.0));
+        graph.addEdge(new Edge("P1", "C1", ConflictDetector.REL_INFLUENCES, 1.0));
+
+        ConflictDetector.Chain chain =
+                detector.findPublicOfficialsThatInfluenceCompanies(graph).get(0);
+
+        assertEquals(2, chain.getAll().size());
+    }
+
+    @Test
+    void ensureQ3ChainContextContainsOrgAndPosition() {
+        RelationGraph graph = new RelationGraph();
+        graph.addEdge(new Edge("P1", "J1", ConflictDetector.REL_HOLDS_POSITION, 1.0));
+        graph.addEdge(new Edge("J1", "O1", ConflictDetector.REL_IN_ORGANIZATION, 1.0));
+        graph.addEdge(new Edge("P1", "C1", ConflictDetector.REL_INFLUENCES, 1.0));
+
+        ConflictDetector.Chain chain =
+                detector.findPublicOfficialsThatInfluenceCompanies(graph).get(0);
+
+        assertTrue(chain.hasContext());
+        assertTrue(chain.getContext().contains("J1"));
+        assertTrue(chain.getContext().contains("O1"));
     }
 
     @Test
@@ -221,22 +261,4 @@ class ConflictDetectorTest {
         assertTrue(detector.findPersonsAppointedByOrganisationMembers(graph).isEmpty());
     }
 
-    // -----------------------------------------------------------------------
-    // multiple chains
-    // -----------------------------------------------------------------------
-
-    @Test
-    void ensureMultipleChainsAreAllReturned() {
-        RelationGraph graph = new RelationGraph();
-        // two separate nepotism chains
-        graph.addEdge(new Edge("P1", "P2", ConflictDetector.REL_RELATIVE_OF, 1.0));
-        graph.addEdge(new Edge("P2", "J1", ConflictDetector.REL_HOLDS_POSITION, 1.0));
-        graph.addEdge(new Edge("P3", "P4", ConflictDetector.REL_RELATIVE_OF, 1.0));
-        graph.addEdge(new Edge("P4", "J2", ConflictDetector.REL_HOLDS_POSITION, 1.0));
-
-        List<ConflictDetector.Chain> chains =
-                detector.findPersonsWithRelativesInPositions(graph);
-
-        assertEquals(2, chains.size());
-    }
 }

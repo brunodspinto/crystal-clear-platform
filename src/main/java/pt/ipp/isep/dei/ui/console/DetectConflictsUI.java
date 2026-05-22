@@ -102,6 +102,9 @@ public class DetectConflictsUI implements Runnable {
             System.out.println("  Chain #" + (i + 1) + "  " + chain);
             System.out.println("    First entity (origin)      : " + chain.getFirst());
             System.out.println("    Last  entity (destination) : " + chain.getLast());
+            if (chain.hasContext()) {
+                System.out.println("    Context                    : " + chain.getContext());
+            }
         }
     }
 }

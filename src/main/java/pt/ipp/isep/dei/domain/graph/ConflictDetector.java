@@ -12,6 +12,10 @@ import java.util.List;
  * The graph is treated as <em>directed</em>: an edge A→B with label L means
  * "A has relation L with B".</p>
  *
+ * <p>Symmetric labels ({@code relativeOf}, {@code friendOf}, {@code associatedWith})
+ * are guaranteed to exist in both directions by {@code GraphBuilder}, so all
+ * queries use plain outgoing-edge traversal without defensive reverse checks.</p>
+ *
  * <p>Supported queries (AC1 – at least 5):</p>
  * <ol>
  *   <li>Q1 – Persons who have a relative holding any position
@@ -131,10 +135,14 @@ public class ConflictDetector {
     /**
      * Q3 – Persons holding a position in a public organisation who also
      * influence a company.
-     * Chain: personA --holdsPosition--> position --inOrganization--> org
-     * personA --influences--> company
-     * (Both arms start at personA; the chain reported is
-     * org ← position ← personA → company so first=org, last=company.)
+     *
+     * <p>The chain reflects the actual graph relation: {@code personA --influences--&gt; company}.
+     * The public organisation (and position) are pre-conditions that qualify the person
+     * for this query; they are attached as context on each chain so the UI can display
+     * them without polluting the chain semantics.</p>
+     *
+     * Chain: personA → company  (first = person, last = company)
+     * Context: "holds [position] in [org]"
      *
      * @param graph the graph
      * @return the list
@@ -156,15 +164,11 @@ public class ConflictDetector {
 
             if (publicOrgs.isEmpty()) continue;
 
-            List<String> companies = new ArrayList<>();
             for (Edge infEdge : edgesWithLabel(graph, personA, REL_INFLUENCES)) {
-                companies.add(infEdge.getToId());
-            }
-
-            for (int i = 0; i < publicOrgs.size(); i++) {
-                for (String company : companies) {
-                    results.add(Chain.of(publicOrgs.get(i), positions.get(i),
-                            personA, company));
+                String company = infEdge.getToId();
+                for (int i = 0; i < publicOrgs.size(); i++) {
+                    String ctx = "holds " + positions.get(i) + " in " + publicOrgs.get(i);
+                    results.add(Chain.ofWithContext(ctx, personA, company));
                 }
             }
         }
@@ -224,6 +228,12 @@ public class ConflictDetector {
         }
     }
 
+    /**
+     * Returns all outgoing edges from {@code nodeId} with the given label.
+     * Use for asymmetric labels where direction is meaningful
+     * ({@code holdsPosition}, {@code inOrganization}, {@code appointedBy},
+     * {@code influences}, {@code memberOf}, {@code ownerOf}).
+     */
     private static List<Edge> edgesWithLabel(RelationGraph graph, String nodeId, String label) {
         List<Edge> result = new ArrayList<>();
         for (Edge edge : graph.neighbors(nodeId)) {
@@ -242,20 +252,24 @@ public class ConflictDetector {
      * Immutable value object that holds an ordered sequence of entity ids
      * representing a detected chain. AC2 requires exposing the first and
      * last entity ids.
+     *
+     * <p>An optional {@code context} string may be attached to provide
+     * human-readable information about the pre-conditions that triggered the
+     * query (e.g. which public organisation a person belongs to in Q3).
+     * The context is not part of the chain itself and does not affect
+     * {@code getFirst()}, {@code getLast()}, or {@code equals()}.</p>
      */
     public static class Chain {
 
         private final List<String> entityIds;
+        private final String context;
 
-        private Chain(List<String> entityIds) {
+        private Chain(List<String> entityIds, String context) {
             this.entityIds = new ArrayList<>(entityIds);
+            this.context   = context;
         }
 
-        /**
-         * Factory for a vararg sequence of ids (minimum 2).  @param ids the ids
-         *
-         * @return the chain
-         */
+        /** Factory for a vararg sequence of ids (minimum 2), no context. */
         public static Chain of(String... ids) {
             if (ids == null || ids.length < 2) {
                 throw new IllegalArgumentException("a chain needs at least two entity ids");
@@ -264,34 +278,55 @@ public class ConflictDetector {
             for (String id : ids) {
                 list.add(id);
             }
-            return new Chain(list);
+            return new Chain(list, null);
         }
 
         /**
-         * Gets first.
+         * Factory for a vararg sequence of ids with an attached context string.
          *
-         * @return the id of the first entity in the chain (AC2).
+         * @param context human-readable pre-condition info shown alongside the chain
+         * @param ids     at least two entity ids
+         * @return the chain
          */
+        public static Chain ofWithContext(String context, String... ids) {
+            if (ids == null || ids.length < 2) {
+                throw new IllegalArgumentException("a chain needs at least two entity ids");
+            }
+            List<String> list = new ArrayList<>();
+            for (String id : ids) {
+                list.add(id);
+            }
+            return new Chain(list, context);
+        }
+
+        /** @return the id of the first entity in the chain (AC2). */
         public String getFirst() {
             return entityIds.get(0);
         }
 
-        /**
-         * Gets last.
-         *
-         * @return the id of the last entity in the chain (AC2).
-         */
+        /** @return the id of the last entity in the chain (AC2). */
         public String getLast() {
             return entityIds.get(entityIds.size() - 1);
         }
 
-        /**
-         * Gets all.
-         *
-         * @return all entity ids in the chain, in order.
-         */
+        /** @return all entity ids in the chain, in order. */
         public List<String> getAll() {
             return new ArrayList<>(entityIds);
+        }
+
+        /**
+         * Returns optional context about the pre-conditions that triggered this
+         * chain, or {@code null} if none was provided.
+         *
+         * @return context string or null
+         */
+        public String getContext() {
+            return context;
+        }
+
+        /** @return true if this chain has an attached context string. */
+        public boolean hasContext() {
+            return context != null && !context.isEmpty();
         }
 
         @Override
@@ -310,6 +345,11 @@ public class ConflictDetector {
             if (o == null || getClass() != o.getClass()) return false;
             Chain other = (Chain) o;
             return entityIds.equals(other.entityIds);
+        }
+
+        @Override
+        public int hashCode() {
+            return entityIds.hashCode();
         }
     }
 }

@@ -11,10 +11,11 @@ import java.util.List;
  * or {@code associatedWith}. AC1 requires that <strong>all</strong> such pairs
  * be listed.</p>
  *
- * <p>The detection is intentionally symmetric for personal ties: if A is a
- * relative of B the pair is flagged regardless of which direction the
- * {@code relativeOf} edge was written in the CSV. The {@code appointedBy} edge,
- * however, is directional: "B appointedBy A" means A appointed B.</p>
+ * <p>Personal-tie edges ({@code relativeOf}, {@code friendOf},
+ * {@code associatedWith}) are guaranteed to exist in both directions by
+ * {@code GraphBuilder}, so only the forward direction is checked.
+ * The {@code appointedBy} edge is directional: "B appointedBy A" means
+ * A appointed B.</p>
  */
 public class NepotismDetector {
 
@@ -71,8 +72,8 @@ public class NepotismDetector {
                 }
                 String appointer = apptEdge.getToId();
 
-                // Check whether a personal tie exists between the two persons.
-                // We check both directions to be robust against inconsistent CSV data.
+                // GraphBuilder guarantees symmetric ties are stored in both
+                // directions, so checking only appointer→appointed is sufficient.
                 String tie = findPersonalTie(graph, appointer, appointed);
                 if (tie != null) {
                     results.add(new NepotismPair(appointer, appointed, tie));
@@ -88,19 +89,16 @@ public class NepotismDetector {
     /* ------------------------------------------------------------------ */
 
     /**
-     * Returns the label of the first personal-relationship edge found between
-     * {@code a} and {@code b} (in either direction), or {@code null} if none.
+     * Returns the label of the first personal-relationship edge found from
+     * {@code a} to {@code b}, or {@code null} if none exists.
+     *
+     * <p>Only the forward direction {@code a→b} is checked because
+     * {@code GraphBuilder} ensures symmetric labels are stored in both
+     * directions before the graph reaches this detector.</p>
      */
     private String findPersonalTie(RelationGraph graph, String a, String b) {
-        // check a -> b
         for (Edge edge : graph.neighbors(a)) {
             if (b.equals(edge.getToId()) && isPersonalTie(edge.getLabel())) {
-                return edge.getLabel();
-            }
-        }
-        // check b -> a (symmetric fallback)
-        for (Edge edge : graph.neighbors(b)) {
-            if (a.equals(edge.getToId()) && isPersonalTie(edge.getLabel())) {
                 return edge.getLabel();
             }
         }
