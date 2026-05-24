@@ -1,12 +1,16 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
+
 /**
  * Represents a single asset entry within a Declaration of Interests.
  * Holds the asset value and a detail object whose type depends on the AssetType:
  * {@link RealEstate} for REAL_ESTATE, {@link VehicleAsset} for VEHICLES,
  * and {@link StockAsset} for STOCKS.
  */
-public class AssetEntry {
+public class AssetEntry implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final AssetType assetType;
     private final double assetValue;

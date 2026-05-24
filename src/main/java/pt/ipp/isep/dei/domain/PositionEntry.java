@@ -1,12 +1,15 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Represents a single professional position entry within a Declaration of Interests.
  * Captures the organization, function, nature, remuneration, and tenure dates.
  */
-public class PositionEntry {
+public class PositionEntry implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final Organization organization;
     private final String functionDesignation;

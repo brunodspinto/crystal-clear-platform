@@ -1,9 +1,13 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
+
 /**
  * Represents the detail of a vehicle asset declared in a Declaration of Interests.
  */
-public class VehicleAsset {
+public class VehicleAsset implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final String description;
 

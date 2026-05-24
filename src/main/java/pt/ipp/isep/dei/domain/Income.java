@@ -1,11 +1,14 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * The type Income.
  */
-public class Income {
+public class Income implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final Organization organization;
     private final double amount;

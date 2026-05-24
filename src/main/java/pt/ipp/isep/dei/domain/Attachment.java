@@ -1,11 +1,14 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Represents a supporting document attached to a Declaration of Interests.
  */
-public class Attachment {
+public class Attachment implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final String fileName;
     private final Date uploadDate;
