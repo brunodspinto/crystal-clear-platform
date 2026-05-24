@@ -4,6 +4,7 @@ import pt.ipp.isep.dei.ui.console.AssetEvolutionUI;
 import pt.ipp.isep.dei.ui.console.ConsultIntegratedSituationUI;
 import pt.ipp.isep.dei.ui.console.DetectConflictsUI;
 import pt.ipp.isep.dei.ui.console.DetectNepotismUI;
+import pt.ipp.isep.dei.ui.console.FindPathUI;
 import pt.ipp.isep.dei.ui.console.ValidateDeclarationUI;
 import pt.ipp.isep.dei.ui.console.utils.Utils;
 
@@ -35,6 +36,9 @@ public class EthicsCommitteeUI implements Runnable {
         options.add(new MenuItem(
                 "Detect Indirect Nepotism & Conflicts of Interest via relation chains (US23)",
                 new DetectConflictsUI()));
+        options.add(new MenuItem(
+                "Verify Pathway Between Two Entities (US34)",
+                new FindPathUI()));
 
         int option = 0;
         do {
