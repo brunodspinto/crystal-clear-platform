@@ -197,9 +197,15 @@ public class ConflictDetector {
     }
 
     /**
-     * Q5 – Persons appointed by someone who is a member of the same
-     * organisation as the appointer.
-     * Chain: personA --appointedBy--> personB --memberOf--> org
+     * Q5 – Persons appointed by someone who holds a position in an organisation.
+     *
+     * <p>In this data model, a person's membership in an organisation is expressed
+     * via an intermediate position node:
+     * {@code personB --holdsPosition--&gt; position --inOrganization--&gt; org}.
+     * There is no direct {@code memberOf} edge from person to organisation.</p>
+     *
+     * Chain: personA → personB → org  (first = appointed person, last = organisation)
+     * Context: "appointer holds [position] in [org]"
      *
      * @param graph the graph
      * @return the list
@@ -210,8 +216,13 @@ public class ConflictDetector {
         for (String personA : graph.nodes()) {
             for (Edge apptEdge : edgesWithLabel(graph, personA, REL_APPOINTED_BY)) {
                 String personB = apptEdge.getToId();
-                for (Edge memEdge : edgesWithLabel(graph, personB, REL_MEMBER_OF)) {
-                    results.add(Chain.of(personA, personB, memEdge.getToId()));
+                for (Edge posEdge : edgesWithLabel(graph, personB, REL_HOLDS_POSITION)) {
+                    String position = posEdge.getToId();
+                    for (Edge orgEdge : edgesWithLabel(graph, position, REL_IN_ORGANIZATION)) {
+                        String org = orgEdge.getToId();
+                        String ctx = "appointer holds " + position + " in " + org;
+                        results.add(Chain.ofWithContext(ctx, personA, personB, org));
+                    }
                 }
             }
         }

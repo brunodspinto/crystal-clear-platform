@@ -236,27 +236,64 @@ class ConflictDetectorTest {
     }
 
     // -----------------------------------------------------------------------
-    // Q5 – appointed by organisation member
+    // Q5 – appointed by person who holds a position in an organisation
     // -----------------------------------------------------------------------
 
     @Test
-    void ensureQ5FindsChainWhenAppointedByOrgMember() {
+    void ensureQ5FindsChainWhenAppointedByPersonWithPosition() {
         RelationGraph graph = new RelationGraph();
-        graph.addEdge(new Edge("P1", "P2", ConflictDetector.REL_APPOINTED_BY, 1.0));
-        graph.addEdge(new Edge("P2", "O1", ConflictDetector.REL_MEMBER_OF, 1.0));
+        graph.addEdge(new Edge("P1", "P2", ConflictDetector.REL_APPOINTED_BY,    1.0));
+        graph.addEdge(new Edge("P2", "C1", ConflictDetector.REL_HOLDS_POSITION,  1.0));
+        graph.addEdge(new Edge("C1", "O1", ConflictDetector.REL_IN_ORGANIZATION, 1.0));
 
         List<ConflictDetector.Chain> chains =
                 detector.findPersonsAppointedByOrganisationMembers(graph);
 
         assertEquals(1, chains.size());
-        assertEquals("P1", chains.get(0).getFirst());
-        assertEquals("O1", chains.get(0).getLast());
     }
 
     @Test
-    void ensureQ5ReturnsEmptyWhenAppointingPersonIsNotOrgMember() {
+    void ensureQ5ChainFirstIsAppointedPersonLastIsOrg() {
+        RelationGraph graph = new RelationGraph();
+        graph.addEdge(new Edge("P1", "P2", ConflictDetector.REL_APPOINTED_BY,    1.0));
+        graph.addEdge(new Edge("P2", "C1", ConflictDetector.REL_HOLDS_POSITION,  1.0));
+        graph.addEdge(new Edge("C1", "O1", ConflictDetector.REL_IN_ORGANIZATION, 1.0));
+
+        ConflictDetector.Chain chain =
+                detector.findPersonsAppointedByOrganisationMembers(graph).get(0);
+
+        assertEquals("P1", chain.getFirst());
+        assertEquals("O1", chain.getLast());
+    }
+
+    @Test
+    void ensureQ5ChainContextContainsPositionAndOrg() {
+        RelationGraph graph = new RelationGraph();
+        graph.addEdge(new Edge("P1", "P2", ConflictDetector.REL_APPOINTED_BY,    1.0));
+        graph.addEdge(new Edge("P2", "C1", ConflictDetector.REL_HOLDS_POSITION,  1.0));
+        graph.addEdge(new Edge("C1", "O1", ConflictDetector.REL_IN_ORGANIZATION, 1.0));
+
+        ConflictDetector.Chain chain =
+                detector.findPersonsAppointedByOrganisationMembers(graph).get(0);
+
+        assertTrue(chain.hasContext());
+        assertTrue(chain.getContext().contains("C1"));
+        assertTrue(chain.getContext().contains("O1"));
+    }
+
+    @Test
+    void ensureQ5ReturnsEmptyWhenAppointingPersonHasNoPosition() {
         RelationGraph graph = new RelationGraph();
         graph.addEdge(new Edge("P1", "P2", ConflictDetector.REL_APPOINTED_BY, 1.0));
+
+        assertTrue(detector.findPersonsAppointedByOrganisationMembers(graph).isEmpty());
+    }
+
+    @Test
+    void ensureQ5ReturnsEmptyWhenNoAppointmentEdge() {
+        RelationGraph graph = new RelationGraph();
+        graph.addEdge(new Edge("P2", "C1", ConflictDetector.REL_HOLDS_POSITION,  1.0));
+        graph.addEdge(new Edge("C1", "O1", ConflictDetector.REL_IN_ORGANIZATION, 1.0));
 
         assertTrue(detector.findPersonsAppointedByOrganisationMembers(graph).isEmpty());
     }
