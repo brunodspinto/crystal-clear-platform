@@ -122,11 +122,17 @@ public class RelationCsvParser {
             fromId = parts[4].trim();
             toId = parts[5].trim();
             label = parts[1].trim();
+            String startDate = parts[2].trim();
+            String endDate = parts[3].trim();
             try {
                 weight = Double.parseDouble(parts[6].trim());
             } catch (NumberFormatException e) {
                 return null;
             }
+            if (fromId.isBlank() || toId.isBlank() || label.isBlank()) {
+                return null;
+            }
+            return new Edge(fromId, toId, label, weight, startDate, endDate);
         } else {
             fromId = parts[0].trim();
             toId = parts[1].trim();

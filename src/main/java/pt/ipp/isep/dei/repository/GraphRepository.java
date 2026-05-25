@@ -1,5 +1,6 @@
 package pt.ipp.isep.dei.repository;
 
+import pt.ipp.isep.dei.domain.graph.Edge;
 import pt.ipp.isep.dei.domain.graph.Entity;
 import pt.ipp.isep.dei.domain.graph.RelationGraph;
 
@@ -13,6 +14,7 @@ public class GraphRepository {
 
     private final List<Entity> entities;
     private RelationGraph relationGraph;
+    private List<Edge> edges;
 
     /**
      * Instantiates a new Graph repository.
@@ -20,6 +22,7 @@ public class GraphRepository {
     public GraphRepository() {
         entities = new ArrayList<>();
         relationGraph = null;
+        edges = new ArrayList<>();
     }
 
     /**
@@ -56,5 +59,23 @@ public class GraphRepository {
      */
     public RelationGraph getRelationGraph() {
         return relationGraph;
+    }
+
+    /**
+     * Stores the raw edge list (with temporal data) for snapshot filtering.
+     *
+     * @param edges the list of edges
+     */
+    public void setEdges(List<Edge> edges) {
+        this.edges = edges == null ? new ArrayList<>() : new ArrayList<>(edges);
+    }
+
+    /**
+     * Returns the raw edge list.
+     *
+     * @return a defensive copy of all edges
+     */
+    public List<Edge> getEdges() {
+        return new ArrayList<>(edges);
     }
 }

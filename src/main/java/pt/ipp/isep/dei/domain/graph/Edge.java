@@ -13,6 +13,8 @@ public class Edge {
     private final String toId;
     private final String label;
     private final double weight;
+    private final String startDate;
+    private final String endDate;
 
     /**
      * Instantiates a new Edge.
@@ -23,10 +25,27 @@ public class Edge {
      * @param weight the weight
      */
     public Edge(String fromId, String toId, String label, double weight) {
+        this(fromId, toId, label, weight, "", "");
+    }
+
+    /**
+     * Instantiates a new Edge with temporal bounds.
+     *
+     * @param fromId    the from id
+     * @param toId      the to id
+     * @param label     the label
+     * @param weight    the weight
+     * @param startDate the start date (yyyy-MM-dd), or blank if unknown
+     * @param endDate   the end date (yyyy-MM-dd), or blank if still active
+     */
+    public Edge(String fromId, String toId, String label, double weight,
+                String startDate, String endDate) {
         this.fromId = requireNonBlank(fromId, "fromId");
         this.toId = requireNonBlank(toId, "toId");
         this.label = requireNonBlank(label, "label");
         this.weight = weight;
+        this.startDate = startDate == null ? "" : startDate.trim();
+        this.endDate = endDate == null ? "" : endDate.trim();
     }
 
     /**
@@ -63,6 +82,39 @@ public class Edge {
      */
     public double getWeight() {
         return weight;
+    }
+
+    /**
+     * Gets start date.
+     *
+     * @return the start date (yyyy-MM-dd), or blank if unset
+     */
+    public String getStartDate() {
+        return startDate;
+    }
+
+    /**
+     * Gets end date.
+     *
+     * @return the end date (yyyy-MM-dd), or blank if still active
+     */
+    public String getEndDate() {
+        return endDate;
+    }
+
+    /**
+     * Returns true if this edge is active at the given date.
+     * An edge with no startDate is assumed to have always existed;
+     * an edge with no endDate is assumed to still be active.
+     *
+     * @param date the snapshot date in yyyy-MM-dd format
+     * @return true if active at that date
+     */
+    public boolean isActiveAt(String date) {
+        if (date == null || date.isBlank()) return false;
+        boolean startOk = startDate.isEmpty() || startDate.compareTo(date) <= 0;
+        boolean endOk = endDate.isEmpty() || endDate.compareTo(date) >= 0;
+        return startOk && endOk;
     }
 
     private static String requireNonBlank(String value, String name) {
