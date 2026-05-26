@@ -19,6 +19,7 @@ public class Repositories {
     private final EthicsCommitteeMemberRepository ethicsCommitteeMemberRepository;
     private final ValidationRecordRepository validationRecordRepository;
     private final RegistrationRequestRepository registrationRequestRepository;
+    private final ComplaintAssessmentRepository complaintAssessmentRepository;
 
     /**
      * The Singleton's constructor should always be private to prevent direct construction calls with the new operator.
@@ -35,6 +36,7 @@ public class Repositories {
         ethicsCommitteeMemberRepository = new EthicsCommitteeMemberRepository();
         validationRecordRepository = new ValidationRecordRepository();
         registrationRequestRepository = new RegistrationRequestRepository();
+        complaintAssessmentRepository = new ComplaintAssessmentRepository();
     }
 
     /**
@@ -148,5 +150,14 @@ public class Repositories {
      */
     public RegistrationRequestRepository getRegistrationRequestRepository() {
         return registrationRequestRepository;
+    }
+
+    /**
+     * Gets complaint assessment repository.
+     *
+     * @return the complaint assessment repository
+     */
+    public ComplaintAssessmentRepository getComplaintAssessmentRepository() {
+        return complaintAssessmentRepository;
     }
 }

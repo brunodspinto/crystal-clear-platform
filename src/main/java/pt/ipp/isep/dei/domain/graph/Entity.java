@@ -70,6 +70,21 @@ public abstract class Entity {
     }
 
     /**
+     * Returns true if this entity is active at the given date.
+     * An entity with no startDate is assumed to have always existed;
+     * an entity with no endDate is assumed to still be active.
+     *
+     * @param date the snapshot date in yyyy-MM-dd format
+     * @return true if active at that date
+     */
+    public boolean isActiveAt(String date) {
+        if (date == null || date.isBlank()) return false;
+        boolean startOk = startDate.isEmpty() || startDate.compareTo(date) <= 0;
+        boolean endOk = endDate.isEmpty() || endDate.compareTo(date) >= 0;
+        return startOk && endOk;
+    }
+
+    /**
      * Returns a human-readable summary of the entity's specific fields for display in tooltips.
      *
      * @return the detail string

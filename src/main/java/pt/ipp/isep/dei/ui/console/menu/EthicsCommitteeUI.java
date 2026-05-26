@@ -1,5 +1,6 @@
 package pt.ipp.isep.dei.ui.console.menu;
 
+import pt.ipp.isep.dei.ui.console.AssessComplaintUI;
 import pt.ipp.isep.dei.ui.console.AssetEvolutionUI;
 import pt.ipp.isep.dei.ui.console.ConsultIntegratedSituationUI;
 import pt.ipp.isep.dei.ui.console.DetectConflictsUI;
@@ -40,6 +41,7 @@ public class EthicsCommitteeUI implements Runnable {
         options.add(new MenuItem(
                 "Verify Pathway Between Two Entities (US34)",
                 new FindPathUI()));
+        options.add(new MenuItem("Assess Complaint (US27)", new AssessComplaintUI()));
         options.add(new MenuItem(
                 "Visualise Influence Subnetwork for an Entity (US36)",
                 new SubnetworkUI()));
