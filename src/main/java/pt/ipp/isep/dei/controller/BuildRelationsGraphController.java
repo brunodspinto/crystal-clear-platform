@@ -52,6 +52,7 @@ public class BuildRelationsGraphController {
         List<Entity> entities = graphRepository.getAll();
         RelationGraph graph = GraphBuilder.build(entities, edges);
         graphRepository.setRelationGraph(graph);
+        graphRepository.setEdges(edges);
 
         List<String> labels = new ArrayList<>();
         for (Edge e : edges) {

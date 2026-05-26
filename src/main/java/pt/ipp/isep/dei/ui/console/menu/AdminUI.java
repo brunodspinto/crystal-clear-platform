@@ -1,6 +1,7 @@
 package pt.ipp.isep.dei.ui.console.menu;
 
 import pt.ipp.isep.dei.ui.console.BuildRelationsGraphUI;
+import pt.ipp.isep.dei.ui.console.NetworkDynamicsUI;
 import pt.ipp.isep.dei.ui.console.CreateTaskUI;
 import pt.ipp.isep.dei.ui.console.ExportDeclarationCsvUI;
 import pt.ipp.isep.dei.ui.console.ExportGraphSvgUI;
@@ -36,6 +37,7 @@ public class AdminUI implements Runnable {
         options.add(new MenuItem("Export Declaration (CSV)", new ExportDeclarationCsvUI()));
         options.add(new MenuItem("Export Holdings (CSV)", new ExportHoldingsCsvUI()));
         options.add(new MenuItem("Export Graph (SVG)", new ExportGraphSvgUI()));
+        options.add(new MenuItem("Network Dynamics Over Time (US32)", new NetworkDynamicsUI()));
 
         int option = 0;
         do {
