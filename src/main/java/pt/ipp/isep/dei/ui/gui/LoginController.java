@@ -84,6 +84,13 @@ public class LoginController implements Initializable {
         messageLabel.setText("");
     }
 
+    @FXML
+    private void handleRegister() {
+        if (mainController != null) {
+            mainController.showRegister();
+        }
+    }
+
     private boolean isPasswordValid(String password) {
         if (password.length() != PASSWORD_LENGTH) {
             return false;

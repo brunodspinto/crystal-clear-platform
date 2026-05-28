@@ -1,0 +1,146 @@
+/* app.css — shared styles for Crystal Clear JavaFX UI */
+
+/* ── Root ────────────────────────────────────────────────────────────────── */
+.root-pane {
+    -fx-background-color: #f5f7fa;
+}
+
+/* ── Typography ──────────────────────────────────────────────────────────── */
+.app-title {
+    -fx-font-size: 12px;
+    -fx-font-family: "Helvetica Neue", sans-serif;
+    -fx-text-fill: #999999;
+    -fx-font-weight: normal;
+    -fx-padding: 0 0 2 0;
+    -fx-alignment: CENTER;
+    -fx-max-width: Infinity;
+}
+
+.scene-title {
+    -fx-font-size: 22px;
+    -fx-font-family: "Helvetica Neue", sans-serif;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a1a2e;
+    -fx-padding: 0 0 6 0;
+    -fx-alignment: CENTER;
+    -fx-max-width: Infinity;
+}
+
+.title-separator {
+    -fx-padding: 0 0 14 0;
+}
+
+.field-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #444444;
+    -fx-padding: 10 0 3 0;
+}
+
+/* ── Inputs ──────────────────────────────────────────────────────────────── */
+.input-field {
+    -fx-font-size: 13px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 8 10 8 10;
+    -fx-pref-height: 36px;
+}
+
+.input-field:focused {
+    -fx-border-color: #0f3460;
+    -fx-effect: dropshadow(gaussian, rgba(15,52,96,0.15), 4, 0, 0, 0);
+}
+
+.combo-box .list-cell {
+    -fx-font-size: 13px;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+.primary-button {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-color: #0f3460;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-padding: 10 0 10 0;
+    -fx-cursor: hand;
+    -fx-margin: 14 0 6 0;
+}
+
+.primary-button:hover {
+    -fx-background-color: #16213e;
+}
+
+.primary-button:disabled {
+    -fx-background-color: #aaaaaa;
+    -fx-cursor: default;
+}
+
+.secondary-button {
+    -fx-font-size: 13px;
+    -fx-background-color: transparent;
+    -fx-border-color: #0f3460;
+    -fx-border-radius: 5;
+    -fx-text-fill: #0f3460;
+    -fx-padding: 8 16 8 16;
+    -fx-cursor: hand;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #e8edf5;
+}
+
+.link-button {
+    -fx-text-fill: #0f3460;
+    -fx-font-size: 12px;
+}
+
+.link-button:hover {
+    -fx-text-fill: #16213e;
+}
+
+/* ── Password hint ───────────────────────────────────────────────────────── */
+.hint-neutral {
+    -fx-font-size: 11px;
+    -fx-text-fill: #888888;
+    -fx-padding: 2 0 0 2;
+}
+
+.hint-ok {
+    -fx-font-size: 11px;
+    -fx-text-fill: #2d9e5f;
+    -fx-padding: 2 0 0 2;
+}
+
+.hint-error {
+    -fx-font-size: 11px;
+    -fx-text-fill: #c0392b;
+    -fx-padding: 2 0 0 2;
+}
+
+/* ── Feedback labels ─────────────────────────────────────────────────────── */
+.message-error {
+    -fx-font-size: 12px;
+    -fx-text-fill: #c0392b;
+    -fx-background-color: #fdf0ef;
+    -fx-border-color: #e8c2bf;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 8 10 8 10;
+    -fx-max-width: Infinity;
+    -fx-wrap-text: true;
+}
+
+.message-success {
+    -fx-font-size: 12px;
+    -fx-text-fill: #1e7e4e;
+    -fx-background-color: #edf7f2;
+    -fx-border-color: #b8dfc9;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 8 10 8 10;
+    -fx-max-width: Infinity;
+    -fx-wrap-text: true;
+}

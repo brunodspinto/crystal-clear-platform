@@ -31,6 +31,10 @@ public class MainController {
         loadCenter("/fxml/Login.fxml");
     }
 
+    public void showRegister() {
+        loadCenter("/fxml/Register.fxml");
+    }
+
     public void showCitizenMenu() {
         loadCenter("/fxml/CitizenMenu.fxml");
     }
@@ -39,7 +43,7 @@ public class MainController {
         loadCenter("/fxml/JournalistMenu.fxml");
     }
 
-    private void loadCenter(String fxmlPath) {
+    void loadCenter(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent view = loader.load();
@@ -47,6 +51,8 @@ public class MainController {
             Object child = loader.getController();
             if (child instanceof LoginController) {
                 ((LoginController) child).setMainController(this);
+            } else if (child instanceof RegisterSceneController) {
+                ((RegisterSceneController) child).setMainController(this);
             }
 
             root.setCenter(view);
