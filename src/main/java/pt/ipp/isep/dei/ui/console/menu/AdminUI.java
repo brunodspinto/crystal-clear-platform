@@ -7,6 +7,7 @@ import pt.ipp.isep.dei.ui.console.ExportDeclarationCsvUI;
 import pt.ipp.isep.dei.ui.console.ExportGraphSvgUI;
 import pt.ipp.isep.dei.ui.console.ExportHoldingsCsvUI;
 import pt.ipp.isep.dei.ui.console.GenerateAdjacencyMatricesUI;
+import pt.ipp.isep.dei.ui.console.GlobalSupportMatrixUI;
 import pt.ipp.isep.dei.ui.console.LoadEntitiesFromCsvUI;
 import pt.ipp.isep.dei.ui.console.RegisterOrganizationUI;
 import pt.ipp.isep.dei.ui.console.ReviewRegistrationUI;
@@ -38,6 +39,7 @@ public class AdminUI implements Runnable {
         options.add(new MenuItem("Export Holdings (CSV)", new ExportHoldingsCsvUI()));
         options.add(new MenuItem("Export Graph (SVG)", new ExportGraphSvgUI()));
         options.add(new MenuItem("Network Dynamics Over Time (US32)", new NetworkDynamicsUI()));
+        options.add(new MenuItem("Global Support Adjacency Matrix (US33)", new GlobalSupportMatrixUI()));
 
         int option = 0;
         do {
