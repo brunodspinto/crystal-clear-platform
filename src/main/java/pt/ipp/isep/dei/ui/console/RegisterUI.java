@@ -78,22 +78,25 @@ public class RegisterUI implements Runnable {
     private String requestValidPassword() {
         System.out.println("\nPassword must have exactly 7 alphanumeric characters, at least 3 uppercase letters and at least 2 digits.");
         int attempts = 0;
-        while (attempts < 3) {
+        String validPassword = null;
+        while (attempts < 3 && validPassword == null) {
             String password = Utils.readLineFromConsole("Password: ");
             if (!controller.isValidPassword(password)) {
                 System.out.println("Invalid password. Please try again.");
                 attempts++;
-                continue;
+            } else {
+                String confirm = Utils.readLineFromConsole("Confirm password: ");
+                if (!password.equals(confirm)) {
+                    System.out.println("Passwords do not match. Please try again.");
+                    attempts++;
+                } else {
+                    validPassword = password;
+                }
             }
-            String confirm = Utils.readLineFromConsole("Confirm password: ");
-            if (!password.equals(confirm)) {
-                System.out.println("Passwords do not match. Please try again.");
-                attempts++;
-                continue;
-            }
-            return password;
         }
-        System.out.println("Too many failed attempts.");
-        return null;
+        if (validPassword == null) {
+            System.out.println("Too many failed attempts.");
+        }
+        return validPassword;
     }
 }
