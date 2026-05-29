@@ -41,17 +41,16 @@ public class Utils {
      * @return the int
      */
     static public int readIntegerFromConsole(String prompt) {
-        do {
+        Integer value = null;
+        while (value == null) {
             try {
                 String input = readLineFromConsole(prompt);
-
-                int value = Integer.parseInt(input);
-
-                return value;
+                value = Integer.parseInt(input);
             } catch (NumberFormatException ex) {
                 Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } while (true);
+        }
+        return value;
     }
 
     /**
@@ -61,29 +60,29 @@ public class Utils {
      * @return the double
      */
     static public long readLongFromConsole(String prompt) {
-        do {
+        Long value = null;
+        while (value == null) {
             try {
                 String input = readLineFromConsole(prompt);
-                long value = Long.parseLong(input);
-                return value;
+                value = Long.parseLong(input);
             } catch (NumberFormatException ex) {
                 Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } while (true);
+        }
+        return value;
     }
 
     static public double readDoubleFromConsole(String prompt) {
-        do {
+        Double value = null;
+        while (value == null) {
             try {
                 String input = readLineFromConsole(prompt);
-
-                double value = Double.parseDouble(input);
-
-                return value;
+                value = Double.parseDouble(input);
             } catch (NumberFormatException ex) {
                 Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } while (true);
+        }
+        return value;
     }
 
     /**
@@ -93,19 +92,19 @@ public class Utils {
      * @return the date
      */
     static public Date readDateFromConsole(String prompt) {
-        do {
+        Date date = null;
+        while (date == null) {
             try {
                 String strDate = readLineFromConsole(prompt);
 
                 SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 
-                Date date = df.parse(strDate);
-
-                return date;
+                date = df.parse(strDate);
             } catch (ParseException ex) {
                 Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } while (true);
+        }
+        return date;
     }
 
     /**
