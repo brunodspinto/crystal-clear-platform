@@ -48,18 +48,18 @@ public class GlobalSupportMatrixUI implements Runnable {
     }
 
     private String readDate() {
-        while (true) {
+        for (int attempts = 0; attempts < 5; attempts++) {
             String date = Utils.readLineFromConsole("\nSnapshot date (yyyy-MM-dd, blank to cancel): ");
             if (date == null || date.isBlank()) {
                 return null;
             }
             date = date.trim();
-            if (!date.matches("\\d{4}-\\d{2}-\\d{2}")) {
-                System.out.println("Invalid format. Use yyyy-MM-dd.");
-                continue;
+            if (date.matches("\\d{4}-\\d{2}-\\d{2}")) {
+                return date;
             }
-            return date;
+            System.out.println("Invalid format. Use yyyy-MM-dd.");
         }
+        return null;
     }
 
     private void printMatrix(SupportGraph sg, String date) {
