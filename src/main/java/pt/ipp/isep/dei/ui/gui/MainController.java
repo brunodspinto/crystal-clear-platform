@@ -43,6 +43,10 @@ public class MainController {
         loadCenter("/fxml/JournalistMenu.fxml");
     }
 
+    public void showIncomeEvolution() {
+        loadCenter("/fxml/AnalyseIncomeEvolution.fxml");
+    }
+
     void loadCenter(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -53,6 +57,8 @@ public class MainController {
                 ((LoginController) child).setMainController(this);
             } else if (child instanceof RegisterSceneController) {
                 ((RegisterSceneController) child).setMainController(this);
+            } else if (child instanceof AnalyseIncomeEvolutionFXController) {
+                ((AnalyseIncomeEvolutionFXController) child).setMainController(this);
             }
 
             root.setCenter(view);

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+
+<VBox spacing="12" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.ipp.isep.dei.ui.gui.AnalyseIncomeEvolutionFXController">
+    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+
+    <Label text="US10 — Income Evolution" style="-fx-font-size: 15px; -fx-font-weight: bold;"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Label text="Agent:"/>
+        <ComboBox fx:id="agentCombo" prefWidth="220"/>
+        <Label text="From:"/>
+        <DatePicker fx:id="startPicker"/>
+        <Label text="To:"/>
+        <DatePicker fx:id="endPicker"/>
+        <Button text="Search" onAction="#handleSearch"/>
+        <Button text="Back"   onAction="#handleBack"/>
+    </HBox>
+
+    <Label fx:id="messageLabel" style="-fx-text-fill: red;"/>
+
+    <TabPane VBox.vgrow="ALWAYS">
+        <Tab text="Table" closable="false">
+            <TableView fx:id="declarationTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colId"     text="ID"           prefWidth="90"/>
+                    <TableColumn fx:id="colDate"   text="Date"         prefWidth="110"/>
+                    <TableColumn fx:id="colType"   text="Type"         prefWidth="110"/>
+                    <TableColumn fx:id="colTotal"  text="Total Income" prefWidth="120"/>
+                    <TableColumn fx:id="colCount"  text="# Incomes"    prefWidth="90"/>
+                </columns>
+            </TableView>
+        </Tab>
+        <Tab text="Chart" closable="false">
+            <LineChart fx:id="incomeChart" legendVisible="false">
+                <xAxis><CategoryAxis label="Declaration Date"/></xAxis>
+                <yAxis><NumberAxis label="Total Income (€)"/></yAxis>
+            </LineChart>
+        </Tab>
+    </TabPane>
+</VBox>
