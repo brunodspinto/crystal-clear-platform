@@ -5,6 +5,7 @@ import pt.ipp.isep.dei.domain.DeclarationStatus;
 import pt.ipp.isep.dei.domain.PoliticalAgent;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -79,15 +80,35 @@ public class DeclarationRepository {
         if (referenceDate == null) {
             throw new IllegalArgumentException("Reference date cannot be null.");
         }
+        Date endOfDay = endOfDay(referenceDate);
         List<Declaration> result = new ArrayList<>();
         for (Declaration d : declarations) {
             if (d.getStatus() == DeclarationStatus.VALIDATED
                     && d.getAgent().equals(agent)
-                    && !d.getSubmissionDate().after(referenceDate)) {
+                    && !d.getSubmissionDate().after(endOfDay)) {
                 result.add(d);
             }
         }
         return result;
+    }
+
+    /**
+     * Returns the last instant (23:59:59.999) of the day the given date falls
+     * on. The reference date is typed without a time of day, so it is parsed at
+     * midnight; rolling it to the end of the day makes the comparison inclusive
+     * of declarations submitted later on that same day.
+     *
+     * @param date the date to roll to the end of its day.
+     * @return a new date at the last millisecond of that day.
+     */
+    private Date endOfDay(Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.set(Calendar.HOUR_OF_DAY, 23);
+        c.set(Calendar.MINUTE, 59);
+        c.set(Calendar.SECOND, 59);
+        c.set(Calendar.MILLISECOND, 999);
+        return c.getTime();
     }
 
     /**
@@ -111,13 +132,14 @@ public class DeclarationRepository {
         if (startDate.after(endDate)) {
             throw new IllegalArgumentException("Start date must be before or equal to end date.");
         }
+        Date endOfDay = endOfDay(endDate);
         List<Declaration> result = new ArrayList<>();
         for (Declaration d : declarations) {
             Date sd = d.getSubmissionDate();
             if (d.getStatus() == DeclarationStatus.VALIDATED
                     && d.getAgent().equals(agent)
                     && !sd.before(startDate)
-                    && !sd.after(endDate)) {
+                    && !sd.after(endOfDay)) {
                 result.add(d);
             }
         }
