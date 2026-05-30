@@ -1,16 +1,26 @@
 package pt.ipp.isep.dei.repository;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+
 /**
  * Inspired on https://refactoring.guru/design-patterns/singleton/java/example
  * <p>
  * The Repositories class works as a Singleton. It defines the getInstance method that serves as an alternative
  * to the constructor and lets client classes access the same instance of this class over and over.
  */
-public class Repositories {
+public class Repositories implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private static Repositories instance;
     private final OrganizationRepository organizationRepository;
     private final TaskCategoryRepository taskCategoryRepository;
-    private final AuthenticationRepository authenticationRepository;
+    // The authentication repository wraps the auth library (not serializable),
+    // so it is kept transient and rebuilt on load. The users are registered
+    // again by the Bootstrap on startup.
+    private transient AuthenticationRepository authenticationRepository;
     private final PoliticalAgentRepository politicalAgentRepository;
     private final CitizenRepository citizenRepository;
     private final ComplaintRepository complaintRepository;
@@ -51,6 +61,11 @@ public class Repositories {
             instance = new Repositories();
         }
         return instance;
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        authenticationRepository = new AuthenticationRepository();
     }
 
     /**
