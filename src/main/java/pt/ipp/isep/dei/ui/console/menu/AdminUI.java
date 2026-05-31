@@ -4,6 +4,7 @@ import pt.ipp.isep.dei.ui.console.BuildRelationsGraphUI;
 import pt.ipp.isep.dei.ui.console.NetworkDynamicsUI;
 import pt.ipp.isep.dei.ui.console.CreateTaskUI;
 import pt.ipp.isep.dei.ui.console.ExportDeclarationCsvUI;
+import pt.ipp.isep.dei.ui.console.ExportDeclarationGraphUI;
 import pt.ipp.isep.dei.ui.console.ExportGraphSvgUI;
 import pt.ipp.isep.dei.ui.console.ExportHoldingsCsvUI;
 import pt.ipp.isep.dei.ui.console.GenerateAdjacencyMatricesUI;
@@ -40,6 +41,7 @@ public class AdminUI implements Runnable {
         options.add(new MenuItem("Export Graph (SVG)", new ExportGraphSvgUI()));
         options.add(new MenuItem("Network Dynamics Over Time (US32)", new NetworkDynamicsUI()));
         options.add(new MenuItem("Global Support Adjacency Matrix (US33)", new GlobalSupportMatrixUI()));
+        options.add(new MenuItem("Export Declaration Interest Graph (US37)", new ExportDeclarationGraphUI()));
 
         int option = 0;
         do {
