@@ -1,9 +1,12 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
 /**
  * The type Citizen.
  */
-public class Citizen extends User {
+public class Citizen extends User implements Serializable{
+
+    private static final long serialVersionUID = 1L;
 
     private final String nationalIdCardNumber;
 

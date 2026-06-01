@@ -1,9 +1,13 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
+
 /**
  * The type User.
  */
-public abstract class User {
+public abstract class User implements Serializable{
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * The Name.

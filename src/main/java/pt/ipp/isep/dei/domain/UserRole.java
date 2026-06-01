@@ -1,9 +1,11 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
 /**
  * The enum User role.
  */
-public enum UserRole {
+public enum UserRole implements Serializable{
+
     /**
      * The Political agent.
      */
