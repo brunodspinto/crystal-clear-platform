@@ -8,6 +8,8 @@ autonumber
 actor "Political Agent" as PA
 participant ":ListOrganizationsUI" as UI
 participant ":ListOrganizationsController" as CTRL
+participant "Repositories" as REPOS
+participant "repositories:Repositories" as REPOS_SINGLETON
 participant ":OrganizationRepository" as REPO
 
 activate PA
@@ -17,6 +19,16 @@ activate PA
 
         UI -> CTRL : getOrganizationsGroupedByType()
         activate CTRL
+
+            CTRL -> REPOS : getInstance()
+            activate REPOS
+                REPOS --> CTRL : repositories
+            deactivate REPOS
+
+            CTRL -> REPOS_SINGLETON : getOrganizationRepository()
+            activate REPOS_SINGLETON
+                REPOS_SINGLETON --> CTRL : organizationRepository
+            deactivate REPOS_SINGLETON
 
             CTRL -> REPO : getOrganizations()
             activate REPO

@@ -36,6 +36,12 @@ class RegistrationRequestRepository {
     + getPendingRequests() : List<RegistrationRequest>
 }
 
+class Repositories {
+    - Repositories()
+    + {static} getInstance() : Repositories
+    + getRegistrationRequestRepository() : RegistrationRequestRepository
+}
+
 enum UserRole {
     POLITICAL_AGENT
     CITIZEN
@@ -51,8 +57,11 @@ enum RegistrationStatus {
 }
 
 RegisterUI .> RegisterController
+RegisterController .> Repositories
 RegisterController ..> RegistrationRequestRepository
 RegisterController ..> RegistrationRequest
+Repositories -> "1" Repositories : instance
+Repositories --> "1" RegistrationRequestRepository : registrationRequestRepository
 RegistrationRequest "1" --> "1" UserRole : role
 RegistrationRequest "1" --> "1" RegistrationStatus : status
 

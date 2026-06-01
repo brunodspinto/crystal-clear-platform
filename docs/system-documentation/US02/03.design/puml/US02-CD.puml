@@ -39,6 +39,29 @@ class AuthenticationRepository {
     + addUserWithRole(name : String, email : String, password : String, roleId : String) : void
 }
 
+class Repositories {
+    - Repositories()
+    + {static} getInstance() : Repositories
+    + getRegistrationRequestRepository() : RegistrationRequestRepository
+    + getAuthenticationRepository() : AuthenticationRepository
+}
+
+interface EmailService {
+    + sendNotification(toEmail : String, subject : String, body : String) : void
+}
+
+class GmailEmailService {
+    + sendNotification(toEmail : String, subject : String, body : String) : void
+}
+
+class DeiEmailService {
+    + sendNotification(toEmail : String, subject : String, body : String) : void
+}
+
+class EmailServiceFactory {
+    + {static} create() : EmailService
+}
+
 enum UserRole {
     POLITICAL_AGENT
     CITIZEN
@@ -54,9 +77,18 @@ enum RegistrationStatus {
 }
 
 ReviewRegistrationUI .> ReviewRegistrationController
+ReviewRegistrationController .> Repositories
 ReviewRegistrationController ..> RegistrationRequestRepository
 ReviewRegistrationController ..> AuthenticationRepository
 ReviewRegistrationController ..> RegistrationRequest
+Repositories -> "1" Repositories : instance
+Repositories --> "1" RegistrationRequestRepository : registrationRequestRepository
+Repositories --> "1" AuthenticationRepository : authenticationRepository
+ReviewRegistrationController --> EmailService : emailService
+ReviewRegistrationController ..> EmailServiceFactory
+GmailEmailService ..|> EmailService
+DeiEmailService ..|> EmailService
+EmailServiceFactory ..> EmailService : creates
 RegistrationRequest "1" --> "1" UserRole : role
 RegistrationRequest "1" --> "1" RegistrationStatus : status
 
