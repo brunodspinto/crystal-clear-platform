@@ -14,25 +14,31 @@ autonumber 11.1
 activate CTRL
     group Collect Assets
 
-        alt declarations is empty (AC3)
-            CTRL --> CTRL : empty list
-        else
-            loop for each d in declarations
-                CTRL -> DEC : getAssetEntries()
-                activate DEC
-                    DEC --> CTRL : assetEntries
-                deactivate DEC
-            end
+        CTRL -> CTRL : assets := new ArrayList<AssetEntry>()
+        activate CTRL
+        deactivate CTRL
 
-            CTRL --> CTRL : assetEntries
+        loop for each d in declarations
+            CTRL -> DEC : getAssetEntries()
+            activate DEC
+                DEC --> CTRL : assetEntries
+            deactivate DEC
+
+            loop for each a in assetEntries
+                CTRL -> CTRL : assets.add(a)
+                activate CTRL
+                deactivate CTRL
+            end
         end
 
     end
     autonumber 12
-    <-- CTRL : assetEntries
+    <-- CTRL : assets
 deactivate CTRL
 
 note over CTRL
+    Returns an empty list (AC3) when
+    declarations is empty.
     AC4 (masking) is handled by
     the UI using the boolean from
     isCurrentUserJournalist().

@@ -8,6 +8,7 @@ autonumber
 actor "Journalist" as Journalist
 participant ":AnalyseIncomeEvolutionUI" as UI
 participant ":AnalyseIncomeEvolutionController" as CTRL
+participant ":Repositories" as REPOS
 
 activate Journalist
 
@@ -15,6 +16,23 @@ activate Journalist
     activate UI
 
         UI --> CTRL** : create()
+        activate CTRL
+            CTRL -> REPOS : getInstance()
+            activate REPOS
+                REPOS --> CTRL : repositories
+            deactivate REPOS
+
+            CTRL -> REPOS : getPoliticalAgentRepository()
+            activate REPOS
+                REPOS --> CTRL : politicalAgentRepository
+            deactivate REPOS
+
+            CTRL -> REPOS : getDeclarationRepository()
+            activate REPOS
+                REPOS --> CTRL : declarationRepository
+            deactivate REPOS
+        deactivate CTRL
+
         UI -> CTRL : getPoliticalAgents()
         ref over CTRL
             Get Political Agents
@@ -38,16 +56,19 @@ activate Journalist
         UI -> CTRL : getIncomeEvolution(agent, startDate, endDate)
         activate CTRL
 
-            note right of CTRL
-                AC2: validates inline that
-                startDate <= endDate.
-            end note
+            alt agent == null
+                CTRL --> UI : throw IllegalArgumentException("Agent cannot be null.")
+            else startDate == null or endDate == null
+                CTRL --> UI : throw IllegalArgumentException("Dates cannot be null.")
+            else startDate.after(endDate) (AC2)
+                CTRL --> UI : throw IllegalArgumentException("Start date must be before or equal to end date.")
+            else valid input
+                ref over CTRL
+                    Get Validated Declarations For Agent Between
+                end ref
 
-            ref over CTRL
-                Get Validated Declarations For Agent Between
-            end ref
-
-            CTRL --> UI : declarations
+                CTRL --> UI : declarations
+            end
         deactivate CTRL
 
         alt declarations is empty (AC5)

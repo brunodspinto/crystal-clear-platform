@@ -8,6 +8,7 @@ autonumber
 actor "Ethics Committee Member" as ECM
 participant ":ConsultIntegratedSituationUI" as UI
 participant ":ConsultIntegratedSituationController" as CTRL
+participant ":Repositories" as REPOS
 
 activate ECM
 
@@ -15,6 +16,23 @@ activate ECM
     activate UI
 
         UI --> CTRL** : create()
+        activate CTRL
+            CTRL -> REPOS : getInstance()
+            activate REPOS
+                REPOS --> CTRL : repositories
+            deactivate REPOS
+
+            CTRL -> REPOS : getPoliticalAgentRepository()
+            activate REPOS
+                REPOS --> CTRL : politicalAgentRepository
+            deactivate REPOS
+
+            CTRL -> REPOS : getDeclarationRepository()
+            activate REPOS
+                REPOS --> CTRL : declarationRepository
+            deactivate REPOS
+        deactivate CTRL
+
         UI -> CTRL : getPoliticalAgents()
         ref over CTRL
             Get Political Agents
@@ -38,11 +56,17 @@ activate ECM
         UI -> CTRL : getIntegratedSituation(agent, referenceDate)
         activate CTRL
 
-            ref over CTRL
-                Get Validated Declarations For Agent Up To
-            end ref
+            alt agent == null
+                CTRL --> UI : throw IllegalArgumentException("Agent cannot be null.")
+            else referenceDate == null
+                CTRL --> UI : throw IllegalArgumentException("Reference date cannot be null.")
+            else valid input
+                ref over CTRL
+                    Get Validated Declarations For Agent Up To
+                end ref
 
-            CTRL --> UI : declarations
+                CTRL --> UI : declarations
+            end
         deactivate CTRL
 
         alt declarations is empty (AC3)

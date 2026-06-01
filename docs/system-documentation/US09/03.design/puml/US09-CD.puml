@@ -13,6 +13,14 @@ class ConsultIntegratedSituationController {
     + getIntegratedSituation(agent, referenceDate)
 }
 
+class Repositories <<Singleton>> {
+    - {static} instance : Repositories
+    - Repositories()
+    + {static} getInstance() : Repositories
+    + getPoliticalAgentRepository() : PoliticalAgentRepository
+    + getDeclarationRepository() : DeclarationRepository
+}
+
 class PoliticalAgentRepository {
     + getAll()
 }
@@ -87,6 +95,9 @@ class BusinessParticipation {
 
 ConsultIntegratedSituationUI .> ConsultIntegratedSituationController
 
+ConsultIntegratedSituationController ..> Repositories
+Repositories ..> PoliticalAgentRepository
+Repositories ..> DeclarationRepository
 ConsultIntegratedSituationController ..> PoliticalAgentRepository
 ConsultIntegratedSituationController ..> DeclarationRepository
 ConsultIntegratedSituationController ..> PoliticalAgent
@@ -115,6 +126,12 @@ note bottom of DeclarationRepository
     AC2: returns only declarations with
     status = VALIDATED and
     submissionDate <= referenceDate
+end note
+
+note right of ConsultIntegratedSituationController
+    getIntegratedSituation validates inputs:
+    throws IllegalArgumentException if agent or
+    referenceDate is null, before calling the repository.
 end note
 
 @enduml

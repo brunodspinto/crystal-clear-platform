@@ -16,30 +16,52 @@ activate UI
     UI -> CTRL : isCurrentUserJournalist()
     activate CTRL
 
-        note right of CTRL
-            AC4: returns true when the
-            current session has the
-            Journalist role.
-            The UI uses this to mask or
-            show sensitive values.
-        end note
+        alt authenticationRepository == null
+            CTRL --> UI : false
+        else
+            CTRL -> AUTH : getCurrentUserSession()
+            activate AUTH
+                AUTH --> CTRL : session
+            deactivate AUTH
 
-        CTRL -> AUTH : getCurrentUserSession()
-        activate AUTH
-            AUTH --> CTRL : session
-        deactivate AUTH
+            alt session == null
+                CTRL --> UI : false
+            else
+                CTRL -> SESS : isLoggedIn()
+                activate SESS
+                    SESS --> CTRL : loggedIn
+                deactivate SESS
 
-        CTRL -> SESS : isLoggedIn()
-        activate SESS
-            SESS --> CTRL : true
-        deactivate SESS
+                alt !loggedIn
+                    CTRL --> UI : false
+                else
+                    CTRL -> SESS : getUserRoles()
+                    activate SESS
+                        SESS --> CTRL : roles
+                    deactivate SESS
 
-        CTRL -> SESS : getUserRoles()
-        activate SESS
-            SESS --> CTRL : roles
-        deactivate SESS
+                    alt roles == null
+                        CTRL --> UI : false
+                    else
+                        loop for each role in roles
+                            CTRL -> CTRL : role.getDescription().equals("Journalist") ?
+                            activate CTRL
+                            deactivate CTRL
+                        end
 
-        CTRL --> UI : isJournalist
+                        note right of CTRL
+                            AC4: returns true if any role
+                            description equals "Journalist";
+                            false otherwise (Citizen).
+                            The UI uses this flag to mask
+                            sensitive values when not journalist.
+                        end note
+
+                        CTRL --> UI : isJournalist
+                    end
+                end
+            end
+        end
     deactivate CTRL
 
 deactivate UI
