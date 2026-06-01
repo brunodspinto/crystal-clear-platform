@@ -7,7 +7,9 @@ import pt.ipp.isep.dei.domain.RegistrationStatus;
 import pt.ipp.isep.dei.domain.UserRole;
 import pt.ipp.isep.dei.repository.AuthenticationRepository;
 import pt.ipp.isep.dei.repository.RegistrationRequestRepository;
+import pt.ipp.isep.dei.service.EmailService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,13 +17,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class ReviewRegistrationControllerTest {
 
     private RegistrationRequestRepository repository;
+    private RecordingEmailService emailService;
     private ReviewRegistrationController controller;
 
     @BeforeEach
     void setUp() {
         repository = new RegistrationRequestRepository();
         AuthenticationRepository authRepo = new AuthenticationRepository();
-        controller = new ReviewRegistrationController(repository, authRepo);
+        emailService = new RecordingEmailService();
+        controller = new ReviewRegistrationController(repository, authRepo, emailService);
     }
 
     private RegistrationRequest makeRequest(String email, UserRole role) {
@@ -147,5 +151,68 @@ class ReviewRegistrationControllerTest {
     void ensureDefaultConstructorInitialisesRepositoriesFromSingleton() {
         ReviewRegistrationController defaultController = new ReviewRegistrationController();
         assertNotNull(defaultController.getPendingRequests());
+    }
+
+    @Test
+    void ensureApproveRequestSendsNotificationToCorrectEmail() {
+        RegistrationRequest r = makeRequest("notify@gov.pt", UserRole.POLITICAL_AGENT);
+        repository.save(r);
+        controller.approveRequest(r);
+        assertEquals(1, emailService.getSentEmails().size());
+        assertEquals("notify@gov.pt", emailService.getSentEmails().get(0));
+    }
+
+    @Test
+    void ensureRejectRequestSendsNotificationToCorrectEmail() {
+        RegistrationRequest r = makeRequest("reject@gov.pt", UserRole.POLITICAL_AGENT);
+        repository.save(r);
+        controller.rejectRequest(r, "Incomplete data");
+        assertEquals(1, emailService.getSentEmails().size());
+        assertEquals("reject@gov.pt", emailService.getSentEmails().get(0));
+    }
+
+    @Test
+    void ensureApproveNotificationSubjectIndicatesApproval() {
+        RegistrationRequest r = makeRequest("approved@gov.pt", UserRole.POLITICAL_AGENT);
+        repository.save(r);
+        controller.approveRequest(r);
+        assertTrue(emailService.getLastSubject().contains("Approved"));
+    }
+
+    @Test
+    void ensureRejectNotificationBodyContainsReason() {
+        RegistrationRequest r = makeRequest("rejected@gov.pt", UserRole.POLITICAL_AGENT);
+        repository.save(r);
+        controller.rejectRequest(r, "Wrong role");
+        assertTrue(emailService.getLastBody().contains("Wrong role"));
+    }
+
+    /**
+     * Test double that records sent emails for assertion.
+     */
+    private static class RecordingEmailService implements EmailService {
+
+        private final List<String> sentEmails = new ArrayList<>();
+        private String lastSubject = "";
+        private String lastBody = "";
+
+        @Override
+        public void sendNotification(String toEmail, String subject, String body) {
+            sentEmails.add(toEmail);
+            lastSubject = subject;
+            lastBody = body;
+        }
+
+        public List<String> getSentEmails() {
+            return sentEmails;
+        }
+
+        public String getLastSubject() {
+            return lastSubject;
+        }
+
+        public String getLastBody() {
+            return lastBody;
+        }
     }
 }
