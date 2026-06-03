@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="12" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.ipp.isep.dei.ui.gui.SubmitComplaintFXController">
+    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+
+    <Label text="US12 — Submit Complaint" style="-fx-font-size: 15px; -fx-font-weight: bold;"/>
+
+    <GridPane hgap="12" vgap="10">
+        <columnConstraints>
+            <ColumnConstraints minWidth="120"/>
+            <ColumnConstraints minWidth="260" hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <Label text="Political Agent:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="agentCombo" prefWidth="280" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Political Function:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="functionCombo" prefWidth="280" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Complaint Date:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <DatePicker fx:id="datePicker" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Description:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextArea fx:id="descriptionArea" prefRowCount="5" wrapText="true"
+                  GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <Label fx:id="messageLabel" style="-fx-text-fill: red;"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Button text="Submit" onAction="#handleSubmit" defaultButton="true"/>
+        <Button text="Clear"  onAction="#handleClear"/>
+        <Button text="Back"   onAction="#handleBack"/>
+    </HBox>
+</VBox>

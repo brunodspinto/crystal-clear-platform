@@ -71,6 +71,8 @@ public class MainController {
                 ((CitizenMenuController) child).setMainController(this);
             } else if (child instanceof JournalistMenuController) {
                 ((JournalistMenuController) child).setMainController(this);
+            } else if (child instanceof SubmitComplaintFXController) {
+                ((SubmitComplaintFXController) child).setMainController(this);
             }
 
             root.setCenter(view);
