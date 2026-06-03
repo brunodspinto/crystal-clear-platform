@@ -131,8 +131,10 @@ def print_segments(segment_stats):
         print(f"  [{entry['pct_low']:5.2f}%, {entry['pct_high']:5.2f}%]  "
               f"n={entry['n']:4d}  mean_value={entry['mean_value']:14,.2f}  "
               f"slope={entry['slope']:14,.2f}")
-    verdict = acceleration_verdict([e['mean_value'] for e in segment_stats])
-    print(f'  -> mean-value trend with ownership level: {verdict}')
+    mean_trend = acceleration_verdict([e['mean_value'] for e in segment_stats])
+    slope_trend = acceleration_verdict([e['slope'] for e in segment_stats])
+    print(f'  -> mean-value trend with ownership level: {mean_trend}')
+    print(f'  -> slope trend with ownership level (acceleration): {slope_trend}')
     print()
 
 

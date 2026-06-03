@@ -98,6 +98,7 @@ STATISTICS BY OWNERSHIP LEVEL (equal-width segments)
   [15.26%, 20.09%]  n=  45  mean_value=    145,573.56  slope=       -938.49
   [20.09%, 24.92%]  n=  58  mean_value=    150,855.32  slope=     11,857.36
   -> mean-value trend with ownership level: no monotonic trend
+  -> slope trend with ownership level (acceleration): no monotonic trend
 ```
 
 
@@ -106,6 +107,7 @@ STATISTICS BY OWNERSHIP LEVEL (equal-width segments)
 - The **linear fit is very weak**: r² = 0.02, i.e. the shareholding percentage explains only about **2 %** of the variability of the stock value. The percentage is, by itself, a poor linear predictor of the declared value.
 - The **residuals** form a wide cloud around zero with **no systematic curve** — so there is no evidence of a specific non-linear (e.g. quadratic / accelerating) functional form.
 - The **mean stock value by ownership level is non-monotonic** (≈ 113 k → 139 k → 116 k → 146 k → 151 k). The two **highest** ownership levels do show the **highest** mean values (≈ 146 k–151 k versus ≈ 113 k at the lowest level), but the trend is not monotonic and the within-segment slopes alternate sign, so the rise is weak and dominated by dispersion.
+- The **slope trend** across ownership levels is also classified as *no monotonic trend* (the per-segment slopes alternate sign: +7 569, −7 071, +7 096, −938, +11 857). There is therefore **no acceleration**: the slope of the relationship does not grow consistently at higher ownership levels.
 - **Answer to the user story:** the relationship does **not** follow a clear constant/linear pattern (very low r²), and it also does **not** show a clean curvature or acceleration at higher levels of ownership. There is only a **mild tendency** for higher declared value at the highest ownership levels, which is not strong enough to conclude a disproportionate (accelerating) growth of financial exposure. Within the course material (linear regression + residuals + segmented analysis) this is the strongest statement the data supports.
 
 
