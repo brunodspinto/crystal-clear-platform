@@ -47,6 +47,14 @@ public class MainController {
         loadCenter("/fxml/AnalyseIncomeEvolution.fxml");
     }
 
+    public void showConsultAssets() {
+        loadCenter("/fxml/ConsultAssets.fxml");
+    }
+
+    public void showSubmitComplaint() {
+        loadCenter("/fxml/SubmitComplaint.fxml");
+    }
+
     void loadCenter(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -59,6 +67,10 @@ public class MainController {
                 ((RegisterSceneController) child).setMainController(this);
             } else if (child instanceof AnalyseIncomeEvolutionFXController) {
                 ((AnalyseIncomeEvolutionFXController) child).setMainController(this);
+            } else if (child instanceof CitizenMenuController) {
+                ((CitizenMenuController) child).setMainController(this);
+            } else if (child instanceof JournalistMenuController) {
+                ((JournalistMenuController) child).setMainController(this);
             }
 
             root.setCenter(view);

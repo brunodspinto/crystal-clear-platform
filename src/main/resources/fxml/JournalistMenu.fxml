@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.ipp.isep.dei.ui.gui.JournalistMenuController"
+      styleClass="root-pane"
+      stylesheets="@../css/app.css"
+      spacing="12" alignment="CENTER">
+    <padding>
+        <Insets top="40" right="40" bottom="40" left="40"/>
+    </padding>
+
+    <Label text="Journalist Menu" style="-fx-font-size: 20px;"/>
+
+    <Button text="Consult Assets" onAction="#handleConsultAssets" maxWidth="240"/>
+    <Button text="Analyse Income Evolution" onAction="#handleIncomeEvolution" maxWidth="240"/>
+    <Button text="Logout" onAction="#handleLogout" maxWidth="240"/>
+</VBox>
