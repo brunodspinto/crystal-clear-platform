@@ -12,8 +12,9 @@
 | Step 1         | ...coordinating the US?                                                                           | RegisterOrganizationController  | **Controller**: decouples the UI from the domain and orchestrates the use case.                                                                  |
 | Step 2         | ...providing the list of available organization types for the Administrator to select from? (AC2) | OrganizationType                | **Information Expert**: the enum owns its own set of values.                                                                                     |
 | Step 3         | ...saving the selected organization type?                                                         | RegisterOrganizationUI          | **Information Expert**: the UI is responsible for keeping user selections until submission.                                                      |
-| Step 4         | ...requesting the organization name and nature?                                                   | RegisterOrganizationUI          | **Information Expert**: the UI is responsible for user interactions.                                                                             |
-| Step 5         | ...saving the inputted name and nature?                                                           | RegisterOrganizationUI          | **Information Expert**: the UI is responsible for keeping inputted data until submission.                                                        |
+| Step 4         | ...providing the list of available organization natures for the Administrator to select from?     | OrganizationNature              | **Information Expert**: the enum owns its own set of values.                                                                                     |
+| Step 4         | ...requesting the organization name?                                                              | RegisterOrganizationUI          | **Information Expert**: the UI is responsible for user interactions.                                                                             |
+| Step 5         | ...saving the selected nature and inputted name?                                                  | RegisterOrganizationUI          | **Information Expert**: the UI is responsible for keeping user selections/inputted data until submission.                                        |
 | Step 6         | ...showing all data and requesting confirmation?                                                  | RegisterOrganizationUI          | **Information Expert**: the UI is responsible for user interactions.                                                                             |
 | Step 7         | ...instantiating a new Organization?                                                              | RegisterOrganizationController  | **Creator** + **Controller**: the controller orchestrates construction and delegates persistence.                                                 |
 | Step 7         | ...validating all data (local validation)?                                                        | Organization                    | **Information Expert**: an Organization owns its own data and is responsible for its own consistency.                                            |
@@ -27,6 +28,7 @@ According to the taken rationale, the conceptual classes promoted to software cl
 
 * Organization
 * OrganizationType
+* OrganizationNature
 
 Other software classes (i.e. Pure Fabrication) identified:
 
