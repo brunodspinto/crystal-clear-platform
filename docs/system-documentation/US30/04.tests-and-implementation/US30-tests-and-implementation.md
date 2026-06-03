@@ -11,6 +11,7 @@ The user story builds directly on the regression of **US29** (the expected relat
 3. Fit the least-squares line `total_assets ~ total_income` with `scipy.stats.linregress` and compute the **residuals** `e_i = y_i - (slope·x_i + intercept)` (Statistics ch. 6).
 4. Repeat the fit on the **normalized data**, where each variable is standardized with the z-score (reduced variable `Z = (X − mean) / std`), and compute the residuals on that scale.
 5. Plot **two histograms** — residuals on the original data and residuals on the normalized data — overlaid with the Normal curve of the same mean and standard deviation, and report the descriptive measures (mean, std, min, max).
+6. **Evaluate the number of agents with the greatest deviation:** count how many residuals fall beyond ±2 and ±3 standard deviations and compare those counts with the number a Normal distribution would produce (ch. 3). This directly checks the validity of the US29 deviation/outlier results.
 
 ### Alignment with the Statistics syllabus
 
@@ -23,7 +24,7 @@ The user story builds directly on the regression of **US29** (the expected relat
 
 ## 4. Tests
 
-- `src/test/python/us30/test_residual_analysis.py` — 16 unit tests for the pure functions (I/O and plotting functions are excluded per project guidelines).
+- `src/test/python/us30/test_residual_analysis.py` — 21 unit tests for the pure functions (I/O and plotting functions are excluded per project guidelines).
 
 | Test | Description |
 |------|-------------|
@@ -41,6 +42,11 @@ The user story builds directly on the regression of **US29** (the expected relat
 | `test_original_residuals_sum_to_zero` | OLS residuals on the original data have mean 0 |
 | `test_normalized_residuals_have_mean_zero` | residuals on normalized data have mean 0 |
 | `test_one_residual_per_row` | one residual is produced per observation |
+| `test_counts_values_beyond_two_sigma` | `count_beyond_sigma` counts the residuals with \|z\| > 2 |
+| `test_no_values_beyond_for_tight_data` | `count_beyond_sigma` returns 0 when no residual is extreme |
+| `test_constant_series_returns_zero` | `count_beyond_sigma` is 0 for a constant series |
+| `test_two_sigma_fraction` | `normal_expected_count` ≈ 4.55 % beyond ±2σ |
+| `test_three_sigma_fraction` | `normal_expected_count` ≈ 0.27 % beyond ±3σ |
 | `test_mean_and_std` | `describe_residuals` reports the correct mean and std |
 | `test_min_and_max` | `describe_residuals` reports the correct min and max |
 
@@ -68,6 +74,8 @@ The full implementation lives in `src/main/python/us30/residual_analysis.py`.
 | `residuals_original(df)` | Residuals of `total_assets ~ total_income` on the original data |
 | `residuals_normalized(df)` | Residuals after z-score normalizing income and assets |
 | `describe_residuals(residuals)` | Mean, std, min and max of the residuals (ch. 2) |
+| `count_beyond_sigma(residuals, k=2.0)` | Number of residuals with \|z\| > k (the high-deviation agents) |
+| `normal_expected_count(n, k=2.0)` | Number expected beyond ±k σ under a Normal: `n·2·(1−Φ(k))` |
 | `print_description(title, residuals)` | Prints the descriptive measures (stdout) |
 | `plot_residuals_histogram(residuals, title, output_path)` | Saves the residual histogram with the Normal reference curve as SVG |
 
@@ -100,6 +108,10 @@ RESIDUALS - NORMALIZED DATA (z-score)
   std   =           0.9997
   min   =          -1.6733
   max   =           5.3055
+
+AGENTS WITH GREATEST DEVIATION (validity check vs Normal)
+  |z| > 2: observed =  101 ( 4.27%)  Normal-expected =  107.6 ( 4.55%)
+  |z| > 3: observed =   30 ( 1.27%)  Normal-expected =    6.4 ( 0.27%)
 ```
 
 > **Consistency with US29.** US30 reuses exactly the same preprocessing and model as US29 (`keep_most_recent`, `compute_totals`, and the `total_assets ~ total_income` regression via `stats.linregress`). The residuals computed here are numerically identical to those of US29 (slope = 0.028296, intercept = 56 546.27), and the standard deviation uses the same sample convention (`pandas .std()`, ddof = 1) as US29's z-score, so the two analyses agree. US29 flags 101 agents with `|z| > 2`.
@@ -110,7 +122,10 @@ RESIDUALS - NORMALIZED DATA (z-score)
 - The residual **mean is 0** in both cases, as expected from the least-squares method (ch. 6) — this part of the assumption holds.
 - The residuals are **strongly right-skewed**: on the normalized scale the minimum is only −1.67 standard deviations while the maximum reaches **+5.31** standard deviations. The histogram therefore departs from the symmetric Normal reference curve, so the **Normality assumption of linear regression is not fully satisfied**.
 - Normalization with the z-score is a **linear transformation**, so it does **not** change the *shape* of the distribution — it only rescales it (std becomes ≈ 1). The normalized histogram is the right scale to read deviations directly in standard-deviation units and to apply the ±2 rule used in US29.
-- **Validity of the US29 results:** because the residuals have a heavy positive tail, the agents flagged by US29 as having the greatest deviation (residuals beyond +5 standard deviations) are genuine extreme cases and not an artefact of a symmetric model. At the same time, the lack of Normality means the exact *count* of agents obtained from a Normal-based ±2 threshold should be read with caution — the deviations are real, but the distributional assumption underlying a strict probabilistic interpretation is only approximate.
+- **Validity of the US29 results (number of agents with greatest deviation):** counting the residuals beyond ±k standard deviations and comparing with the Normal expectation gives a concrete answer:
+  - at **±2σ**, the observed count is **101 (4.27 %)**, essentially equal to the Normal expectation of ≈ 107.6 (4.55 %) — and **exactly the number US29 reports** with its `|z| > 2` rule;
+  - at **±3σ**, the observed count is **30 (1.27 %)** against only ≈ 6.4 (0.27 %) expected under a Normal — roughly **five times more** extreme agents than a Normal would produce.
+- This confirms the **heavy right tail**: the count at moderate deviation (±2σ) is consistent with a Normal, but the extreme-deviation agents (±3σ) are far more numerous than Normality predicts. The agents that US29 flags as the greatest deviations are therefore **genuine anomalies**, while the strict probabilistic interpretation of a Normal-based threshold should still be read with caution because the Normality assumption is only approximate.
 
 
 ## 8. Checklist
@@ -123,7 +138,8 @@ RESIDUALS - NORMALIZED DATA (z-score)
 - [x] `standardize` — z-score normalization (reduced variable)
 - [x] `residuals_original` / `residuals_normalized` — residuals on both scales
 - [x] `describe_residuals` — descriptive measures (ch. 2)
+- [x] `count_beyond_sigma` / `normal_expected_count` — number of high-deviation agents vs Normal expectation (US29 validity)
 - [x] `plot_residuals_histogram` — histogram + Normal reference curve → SVG
 - [x] two graphs (original data + normalized data)
-- [x] 16 unit tests (all passing)
+- [x] 21 unit tests (all passing)
 - [x] SVG charts saved to `docs/system-documentation/US30/`

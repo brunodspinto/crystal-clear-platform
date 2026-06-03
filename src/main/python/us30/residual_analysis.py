@@ -102,6 +102,26 @@ def describe_residuals(residuals):
     }
 
 
+def count_beyond_sigma(residuals, k=2.0):
+    """Number of residuals whose standardized value exceeds +/- k (|z| > k).
+
+    These are the agents with the greatest deviation (the ones US29 flags).
+    """
+    mean = residuals.mean()
+    std = residuals.std()
+    if std == 0:
+        return 0
+    z = (residuals - mean) / std
+    return int((z.abs() > k).sum())
+
+
+def normal_expected_count(n, k=2.0):
+    """Number of observations expected beyond +/- k standard deviations under
+    a Normal distribution (ch. 3): n * 2 * (1 - Phi(k))."""
+    fraction = 2.0 * (1.0 - stats.norm.cdf(k))
+    return n * fraction
+
+
 def print_description(title, residuals):
     """Prints the descriptive measures of a residual series (stdout)."""
     print(title)
@@ -150,6 +170,17 @@ if __name__ == '__main__':
 
     print_description('RESIDUALS - ORIGINAL DATA', res_original)
     print_description('RESIDUALS - NORMALIZED DATA (z-score)', res_normalized)
+
+    # Validity of the "number of agents with greatest deviation" (US29):
+    # compare the observed counts beyond +/- k sigma with the Normal expectation.
+    n = len(res_original)
+    print('AGENTS WITH GREATEST DEVIATION (validity check vs Normal)')
+    for k in (2.0, 3.0):
+        observed = count_beyond_sigma(res_original, k)
+        expected = normal_expected_count(n, k)
+        print(f'  |z| > {k:.0f}: observed = {observed:4d} ({observed / n:6.2%})  '
+              f'Normal-expected = {expected:6.1f} ({expected / n:6.2%})')
+    print()
 
     plot_residuals_histogram(
         res_original, 'US30 - Residuals (original data)',

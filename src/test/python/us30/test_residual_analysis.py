@@ -17,6 +17,8 @@ from residual_analysis import (
     residuals_original,
     residuals_normalized,
     describe_residuals,
+    count_beyond_sigma,
+    normal_expected_count,
 )
 
 
@@ -133,6 +135,33 @@ class TestResiduals(unittest.TestCase):
     def test_one_residual_per_row(self):
         self.assertEqual(len(residuals_original(self.df)), len(self.df))
         self.assertEqual(len(residuals_normalized(self.df)), len(self.df))
+
+
+class TestCountBeyondSigma(unittest.TestCase):
+
+    def test_counts_values_beyond_two_sigma(self):
+        # 0..9 plus an extreme outlier; only the outlier exceeds |z|>2
+        residuals = pd.Series([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 100.0])
+        self.assertEqual(count_beyond_sigma(residuals, k=2.0), 1)
+
+    def test_no_values_beyond_for_tight_data(self):
+        residuals = pd.Series([-1.0, 0.0, 1.0, -1.0, 0.0, 1.0])
+        self.assertEqual(count_beyond_sigma(residuals, k=2.0), 0)
+
+    def test_constant_series_returns_zero(self):
+        residuals = pd.Series([5.0, 5.0, 5.0])
+        self.assertEqual(count_beyond_sigma(residuals, k=2.0), 0)
+
+
+class TestNormalExpectedCount(unittest.TestCase):
+
+    def test_two_sigma_fraction(self):
+        # ~4.55% of a Normal lies beyond +/- 2 sigma
+        self.assertAlmostEqual(normal_expected_count(10000, k=2.0) / 10000, 0.0455, places=3)
+
+    def test_three_sigma_fraction(self):
+        # ~0.27% beyond +/- 3 sigma
+        self.assertAlmostEqual(normal_expected_count(10000, k=3.0) / 10000, 0.0027, places=3)
 
 
 class TestDescribeResiduals(unittest.TestCase):
