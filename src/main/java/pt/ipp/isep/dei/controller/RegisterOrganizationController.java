@@ -1,6 +1,7 @@
 package pt.ipp.isep.dei.controller;
 
 import pt.ipp.isep.dei.domain.Organization;
+import pt.ipp.isep.dei.domain.OrganizationNature;
 import pt.ipp.isep.dei.domain.OrganizationType;
 import pt.ipp.isep.dei.repository.OrganizationRepository;
 import pt.ipp.isep.dei.repository.Repositories;
@@ -37,6 +38,15 @@ public class RegisterOrganizationController {
      */
     public List<OrganizationType> getOrganizationTypes() {
         return Arrays.asList(OrganizationType.values());
+    }
+
+    /**
+     * Returns all available organization natures.
+     *
+     * @return list of {@link OrganizationNature} values.
+     */
+    public List<OrganizationNature> getOrganizationNatures() {
+        return Arrays.asList(OrganizationNature.values());
     }
 
     /**

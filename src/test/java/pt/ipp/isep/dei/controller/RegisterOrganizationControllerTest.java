@@ -1,6 +1,7 @@
 package pt.ipp.isep.dei.controller;
 
 import org.junit.jupiter.api.Test;
+import pt.ipp.isep.dei.domain.OrganizationNature;
 import pt.ipp.isep.dei.domain.OrganizationType;
 import pt.ipp.isep.dei.repository.OrganizationRepository;
 
@@ -18,6 +19,28 @@ class RegisterOrganizationControllerTest {
         List<OrganizationType> types = controller.getOrganizationTypes();
 
         assertEquals(OrganizationType.values().length, types.size());
+    }
+
+    @Test
+    void ensureGetOrganizationNaturesReturnsAllValues() {
+        RegisterOrganizationController controller =
+                new RegisterOrganizationController(new OrganizationRepository());
+
+        List<OrganizationNature> natures = controller.getOrganizationNatures();
+
+        assertEquals(OrganizationNature.values().length, natures.size());
+    }
+
+    @Test
+    void ensureGetOrganizationNaturesContainsAllNatures() {
+        RegisterOrganizationController controller =
+                new RegisterOrganizationController(new OrganizationRepository());
+
+        List<OrganizationNature> natures = controller.getOrganizationNatures();
+
+        assertTrue(natures.contains(OrganizationNature.PUBLIC));
+        assertTrue(natures.contains(OrganizationNature.PRIVATE));
+        assertTrue(natures.contains(OrganizationNature.SOCIAL));
     }
 
     @Test
