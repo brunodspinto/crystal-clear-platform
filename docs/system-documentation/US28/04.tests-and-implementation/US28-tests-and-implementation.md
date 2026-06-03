@@ -18,6 +18,7 @@ For a given **role**, the analysis is performed twice — once using each agent'
    (two-sided test H0: slope = 0, i.e. no linear association — Statistics ch. 5).
 6. Identify the asset type with the strongest correlation (largest absolute *r*).
 7. Compare the *first* vs *last* coefficients (delta per asset type) to assess whether the alignment changed over time.
+8. Compute the **overall** correlation between the total remuneration and the **total declared assets** (real estate + vehicles + stocks), answering the opening question of whether remuneration is aligned with assets as a whole.
 
 > **Alignment with the Statistics syllabus.** The correlation coefficient and its
 > interpretation table come from ch. 6 (Regressão Linear Simples); the regression
@@ -30,7 +31,7 @@ For a given **role**, the analysis is performed twice — once using each agent'
 
 ## 4. Tests
 
-- `src/test/python/us28/test_role_asset_correlation.py` — 31 unit tests for the pure functions (I/O and plotting functions are excluded per project guidelines).
+- `src/test/python/us28/test_role_asset_correlation.py` — 35 unit tests for the pure functions (I/O and plotting functions are excluded per project guidelines).
 
 | Test | Description |
 |------|-------------|
@@ -38,6 +39,10 @@ For a given **role**, the analysis is performed twice — once using each agent'
 | `test_no_match_returns_empty` | `filter_by_role` returns an empty frame when no row matches |
 | `test_sums_salary_and_side_incomes` | `total_remuneration` = gross salary + both side incomes |
 | `test_does_not_mutate_input` | `compute_total_remuneration` does not mutate the caller's DataFrame |
+| `test_sums_all_asset_types` | `compute_total_assets` = real estate + vehicles + stocks |
+| `test_does_not_mutate_input` (assets) | `compute_total_assets` does not mutate the caller's DataFrame |
+| `test_perfect_alignment` | `overall_correlation` returns r = 1 (p < 0.05) for perfectly aligned data |
+| `test_constant_assets_returns_nan` | `overall_correlation` returns NaN for a constant series |
 | `test_first_picks_earliest_per_agent` | `first_declarations` keeps each agent's earliest declaration |
 | `test_last_picks_latest_per_agent` | `last_declarations` keeps each agent's most recent declaration |
 | `test_one_row_per_agent` | first/last reduce to exactly one row per agent |
@@ -84,6 +89,9 @@ The full implementation lives in `src/main/python/us28/role_asset_correlation.py
 | `load_data(path)` | Reads the declarations CSV into a DataFrame |
 | `filter_by_role(df, role)` | Keeps only the declarations of the requested role |
 | `compute_total_remuneration(df)` | Adds `total_remuneration` = `gross_salary` + `side_income_consulting` + `side_income_board_memberships` (does not mutate the input) |
+| `compute_total_assets(df)` | Adds `total_assets` = real estate + vehicles + stocks |
+| `overall_correlation(df)` | Pearson r and p between total remuneration and **total assets** |
+| `print_overall(title, r, p)` | Prints the overall remuneration vs total-assets correlation (stdout) |
 | `first_declarations(df)` | Keeps each agent's earliest declaration (`sort_values('declaration_date')` + `drop_duplicates(agent_id, keep='first')`) |
 | `last_declarations(df)` | Keeps each agent's most recent declaration (`keep='last'`) |
 | `pearson_coefficient(x, y)` | Pearson's r via `scipy.stats.linregress(...).rvalue` (Statistics ch. 6); returns NaN when undefined (fewer than 2 points or a constant series) |
@@ -145,6 +153,10 @@ CHANGE BETWEEN FIRST AND LAST DECLARATIONS
   real estate  first =   0.0470  last =  -0.0234  delta =  -0.0704
   vehicles     first =   0.0658  last =   0.1235  delta =  +0.0577
   stocks       first =   0.0356  last =   0.0314  delta =  -0.0042
+
+OVERALL - total remuneration vs TOTAL assets
+  first: r = 0.0878 (ínfima positiva)  p = 0.1034 [não significativa]
+  last : r = 0.0822 (ínfima positiva)  p = 0.1275 [não significativa]
 ```
 
 
@@ -157,6 +169,7 @@ CHANGE BETWEEN FIRST AND LAST DECLARATIONS
 - `strongest_correlation` ranks by **absolute** value, so a strong negative correlation correctly outranks a weak positive one.
 - The dataset column names differ slightly from Table 2 of the assignment: side income is split into `side_income_consulting` and `side_income_board_memberships`, both summed into the total remuneration.
 - For role `MP`, the correlations are *ínfima*/*fraca* and almost all **statistically non-significant** (only vehicles in the last declarations reaches p < 0.05). This means that, for this role, the declared remuneration is **not** aligned with the declared assets — a relevant finding for the Ethics Committee (the assets are not explained by the declared income).
+- The **overall** correlation with the **total assets** confirms this: r ≈ 0.08–0.09 (ínfima positiva), p ≈ 0.10–0.13, i.e. **not statistically significant** for either the first or the last declarations. The total declared remuneration of MPs is therefore not aligned with their total declared assets.
 
 
 ## 8. Checklist
@@ -169,8 +182,9 @@ CHANGE BETWEEN FIRST AND LAST DECLARATIONS
 - [x] `pearson_pvalue` — slope-significance p-value (ch. 5), NaN-safe
 - [x] `interpret_correlation` — ch. 6 slide 11 classification
 - [x] `pearson_correlations` / `pearson_pvalues` — r and p per asset type vs total remuneration
+- [x] `compute_total_assets` / `overall_correlation` — remuneration vs total assets (opening question)
 - [x] `strongest_correlation` — strongest by \|r\|, NaN-aware
 - [x] `compare_correlations` — first vs last delta per asset type
 - [x] `plot_comparison` — grouped bar chart (first vs last) → SVG
-- [x] 31 unit tests (all passing)
+- [x] 35 unit tests (all passing)
 - [x] SVG chart saved to `docs/system-documentation/US28/`

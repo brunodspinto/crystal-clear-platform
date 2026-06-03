@@ -11,12 +11,14 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__),
 from role_asset_correlation import (
     filter_by_role,
     compute_total_remuneration,
+    compute_total_assets,
     first_declarations,
     last_declarations,
     pearson_coefficient,
     pearson_pvalue,
     interpret_correlation,
     pearson_correlations,
+    overall_correlation,
     strongest_correlation,
     compare_correlations,
 )
@@ -59,6 +61,48 @@ class TestComputeTotalRemuneration(unittest.TestCase):
         })
         compute_total_remuneration(df)
         self.assertNotIn('total_remuneration', df.columns)
+
+
+class TestComputeTotalAssets(unittest.TestCase):
+
+    def test_sums_all_asset_types(self):
+        df = pd.DataFrame({
+            'assets_in_real_estate': [100000.0],
+            'assets_in_vehicles':    [20000.0],
+            'assets_in_stocks':      [30000.0],
+        })
+        result = compute_total_assets(df)
+        self.assertAlmostEqual(result.iloc[0]['total_assets'], 150000.0)
+
+    def test_does_not_mutate_input(self):
+        df = pd.DataFrame({
+            'assets_in_real_estate': [1.0],
+            'assets_in_vehicles':    [1.0],
+            'assets_in_stocks':      [1.0],
+        })
+        compute_total_assets(df)
+        self.assertNotIn('total_assets', df.columns)
+
+
+class TestOverallCorrelation(unittest.TestCase):
+
+    def test_perfect_alignment(self):
+        # total_assets perfectly proportional to total_remuneration -> r = 1
+        df = pd.DataFrame({
+            'total_remuneration': [10.0, 20.0, 30.0, 40.0],
+            'total_assets':       [100.0, 200.0, 300.0, 400.0],
+        })
+        r, p = overall_correlation(df)
+        self.assertAlmostEqual(r, 1.0)
+        self.assertLess(p, 0.05)
+
+    def test_constant_assets_returns_nan(self):
+        df = pd.DataFrame({
+            'total_remuneration': [10.0, 20.0, 30.0],
+            'total_assets':       [5.0, 5.0, 5.0],
+        })
+        r, p = overall_correlation(df)
+        self.assertTrue(math.isnan(r))
 
 
 class TestFirstLastDeclarations(unittest.TestCase):

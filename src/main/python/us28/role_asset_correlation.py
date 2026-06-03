@@ -42,6 +42,15 @@ def compute_total_remuneration(df):
     return df
 
 
+def compute_total_assets(df):
+    """Adds a 'total_assets' column = real estate + vehicles + stocks."""
+    df = df.copy()
+    df['total_assets'] = (df['assets_in_real_estate']
+                          + df['assets_in_vehicles']
+                          + df['assets_in_stocks'])
+    return df
+
+
 def first_declarations(df):
     """Keeps, for each agent, only their earliest declaration (by date)."""
     return df.sort_values('declaration_date').drop_duplicates(
@@ -112,6 +121,16 @@ def interpret_correlation(r):
     if r > -1:
         return 'forte negativa'
     return 'perfeita negativa'
+
+
+def overall_correlation(df):
+    """Pearson's r and p between total remuneration and TOTAL declared assets.
+
+    Answers the overall question of whether the total declared remuneration is
+    aligned with the total declared assets. Returns the pair (r, p); both NaN
+    when the coefficient is undefined.
+    """
+    return _linear_fit(df['total_remuneration'], df['total_assets'])
 
 
 def pearson_correlations(df):
@@ -190,6 +209,14 @@ def print_correlations(title, correlations, pvalues=None):
     print()
 
 
+def print_overall(title, r, p):
+    """Prints the overall remuneration vs total-assets correlation (stdout)."""
+    significance = 'significativa' if (p == p and p < 0.05) \
+        else 'não significativa'
+    print(f'{title}: r = {r:.4f} ({interpret_correlation(r)})  '
+          f'p = {p:.4f} [{significance}]')
+
+
 def print_comparison(comparison):
     """Prints the change in correlation between first and last declarations."""
     print('CHANGE BETWEEN FIRST AND LAST DECLARATIONS')
@@ -230,6 +257,7 @@ if __name__ == '__main__':
     df['declaration_date'] = pd.to_datetime(df['declaration_date'])
     df = filter_by_role(df, role)
     df = compute_total_remuneration(df)
+    df = compute_total_assets(df)
 
     df_first = first_declarations(df)
     df_last = last_declarations(df)
@@ -242,6 +270,13 @@ if __name__ == '__main__':
     print_correlations(f'FIRST DECLARATIONS - role: {role}', corr_first, pval_first)
     print_correlations(f'LAST DECLARATIONS  - role: {role}', corr_last, pval_last)
     print_comparison(compare_correlations(corr_first, corr_last))
+
+    print('OVERALL - total remuneration vs TOTAL assets')
+    r_first_total, p_first_total = overall_correlation(df_first)
+    r_last_total, p_last_total = overall_correlation(df_last)
+    print_overall('  first', r_first_total, p_first_total)
+    print_overall('  last ', r_last_total, p_last_total)
+    print()
 
     plot_comparison(corr_first, corr_last, role,
                     'docs/system-documentation/US28/US28_correlation.svg')
