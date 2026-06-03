@@ -1,5 +1,6 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,7 +11,9 @@ import java.util.List;
  * (positions, subsidies, assets, business participations, attachments).
  * Upon creation, the status is always set to {@link DeclarationStatus#PENDING}.
  */
-public class Declaration {
+public class Declaration implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private static int nextId = 1;
 

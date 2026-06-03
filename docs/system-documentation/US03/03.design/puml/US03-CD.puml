@@ -16,6 +16,12 @@ class OrganizationRepository {
     + getOrganizations() : List<Organization>
 }
 
+class Repositories {
+    - Repositories()
+    + {static} getInstance() : Repositories
+    + getOrganizationRepository() : OrganizationRepository
+}
+
 class Organization {
     - name : String
     - type : OrganizationType
@@ -32,7 +38,10 @@ enum OrganizationType {
 }
 
 ListOrganizationsUI .> ListOrganizationsController
+ListOrganizationsController .> Repositories
 ListOrganizationsController ..> OrganizationRepository
+Repositories -> "1" Repositories : instance
+Repositories --> "1" OrganizationRepository : organizationRepository
 OrganizationRepository "1" --> "*" Organization : stores
 Organization "1" --> "1" OrganizationType : type
 

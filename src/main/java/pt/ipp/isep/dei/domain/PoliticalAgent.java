@@ -1,11 +1,14 @@
 package pt.ipp.isep.dei.domain;
 
 import java.util.Date;
+import java.io.Serializable;
 
 /**
  * The type Political agent.
  */
-public class PoliticalAgent extends User {
+public class PoliticalAgent extends User implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final String nationalIdentityCard;
     private final String taxIdentificationNumber;

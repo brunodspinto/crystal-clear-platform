@@ -1,9 +1,13 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
+
 /**
  * Represents the detail of a real estate asset declared in a Declaration of Interests.
  */
-public class RealEstate {
+public class RealEstate implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final String description;
     private final String municipality;

@@ -1,10 +1,14 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
+
 /**
  * Represents a single business participation (holding) entry within a Declaration of Interests.
  * Captures the company, NIF, total stock value, and ownership percentage.
  */
-public class BusinessParticipation {
+public class BusinessParticipation implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final Organization organization;
     private final long companyNIF;

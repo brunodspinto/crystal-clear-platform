@@ -37,6 +37,7 @@ As an Administrator, I want to accept or reject registration requests on the pla
 * **AC5:** The Administrator must not be able to accept a request for a role that does not exist in the system's predefined list.
 * **AC6:** The Administrator must verify the identification document of the registering user (press card for Journalists; national identity card for Ordinary Citizens) before accepting the request.
 * **AC7:** The Administrator cannot edit any data within a registration request only Accept or Reject.
+* **AC8:** The system must support multiple email service providers (e.g., Gmail, DEI service) for sending the decision notification. The provider to be used must be defined through a configuration file, and at least two different implementations must be available.
 
 ---
 
@@ -61,6 +62,7 @@ As an Administrator, I want to accept or reject registration requests on the pla
 
 * List of pending registration requests (name, email, requested role, identification document, submission date)
 * (In)Success of the operation
+* Decision notification sent to the user's email (accept or reject), through the email provider defined in the configuration file
 
 ---
 

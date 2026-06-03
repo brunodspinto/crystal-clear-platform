@@ -13,6 +13,14 @@ class AnalyseIncomeEvolutionController {
     + getIncomeEvolution(agent, startDate, endDate)
 }
 
+class Repositories <<Singleton>> {
+    - {static} instance : Repositories
+    - Repositories()
+    + {static} getInstance() : Repositories
+    + getPoliticalAgentRepository() : PoliticalAgentRepository
+    + getDeclarationRepository() : DeclarationRepository
+}
+
 class PoliticalAgentRepository {
     + getAll()
 }
@@ -65,6 +73,9 @@ class SubsidyEntry {
 
 AnalyseIncomeEvolutionUI .> AnalyseIncomeEvolutionController
 
+AnalyseIncomeEvolutionController ..> Repositories
+Repositories ..> PoliticalAgentRepository
+Repositories ..> DeclarationRepository
 AnalyseIncomeEvolutionController ..> PoliticalAgentRepository
 AnalyseIncomeEvolutionController ..> DeclarationRepository
 AnalyseIncomeEvolutionController ..> PoliticalAgent
@@ -84,9 +95,10 @@ Declaration "1" *-- "*" Income : includes >
 Declaration "1" *-- "*" SubsidyEntry : includes >
 
 note right of AnalyseIncomeEvolutionController
-    AC2: validates inline that
-    startDate <= endDate before
-    calling the repository.
+    getIncomeEvolution validates inputs:
+    throws IllegalArgumentException if agent or
+    either date is null, or if startDate.after(endDate)
+    (AC2), before calling the repository.
 end note
 
 note bottom of DeclarationRepository

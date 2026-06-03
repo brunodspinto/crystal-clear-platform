@@ -8,6 +8,7 @@ autonumber
 actor "Ethics Committee Member" as ECM
 participant ":ConsultIntegratedSituationUI" as UI
 participant ":ConsultIntegratedSituationController" as CTRL
+participant ":Repositories" as REPOS
 participant ":PoliticalAgentRepository" as PAR
 participant ":DeclarationRepository" as DR
 participant "d:Declaration" as DEC
@@ -16,6 +17,24 @@ activate ECM
 
     ECM -> UI : asks to consult integrated situation
     activate UI
+
+        UI --> CTRL** : create()
+        activate CTRL
+            CTRL -> REPOS : getInstance()
+            activate REPOS
+                REPOS --> CTRL : repositories
+            deactivate REPOS
+
+            CTRL -> REPOS : getPoliticalAgentRepository()
+            activate REPOS
+                REPOS --> CTRL : politicalAgentRepository
+            deactivate REPOS
+
+            CTRL -> REPOS : getDeclarationRepository()
+            activate REPOS
+                REPOS --> CTRL : declarationRepository
+            deactivate REPOS
+        deactivate CTRL
 
         UI -> CTRL : getPoliticalAgents()
         activate CTRL
@@ -43,19 +62,25 @@ activate ECM
         UI -> CTRL : getIntegratedSituation(agent, referenceDate)
         activate CTRL
 
-            CTRL -> DR : getValidatedDeclarationsForAgentUpTo(agent, referenceDate)
-            activate DR
+            alt agent == null
+                CTRL --> UI : throw IllegalArgumentException("Agent cannot be null.")
+            else referenceDate == null
+                CTRL --> UI : throw IllegalArgumentException("Reference date cannot be null.")
+            else valid input
+                CTRL -> DR : getValidatedDeclarationsForAgentUpTo(agent, referenceDate)
+                activate DR
 
-                note right of DR
-                    AC2: only declarations with
-                    status = VALIDATED and
-                    submissionDate <= referenceDate
-                end note
+                    note right of DR
+                        AC2: only declarations with
+                        status = VALIDATED and
+                        submissionDate <= referenceDate
+                    end note
 
-                DR --> CTRL : declarations
-            deactivate DR
+                    DR --> CTRL : declarations
+                deactivate DR
 
-            CTRL --> UI : declarations
+                CTRL --> UI : declarations
+            end
         deactivate CTRL
 
         alt declarations is empty (AC3)

@@ -1,11 +1,14 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Represents a single support or subsidy entry within a Declaration of Interests.
  */
-public class SubsidyEntry {
+public class SubsidyEntry implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final Organization organization;
     private final double amount;

@@ -8,6 +8,7 @@ autonumber
 actor "Citizen / Journalist" as Actor
 participant ":ConsultAssetsUI" as UI
 participant ":ConsultAssetsController" as CTRL
+participant ":Repositories" as REPOS
 
 activate Actor
 
@@ -15,6 +16,28 @@ activate Actor
     activate UI
 
         UI --> CTRL** : create()
+        activate CTRL
+            CTRL -> REPOS : getInstance()
+            activate REPOS
+                REPOS --> CTRL : repositories
+            deactivate REPOS
+
+            CTRL -> REPOS : getPoliticalAgentRepository()
+            activate REPOS
+                REPOS --> CTRL : politicalAgentRepository
+            deactivate REPOS
+
+            CTRL -> REPOS : getDeclarationRepository()
+            activate REPOS
+                REPOS --> CTRL : declarationRepository
+            deactivate REPOS
+
+            CTRL -> REPOS : getAuthenticationRepository()
+            activate REPOS
+                REPOS --> CTRL : authenticationRepository
+            deactivate REPOS
+        deactivate CTRL
+
         UI -> CTRL : getPoliticalAgents()
         ref over CTRL
             Get Political Agents
@@ -38,15 +61,21 @@ activate Actor
         UI -> CTRL : getAssetsAt(agent, referenceDate)
         activate CTRL
 
-            ref over CTRL
-                Get Validated Declarations For Agent Up To
-            end ref
+            alt agent == null
+                CTRL --> UI : throw IllegalArgumentException("Agent cannot be null.")
+            else referenceDate == null
+                CTRL --> UI : throw IllegalArgumentException("Reference date cannot be null.")
+            else valid input
+                ref over CTRL
+                    Get Validated Declarations For Agent Up To
+                end ref
 
-            ref over CTRL
-                Collect Assets
-            end ref
+                ref over CTRL
+                    Collect Assets
+                end ref
 
-            CTRL --> UI : assetEntries
+                CTRL --> UI : assets
+            end
         deactivate CTRL
 
         alt assets is empty (AC3)
@@ -54,7 +83,7 @@ activate Actor
         else
             UI -> CTRL : isCurrentUserJournalist()
             ref over CTRL
-                Check Current User Role
+                Get Current User Role
             end ref
 
             activate CTRL

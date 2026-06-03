@@ -1,9 +1,13 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
 /**
  * The type Employee.
  */
-public class Employee {
+public class Employee implements Serializable{
+
+    private static final long serialVersionUID = 1L;
+    
     private final String email;
 
     /**

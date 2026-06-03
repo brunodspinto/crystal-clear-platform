@@ -9,6 +9,8 @@ actor "Future User" as User
 participant ":RegisterUI" as UI
 participant ":RegisterController" as CTRL
 participant "rr:RegistrationRequest" as RR
+participant "Repositories" as REPOS
+participant "repositories:Repositories" as REPOS_SINGLETON
 participant ":RegistrationRequestRepository" as REPO
 
 activate User
@@ -30,13 +32,14 @@ activate User
         deactivate CTRL
         UI -> CTRL : requiresDocument(role)
         activate CTRL
-            CTRL --> UI : true/false
+            CTRL --> UI : required
         deactivate CTRL
-        UI --> User : requests identification document (if required)
-    deactivate UI
 
-    User -> UI : types identification document (if required)
-    activate UI
+        opt document is required (Journalist or Citizen)
+            UI --> User : requests identification document
+            User -> UI : types identification document
+        end
+
         UI --> User : shows all data and requests confirmation
     deactivate UI
 
@@ -50,6 +53,16 @@ activate User
             activate RR
                 RR --> CTRL : rr
             deactivate RR
+
+            CTRL -> REPOS : getInstance()
+            activate REPOS
+                REPOS --> CTRL : repositories
+            deactivate REPOS
+
+            CTRL -> REPOS_SINGLETON : getRegistrationRequestRepository()
+            activate REPOS_SINGLETON
+                REPOS_SINGLETON --> CTRL : registrationRequestRepository
+            deactivate REPOS_SINGLETON
 
             CTRL -> REPO : save(rr)
             activate REPO

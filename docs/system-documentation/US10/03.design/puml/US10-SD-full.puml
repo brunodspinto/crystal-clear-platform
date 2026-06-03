@@ -8,6 +8,7 @@ autonumber
 actor "Journalist" as Journalist
 participant ":AnalyseIncomeEvolutionUI" as UI
 participant ":AnalyseIncomeEvolutionController" as CTRL
+participant ":Repositories" as REPOS
 participant ":PoliticalAgentRepository" as PAR
 participant ":DeclarationRepository" as DR
 participant "d:Declaration" as DEC
@@ -16,6 +17,24 @@ activate Journalist
 
     Journalist -> UI : asks to analyse income evolution
     activate UI
+
+        UI --> CTRL** : create()
+        activate CTRL
+            CTRL -> REPOS : getInstance()
+            activate REPOS
+                REPOS --> CTRL : repositories
+            deactivate REPOS
+
+            CTRL -> REPOS : getPoliticalAgentRepository()
+            activate REPOS
+                REPOS --> CTRL : politicalAgentRepository
+            deactivate REPOS
+
+            CTRL -> REPOS : getDeclarationRepository()
+            activate REPOS
+                REPOS --> CTRL : declarationRepository
+            deactivate REPOS
+        deactivate CTRL
 
         UI -> CTRL : getPoliticalAgents()
         activate CTRL
@@ -43,26 +62,27 @@ activate Journalist
         UI -> CTRL : getIncomeEvolution(agent, startDate, endDate)
         activate CTRL
 
-            note right of CTRL
-                AC2: validates inline
-                that startDate <= endDate;
-                throws IllegalArgumentException
-                otherwise.
-            end note
+            alt agent == null
+                CTRL --> UI : throw IllegalArgumentException("Agent cannot be null.")
+            else startDate == null or endDate == null
+                CTRL --> UI : throw IllegalArgumentException("Dates cannot be null.")
+            else startDate.after(endDate) (AC2)
+                CTRL --> UI : throw IllegalArgumentException("Start date must be before or equal to end date.")
+            else valid input
+                CTRL -> DR : getValidatedDeclarationsForAgentBetween(agent, startDate, endDate)
+                activate DR
 
-            CTRL -> DR : getValidatedDeclarationsForAgentBetween(agent, startDate, endDate)
-            activate DR
+                    note right of DR
+                        AC3: only declarations with
+                        status = VALIDATED in [start, end]
+                        AC4: ordered by submissionDate
+                    end note
 
-                note right of DR
-                    AC3: only declarations with
-                    status = VALIDATED in [start, end]
-                    AC4: ordered by submissionDate
-                end note
+                    DR --> CTRL : declarations
+                deactivate DR
 
-                DR --> CTRL : declarations
-            deactivate DR
-
-            CTRL --> UI : declarations
+                CTRL --> UI : declarations
+            end
         deactivate CTRL
 
         alt declarations is empty (AC5)
@@ -77,6 +97,11 @@ activate Journalist
                 UI -> DEC : getType()
                 activate DEC
                     DEC --> UI : type
+                deactivate DEC
+
+                UI -> DEC : getPositionEntries()
+                activate DEC
+                    DEC --> UI : positionEntries
                 deactivate DEC
 
                 UI -> DEC : getIncomes()

@@ -8,15 +8,40 @@ autonumber
 actor "Citizen / Journalist" as Actor
 participant ":ConsultAssetsUI" as UI
 participant ":ConsultAssetsController" as CTRL
-participant ":AuthenticationRepository" as AUTH
+participant ":Repositories" as REPOS
 participant ":PoliticalAgentRepository" as PAR
 participant ":DeclarationRepository" as DR
+participant ":AuthenticationRepository" as AUTH
 participant "d:Declaration" as DEC
+participant "session:UserSession" as SESS
 
 activate Actor
 
     Actor -> UI : asks to consult assets of a political agent
     activate UI
+
+        UI --> CTRL** : create()
+        activate CTRL
+            CTRL -> REPOS : getInstance()
+            activate REPOS
+                REPOS --> CTRL : repositories
+            deactivate REPOS
+
+            CTRL -> REPOS : getPoliticalAgentRepository()
+            activate REPOS
+                REPOS --> CTRL : politicalAgentRepository
+            deactivate REPOS
+
+            CTRL -> REPOS : getDeclarationRepository()
+            activate REPOS
+                REPOS --> CTRL : declarationRepository
+            deactivate REPOS
+
+            CTRL -> REPOS : getAuthenticationRepository()
+            activate REPOS
+                REPOS --> CTRL : authenticationRepository
+            deactivate REPOS
+        deactivate CTRL
 
         UI -> CTRL : getPoliticalAgents()
         activate CTRL
@@ -44,31 +69,42 @@ activate Actor
         UI -> CTRL : getAssetsAt(agent, referenceDate)
         activate CTRL
 
-            CTRL -> DR : getValidatedDeclarationsForAgentUpTo(agent, referenceDate)
-            activate DR
+            alt agent == null
+                CTRL --> UI : throw IllegalArgumentException("Agent cannot be null.")
+            else referenceDate == null
+                CTRL --> UI : throw IllegalArgumentException("Reference date cannot be null.")
+            else valid input
+                CTRL -> DR : getValidatedDeclarationsForAgentUpTo(agent, referenceDate)
+                activate DR
 
-                note right of DR
-                    AC2: only declarations with
-                    status = VALIDATED and
-                    submissionDate <= referenceDate
-                end note
+                    note right of DR
+                        AC2: only declarations with
+                        status = VALIDATED and
+                        submissionDate <= referenceDate
+                    end note
 
-                DR --> CTRL : declarations
-            deactivate DR
+                    DR --> CTRL : declarations
+                deactivate DR
 
-            alt declarations is empty (AC3)
-                CTRL --> UI : empty list
-            else
+                CTRL -> CTRL : assets := new ArrayList<AssetEntry>()
+                activate CTRL
+                deactivate CTRL
+
                 loop for each d in declarations
                     CTRL -> DEC : getAssetEntries()
                     activate DEC
                         DEC --> CTRL : assetEntries
                     deactivate DEC
+
+                    loop for each a in assetEntries
+                        CTRL -> CTRL : assets.add(a)
+                        activate CTRL
+                        deactivate CTRL
+                    end
                 end
 
-                CTRL --> UI : assetEntries
+                CTRL --> UI : assets
             end
-
         deactivate CTRL
 
         alt assets is empty (AC3)
@@ -77,18 +113,50 @@ activate Actor
             UI -> CTRL : isCurrentUserJournalist()
             activate CTRL
 
-                CTRL -> AUTH : getCurrentUserSession()
-                activate AUTH
-                    AUTH --> CTRL : session
-                deactivate AUTH
+                alt authenticationRepository == null
+                    CTRL --> UI : false
+                else
+                    CTRL -> AUTH : getCurrentUserSession()
+                    activate AUTH
+                        AUTH --> CTRL : session
+                    deactivate AUTH
 
-                note right of CTRL
-                    AC4: true if session role
-                    contains "Journalist";
-                    false otherwise (Citizen).
-                end note
+                    alt session == null
+                        CTRL --> UI : false
+                    else
+                        CTRL -> SESS : isLoggedIn()
+                        activate SESS
+                            SESS --> CTRL : loggedIn
+                        deactivate SESS
 
-                CTRL --> UI : isJournalist
+                        alt !loggedIn
+                            CTRL --> UI : false
+                        else
+                            CTRL -> SESS : getUserRoles()
+                            activate SESS
+                                SESS --> CTRL : roles
+                            deactivate SESS
+
+                            alt roles == null
+                                CTRL --> UI : false
+                            else
+                                loop for each role in roles
+                                    CTRL -> CTRL : role.getDescription().equals("Journalist") ?
+                                    activate CTRL
+                                    deactivate CTRL
+                                end
+
+                                note right of CTRL
+                                    AC4: returns true if any role
+                                    description equals "Journalist";
+                                    false otherwise (Citizen).
+                                end note
+
+                                CTRL --> UI : isJournalist
+                            end
+                        end
+                    end
+                end
             deactivate CTRL
 
             UI --> Actor : shows assets\n(masked when not journalist)
