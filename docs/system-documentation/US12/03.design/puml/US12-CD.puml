@@ -14,6 +14,16 @@ class SubmitComplaintController {
     + submitComplaint(description : String, date : Date,\n  agent : PoliticalAgent, function : PoliticalFunction) : boolean
 }
 
+class Repositories <<Singleton>> {
+    - {static} instance : Repositories
+    - Repositories()
+    + {static} getInstance() : Repositories
+    + getPoliticalAgentRepository() : PoliticalAgentRepository
+    + getCitizenRepository() : CitizenRepository
+    + getComplaintRepository() : ComplaintRepository
+    + getAuthenticationRepository() : AuthenticationRepository
+}
+
 class AuthenticationRepository {
     + getCurrentUserSession() : UserSession
 }
@@ -76,6 +86,7 @@ enum PoliticalFunction {
 
 SubmitComplaintUI .> SubmitComplaintController
 
+SubmitComplaintController ..> Repositories
 SubmitComplaintController ..> PoliticalAgentRepository
 SubmitComplaintController ..> CitizenRepository
 SubmitComplaintController ..> ComplaintRepository
@@ -83,6 +94,12 @@ SubmitComplaintController ..> AuthenticationRepository
 SubmitComplaintController ..> UserSession
 SubmitComplaintController ..> Email
 SubmitComplaintController ..> Complaint
+
+Repositories -> "1" Repositories : instance
+Repositories --> "1" PoliticalAgentRepository : politicalAgentRepository
+Repositories --> "1" CitizenRepository : citizenRepository
+Repositories --> "1" ComplaintRepository : complaintRepository
+Repositories --> "1" AuthenticationRepository : authenticationRepository
 
 AuthenticationRepository --> "0..1" UserSession : current >
 UserSession ..> Email

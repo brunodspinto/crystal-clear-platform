@@ -10,6 +10,7 @@
 |:---------------|:-------------------------------------------------------|:--------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------|
 | Step 1         | ...interacting with the actor?                         | SubmitComplaintUI         | **Pure Fabrication**: there is no reason to assign this responsibility to any existing class in the Domain Model.                                   |
 |                | ...coordinating the US?                                | SubmitComplaintController | **Controller**                                                                                                                                      |
+|                | ...providing a single, globally accessible instance of the repositories to the controller? | Repositories | **Singleton** (GoF): `Repositories` has a private constructor and exposes `getInstance()`, guaranteeing one shared instance of each repository across the application. |
 |                | ...knowing the user using the system?                  | UserSession               | **IE**: cf. A&A component documentation.                                                                                                            |
 |                |                                                        | CitizenRepository         | **IE**: knows/has its own Citizens.                                                                                                                 |
 |                |                                                        | Citizen                   | **IE**: knows its own data (e.g. email).                                                                                                            |
@@ -40,7 +41,7 @@ Other software classes (i.e. Pure Fabrication) identified:
 
 * SubmitComplaintUI
 * SubmitComplaintController
-* Repositories
+* Repositories (**Singleton**)
 * PoliticalAgentRepository
 * CitizenRepository
 * ComplaintRepository
