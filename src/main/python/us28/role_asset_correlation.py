@@ -13,7 +13,7 @@ import sys
 
 import pandas as pd
 import matplotlib.pyplot as plt
-from scipy.stats import pearsonr
+from scipy import stats
 
 # Human-readable asset label -> dataset column name.
 ASSET_COLUMNS = {
@@ -54,18 +54,64 @@ def last_declarations(df):
         subset='agent_id', keep='last')
 
 
+def _linear_fit(x, y):
+    """Fits a simple linear regression and returns (rvalue, pvalue).
+
+    Uses ``scipy.stats.linregress`` (Statistics ch. 6). Returns (NaN, NaN)
+    when the fit is undefined (fewer than two points or a constant series).
+    The pvalue corresponds to the two-sided test H0: slope = 0, i.e. no
+    linear association between the two variables (Statistics ch. 5).
+    """
+    if len(x) < 2 or x.std() == 0 or y.std() == 0:
+        return float('nan'), float('nan')
+    model = stats.linregress(x, y)
+    return model.rvalue, model.pvalue
+
+
 def pearson_coefficient(x, y):
-    """Pearson's r between two series.
+    """Pearson's correlation coefficient r between two series.
 
     Returns NaN when it cannot be computed (fewer than two points or a
     constant series, where the coefficient is undefined).
     """
-    if len(x) < 2:
-        return float('nan')
-    if x.std() == 0 or y.std() == 0:
-        return float('nan')
-    r, _ = pearsonr(x, y)
+    r, _ = _linear_fit(x, y)
     return r
+
+
+def pearson_pvalue(x, y):
+    """P-value of the test H0: no linear association (slope = 0).
+
+    Returns NaN when the fit is undefined.
+    """
+    _, p = _linear_fit(x, y)
+    return p
+
+
+def interpret_correlation(r):
+    """Classifies a correlation coefficient (Statistics ch. 6, slide 11)."""
+    if r != r:  # NaN
+        return 'indeterminada'
+    if r == 1:
+        return 'perfeita positiva'
+    if r >= 0.8:
+        return 'forte positiva'
+    if r >= 0.5:
+        return 'moderada positiva'
+    if r >= 0.1:
+        return 'fraca positiva'
+    if r > 0:
+        return 'ínfima positiva'
+    if r == 0:
+        return 'nula'
+    if r > -0.1:
+        return 'ínfima negativa'
+    if r > -0.5:
+        return 'fraca negativa'
+    if r > -0.8:
+        return 'moderada negativa'
+    if r > -1:
+        return 'forte negativa'
+    return 'perfeita negativa'
 
 
 def pearson_correlations(df):
@@ -78,6 +124,18 @@ def pearson_correlations(df):
     for label, column in ASSET_COLUMNS.items():
         correlations[label] = pearson_coefficient(remuneration, df[column])
     return correlations
+
+
+def pearson_pvalues(df):
+    """P-value (slope significance) for each asset type vs total remuneration.
+
+    Returns a dict mapping the asset label to its p-value.
+    """
+    pvalues = {}
+    remuneration = df['total_remuneration']
+    for label, column in ASSET_COLUMNS.items():
+        pvalues[label] = pearson_pvalue(remuneration, df[column])
+    return pvalues
 
 
 def strongest_correlation(correlations):
@@ -112,16 +170,23 @@ def compare_correlations(corr_first, corr_last):
     return comparison
 
 
-def print_correlations(title, correlations):
-    """Prints the correlation per asset type and highlights the strongest."""
+def print_correlations(title, correlations, pvalues=None):
+    """Prints r, its interpretation and (optionally) the significance."""
     print(title)
     for label, r in correlations.items():
-        print(f'  {label:<12} r = {r:>8.4f}')
+        line = f'  {label:<12} r = {r:>8.4f}  ({interpret_correlation(r)})'
+        if pvalues is not None:
+            p = pvalues[label]
+            significance = 'significativa' if (p == p and p < 0.05) \
+                else 'não significativa'
+            line += f'  p = {p:>7.4f} [{significance}]'
+        print(line)
     label, r = strongest_correlation(correlations)
     if label is None:
         print('  -> strongest: n/a (not enough data)')
     else:
-        print(f'  -> strongest: {label} (r = {r:.4f})')
+        print(f'  -> strongest: {label} '
+              f'(r = {r:.4f}, {interpret_correlation(r)})')
     print()
 
 
@@ -171,9 +236,11 @@ if __name__ == '__main__':
 
     corr_first = pearson_correlations(df_first)
     corr_last = pearson_correlations(df_last)
+    pval_first = pearson_pvalues(df_first)
+    pval_last = pearson_pvalues(df_last)
 
-    print_correlations(f'FIRST DECLARATIONS - role: {role}', corr_first)
-    print_correlations(f'LAST DECLARATIONS  - role: {role}', corr_last)
+    print_correlations(f'FIRST DECLARATIONS - role: {role}', corr_first, pval_first)
+    print_correlations(f'LAST DECLARATIONS  - role: {role}', corr_last, pval_last)
     print_comparison(compare_correlations(corr_first, corr_last))
 
     plot_comparison(corr_first, corr_last, role,

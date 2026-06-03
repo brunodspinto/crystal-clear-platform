@@ -14,6 +14,8 @@ from role_asset_correlation import (
     first_declarations,
     last_declarations,
     pearson_coefficient,
+    pearson_pvalue,
+    interpret_correlation,
     pearson_correlations,
     strongest_correlation,
     compare_correlations,
@@ -105,6 +107,53 @@ class TestPearsonCoefficient(unittest.TestCase):
         x = pd.Series([1.0])
         y = pd.Series([2.0])
         self.assertTrue(math.isnan(pearson_coefficient(x, y)))
+
+
+class TestPearsonPValue(unittest.TestCase):
+
+    def test_perfect_correlation_is_significant(self):
+        x = pd.Series([1.0, 2.0, 3.0, 4.0, 5.0])
+        y = pd.Series([2.0, 4.0, 6.0, 8.0, 10.0])
+        self.assertLess(pearson_pvalue(x, y), 0.05)
+
+    def test_constant_series_returns_nan(self):
+        x = pd.Series([5.0, 5.0, 5.0])
+        y = pd.Series([1.0, 2.0, 3.0])
+        self.assertTrue(math.isnan(pearson_pvalue(x, y)))
+
+
+class TestInterpretCorrelation(unittest.TestCase):
+
+    def test_perfect_positive(self):
+        self.assertEqual(interpret_correlation(1.0), 'perfeita positiva')
+
+    def test_strong_positive(self):
+        self.assertEqual(interpret_correlation(0.85), 'forte positiva')
+
+    def test_moderate_positive(self):
+        self.assertEqual(interpret_correlation(0.6), 'moderada positiva')
+
+    def test_weak_positive(self):
+        self.assertEqual(interpret_correlation(0.3), 'fraca positiva')
+
+    def test_tiny_positive(self):
+        self.assertEqual(interpret_correlation(0.05), 'ínfima positiva')
+
+    def test_null(self):
+        self.assertEqual(interpret_correlation(0.0), 'nula')
+
+    def test_weak_negative(self):
+        self.assertEqual(interpret_correlation(-0.3), 'fraca negativa')
+
+    def test_perfect_negative(self):
+        self.assertEqual(interpret_correlation(-1.0), 'perfeita negativa')
+
+    def test_boundary_point_one_is_weak(self):
+        # 0.1 <= r < 0.5 -> fraca positiva (slide 11 boundary)
+        self.assertEqual(interpret_correlation(0.1), 'fraca positiva')
+
+    def test_nan_is_indeterminate(self):
+        self.assertEqual(interpret_correlation(float('nan')), 'indeterminada')
 
 
 class TestPearsonCorrelationsAndStrongest(unittest.TestCase):
