@@ -8,6 +8,7 @@ autonumber
 actor "Administrator" as Admin
 participant ":RegisterOrganizationUI" as UI
 participant ":RegisterOrganizationController" as CTRL
+participant "Repositories" as REPOS
 participant ":OrganizationRepository" as REPO
 participant "org:Organization" as ORG
 
@@ -15,6 +16,18 @@ activate Admin
 
     Admin -> UI : asks to register a new organization
     activate UI
+
+        UI -> CTRL** : create
+        activate CTRL
+            CTRL -> REPOS : getInstance()
+            activate REPOS
+                REPOS --> CTRL : repositories
+            deactivate REPOS
+            CTRL -> REPOS : getOrganizationRepository()
+            activate REPOS
+                REPOS --> CTRL : organizationRepository
+            deactivate REPOS
+        deactivate CTRL
 
         UI -> CTRL : getOrganizationTypes()
         activate CTRL
@@ -26,10 +39,21 @@ activate Admin
 
     Admin -> UI : selects organization type
     activate UI
-        UI --> Admin : requests organization name and nature
+
+        UI -> CTRL : getOrganizationNatures()
+        activate CTRL
+            CTRL --> UI : organizationNatureList
+        deactivate CTRL
+
+        UI --> Admin : shows organization nature list\nand requests selection
     deactivate UI
 
-    Admin -> UI : types organization name and nature
+    Admin -> UI : selects organization nature
+    activate UI
+        UI --> Admin : requests organization name
+    deactivate UI
+
+    Admin -> UI : types organization name
     activate UI
         UI --> Admin : shows data and requests confirmation
     deactivate UI
@@ -47,7 +71,7 @@ activate Admin
 
             alt result = false (no duplicate)
 
-                CTRL -> ORG ** : create(name, nature, type)
+                CTRL -> ORG** : create(name, nature, type)
 
                 CTRL -> REPO : save(org)
                 activate REPO

@@ -11,7 +11,15 @@ class RegisterOrganizationUI {
 class RegisterOrganizationController {
     + RegisterOrganizationController()
     + getOrganizationTypes() : List<OrganizationType>
+    + getOrganizationNatures() : List<OrganizationNature>
     + registerOrganization(name : String, nature : String, type : OrganizationType) : boolean
+}
+
+class Repositories <<Singleton>> {
+    - {static} instance : Repositories
+    - Repositories()
+    + {static} getInstance() : Repositories
+    + getOrganizationRepository() : OrganizationRepository
 }
 
 class OrganizationRepository {
@@ -36,13 +44,24 @@ enum OrganizationType {
     ASSOCIATION
 }
 
+enum OrganizationNature {
+    PUBLIC
+    PRIVATE
+    SOCIAL
+}
+
 RegisterOrganizationUI .> RegisterOrganizationController
 
+RegisterOrganizationController ..> Repositories
 RegisterOrganizationController ..> OrganizationRepository
 RegisterOrganizationController ..> Organization
+
+Repositories -> "1" Repositories : instance
+Repositories --> "1" OrganizationRepository : organizationRepository
 
 OrganizationRepository "1" --> "*" Organization : organizations
 
 Organization ..> OrganizationType
+Organization ..> OrganizationNature
 
 @enduml

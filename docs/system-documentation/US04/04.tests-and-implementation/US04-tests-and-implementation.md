@@ -146,5 +146,5 @@ public boolean save(Organization organization) {
 
 ## 7. Observations
 
-* The `nature` field indicates the legal nature of the organization (e.g. "public", "private", "social") and cannot be null or empty (AC4).
+* The `nature` field indicates the legal nature of the organization. At the UI level it is selected from the predefined `OrganizationNature` enum (`PUBLIC`, `PRIVATE`, `SOCIAL`) via `RegisterOrganizationController.getOrganizationNatures()` (AC4); the selected label is then passed to the `Organization` constructor, which still validates it as non-null/non-blank as a defensive measure.
 * The internal `vatNumber` is generated using a static counter (`"GEN-" + nextGeneratedVat`) when using the US04 constructor, since this use case does not require a VAT number.

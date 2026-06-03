@@ -19,10 +19,15 @@ deactivate System
 
 Admin -> System : selects organization type
 activate System
-System --> Admin : requests organization name and nature
+System --> Admin : shows organization nature list\n(Public, Private, Social)\nand requests selection
 deactivate System
 
-Admin -> System : types organization name and nature
+Admin -> System : selects organization nature
+activate System
+System --> Admin : requests organization name
+deactivate System
+
+Admin -> System : types organization name
 activate System
 System --> Admin : shows data and requests confirmation
 deactivate System

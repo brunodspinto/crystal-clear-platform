@@ -10,6 +10,7 @@
 |:---------------|:--------------------------------------------------------------------------------------------------|:--------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------|
 | Step 1         | ...interacting with the actor?                                                                    | RegisterOrganizationUI          | **Pure Fabrication**: the UI has no business responsibilities; it only handles I/O with the Administrator.                                       |
 | Step 1         | ...coordinating the US?                                                                           | RegisterOrganizationController  | **Controller**: decouples the UI from the domain and orchestrates the use case.                                                                  |
+| Step 1         | ...providing a single, globally accessible instance of the repositories to the controller?        | Repositories                    | **Singleton** (GoF): `Repositories` has a private constructor and exposes `getInstance()`, guaranteeing one shared instance of each repository across the application. |
 | Step 2         | ...providing the list of available organization types for the Administrator to select from? (AC2) | OrganizationType                | **Information Expert**: the enum owns its own set of values.                                                                                     |
 | Step 3         | ...saving the selected organization type?                                                         | RegisterOrganizationUI          | **Information Expert**: the UI is responsible for keeping user selections until submission.                                                      |
 | Step 4         | ...providing the list of available organization natures for the Administrator to select from?     | OrganizationNature              | **Information Expert**: the enum owns its own set of values.                                                                                     |
@@ -35,6 +36,7 @@ Other software classes (i.e. Pure Fabrication) identified:
 * RegisterOrganizationUI
 * RegisterOrganizationController
 * OrganizationRepository
+* Repositories (**Singleton**)
 
 ## 3.2. Sequence Diagram (SD)
 

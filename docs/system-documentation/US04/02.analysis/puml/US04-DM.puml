@@ -25,8 +25,15 @@ enum OrganizationType {
     ASSOCIATION
 }
 
+enum OrganizationNature {
+    PUBLIC
+    PRIVATE
+    SOCIAL
+}
+
 Administrator "1" -- "*" Organization : registers >
 
 Organization "*" -- "1" OrganizationType : classified as
+Organization "*" -- "1" OrganizationNature : has nature >
 
 @enduml
