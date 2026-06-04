@@ -2,6 +2,7 @@ package pt.ipp.isep.dei.repository;
 
 import pt.ipp.isep.dei.domain.Complaint;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * Repository for storing and retrieving {@link Complaint} instances.
  * Allows duplicate complaints (the same citizen may submit multiple complaints).
  */
-public class ComplaintRepository {
+public class ComplaintRepository implements Serializable {
     private final List<Complaint> complaints;
 
     /**

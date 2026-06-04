@@ -1,12 +1,13 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Represents a complaint submitted by a citizen about a political agent.
  * All fields are immutable after creation. The submission date is set automatically.
  */
-public class Complaint {
+public class Complaint implements Serializable {
     private final String description;
     private final Date complaintDate;
     private final Date submissionDate;

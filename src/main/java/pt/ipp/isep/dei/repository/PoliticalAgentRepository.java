@@ -2,13 +2,14 @@ package pt.ipp.isep.dei.repository;
 
 import pt.ipp.isep.dei.domain.PoliticalAgent;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Repository for storing and retrieving {@link PoliticalAgent} instances.
  */
-public class PoliticalAgentRepository {
+public class PoliticalAgentRepository implements Serializable {
     private final List<PoliticalAgent> politicalAgents;
 
     /**

@@ -2,13 +2,14 @@ package pt.ipp.isep.dei.repository;
 
 import pt.ipp.isep.dei.domain.Citizen;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Repository for storing and retrieving {@link Citizen} instances.
  */
-public class CitizenRepository {
+public class CitizenRepository implements Serializable {
     private final List<Citizen> citizens;
 
     /**
