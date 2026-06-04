@@ -73,6 +73,28 @@
                 new Organization("Test Org", "   ", OrganizationType.FOUNDATION));
     }
 
+**Test 9:** Check that the controller provides all predefined organization natures for the Administrator to select from — AC4.
+
+    @Test
+    void ensureGetOrganizationNaturesReturnsAllValues() {
+        RegisterOrganizationController controller =
+                new RegisterOrganizationController(new OrganizationRepository());
+        assertEquals(OrganizationNature.values().length,
+                controller.getOrganizationNatures().size());
+    }
+
+**Test 10:** Check that the controller provides all predefined organization types for the Administrator to select from — AC2.
+
+    @Test
+    void ensureGetOrganizationTypesReturnsAllValues() {
+        RegisterOrganizationController controller =
+                new RegisterOrganizationController(new OrganizationRepository());
+        assertEquals(OrganizationType.values().length,
+                controller.getOrganizationTypes().size());
+    }
+
+> The tests above are split between `OrganizationTest` / `OrganizationRepositoryTest` (domain/repository validation) and `RegisterOrganizationControllerTest` (the predefined type/nature lists and the duplicate handling).
+
 
 ## 5. Construction (Implementation)
 
@@ -136,6 +158,51 @@ public boolean save(Organization organization) {
 }
 ```
 
+### Enum OrganizationNature
+
+The nature is a predefined value (AC4), modelled as an enum so the Administrator selects it from a list instead of typing free text.
+
+```java
+public enum OrganizationNature {
+    PUBLIC("Public"),
+    PRIVATE("Private"),
+    SOCIAL("Social");
+
+    private final String label;
+
+    OrganizationNature(String label) {
+        this.label = label;
+    }
+
+    @Override
+    public String toString() {
+        return label;
+    }
+}
+```
+
+### Class RegisterOrganizationController (lists for selection)
+
+```java
+public List<OrganizationType> getOrganizationTypes() {
+    return Arrays.asList(OrganizationType.values());
+}
+
+public List<OrganizationNature> getOrganizationNatures() {
+    return Arrays.asList(OrganizationNature.values());
+}
+```
+
+### Class RegisterOrganizationUI (nature is selected, not typed)
+
+```java
+private OrganizationNature displayAndSelectOrganizationNature() {
+    List<OrganizationNature> natures = controller.getOrganizationNatures();
+    return (OrganizationNature) Utils.showAndSelectOne(natures, "Select the organization nature:");
+}
+// the selected nature's label is passed to registerOrganization(...)
+```
+
 
 ## 6. Integration and Demo
 
@@ -148,3 +215,4 @@ public boolean save(Organization organization) {
 
 * The `nature` field indicates the legal nature of the organization. At the UI level it is selected from the predefined `OrganizationNature` enum (`PUBLIC`, `PRIVATE`, `SOCIAL`) via `RegisterOrganizationController.getOrganizationNatures()` (AC4); the selected label is then passed to the `Organization` constructor, which still validates it as non-null/non-blank as a defensive measure.
 * The internal `vatNumber` is generated using a static counter (`"GEN-" + nextGeneratedVat`) when using the US04 constructor, since this use case does not require a VAT number.
+* To support the object-serialization persistence requirement, `Organization` and `OrganizationRepository` implement `java.io.Serializable` (the `OrganizationType` and `OrganizationNature` enums are serializable by default), so they can be persisted together with the `Repositories` singleton.
