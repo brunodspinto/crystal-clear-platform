@@ -1,12 +1,13 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The type Organization.
  */
-public class Organization {
+public class Organization implements Serializable {
     private static int nextGeneratedVat = 1;
 
     private final String vatNumber;

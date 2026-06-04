@@ -4,13 +4,14 @@ import pt.ipp.isep.dei.domain.Employee;
 import pt.ipp.isep.dei.domain.Organization;
 import pt.ipp.isep.dei.domain.OrganizationType;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The type Organization repository.
  */
-public class OrganizationRepository {
+public class OrganizationRepository implements Serializable {
     private final List<Organization> organizations;
 
     /**
