@@ -131,7 +131,8 @@ public Complaint(String description, Date complaintDate, Citizen citizen,
 ## 6. Integration and Demo
 
 * A new **Citizen** role was added to the authentication system.
-* A new **Citizen menu** with the option "Submit Complaint" was added.
+* A new **Citizen menu** with the option "Submit Complaint" was added (console UI).
+* A **JavaFX 11 graphical interface** is also provided for the citizen: `SubmitComplaintFXController` + `SubmitComplaint.fxml`, reached from the Citizen menu of the GUI. It follows the FXML + Controller (MVC) pattern, delegates to the same `SubmitComplaintController`, and communicates with the rest of the GUI through the `MainController` mediator.
 * For demo purposes, two political agents and one citizen are bootstrapped when the system starts.
 * Demo credentials: **citizen@this.app / citizen**.
 
@@ -141,3 +142,4 @@ public Complaint(String description, Date complaintDate, Citizen citizen,
 * The identity of the citizen who submitted the complaint is stored internally (associated with the `Complaint`) for audit purposes, but is not publicly disclosed — AC5.
 * The `submissionDate` is automatically set to `new Date()` at the time of Complaint instantiation — AC5.
 * The `complaintDate` (when the reported behaviour occurred) is provided by the citizen and is distinct from the `submissionDate`.
+* To support the object-serialization persistence requirement, `Complaint`, `ComplaintRepository`, `CitizenRepository` and `PoliticalAgentRepository` implement `java.io.Serializable` (`Citizen` and `PoliticalAgent` already do, through `User`; `PoliticalFunction` is an enum and is serializable by default), so they can be persisted together with the `Repositories` singleton.
