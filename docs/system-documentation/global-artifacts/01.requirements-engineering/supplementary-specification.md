@@ -24,6 +24,7 @@ documentation; consistency and standards._
 _Refers to the integrity, compliance and interoperability of the software. The requirements to be considered are: frequency and severity of failure, possibility of recovery, possibility of prediction, accuracy, average time between failures._
 
 * **Data Integrity:** The validation of business rules must be rigorously respected when recording and updating data within the system to prevent corrupt or invalid states.
+* **Persistence:** The application must employ object serialization to guarantee the persistence of the data between two successive runs, i.e. the data registered in one execution must still be available in the next.
 
 ## Performance
 
@@ -64,7 +65,8 @@ database integrity, resource limits, operating system._
 _Specifies or constraints the features inherent to the interaction of the
 system being developed with other external systems._
 
-* **User Interaction:** The primary interface for this sprint relies on a console-based Input/Output system to interact with the actors.
+* **User Interaction:** The application provides a console-based Input/Output interface to interact with the actors (e.g., Administrator, Political Agent, Ethics Committee Member, Product Owner).
+* **Graphical Interface:** A graphical user interface must be developed in **JavaFX 11**, covering the functionalities related to the **Citizen** and the **Journalist**.
 
 ### Physical Constraints
 
