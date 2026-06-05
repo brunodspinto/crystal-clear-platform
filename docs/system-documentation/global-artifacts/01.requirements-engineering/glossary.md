@@ -10,9 +10,12 @@
 | **Asset** | **Ativo / Bem** | An item of property owned by a political agent, including real estate, which has an acquisition and market value. |
 | **Asset Declaration** | **Declaração de Património** | A formal document submitted by a political agent detailing their income, assets, positions, and business participations. |
 | **Business Participation** | **Participação Social** | Quotas, shares, and holdings a political agent has in companies, along with their respective market values. |
+| **Chain of Influence** | **Cadeia de Influência** | A subnetwork through which a given entity can reach and potentially influence other entities; analysed in the support graph to reduce the size of the network under study (US36). |
 | **Complaint** | **Queixa** | A report submitted by a citizen regarding a political agent's behaviour or lack of transparency. |
+| **Complaint Assessment** | **Avaliação de Queixa** | The evaluation, by a member of the Ethics Committee, of a citizen's complaint, classifying it as **valid** or **invalid**; when invalid, a reason/explanation must be provided (US27). |
 | **Conflict of Interest** | **Conflito de Interesses** | A situation where a political agent's personal financial interests may influence or compromise their public duties. |
 | **CSV Dataset** | **Conjunto de Dados CSV** | A structured comma-separated values file used to exchange declaration or holdings data between the platform and external statistical tools. |
+| **Data Normalization** | **Normalização de Dados** | The transformation of a variable to a standard scale using the z-score (Z = (X − mean) / standard deviation), used to inspect the regression residuals on a standardized scale (US30). |
 | **Declaration Dataset** | **Dataset de Declarações** | A CSV file containing one row per declaration, with columns for declaration id, agent id, role, institution, declaration type, declaration date, gross salary, side income, and asset values by category (Table 2 of the specifications). |
 | **Declaration of Interests** | **Declaração de Interesses** | The core document submitted by Political Agents, which may be initial, regular, or exceptional, detailing their professional, financial, and patrimonial situation. |
 | **DI** | **DI** | Acronym for _Declaration of Interests_. |
@@ -20,6 +23,7 @@
 | **Entity** | **Entidade** | A node in the heterogeneous network representing a real-world object of one of the following types: person, organization, position, or asset. Each entity has an id, type, start/end dates, and type-specific attributes. |
 | **Ethics Committee** | **Comissão de Ética** | The body responsible for managing and supervising declarations of interests and verifying incompatibilities. |
 | **Exceptional Declaration** | **Declaração Excecional** | A Declaration of Interests submitted outside the regular schedule, triggered by a significant change in a political agent's situation. |
+| **Family Relationship** | **Relação Familiar** | A kinship relationship between persons, inferred from the declarations; it may be **symmetric** (e.g. spouse), **inverse** (e.g. childOf vs parentOf) or **transitive** (e.g. grandmother as parent of a parent) (US37). |
 | **Function** | **Função** | A political or administrative role (e.g., Mayor, Minister, Deputy) performed by a Political Agent. |
 | **Graph** | **Grafo** | A mathematical structure composed of entities (vertices/nodes) and relationships (edges) used to model the heterogeneous and multi-relational network of political agents, organizations, positions, and assets. |
 | **Heterogeneous Network** | **Rede Heterogénea** | A graph that combines different types of vertices (e.g., person, organization, position, asset), as opposed to a homogeneous network where all nodes are of the same type. |
@@ -31,18 +35,23 @@
 | **Integrated Situation** | **Situação Integrada** | A consolidated view of a Political Agent's financial and professional status on a given date, used for temporal analysis. |
 | **Journalist** | **Jornalista** | A registered member of the Journalists' Union with specific access rights to the transparency portal for investigative purposes. |
 | **JRN** | **JRN** | Acronym for _Journalist_. |
+| **Linear Regression** | **Regressão Linear** | A statistical model describing the expected linear relationship between a predictor variable and a response variable (e.g. total income vs total assets), used to detect deviations from the expected pattern (US28–US31). |
 | **Market Value** | **Valor de Mercado** | The estimated current value of an asset at a given point in time, as declared by a political agent. |
 | **Multi-relational Network** | **Rede Multi-Relacional** | A graph in which pairs of vertices can be connected by multiple distinct types of edges (e.g., relativeOf, friendOf, memberOf), each representing a different type of relationship. |
 | **National Identity Card** | **Cartão de Cidadão** | An official identification document required from Ordinary Citizens during platform registration. |
 | **Nepotism** | **Nepotismo** | The practice of appointing or favouring relatives or close associates to positions of power or authority, regardless of their merit. |
+| **Non-linear Pattern** | **Padrão Não-Linear** | A relationship between two variables that does not follow a constant linear trend, possibly showing curvature or acceleration at higher levels (e.g. shareholding percentage vs total share value) (US31). |
 | **OC** | **CC** | Acronym for _Ordinary Citizen_. |
 | **ORG** | **ORG** | Acronym for _Organization_. |
 | **Organization** | **Organização** | An entity (company, political party, foundation, institute, or association) associated with a political agent's positions, business participations, or subsidy declarations. |
 | **OrganizationType** | **Tipo de Organização** | A predefined classification of an organization's legal form: Company, Political Party, Foundation, Institute, or Association. |
 | **Ordinary Citizen** | **Cidadão Comum** | A member of the public who has an interest in scrutinising political agents and can use the portal to report suspicious behaviour. |
+| **Outlier** | **Outlier / Valor Atípico** | An agent whose deviation (residual) from the expected income/assets relationship is abnormally large, potentially signalling unexplained wealth accumulation (US29–US30). |
 | **PA** | **AP** | Acronym for _Political Agent_. |
+| **Pathway** | **Caminho** | A sequence of relationships (edges) connecting two entities in the support graph; its existence and distance can be verified using primitive operations (US34). |
+| **Pearson Correlation Coefficient** | **Coeficiente de Correlação de Pearson** | A measure (r, between −1 and 1) of the direction and strength of the linear association between two variables, used to relate declared remuneration and each asset type (US28). |
 | **PO** | **PO** | Acronym for _Product Owner_. |
-| **Product Owner** | **Product Owner** | The stakeholder responsible for the platform's overall requirements. In Sprint 2, the Product Owner triggers data export operations (US24, US25) and graph interaction features (US19–US21, US26). |
+| **Product Owner** | **Product Owner** | The stakeholder responsible for the platform's overall requirements. The Product Owner triggers data export operations (US24, US25, US37), graph construction and interaction features (US19–US21, US26), and the network-dynamics, global-matrix, complexity and sub-network features (US32, US33, US35, US36). |
 | **Political Agent** | **Agente Político** | A person performing a political function such as deputy, minister, councillor, mayor, or parish council president. |
 | **Position** | **Cargo** | A professional or public role held by a political agent, either in a public institution or a private organisation. |
 | **Press Card** | **Cartão de Jornalista** | An official credential issued by the Journalists' Union, required for journalist registration on the platform. |
@@ -51,10 +60,13 @@
 | **Registration Request** | **Pedido de Registo** | A formal application submitted by a prospective user to gain access to the platform with a specific role. |
 | **Regular Declaration** | **Declaração Regular** | A Declaration of Interests submitted periodically by a political agent during the exercise of their public function. |
 | **Rejection Reason** | **Motivo de Rejeição** | The mandatory explanation provided by the System Administrator when refusing a registration request, displayed to the user upon their next login attempt. |
+| **Residual** | **Resíduo** | The difference between an observed value and the value predicted by the regression model (e = y − ŷ); the distribution of the residuals is analysed to assess the validity of the linear-regression assumptions (US30). |
 | **Role** | **Papel / Perfil** | The set of permissions assigned to a user (e.g., Administrator, Journalist, Citizen) that dictates their access level on the platform. |
 | **SA** | **AS** | Acronym for _System Administrator_. |
 | **Subsidy** | **Subsídio / Apoio** | Financial support or grants received by a political agent from specific institutions. |
+| **Support Graph** | **Grafo de Suporte** | An undirected, unweighted global representation of the network (a global adjacency matrix without edge directions or weights), used for path-finding and influence analysis (US33–US34, US36). |
 | **System Administrator** | **Administrador do Sistema** | The person or team responsible for managing the platform and its access privileges. |
+| **Temporal Snapshot** | **Instantâneo Temporal** | The state of the dynamic network at a specific date; a sequence of snapshots models the evolution (dynamics) of the network over time (US32). |
 | **TP** | **PT** | Acronym for _Transparency Portal_. |
 | **Transparency Portal** | **Portal da Transparência** | The IT platform that supports the registration, evaluation, and analysis of declarations of interests by political agents. |
 | **Validated Declaration** | **Declaração Validada** | A declaration of interests that has been reviewed and approved by the Ethics Committee. |
