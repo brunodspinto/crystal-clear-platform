@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.ipp.isep.dei.ui.gui.StatisticsAnalysisFXController"
+      styleClass="root-pane"
+      stylesheets="@../css/app.css"
+      spacing="10">
+    <padding><Insets top="24" right="32" bottom="24" left="32"/></padding>
+
+    <Label fx:id="titleLabel" text="Statistics" styleClass="scene-title"/>
+    <Label fx:id="descriptionLabel" wrapText="true"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Button fx:id="runButton" text="Run analysis" onAction="#handleRun"
+                defaultButton="true" styleClass="primary-button"/>
+        <Button fx:id="openButton" text="Open graph(s)" onAction="#handleOpenGraphs"
+                styleClass="secondary-button"/>
+        <Button text="Back" onAction="#handleBack" styleClass="secondary-button"/>
+    </HBox>
+
+    <Label fx:id="statusLabel" maxWidth="Infinity"/>
+
+    <Label text="Output:" styleClass="field-label"/>
+    <TextArea fx:id="logArea" editable="false" wrapText="true" VBox.vgrow="ALWAYS"/>
+</VBox>

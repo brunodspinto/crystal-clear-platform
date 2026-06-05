@@ -1,5 +1,6 @@
 package pt.ipp.isep.dei.ui.gui;
 
+import javafx.application.HostServices;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,6 +19,8 @@ public class MainController {
     private BorderPane root;
 
     private Stage stage;
+    private HostServices hostServices;
+    private StatsScreen pendingStatsScreen;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -25,6 +28,14 @@ public class MainController {
 
     public Stage getStage() {
         return stage;
+    }
+
+    public void setHostServices(HostServices hostServices) {
+        this.hostServices = hostServices;
+    }
+
+    public HostServices getHostServices() {
+        return hostServices;
     }
 
     public void showLogin() {
@@ -43,6 +54,18 @@ public class MainController {
         loadCenter("/fxml/JournalistMenu.fxml");
     }
 
+    public void showAdminMenu() {
+        loadCenter("/fxml/AdminMenu.fxml");
+    }
+
+    public void showRegisterOrganization() {
+        loadCenter("/fxml/RegisterOrganization.fxml");
+    }
+
+    public void showExportDeclarationCsv() {
+        loadCenter("/fxml/ExportDeclarationCsv.fxml");
+    }
+
     public void showIncomeEvolution() {
         loadCenter("/fxml/AnalyseIncomeEvolution.fxml");
     }
@@ -55,16 +78,17 @@ public class MainController {
         loadCenter("/fxml/SubmitComplaint.fxml");
     }
 
-    public void showAdminMenu() {
-        loadCenter("/fxml/AdminMenu.fxml");
-    }
-
     public void showPoliticalAgentMenu() {
         loadCenter("/fxml/PoliticalAgentMenu.fxml");
     }
 
     public void showEthicsCommitteeMenu() {
         loadCenter("/fxml/EthicsCommitteeMenu.fxml");
+    }
+
+    public void showStatistics(StatsScreen screen) {
+        this.pendingStatsScreen = screen;
+        loadCenter("/fxml/StatisticsView.fxml");
     }
 
     void loadCenter(String fxmlPath) {
@@ -91,6 +115,17 @@ public class MainController {
                 ((PoliticalAgentMenuController) child).setMainController(this);
             } else if (child instanceof EthicsCommitteeMenuController) {
                 ((EthicsCommitteeMenuController) child).setMainController(this);
+            } else if (child instanceof RegisterOrganizationFXController) {
+                ((RegisterOrganizationFXController) child).setMainController(this);
+            } else if (child instanceof ExportDeclarationCsvFXController) {
+                ((ExportDeclarationCsvFXController) child).setMainController(this);
+            } else if (child instanceof StatisticsAnalysisFXController) {
+                StatisticsAnalysisFXController stats = (StatisticsAnalysisFXController) child;
+                stats.setMainController(this);
+                if (pendingStatsScreen != null) {
+                    stats.setScreen(pendingStatsScreen);
+                    pendingStatsScreen = null;
+                }
             }
 
             root.setCenter(view);

@@ -7,6 +7,8 @@ import pt.ipp.isep.dei.controller.AuthenticationController;
 /**
  * Menu shown to a logged in administrator. Each button navigates to the
  * screen of an admin functionality; those screens are built by their owners.
+ * Register Organization (US04) and Export Declaration CSV (US24) are provided
+ * here.
  */
 public class AdminMenuController {
 

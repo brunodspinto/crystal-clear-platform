@@ -3,25 +3,36 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="pt.ipp.isep.dei.ui.gui.EthicsCommitteeMenuController"
-      styleClass="root-pane"
-      stylesheets="@../css/app.css"
-      spacing="9" alignment="CENTER">
-    <padding>
-        <Insets top="24" right="40" bottom="24" left="40"/>
-    </padding>
+<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="pt.ipp.isep.dei.ui.gui.EthicsCommitteeMenuController"
+            fitToWidth="true" styleClass="root-pane" stylesheets="@../css/app.css">
+    <VBox spacing="8" alignment="CENTER" styleClass="root-pane">
+        <padding>
+            <Insets top="20" right="40" bottom="20" left="40"/>
+        </padding>
 
-    <Label text="Ethics Committee Menu" styleClass="scene-title"/>
+        <Label text="Ethics Committee Menu" styleClass="scene-title"/>
 
-    <Button text="Validate Declaration" onAction="#handleValidateDeclaration" styleClass="primary-button" maxWidth="260"/>
-    <Button text="Integrated Situation" onAction="#handleIntegratedSituation" styleClass="primary-button" maxWidth="260"/>
-    <Button text="Assess Complaint" onAction="#handleAssessComplaint" styleClass="primary-button" maxWidth="260"/>
-    <Button text="Detect Nepotism" onAction="#handleDetectNepotism" styleClass="primary-button" maxWidth="260"/>
-    <Button text="Detect Conflicts of Interest" onAction="#handleDetectConflicts" styleClass="primary-button" maxWidth="260"/>
-    <Button text="Find Pathway" onAction="#handleFindPath" styleClass="primary-button" maxWidth="260"/>
-    <Button text="Influence Subnetwork" onAction="#handleSubnetwork" styleClass="primary-button" maxWidth="260"/>
-    <Button text="Logout" onAction="#handleLogout" styleClass="secondary-button" maxWidth="260"/>
-</VBox>
+        <Label text="Network &amp; validation" styleClass="field-label"/>
+        <Button text="Validate Declaration" onAction="#handleValidateDeclaration" styleClass="primary-button" maxWidth="300"/>
+        <Button text="Integrated Situation" onAction="#handleIntegratedSituation" styleClass="primary-button" maxWidth="300"/>
+        <Button text="Assess Complaint" onAction="#handleAssessComplaint" styleClass="primary-button" maxWidth="300"/>
+        <Button text="Detect Nepotism" onAction="#handleDetectNepotism" styleClass="primary-button" maxWidth="300"/>
+        <Button text="Detect Conflicts of Interest" onAction="#handleDetectConflicts" styleClass="primary-button" maxWidth="300"/>
+        <Button text="Find Pathway" onAction="#handleFindPath" styleClass="primary-button" maxWidth="300"/>
+        <Button text="Influence Subnetwork" onAction="#handleSubnetwork" styleClass="primary-button" maxWidth="300"/>
+
+        <Label text="Statistical analyses" styleClass="field-label"/>
+        <Button text="US14 — Declaration Statistics" onAction="#handleUs14" styleClass="primary-button" maxWidth="300"/>
+        <Button text="US17 — Top Companies by Stock Value" onAction="#handleUs17" styleClass="primary-button" maxWidth="300"/>
+        <Button text="US18 — Largest Stock Increases" onAction="#handleUs18" styleClass="primary-button" maxWidth="300"/>
+        <Button text="US28 — Role vs Asset Correlation" onAction="#handleUs28" styleClass="primary-button" maxWidth="300"/>
+        <Button text="US30 — Residual Analysis" onAction="#handleUs30" styleClass="primary-button" maxWidth="300"/>
+        <Button text="US31 — Shareholding Non-linearity" onAction="#handleUs31" styleClass="primary-button" maxWidth="300"/>
+
+        <Button text="Logout" onAction="#handleLogout" styleClass="secondary-button" maxWidth="300"/>
+    </VBox>
+</ScrollPane>

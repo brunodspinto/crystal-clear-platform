@@ -23,6 +23,7 @@ public class App extends Application {
 
         MainController mainController = loader.getController();
         mainController.setStage(stage);
+        mainController.setHostServices(getHostServices());
         mainController.showLogin();
 
         Scene scene = new Scene(root, 720, 480);

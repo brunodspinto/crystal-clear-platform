@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.ipp.isep.dei.ui.gui.RegisterOrganizationFXController"
+      styleClass="root-pane"
+      stylesheets="@../css/app.css"
+      spacing="10">
+    <padding><Insets top="24" right="32" bottom="24" left="32"/></padding>
+
+    <Label text="US04 — Register Organization" styleClass="scene-title"/>
+
+    <GridPane hgap="12" vgap="6">
+        <columnConstraints>
+            <ColumnConstraints minWidth="120"/>
+            <ColumnConstraints minWidth="300" hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <Label text="Name:" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="nameField" promptText="Organization name" styleClass="input-field"
+                   GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Type:" styleClass="field-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="typeCombo" promptText="Select a type" maxWidth="Infinity"
+                  GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Nature:" styleClass="field-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="natureCombo" promptText="Select a nature" maxWidth="Infinity"
+                  GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <Label fx:id="messageLabel" maxWidth="Infinity"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Button text="Register" onAction="#handleRegister" defaultButton="true" styleClass="primary-button"/>
+        <Button text="Clear" onAction="#handleClear" styleClass="secondary-button"/>
+        <Button text="Back" onAction="#handleBack" styleClass="secondary-button"/>
+    </HBox>
+</VBox>
