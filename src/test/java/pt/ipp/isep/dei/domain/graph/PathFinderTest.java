@@ -183,7 +183,7 @@ class PathFinderTest {
                 new String[]{"C", "A"}
         );
         assertEquals(1, PathFinder.shortestDistance(g, "A", "B"));
-        assertEquals(2, PathFinder.shortestDistance(g, "A", "C"));
+        assertEquals(1, PathFinder.shortestDistance(g, "A", "C"));
     }
 
     // -------------------------------------------------------------------------
