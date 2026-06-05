@@ -1,5 +1,4 @@
 @startuml US06-CD
-'skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
 skinparam linetype polyline
@@ -10,27 +9,38 @@ class SubmitDeclarationUI {
 
 class SubmitDeclarationController {
     + SubmitDeclarationController()
-    + getDeclarationTypes()
-    + getOrganizations()
-    + getFunctions()
-    + submitDeclaration(type, positionEntries, subsidyEntries, assetEntries, holdingsEntries, attachments)
-    - getCurrentPoliticalAgent()
+    + getDeclarationTypes() : List<DeclarationType>
+    + getOrganizations() : List<Organization>
+    + getPositionNatures() : List<PositionNature>
+    + getAssetTypes() : List<AssetType>
+    + submitDeclaration(type, positionEntries, subsidyEntries,\nassetEntries, businessParticipations, attachments) : boolean
+    - getCurrentPoliticalAgent() : PoliticalAgent
 }
 
-class AuthenticationService {
-    + getCurrentPoliticalAgent()
+class Repositories <<Singleton>> {
+    - {static} instance : Repositories
+    - Repositories()
+    + {static} getInstance() : Repositories
+    + getOrganizationRepository() : OrganizationRepository
+    + getDeclarationRepository() : DeclarationRepository
+    + getPoliticalAgentRepository() : PoliticalAgentRepository
+    + getAuthenticationRepository() : AuthenticationRepository
 }
 
 class OrganizationRepository {
-    + getOrganizations()
-}
-
-class FunctionRepository {
-    + getFunctions()
+    + getOrganizations() : List<Organization>
 }
 
 class DeclarationRepository {
-    + save(declaration : Declaration)
+    + save(declaration : Declaration) : boolean
+}
+
+class PoliticalAgentRepository {
+    + getByEmail(email : String) : PoliticalAgent
+}
+
+class AuthenticationRepository {
+    + getCurrentUserSession() : UserSession
 }
 
 class PoliticalAgent {
@@ -43,22 +53,32 @@ class PoliticalAgent {
 }
 
 class Declaration {
+    - id : String
     - submissionDate : Date
-    + Declaration(type : DeclarationType, agent : PoliticalAgent, submissionDate : Date, status : DeclarationStatus)
-    + addPositionEntry(organization : Organization, function : Function, nature : PositionNature, grossSalary : double, sideIncomeConsulting : double, sideIncomeBoardMemberships : double, startDate : Date, endDate : Date)
-    + addSubsidyEntry(organization : Organization, amount : double, description : String, date : Date)
-    + addAssetEntry(assetType : AssetType, assetValue : double, detail : Object)
-    + addBusinessParticipation(organization : Organization, companyNIF : long, totalValueInStocks : double, companyPercentage : double)
-    + addAttachment(fileName : String, uploadDate : Date)
+    - status : DeclarationStatus
+    + Declaration(type : DeclarationType, agent : PoliticalAgent, submissionDate : Date)
+    + addPositionEntry(organization, functionDesignation, nature,\ngrossSalary, sideIncomeConsulting, sideIncomeBoardMemberships,\nstartDate, endDate)
+    + addIncome(organization, amount, source, date)
+    + addSubsidyEntry(organization, amount, description, date)
+    + addAssetEntry(assetType, assetValue, detail)
+    + addBusinessParticipation(organization, companyNIF,\ntotalValueInStocks, companyPercentage)
+    + addAttachment(fileName, uploadDate)
 }
 
 class PositionEntry {
+    - functionDesignation : String
     - nature : PositionNature
     - grossSalary : double
     - sideIncomeConsulting : double
     - sideIncomeBoardMemberships : double
     - startDate : Date
     - endDate : Date
+}
+
+class Income {
+    - amount : double
+    - source : String
+    - date : Date
 }
 
 class SubsidyEntry {
@@ -69,7 +89,6 @@ class SubsidyEntry {
 
 class AssetEntry {
     - assetValue : double
-    + AssetEntry(assetType : AssetType, assetValue : double, detail : Object)
 }
 
 class RealEstate {
@@ -93,10 +112,6 @@ class BusinessParticipation {
 
 class Organization {
     - name : String
-}
-
-class Function {
-    - designation : String
 }
 
 class Attachment {
@@ -128,34 +143,47 @@ enum PositionNature {
     SOCIAL
 }
 
-note right of SubmitDeclarationController
-    type is retrieved
-    from selected data
-end note
-
+' ── UI → Controller ───────────────────────────────────────────────────────────
 SubmitDeclarationUI .> SubmitDeclarationController
 
-SubmitDeclarationController ..> AuthenticationService
-SubmitDeclarationController ..> OrganizationRepository
-SubmitDeclarationController ..> FunctionRepository
-SubmitDeclarationController ..> DeclarationRepository
-SubmitDeclarationController ..> Declaration
+' ── Controller → Repositories (GRASP: accesses singleton to obtain repos) ─────
+SubmitDeclarationController ..> Repositories : uses
 
-OrganizationRepository --> "*" Organization : organizations
-FunctionRepository --> "*" Function : functions
+' ── Controller → Repositories (direct use after obtaining from singleton) ──────
+SubmitDeclarationController ..> OrganizationRepository : uses
+SubmitDeclarationController ..> DeclarationRepository : uses
+SubmitDeclarationController ..> PoliticalAgentRepository : uses
+SubmitDeclarationController ..> AuthenticationRepository : uses
+SubmitDeclarationController ..> Declaration : creates
+SubmitDeclarationController ..> PoliticalAgent : uses
 
+' ── Repositories singleton owns all repositories ──────────────────────────────
+Repositories *-- OrganizationRepository
+Repositories *-- DeclarationRepository
+Repositories *-- PoliticalAgentRepository
+Repositories *-- AuthenticationRepository
+
+' ── Repositories store domain objects ─────────────────────────────────────────
+OrganizationRepository --> "*" Organization : stores
+DeclarationRepository --> "*" Declaration : stores
+PoliticalAgentRepository --> "*" PoliticalAgent : stores
+
+' ── Declaration aggregate ─────────────────────────────────────────────────────
 Declaration --> "1" PoliticalAgent : agent
 Declaration --> "1" DeclarationType : type
 Declaration --> "1" DeclarationStatus : status
-Declaration --> "1..*" PositionEntry : positionEntries
-Declaration --> "*" SubsidyEntry : subsidyEntries
-Declaration --> "*" AssetEntry : assetEntries
-Declaration --> "*" BusinessParticipation : businessParticipations
-Declaration --> "*" Attachment : attachments
+Declaration *-- "*" PositionEntry : positionEntries
+Declaration *-- "*" Income : incomes
+Declaration *-- "*" SubsidyEntry : subsidyEntries
+Declaration *-- "*" AssetEntry : assetEntries
+Declaration *-- "*" BusinessParticipation : businessParticipations
+Declaration *-- "*" Attachment : attachments
 
+' ── Entries → shared domain ───────────────────────────────────────────────────
 PositionEntry --> "1" Organization : organization
-PositionEntry --> "1" Function : function
 PositionEntry --> "1" PositionNature : nature
+
+Income --> "1" Organization : organization
 
 SubsidyEntry --> "1" Organization : organization
 

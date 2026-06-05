@@ -1,5 +1,4 @@
 @startuml US06-SD
-skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
 
@@ -8,11 +7,42 @@ autonumber
 actor "Political\nAgent" as Agent
 participant ":SubmitDeclarationUI" as UI
 participant ":SubmitDeclarationController" as CTRL
-participant ":AuthenticationService" as AUTH
+participant ":Repositories" as REPOS
 participant ":OrganizationRepository" as ORGR
-participant ":FunctionRepository" as FUNCR
 participant ":DeclarationRepository" as DR
+participant ":AuthenticationRepository" as AUTHR
+participant ":PoliticalAgentRepository" as PAGR
 participant "d:Declaration" as DEC
+
+note over UI, REPOS
+  On construction, SubmitDeclarationController calls
+  Repositories.getInstance() and stores all four
+  repository references as private final fields.
+end note
+
+UI -> CTRL ** : new SubmitDeclarationController()
+activate CTRL
+    CTRL -> REPOS : getInstance()
+    activate REPOS
+        REPOS --> CTRL : repos
+    deactivate REPOS
+    CTRL -> REPOS : getOrganizationRepository()
+    activate REPOS
+        REPOS --> CTRL : organizationRepository
+    deactivate REPOS
+    CTRL -> REPOS : getDeclarationRepository()
+    activate REPOS
+        REPOS --> CTRL : declarationRepository
+    deactivate REPOS
+    CTRL -> REPOS : getPoliticalAgentRepository()
+    activate REPOS
+        REPOS --> CTRL : politicalAgentRepository
+    deactivate REPOS
+    CTRL -> REPOS : getAuthenticationRepository()
+    activate REPOS
+        REPOS --> CTRL : authenticationRepository
+    deactivate REPOS
+deactivate CTRL
 
 activate Agent
 
@@ -24,53 +54,29 @@ activate Agent
             CTRL --> UI : declarationTypes
         deactivate CTRL
 
-        UI --> Agent : shows declaration type list, requests selection
-    deactivate UI
-
-    Agent -> UI : selects declaration type
-    activate UI
-
         UI -> CTRL : getOrganizations()
         activate CTRL
-
             CTRL -> ORGR : getOrganizations()
             activate ORGR
                 ORGR --> CTRL : organizations
             deactivate ORGR
-
             CTRL --> UI : organizations
         deactivate CTRL
 
-        UI -> CTRL : getFunctions()
+        UI -> CTRL : getPositionNatures()
         activate CTRL
-
-            CTRL -> FUNCR : getFunctions()
-            activate FUNCR
-                FUNCR --> CTRL : functions
-            deactivate FUNCR
-
-            CTRL --> UI : functions
+            CTRL --> UI : positionNatures
         deactivate CTRL
 
-        UI --> Agent : shows organizations and functions;\nrequests position entries
+        UI -> CTRL : getAssetTypes()
+        activate CTRL
+            CTRL --> UI : assetTypes
+        deactivate CTRL
+
+        UI --> Agent : shows available options;\nrequests declaration data section by section
     deactivate UI
 
-    Agent -> UI : provides one or more position entries
-    activate UI
-        UI --> Agent : requests subsidy entries
-    deactivate UI
-
-    Agent -> UI : provides subsidy entries (or skips)
-    activate UI
-        UI --> Agent : requests asset entries\n(real estate / vehicles / stocks)
-    deactivate UI
-
-    Agent -> UI : provides asset entries (or skips)
-    activate UI
-        UI --> Agent : requests holdings entries\n(company NIF, total value in stocks, company percentage)
-    deactivate UI
-
-    Agent -> UI : provides holdings entries (or skips)
+    Agent -> UI : provides type, position entries, subsidy entries,\nasset entries, business participations, attachments
     activate UI
         UI --> Agent : shows full declaration summary;\nrequests confirmation
     deactivate UI
@@ -78,64 +84,59 @@ activate Agent
     Agent -> UI : confirms submission
     activate UI
 
-        UI -> CTRL : submitDeclaration(type, positionEntries, subsidyEntries,\nassetEntries, holdingsEntries, attachments)
+        UI -> CTRL : submitDeclaration(type, positionEntries,\nsubsidyEntries, assetEntries,\nbusinessParticipations, attachments)
         activate CTRL
 
-            CTRL -> AUTH : getCurrentPoliticalAgent()
-            activate AUTH
-                AUTH --> CTRL : agent
-            deactivate AUTH
+            CTRL -> AUTHR : getCurrentUserSession()
+            activate AUTHR
+                AUTHR --> CTRL : userSession
+            deactivate AUTHR
 
-            CTRL -> DEC ** : create(type, agent, submissionDate=now, status=PENDING)
+            CTRL -> AUTHR : userSession.getUserId()
+            activate AUTHR
+                AUTHR --> CTRL : email
+            deactivate AUTHR
+
+            CTRL -> PAGR : getByEmail(email)
+            activate PAGR
+                PAGR --> CTRL : agent
+            deactivate PAGR
+
+            CTRL -> DEC ** : new Declaration(type, agent, new Date())
+            note right of DEC
+                status initialised to PENDING
+                inside the constructor
+            end note
 
             loop for each positionEntry
-                CTRL -> DEC : addPositionEntry(organization, function,\nnature, grossSalary, sideIncomeConsulting, sideIncomeBoardMemberships, startDate, endDate)
-                activate DEC
-                    DEC --> CTRL : ok
-                deactivate DEC
+                CTRL -> DEC : addPositionEntry(organization, functionDesignation,\nnature, grossSalary, sideIncomeConsulting,\nsideIncomeBoardMemberships, startDate, endDate)
             end
 
             loop for each subsidyEntry
                 CTRL -> DEC : addSubsidyEntry(organization, amount, description, date)
-                activate DEC
-                    DEC --> CTRL : ok
-                deactivate DEC
             end
 
             loop for each assetEntry
                 CTRL -> DEC : addAssetEntry(assetType, assetValue, detail)
-                activate DEC
-                    note right of DEC
-                        creates RealEstate, VehicleAsset
-                        or StockAsset based on assetType
-                    end note
-                    DEC --> CTRL : ok
-                deactivate DEC
             end
 
-            loop for each holdingEntry
+            loop for each businessParticipation
                 CTRL -> DEC : addBusinessParticipation(organization,\ncompanyNIF, totalValueInStocks, companyPercentage)
-                activate DEC
-                    DEC --> CTRL : ok
-                deactivate DEC
             end
 
             loop for each attachment
                 CTRL -> DEC : addAttachment(fileName, uploadDate)
-                activate DEC
-                    DEC --> CTRL : ok
-                deactivate DEC
             end
 
-            CTRL -> DR : save(d)
+            CTRL -> DR : save(declaration)
             activate DR
-                DR --> CTRL : ok
+                DR --> CTRL : true
             deactivate DR
 
-            CTRL --> UI : success
+            CTRL --> UI : true
         deactivate CTRL
 
-        UI --> Agent : displays operation success;\ndeclaration set to PENDING state
+        UI --> Agent : displays success message;\ndeclaration submitted with PENDING status
     deactivate UI
 
 deactivate Agent
