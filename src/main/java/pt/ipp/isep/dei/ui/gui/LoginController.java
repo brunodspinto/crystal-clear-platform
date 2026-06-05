@@ -117,6 +117,18 @@ public class LoginController implements Initializable {
             messageLabel.setText("GUI not initialised properly.");
             return;
         }
+        if (sessionHasRole(AuthenticationController.ROLE_ADMIN)) {
+            mainController.showAdminMenu();
+            return;
+        }
+        if (sessionHasRole(AuthenticationController.ROLE_ETHICS_COMMITTEE)) {
+            mainController.showEthicsCommitteeMenu();
+            return;
+        }
+        if (sessionHasRole(AuthenticationController.ROLE_POLITICAL_AGENT)) {
+            mainController.showPoliticalAgentMenu();
+            return;
+        }
         if (sessionHasRole(AuthenticationController.ROLE_JOURNALIST)) {
             mainController.showJournalistMenu();
             return;
@@ -125,7 +137,7 @@ public class LoginController implements Initializable {
             mainController.showCitizenMenu();
             return;
         }
-        messageLabel.setText("This GUI is for citizens and journalists.");
+        messageLabel.setText("No GUI available for this user's role.");
     }
 
     private boolean sessionHasRole(String roleDescription) {

@@ -55,6 +55,18 @@ public class MainController {
         loadCenter("/fxml/SubmitComplaint.fxml");
     }
 
+    public void showAdminMenu() {
+        loadCenter("/fxml/AdminMenu.fxml");
+    }
+
+    public void showPoliticalAgentMenu() {
+        loadCenter("/fxml/PoliticalAgentMenu.fxml");
+    }
+
+    public void showEthicsCommitteeMenu() {
+        loadCenter("/fxml/EthicsCommitteeMenu.fxml");
+    }
+
     void loadCenter(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -73,6 +85,12 @@ public class MainController {
                 ((JournalistMenuController) child).setMainController(this);
             } else if (child instanceof SubmitComplaintFXController) {
                 ((SubmitComplaintFXController) child).setMainController(this);
+            } else if (child instanceof AdminMenuController) {
+                ((AdminMenuController) child).setMainController(this);
+            } else if (child instanceof PoliticalAgentMenuController) {
+                ((PoliticalAgentMenuController) child).setMainController(this);
+            } else if (child instanceof EthicsCommitteeMenuController) {
+                ((EthicsCommitteeMenuController) child).setMainController(this);
             }
 
             root.setCenter(view);
