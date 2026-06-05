@@ -1,5 +1,4 @@
 @startuml US08-CD
-'skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
 skinparam linetype polyline
@@ -10,28 +9,45 @@ class ValidateDeclarationUI {
 
 class ValidateDeclarationController {
     + ValidateDeclarationController()
-    + getPendingDeclarations()
-    + getDeclarationDetails(declaration : Declaration)
-    + processValidation(declaration : Declaration, outcome : ValidationOutcome, comments : List)
-    - getCurrentEthicsCommitteeMember()
+    + getPendingDeclarations() : List<Declaration>
+    + getDeclarationDetails(declaration : Declaration) : String
+    + getValidationOutcomes() : List<ValidationOutcome>
+    + processValidation(declaration : Declaration,\noutcome : ValidationOutcome,\ncomments : List<Object[]>) : boolean
+    - getCurrentEthicsCommitteeMember() : EthicsCommitteeMember
 }
 
-class AuthenticationService {
-    + getCurrentEthicsCommitteeMember()
+class Repositories <<Singleton>> {
+    - {static} instance : Repositories
+    - Repositories()
+    + {static} getInstance() : Repositories
+    + getDeclarationRepository() : DeclarationRepository
+    + getValidationRecordRepository() : ValidationRecordRepository
+    + getEthicsCommitteeMemberRepository() : EthicsCommitteeMemberRepository
+    + getAuthenticationRepository() : AuthenticationRepository
 }
 
 class DeclarationRepository {
-    + getDeclarationsByStatus(status : DeclarationStatus)
-    + save(declaration : Declaration)
+    + getDeclarationsByStatus(status : DeclarationStatus) : List<Declaration>
+    + save(declaration : Declaration) : boolean
 }
 
 class ValidationRecordRepository {
-    + save(record : ValidationRecord)
+    + save(record : ValidationRecord) : boolean
+}
+
+class EthicsCommitteeMemberRepository {
+    + getByEmail(email : String) : EthicsCommitteeMember
+}
+
+class AuthenticationRepository {
+    + getCurrentUserSession() : UserSession
 }
 
 class Declaration {
+    - id : String
     - submissionDate : Date
-    + getDetails()
+    - status : DeclarationStatus
+    + getDetails() : String
     + setStatus(outcome : ValidationOutcome)
 }
 
@@ -42,7 +58,7 @@ class EthicsCommitteeMember {
 
 class ValidationRecord {
     - validationDate : Date
-    + ValidationRecord(member : EthicsCommitteeMember, declaration : Declaration, validationDate : Date, outcome : ValidationOutcome)
+    + ValidationRecord(member : EthicsCommitteeMember,\ndeclaration : Declaration,\nvalidationDate : Date,\noutcome : ValidationOutcome)
     + addComment(section : String, comment : String)
 }
 
@@ -63,24 +79,40 @@ enum ValidationOutcome {
 }
 
 note right of ValidateDeclarationController
-    AC3: guard — declaration
-    must be PENDING before
-    processing validation
+    AC3: declaration must be PENDING
+    before any mutation is performed
 end note
 
+' ── UI → Controller ───────────────────────────────────────────────────────────
 ValidateDeclarationUI .> ValidateDeclarationController
 
-ValidateDeclarationController ..> AuthenticationService
-ValidateDeclarationController ..> DeclarationRepository
-ValidateDeclarationController ..> ValidationRecordRepository
-ValidateDeclarationController ..> Declaration
-ValidateDeclarationController ..> ValidationRecord
+' ── Controller → Repositories (singleton) ────────────────────────────────────
+ValidateDeclarationController ..> Repositories : uses
+ValidateDeclarationController ..> DeclarationRepository : uses
+ValidateDeclarationController ..> ValidationRecordRepository : uses
+ValidateDeclarationController ..> EthicsCommitteeMemberRepository : uses
+ValidateDeclarationController ..> AuthenticationRepository : uses
+ValidateDeclarationController ..> Declaration : uses
+ValidateDeclarationController ..> ValidationRecord : creates
 
+' ── Repositories singleton owns all repositories ──────────────────────────────
+Repositories *-- DeclarationRepository
+Repositories *-- ValidationRecordRepository
+Repositories *-- EthicsCommitteeMemberRepository
+Repositories *-- AuthenticationRepository
+
+' ── Repositories store domain objects ─────────────────────────────────────────
+DeclarationRepository --> "*" Declaration : stores
+ValidationRecordRepository --> "*" ValidationRecord : stores
+EthicsCommitteeMemberRepository --> "*" EthicsCommitteeMember : stores
+
+' ── Declaration ───────────────────────────────────────────────────────────────
 Declaration --> "1" DeclarationStatus : status
 
+' ── ValidationRecord aggregate ────────────────────────────────────────────────
 ValidationRecord --> "1" EthicsCommitteeMember : member
 ValidationRecord --> "1" Declaration : declaration
 ValidationRecord --> "1" ValidationOutcome : outcome
-ValidationRecord --> "*" ValidationComment : comments
+ValidationRecord *-- "*" ValidationComment : comments
 
 @enduml

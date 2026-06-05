@@ -1,5 +1,4 @@
 @startuml US08-SD
-skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
 
@@ -8,11 +7,43 @@ autonumber
 actor "Ethics Committee\nMember" as Member
 participant ":ValidateDeclarationUI" as UI
 participant ":ValidateDeclarationController" as CTRL
-participant ":AuthenticationService" as AUTH
+participant ":Repositories" as REPOS
 participant ":DeclarationRepository" as DR
-participant "d:Declaration" as DEC
 participant ":ValidationRecordRepository" as VRR
+participant ":EthicsCommitteeMemberRepository" as ECMR
+participant ":AuthenticationRepository" as AUTHR
+participant "d:Declaration" as DEC
 participant "vr:ValidationRecord" as VR
+
+note over UI, REPOS
+  On construction, ValidateDeclarationController calls
+  Repositories.getInstance() and stores all four
+  repository references as private final fields.
+end note
+
+UI -> CTRL ** : new ValidateDeclarationController()
+activate CTRL
+    CTRL -> REPOS : getInstance()
+    activate REPOS
+        REPOS --> CTRL : repos
+    deactivate REPOS
+    CTRL -> REPOS : getDeclarationRepository()
+    activate REPOS
+        REPOS --> CTRL : declarationRepository
+    deactivate REPOS
+    CTRL -> REPOS : getValidationRecordRepository()
+    activate REPOS
+        REPOS --> CTRL : validationRecordRepository
+    deactivate REPOS
+    CTRL -> REPOS : getEthicsCommitteeMemberRepository()
+    activate REPOS
+        REPOS --> CTRL : ethicsCommitteeMemberRepository
+    deactivate REPOS
+    CTRL -> REPOS : getAuthenticationRepository()
+    activate REPOS
+        REPOS --> CTRL : authenticationRepository
+    deactivate REPOS
+deactivate CTRL
 
 activate Member
 
@@ -21,12 +52,10 @@ activate Member
 
         UI -> CTRL : getPendingDeclarations()
         activate CTRL
-
             CTRL -> DR : getDeclarationsByStatus(PENDING)
             activate DR
                 DR --> CTRL : declarations
             deactivate DR
-
             CTRL --> UI : declarations
         deactivate CTRL
 
@@ -38,77 +67,74 @@ activate Member
 
         UI -> CTRL : getDeclarationDetails(declaration)
         activate CTRL
-
             CTRL -> DEC : getDetails()
             activate DEC
-                DEC --> CTRL : positions, subsidies, assets, participations
+                DEC --> CTRL : detailsString
             deactivate DEC
-
-            CTRL --> UI : declaration details
+            CTRL --> UI : detailsString
         deactivate CTRL
 
-        UI --> Member : displays full declaration content
+        UI -> CTRL : getValidationOutcomes()
+        activate CTRL
+            CTRL --> UI : validationOutcomes
+        deactivate CTRL
+
+        UI --> Member : displays full declaration content\nand requests validation outcome
     deactivate UI
 
-    Member -> UI : indicates outcome\n(validated or rejected with comments)
-    activate UI
-
-        alt outcome is validated
-            UI --> Member : requests confirmation
-        else outcome is rejected
-            UI --> Member : requests section(s) and comment(s)
-        end
-    deactivate UI
-
-    Member -> UI : confirms outcome\n(or provides section comments if rejecting)
+    Member -> UI : selects outcome;\nprovides comments if rejecting
     activate UI
 
         UI -> CTRL : processValidation(declaration, outcome, comments)
         activate CTRL
 
             note right of CTRL
-                AC3: guard — declaration
-                must be PENDING
+                AC3: guard — if declaration.status
+                != PENDING, return false immediately
             end note
 
-            CTRL -> AUTH : getCurrentEthicsCommitteeMember()
-            activate AUTH
-                AUTH --> CTRL : member
-            deactivate AUTH
+            CTRL -> AUTHR : getCurrentUserSession()
+            activate AUTHR
+                AUTHR --> CTRL : userSession
+            deactivate AUTHR
+
+            CTRL -> AUTHR : userSession.getUserId()
+            activate AUTHR
+                AUTHR --> CTRL : email
+            deactivate AUTHR
+
+            CTRL -> ECMR : getByEmail(email)
+            activate ECMR
+                ECMR --> CTRL : member
+            deactivate ECMR
 
             CTRL -> DEC : setStatus(outcome)
-            activate DEC
-                DEC --> CTRL : ok
-            deactivate DEC
 
-            CTRL -> DR : save(d)
+            CTRL -> DR : save(declaration)
             activate DR
-                DR --> CTRL : ok
+                DR --> CTRL : true
             deactivate DR
 
-            CTRL -> VR ** : create(member, declaration, validationDate=now, outcome)
+            CTRL -> VR ** : new ValidationRecord(member, declaration, new Date(), outcome)
 
-            alt outcome is REJECTED
+            alt outcome == RETURNED_FOR_CORRECTION
                 loop for each comment
                     CTRL -> VR : addComment(section, comment)
-                    activate VR
-                        VR --> CTRL : ok
-                    deactivate VR
                 end
             end
 
             CTRL -> VRR : save(vr)
             activate VRR
-                VRR --> CTRL : ok
+                VRR --> CTRL : true
             deactivate VRR
 
-            CTRL --> UI : success
+            CTRL --> UI : true
         deactivate CTRL
 
-        alt validated
-            UI --> Member : displays operation success;\ndeclaration status set to VALIDATED
-        else rejected
-            UI --> Member : displays operation success;\ndeclaration status set to REJECTED;\nreturned to Political Agent for correction
+        alt outcome == VALIDATED
+            UI --> Member : declaration status set to VALIDATED
+        else outcome == RETURNED_FOR_CORRECTION
+            UI --> Member : declaration status set to REJECTED;\nreturned for correction with comments
         end
     deactivate UI
 
