@@ -95,6 +95,12 @@ enum OrganizationType {
     ASSOCIATION
 }
 
+enum OrganizationNature {
+    PUBLIC
+    PRIVATE
+    SOCIAL
+}
+
 class "Declaration of Interests" as Declaration {
     name
     submissionDate
@@ -194,6 +200,16 @@ class Complaint {
     submissionDate
 }
 
+class ComplaintAssessment {
+    assessmentDate
+    reason
+}
+
+enum ComplaintOutcome {
+    VALID
+    INVALID
+}
+
 class Attachment {
     fileName
     uploadDate
@@ -250,10 +266,22 @@ enum RelationshipType {
     HOLDS_POSITION
     IN_ORGANIZATION
     MEMBER_OF
+    SUPPORTS
+    OPPOSES
     INFLUENCES
     CONTROLS
     PARTNER_OF
     SUPERVISES
+    OWNER_OF
+}
+
+enum FamilyRelationshipType {
+    SPOUSE_OF
+    SIBLING_OF
+    PARENT_OF
+    CHILD_OF
+    GRANDPARENT_OF
+    GRANDCHILD_OF
 }
 
 User <|-- Administrator
@@ -294,6 +322,7 @@ PositionEntry "*" -- "1" Function : performs >
 PositionEntry "*" -- "1" PositionNature : has >
 
 Organization "*" -- "1" OrganizationType : classified as >
+Organization "*" -- "1" OrganizationNature : has nature >
 
 SubsidyEntry "*" -- "1" Organization : received from >
 Income "*" -- "1" Organization : received from >
@@ -314,6 +343,10 @@ Citizen "1" -- "*" Complaint : submits >
 Complaint "*" -- "1" PoliticalAgent : targets >
 Complaint "*" -- "1" PoliticalFunction : references >
 
+EthicsCommitteeMember "1" -- "*" ComplaintAssessment : performs >
+ComplaintAssessment "*" -- "1" Complaint : assesses >
+ComplaintAssessment "*" -- "1" ComplaintOutcome : results in >
+
 Journalist "*" -- "*" PoliticalAgent : analyses income of >
 Journalist "*" -- "*" PoliticalAgent : consults assets of >
 Citizen "*" -- "*" PoliticalAgent : consults assets of >
@@ -329,6 +362,7 @@ Entity <|-- GraphAsset
 EntityRelationship "*" -- "1" Entity : entity1 >
 EntityRelationship "*" -- "1" Entity : entity2 >
 EntityRelationship "*" -- "1" RelationshipType : of type >
+EntityRelationship "*" -- "0..1" FamilyRelationshipType : inferred as (family, US37) >
 
 ProductOwner "1" -- "*" Entity : imports >
 ProductOwner "1" -- "*" EntityRelationship : imports >

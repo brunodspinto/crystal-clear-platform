@@ -31,6 +31,7 @@ To identify domain conceptual classes, start by making a list of candidate conce
 
 * ValidationRecord: records the outcome of a declaration validation by the Ethics Committee
 * ValidationComment: a comment attached to a specific section or item of a rejected declaration
+* ComplaintAssessment: records the assessment, by an Ethics Committee member, of a citizen's complaint as valid or invalid (with a reason when invalid)
 
 **Roles of People or Organizations**
 
@@ -55,11 +56,14 @@ To identify domain conceptual classes, start by making a list of candidate conce
 * DeclarationType: classifies a declaration as initial, regular, or exceptional
 * DeclarationStatus: the current state of a declaration (pending, validated, rejected)
 * OrganizationType: classifies an organization as company, politicalParty, foundation, institute, or association
+* OrganizationNature: classifies the legal nature of an organization as public, private, or social
 * AssetType: classifies an asset as realEstate, vehicles, or stocks
 * ValidationOutcome: the result of a validation (validated or returned for correction)
+* ComplaintOutcome: the result of a complaint assessment (valid or invalid)
 * Status: the state of a registration request (pending, approved, rejected)
 * EntityType: classifies a graph entity as PERSON, ORGANIZATION, POSITION, or ASSET
 * RelationshipType: classifies a relationship between entities (e.g. relativeOf, friendOf, holdsPosition, memberOf, influences)
+* FamilyRelationshipType: classifies a family relationship inferred from declarations (spouseOf, siblingOf, parentOf, childOf, grandparentOf, grandchildOf)
 
 **Catalogs**
 
@@ -147,6 +151,7 @@ An association is a relationship between instances of objects that indicates a r
 | PositionEntry             | held at                  | Organization             |
 | PositionEntry             | performs                 | Function                 |
 | Organization              | classified as            | OrganizationType         |
+| Organization              | has nature               | OrganizationNature       |
 | SubsidyEntry              | received from            | Organization             |
 | Income                    | received from            | Organization             |
 | AssetEntry                | classified as            | AssetType                |
@@ -166,9 +171,13 @@ An association is a relationship between instances of objects that indicates a r
 | Citizen                   | submits                  | Complaint                |
 | Complaint                 | targets                  | PoliticalAgent           |
 | Complaint                 | references               | PoliticalFunction        |
+| EthicsCommitteeMember     | performs                 | ComplaintAssessment      |
+| ComplaintAssessment       | assesses                 | Complaint                |
+| ComplaintAssessment       | results in               | ComplaintOutcome         |
 | User                      | generates                | AuditLog                 |
 | Entity                    | classified as            | EntityType               |
 | EntityRelationship        | of type                  | RelationshipType         |
+| EntityRelationship        | inferred as (family)     | FamilyRelationshipType   |
 | EntityRelationship        | connects (entity1)       | Entity                   |
 | EntityRelationship        | connects (entity2)       | Entity                   |
 | ProductOwner              | imports                  | Entity                   |
@@ -196,6 +205,7 @@ Attributes are chosen based on the information that needs to be stored or displa
 | Function                  | designation: String                                                        |
 | Organization              | name: String, nature: String                                               |
 | OrganizationType          | {company, politicalParty, foundation, institute, association}              |
+| OrganizationNature        | {public, private, social}                                                  |
 | SubsidyEntry              | amount: Double, description: String, date: Date                            |
 | Income                    | amount: Double, source: String, date: Date                                 |
 | AssetEntry                | assetValue: Double                                                         |
@@ -214,6 +224,8 @@ Attributes are chosen based on the information that needs to be stored or displa
 | ValidationComment         | comment: String, section: String                                           |
 | Attachment                | fileName: String, uploadDate: Date                                         |
 | Complaint                 | description: String, complaintDate: Date, submissionDate: Date             |
+| ComplaintAssessment       | assessmentDate: Date, reason: String                                       |
+| ComplaintOutcome          | {valid, invalid}                                                           |
 | AuditLog                  | action: String, timestamp: DateTime, details: String                       |
 | Entity                    | id: String, startDate: Date, endDate: Date                                 |
 | EntityType                | {PERSON, ORGANIZATION, POSITION, ASSET}                                    |
@@ -222,7 +234,8 @@ Attributes are chosen based on the information that needs to be stored or displa
 | GraphPosition             | positionTitle: String, positionType: String, organizationId: String        |
 | GraphAsset                | assetType: String, country: String, estimatedValue: Double                 |
 | EntityRelationship        | id: String, startDate: Date, endDate: Date, weight: Double                 |
-| RelationshipType          | {RELATIVE_OF, FRIEND_OF, ASSOCIATED_WITH, APPOINTED_BY, HOLDS_POSITION, IN_ORGANIZATION, MEMBER_OF, INFLUENCES, CONTROLS, PARTNER_OF, SUPERVISES} |
+| RelationshipType          | {RELATIVE_OF, FRIEND_OF, ASSOCIATED_WITH, APPOINTED_BY, HOLDS_POSITION, IN_ORGANIZATION, MEMBER_OF, SUPPORTS, OPPOSES, INFLUENCES, CONTROLS, PARTNER_OF, SUPERVISES, OWNER_OF} |
+| FamilyRelationshipType    | {spouseOf, siblingOf, parentOf, childOf, grandparentOf, grandchildOf}       |
 
 
 ## Domain Model
