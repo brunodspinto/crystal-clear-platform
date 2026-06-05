@@ -5,7 +5,7 @@ skinparam shadowing false
 
 left to right direction
 
-title Use Case Diagram - Sprint 1 & 2
+title Use Case Diagram - Sprint 1, 2 & 3
 
 actor "Future User" as FutureUser
 actor "Administrator" as Admin
@@ -14,6 +14,7 @@ actor "Ethics Committee" as Ethics
 actor "Journalist" as Journalist
 actor "Citizen" as Citizen
 actor "Product Owner" as PO
+actor "User" as User
 
 usecase "UC01 - Request Registration" as US01
 usecase "UC02 - Accept/Reject Registration" as US02
@@ -41,6 +42,17 @@ usecase "UC23 - Detect Indirect Conflicts of Interest" as US23
 usecase "UC24 - Export Declaration Dataset to CSV" as US24
 usecase "UC25 - Export Holdings Dataset to CSV" as US25
 usecase "UC26 - Interact with Graph via Hyperlinks" as US26
+usecase "UC27 - Assess a Complaint" as US27
+usecase "UC28 - Correlate Remuneration with Asset Types" as US28
+usecase "UC29 - Detect Unusual Wealth Accumulation" as US29
+usecase "UC30 - Analyse Regression Residuals" as US30
+usecase "UC31 - Investigate Non-linear Patterns" as US31
+usecase "UC32 - See Network Dynamics Over Time" as US32
+usecase "UC33 - Represent Global Support Adjacency Matrix" as US33
+usecase "UC34 - Verify Pathway Between Entities" as US34
+usecase "UC35 - Analyse Worst-case Complexity" as US35
+usecase "UC36 - Visualise Influence Subnetwork" as US36
+usecase "UC37 - Extract Declarations to CSV (Family Relations)" as US37
 
 FutureUser --> US01
 Admin --> US02
@@ -75,5 +87,19 @@ PO --> US21
 PO --> US24
 PO --> US25
 PO --> US26
+
+Ethics --> US27
+Ethics --> US28
+Ethics --> US29
+Ethics --> US30
+Ethics --> US31
+Ethics --> US34
+
+User --> US32
+
+PO --> US33
+PO --> US35
+PO --> US36
+PO --> US37
 
 @enduml

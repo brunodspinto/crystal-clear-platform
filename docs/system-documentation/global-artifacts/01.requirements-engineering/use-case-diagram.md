@@ -40,3 +40,14 @@ However, be aware, this is a pedagogical simplification. On further projects and
 | US24  | [Export Declaration Dataset to CSV](../US24/US24-README.md)              |
 | US25  | [Export Holdings Dataset to CSV](../US25/US25-README.md)                 |
 | US26  | [Interact with Graph via Hyperlinks](../US26/US26-README.md)             |
+| US27  | [Assess a Complaint](../US27/US27-README.md)                             |
+| US28  | [Correlate Remuneration with Asset Types](../US28/US28-README.md)        |
+| US29  | [Detect Unusual Wealth Accumulation](../US29/US29-README.md)             |
+| US30  | [Analyse Regression Residuals](../US30/US30-README.md)                   |
+| US31  | [Investigate Non-linear Patterns](../US31/US31-README.md)               |
+| US32  | [See Network Dynamics Over Time](../US32/US32-README.md)                 |
+| US33  | [Represent Global Support Adjacency Matrix](../US33/US33-README.md)      |
+| US34  | [Verify Pathway Between Entities](../US34/US34-README.md)                |
+| US35  | [Analyse Worst-case Complexity](../US35/US35-README.md)                  |
+| US36  | [Visualise Influence Subnetwork](../US36/US36-README.md)                 |
+| US37  | [Extract Declarations to CSV (Family Relations)](../US37/US37-README.md) |
