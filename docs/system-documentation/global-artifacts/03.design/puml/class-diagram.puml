@@ -57,8 +57,8 @@ package "pt.ipp.isep.dei.domain" {
         POLITICAL_AGENT
         CITIZEN
         JOURNALIST
+        ETHICS_COMMITTEE
         ADMINISTRATOR
-        ETHICS_COMMITTEE_MEMBER
     }
 
     enum RegistrationStatus <<enumeration>> {
@@ -91,6 +91,24 @@ package "pt.ipp.isep.dei.domain" {
     Citizen "1" -- "0..*" Complaint : submits
     Complaint "0..*" -- "1" PoliticalAgent : targets
     Complaint "0..*" -- "1" PoliticalFunction : references
+
+    ' -- complaint assessment (US27) --------------------------------------
+    class ComplaintAssessment {
+        - assessmentDate
+        - reason
+        + getOutcome()
+        + getReason()
+        + getComplaint()
+    }
+
+    enum ComplaintOutcome <<enumeration>> {
+        VALID
+        INVALID
+    }
+
+    EthicsCommitteeMember "1" -- "0..*" ComplaintAssessment : performs
+    ComplaintAssessment "0..*" -- "1" Complaint : assesses
+    ComplaintAssessment --> ComplaintOutcome : hasOutcome
 
     ' -- declaration aggregate --------------------------------------------
     class Declaration {
@@ -296,7 +314,14 @@ package "pt.ipp.isep.dei.domain" {
         ASSOCIATION
     }
 
+    enum OrganizationNature <<enumeration>> {
+        PUBLIC
+        PRIVATE
+        SOCIAL
+    }
+
     Organization --> OrganizationType : classifiedAs
+    Organization --> OrganizationNature : hasNature
     Organization "1" *-- "0..*" Employee : employs
 
     ' -- utility ----------------------------------------------------------
