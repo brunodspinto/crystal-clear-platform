@@ -236,7 +236,7 @@ public class DeclarationGraphCsvExporter {
             OrgInfo info = new OrgInfo();
             info.id = String.format("O-%03d", nextOrg);
             info.name = o.getName();
-            info.nature = o.getNature();
+            info.nature = o.getNature() == null ? "" : o.getNature().name().toLowerCase();
             info.type = o.getType() == null ? "" : o.getType().name().toLowerCase();
             organizations.put(key, info);
             nextOrg++;

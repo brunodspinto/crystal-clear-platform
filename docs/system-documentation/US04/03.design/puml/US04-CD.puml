@@ -12,7 +12,7 @@ class RegisterOrganizationController {
     + RegisterOrganizationController()
     + getOrganizationTypes() : List<OrganizationType>
     + getOrganizationNatures() : List<OrganizationNature>
-    + registerOrganization(name : String, nature : String, type : OrganizationType) : boolean
+    + registerOrganization(name : String, nature : OrganizationNature, type : OrganizationType) : boolean
 }
 
 class Repositories <<Singleton>> {
@@ -29,10 +29,10 @@ class OrganizationRepository {
 
 class Organization {
     - name : String
-    - nature : String
-    + Organization(name : String, nature : String, type : OrganizationType)
+    - nature : OrganizationNature
+    + Organization(name : String, nature : OrganizationNature, type : OrganizationType)
     + getName() : String
-    + getNature() : String
+    + getNature() : OrganizationNature
     + getType() : OrganizationType
 }
 

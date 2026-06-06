@@ -5,6 +5,7 @@ import org.junit.jupiter.api.io.TempDir;
 import pt.ipp.isep.dei.domain.Citizen;
 import pt.ipp.isep.dei.domain.Complaint;
 import pt.ipp.isep.dei.domain.Organization;
+import pt.ipp.isep.dei.domain.OrganizationNature;
 import pt.ipp.isep.dei.domain.OrganizationType;
 import pt.ipp.isep.dei.domain.PoliticalAgent;
 import pt.ipp.isep.dei.domain.PoliticalFunction;
@@ -36,7 +37,7 @@ class RepositoriesFileTest {
 
         String orgName = "PersistOrg_" + System.nanoTime();
         repos.getOrganizationRepository().save(
-                new Organization(orgName, "private", OrganizationType.COMPANY));
+                new Organization(orgName, OrganizationNature.PRIVATE, OrganizationType.COMPANY));
 
         Citizen citizen = new Citizen("persist_" + System.nanoTime() + "@test.com",
                 "Persist Citizen", "CC999999999");

@@ -88,7 +88,7 @@ public class RegisterOrganizationUI implements Runnable {
      * Submits the collected data to the controller and prints the result.
      */
     private void submitData() {
-        boolean success = controller.registerOrganization(name, selectedNature.toString(), selectedType);
+        boolean success = controller.registerOrganization(name, selectedNature, selectedType);
         if (success) {
             System.out.println("\nOrganization successfully registered!");
         } else {

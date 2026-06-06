@@ -23,7 +23,7 @@ class ExportDeclarationCsvControllerTest {
     }
 
     private Organization createOrg() {
-        return new Organization("Parliament", "public", OrganizationType.POLITICAL_PARTY);
+        return new Organization("Parliament", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY);
     }
 
     private Declaration createValidatedDeclaration(String tin) {

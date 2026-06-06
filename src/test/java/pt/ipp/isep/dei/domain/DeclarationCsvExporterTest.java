@@ -23,7 +23,7 @@ class DeclarationCsvExporterTest {
     }
 
     private Organization createOrg(String name) {
-        return new Organization(name, "public", OrganizationType.POLITICAL_PARTY);
+        return new Organization(name, OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY);
     }
 
     private Declaration createTestDeclaration() {

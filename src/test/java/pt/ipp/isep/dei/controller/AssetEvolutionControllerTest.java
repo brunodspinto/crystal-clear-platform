@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AssetEvolutionControllerTest {
 
     private static final Organization ORG =
-            new Organization("Parliament", "public", OrganizationType.POLITICAL_PARTY);
+            new Organization("Parliament", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY);
 
     private static Date dateOf(int year, int month, int day) {
         Calendar c = Calendar.getInstance();

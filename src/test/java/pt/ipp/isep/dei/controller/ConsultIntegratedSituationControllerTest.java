@@ -5,6 +5,7 @@ import pt.ipp.isep.dei.domain.Declaration;
 import pt.ipp.isep.dei.domain.DeclarationStatus;
 import pt.ipp.isep.dei.domain.DeclarationType;
 import pt.ipp.isep.dei.domain.Organization;
+import pt.ipp.isep.dei.domain.OrganizationNature;
 import pt.ipp.isep.dei.domain.OrganizationType;
 import pt.ipp.isep.dei.domain.PoliticalAgent;
 import pt.ipp.isep.dei.domain.PositionNature;
@@ -197,7 +198,7 @@ class ConsultIntegratedSituationControllerTest {
         DeclarationRepository declRepo = new DeclarationRepository();
 
         Declaration d = new Declaration(DeclarationType.REGULAR, joao, date(2024, Calendar.MARCH, 1));
-        Organization org = new Organization("Acme Lda", "Private",
+        Organization org = new Organization("Acme Lda", OrganizationNature.PRIVATE,
                 OrganizationType.COMPANY);
         d.addPositionEntry(org, "Director", PositionNature.PUBLIC,
                 50000.0, 0.0, 0.0,

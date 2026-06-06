@@ -11,7 +11,7 @@ class SubsidyEntryTest {
     private static final Date DATE = new Date();
 
     private Organization org() {
-        return new Organization("Foundation", "public", OrganizationType.FOUNDATION);
+        return new Organization("Foundation", OrganizationNature.PUBLIC, OrganizationType.FOUNDATION);
     }
 
     // -------------------------------------------------------------------------

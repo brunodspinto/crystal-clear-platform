@@ -12,7 +12,7 @@ class PositionEntryTest {
     private static final Date END   = new Date(9000000L);
 
     private Organization org() {
-        return new Organization("Assembleia", "public", OrganizationType.POLITICAL_PARTY);
+        return new Organization("Assembleia", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY);
     }
 
     // -------------------------------------------------------------------------

@@ -2,6 +2,7 @@ package pt.ipp.isep.dei.controller;
 
 import org.junit.jupiter.api.Test;
 import pt.ipp.isep.dei.domain.Organization;
+import pt.ipp.isep.dei.domain.OrganizationNature;
 import pt.ipp.isep.dei.domain.OrganizationType;
 import pt.ipp.isep.dei.repository.OrganizationRepository;
 
@@ -27,7 +28,7 @@ class ListOrganizationsControllerTest {
     @Test
     void ensureOrganizationAppearsInCorrectGroup() {
         OrganizationRepository repo = new OrganizationRepository();
-        repo.save(new Organization("Parliament", "public", OrganizationType.INSTITUTE));
+        repo.save(new Organization("Parliament", OrganizationNature.PUBLIC, OrganizationType.INSTITUTE));
         ListOrganizationsController controller = new ListOrganizationsController(repo);
 
         Map<OrganizationType, List<Organization>> result = controller.getOrganizationsGroupedByType();
@@ -39,9 +40,9 @@ class ListOrganizationsControllerTest {
     @Test
     void ensureOrganizationsAreSortedAlphabeticallyWithinGroup() {
         OrganizationRepository repo = new OrganizationRepository();
-        repo.save(new Organization("Zebra Party", "public", OrganizationType.POLITICAL_PARTY));
-        repo.save(new Organization("Alpha Party", "public", OrganizationType.POLITICAL_PARTY));
-        repo.save(new Organization("Mango Party", "public", OrganizationType.POLITICAL_PARTY));
+        repo.save(new Organization("Zebra Party", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY));
+        repo.save(new Organization("Alpha Party", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY));
+        repo.save(new Organization("Mango Party", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY));
         ListOrganizationsController controller = new ListOrganizationsController(repo);
 
         List<Organization> parties = controller.getOrganizationsGroupedByType().get(OrganizationType.POLITICAL_PARTY);
@@ -54,8 +55,8 @@ class ListOrganizationsControllerTest {
     @Test
     void ensureOrganizationsOfDifferentTypesAreInSeparateGroups() {
         OrganizationRepository repo = new OrganizationRepository();
-        repo.save(new Organization("Tech Corp", "private", OrganizationType.COMPANY));
-        repo.save(new Organization("Green Foundation", "social", OrganizationType.FOUNDATION));
+        repo.save(new Organization("Tech Corp", OrganizationNature.PRIVATE, OrganizationType.COMPANY));
+        repo.save(new Organization("Green Foundation", OrganizationNature.SOCIAL, OrganizationType.FOUNDATION));
         ListOrganizationsController controller = new ListOrganizationsController(repo);
 
         Map<OrganizationType, List<Organization>> result = controller.getOrganizationsGroupedByType();
@@ -81,8 +82,8 @@ class ListOrganizationsControllerTest {
     @Test
     void ensureSortingIsCaseInsensitive() {
         OrganizationRepository repo = new OrganizationRepository();
-        repo.save(new Organization("zebra Assoc", "social", OrganizationType.ASSOCIATION));
-        repo.save(new Organization("Alpha Assoc", "social", OrganizationType.ASSOCIATION));
+        repo.save(new Organization("zebra Assoc", OrganizationNature.SOCIAL, OrganizationType.ASSOCIATION));
+        repo.save(new Organization("Alpha Assoc", OrganizationNature.SOCIAL, OrganizationType.ASSOCIATION));
         ListOrganizationsController controller = new ListOrganizationsController(repo);
 
         List<Organization> assocs = controller.getOrganizationsGroupedByType().get(OrganizationType.ASSOCIATION);

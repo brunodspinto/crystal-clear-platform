@@ -160,28 +160,28 @@ class OrganizationTest {
 
     @Test
     void ensureOrganizationUS04CreationWorks() {
-        Organization org = new Organization("Test Org", "private", OrganizationType.COMPANY);
+        Organization org = new Organization("Test Org", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
         assertEquals("Test Org", org.getName());
         assertEquals(OrganizationType.COMPANY, org.getType());
-        assertEquals("private", org.getNature());
+        assertEquals(OrganizationNature.PRIVATE, org.getNature());
     }
 
     @Test
     void ensureOrganizationUS04CreationFailsWithNullName() {
         assertThrows(IllegalArgumentException.class, () ->
-                new Organization(null, "nature", OrganizationType.COMPANY));
+                new Organization(null, OrganizationNature.PUBLIC, OrganizationType.COMPANY));
     }
 
     @Test
     void ensureOrganizationUS04CreationFailsWithBlankName() {
         assertThrows(IllegalArgumentException.class, () ->
-                new Organization("   ", "nature", OrganizationType.COMPANY));
+                new Organization("   ", OrganizationNature.PUBLIC, OrganizationType.COMPANY));
     }
 
     @Test
     void ensureOrganizationUS04CreationFailsWithNullType() {
         assertThrows(IllegalArgumentException.class, () ->
-                new Organization("Test Org", "nature", null));
+                new Organization("Test Org", OrganizationNature.PUBLIC, null));
     }
 
     @Test
@@ -191,14 +191,8 @@ class OrganizationTest {
     }
 
     @Test
-    void ensureOrganizationUS04CreationFailsWithBlankNature() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Organization("Test Org", "   ", OrganizationType.FOUNDATION));
-    }
-
-    @Test
     void ensureOrganizationUS04CloneWorks() {
-        Organization org = new Organization("Test Org", "social", OrganizationType.FOUNDATION);
+        Organization org = new Organization("Test Org", OrganizationNature.SOCIAL, OrganizationType.FOUNDATION);
         Organization clone = org.clone();
         assertEquals(org.getName(), clone.getName());
         assertEquals(org.getType(), clone.getType());

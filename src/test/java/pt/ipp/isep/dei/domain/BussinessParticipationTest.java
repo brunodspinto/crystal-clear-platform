@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BusinessParticipationTest {
 
     private Organization org() {
-        return new Organization("LusoTech SA", "private", OrganizationType.COMPANY);
+        return new Organization("LusoTech SA", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
     }
 
     // -------------------------------------------------------------------------

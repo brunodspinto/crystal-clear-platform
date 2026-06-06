@@ -18,7 +18,7 @@ public class Organization implements Serializable {
     private String phone;
     private String email;
     private OrganizationType type;
-    private String nature;
+    private OrganizationNature nature;
 
     /**
      * Constructor for US04 — registers an organization with a name, nature and type.
@@ -28,12 +28,12 @@ public class Organization implements Serializable {
      * @param nature the nature
      * @param type   the type
      */
-    public Organization(String name, String nature, OrganizationType type) {
+    public Organization(String name, OrganizationNature nature, OrganizationType type) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Name cannot be null or empty");
         }
-        if (nature == null || nature.isBlank()) {
-            throw new IllegalArgumentException("Nature cannot be null or empty");
+        if (nature == null) {
+            throw new IllegalArgumentException("Nature cannot be null");
         }
         if (type == null) {
             throw new IllegalArgumentException("Type cannot be null");
@@ -93,11 +93,11 @@ public class Organization implements Serializable {
     }
 
     /**
-     * Returns the legal nature of the organization (e.g. "public", "private", "social").
+     * Returns the legal nature of the organization (public, private or social).
      *
      * @return the nature of the organization.
      */
-    public String getNature() {
+    public OrganizationNature getNature() {
         return nature;
     }
 
@@ -106,7 +106,7 @@ public class Organization implements Serializable {
      *
      * @param nature the nature to set.
      */
-    public void setNature(String nature) {
+    public void setNature(OrganizationNature nature) {
         this.nature = nature;
     }
 
@@ -341,7 +341,7 @@ public class Organization implements Serializable {
     /**
      * Private constructor for cloning US04 organizations, preserving the original vatNumber.
      */
-    private Organization(String vatNumber, String name, String nature, OrganizationType type) {
+    private Organization(String vatNumber, String name, OrganizationNature nature, OrganizationType type) {
         this.vatNumber = vatNumber;
         this.name = name;
         this.nature = nature;

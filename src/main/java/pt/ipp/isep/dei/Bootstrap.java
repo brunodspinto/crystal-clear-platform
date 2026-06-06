@@ -51,9 +51,9 @@ public class Bootstrap implements Runnable {
      */
     private void addUS04Organizations() {
         OrganizationRepository orgRepo = Repositories.getInstance().getOrganizationRepository();
-        orgRepo.save(new Organization("PartyX", "public", OrganizationType.POLITICAL_PARTY));
-        orgRepo.save(new Organization("TechCorp", "private", OrganizationType.COMPANY));
-        orgRepo.save(new Organization("GreenFoundation", "social", OrganizationType.FOUNDATION));
+        orgRepo.save(new Organization("PartyX", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY));
+        orgRepo.save(new Organization("TechCorp", OrganizationNature.PRIVATE, OrganizationType.COMPANY));
+        orgRepo.save(new Organization("GreenFoundation", OrganizationNature.SOCIAL, OrganizationType.FOUNDATION));
     }
 
     private void addPoliticalAgents() {
@@ -103,16 +103,16 @@ public class Bootstrap implements Runnable {
 
         PoliticalAgent agent = new PoliticalAgent("António Félix", "antonio@gov.pt",
                 "12345678", "123456789", new Date(), null);
-        Organization parliament = new Organization("Parliament", "public", OrganizationType.POLITICAL_PARTY);
+        Organization parliament = new Organization("Parliament", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY);
 
         Declaration d = new Declaration(DeclarationType.INITIAL, agent, new Date());
         d.addPositionEntry(parliament, "Deputy", PositionNature.PUBLIC,
                 60000.0, 5000.0, 2000.0, new Date(), null);
         d.addAssetEntry(AssetType.REAL_ESTATE, 250000.0, new RealEstate("Apartment", "Lisbon"));
         d.addAssetEntry(AssetType.VEHICLES, 25000.0, new VehicleAsset("Toyota Corolla"));
-        Organization techCorp = new Organization("TechCorp", "private", OrganizationType.COMPANY);
+        Organization techCorp = new Organization("TechCorp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
         d.addBusinessParticipation(techCorp, 500000001L, 15000.0, 10.5);
-        Organization greenFund = new Organization("GreenFund", "social", OrganizationType.FOUNDATION);
+        Organization greenFund = new Organization("GreenFund", OrganizationNature.SOCIAL, OrganizationType.FOUNDATION);
         d.addBusinessParticipation(greenFund, 600000002L, 8000.0, 5.0);
         d.setStatus(DeclarationStatus.VALIDATED);
         declarationRepo.save(d);
@@ -127,7 +127,7 @@ public class Bootstrap implements Runnable {
         DeclarationRepository declRepo = Repositories.getInstance().getDeclarationRepository();
 
         PoliticalAgent agent = agentRepo.getAll().get(0);
-        Organization parliament = new Organization("Parliament", "public", OrganizationType.POLITICAL_PARTY);
+        Organization parliament = new Organization("Parliament", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY);
 
         Declaration d2023 = new Declaration(DeclarationType.REGULAR, agent, dateOf(2023, Calendar.MARCH, 15));
         d2023.addPositionEntry(parliament, "Deputy", PositionNature.PUBLIC,

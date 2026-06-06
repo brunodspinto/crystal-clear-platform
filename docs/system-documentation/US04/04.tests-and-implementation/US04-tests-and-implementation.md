@@ -65,15 +65,7 @@
                 new Organization("Test Org", null, OrganizationType.FOUNDATION));
     }
 
-**Test 8:** Check that it is not possible to create an Organization with a blank nature — AC4.
-
-    @Test
-    void ensureOrganizationUS04CreationFailsWithBlankNature() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Organization("Test Org", "   ", OrganizationType.FOUNDATION));
-    }
-
-**Test 9:** Check that the controller provides all predefined organization natures for the Administrator to select from — AC4.
+**Test 8:** Check that the controller provides all predefined organization natures for the Administrator to select from — AC4.
 
     @Test
     void ensureGetOrganizationNaturesReturnsAllValues() {
@@ -83,7 +75,7 @@
                 controller.getOrganizationNatures().size());
     }
 
-**Test 10:** Check that the controller provides all predefined organization types for the Administrator to select from — AC2.
+**Test 9:** Check that the controller provides all predefined organization types for the Administrator to select from — AC2.
 
     @Test
     void ensureGetOrganizationTypesReturnsAllValues() {
@@ -101,7 +93,7 @@
 ### Class RegisterOrganizationController
 
 ```java
-public boolean registerOrganization(String name, String nature, OrganizationType type) {
+public boolean registerOrganization(String name, OrganizationNature nature, OrganizationType type) {
     if (organizationRepository.existsByNameAndType(name, type)) {
         return false;
     }
@@ -113,12 +105,12 @@ public boolean registerOrganization(String name, String nature, OrganizationType
 ### Class Organization (US04 constructor)
 
 ```java
-public Organization(String name, String nature, OrganizationType type) {
+public Organization(String name, OrganizationNature nature, OrganizationType type) {
     if (name == null || name.isBlank()) {
         throw new IllegalArgumentException("Name cannot be null or empty");
     }
-    if (nature == null || nature.isBlank()) {
-        throw new IllegalArgumentException("Nature cannot be null or empty");
+    if (nature == null) {
+        throw new IllegalArgumentException("Nature cannot be null");
     }
     if (type == null) {
         throw new IllegalArgumentException("Type cannot be null");
@@ -200,7 +192,7 @@ private OrganizationNature displayAndSelectOrganizationNature() {
     List<OrganizationNature> natures = controller.getOrganizationNatures();
     return (OrganizationNature) Utils.showAndSelectOne(natures, "Select the organization nature:");
 }
-// the selected nature's label is passed to registerOrganization(...)
+// the selected OrganizationNature (enum) is passed to registerOrganization(...)
 ```
 
 
@@ -213,7 +205,7 @@ private OrganizationNature displayAndSelectOrganizationNature() {
 
 ## 7. Observations
 
-* The `nature` field indicates the legal nature of the organization. At the UI level it is selected from the predefined `OrganizationNature` enum (`PUBLIC`, `PRIVATE`, `SOCIAL`) via `RegisterOrganizationController.getOrganizationNatures()` (AC4); the selected label is then passed to the `Organization` constructor, which still validates it as non-null/non-blank as a defensive measure.
+* The `nature` field indicates the legal nature of the organization and is stored as the `OrganizationNature` enum (not a free-text String). It is selected from the predefined values (`PUBLIC`, `PRIVATE`, `SOCIAL`) via `RegisterOrganizationController.getOrganizationNatures()` (AC4); the selected `OrganizationNature` is passed to the `Organization` constructor, which validates it as non-null. Using the enum end-to-end (instead of a String) prevents invalid values and keeps it consistent with `OrganizationType`.
 * The internal `vatNumber` is generated using a static counter (`"GEN-" + nextGeneratedVat`) when using the US04 constructor, since this use case does not require a VAT number.
 * To support the object-serialization persistence requirement, `Organization` and `OrganizationRepository` implement `java.io.Serializable` (the `OrganizationType` and `OrganizationNature` enums are serializable by default), so they can be persisted together with the `Repositories` singleton.
 * The persistence itself is performed by `RepositoriesFile` (object serialization to a binary file, following the PPROG pattern): the `Repositories` singleton is loaded on startup and saved on exit by both entry points (`Main` for the console and `App` for the GUI). As a result, registered organizations survive between two successive runs.

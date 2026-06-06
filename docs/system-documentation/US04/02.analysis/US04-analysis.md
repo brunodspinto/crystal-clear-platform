@@ -19,4 +19,4 @@ Using enums for `OrganizationType` and `OrganizationNature` rather than free-tex
 ### 2.2. Other Remarks
 
 * The `OrganizationType` enum is shared across US03 (listing), US04 (registration), and US06 (declaration submission), ensuring consistency throughout the domain model.
-* The `OrganizationNature` enum (`PUBLIC`, `PRIVATE`, `SOCIAL`) is selected by the Administrator at registration time; its label is the value stored in the `Organization`. This mirrors the `PositionNature` enum already used for declaration positions.
+* The `OrganizationNature` enum (`PUBLIC`, `PRIVATE`, `SOCIAL`) is selected by the Administrator at registration time and the enum value itself is stored in the `Organization` (the `nature` attribute is of type `OrganizationNature`, not a String). This mirrors the `PositionNature` enum already used for declaration positions.

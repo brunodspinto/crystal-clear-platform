@@ -55,7 +55,7 @@ public class RegisterOrganizationFXController implements Initializable {
 
         boolean registered;
         try {
-            registered = controller.registerOrganization(name, nature.toString(), type);
+            registered = controller.registerOrganization(name, nature, type);
         } catch (IllegalArgumentException ex) {
             showError(ex.getMessage());
             return;

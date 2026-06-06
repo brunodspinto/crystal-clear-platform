@@ -35,7 +35,7 @@ class SubmitDeclarationControllerTest {
         orgRepo = new OrganizationRepository();
         declRepo = new DeclarationRepository();
         agentRepo = new PoliticalAgentRepository();
-        parliament = new Organization("Assembleia", "public", OrganizationType.POLITICAL_PARTY);
+        parliament = new Organization("Assembleia", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY);
         orgRepo.add(parliament);
         agent = new PoliticalAgent("Ana Costa", "ana@gov.pt",
                 "11111111", "111111111", NOW, null);
@@ -88,7 +88,7 @@ class SubmitDeclarationControllerTest {
 
     @Test
     void ensureGetOrganizationsReflectsMultipleEntries() {
-        orgRepo.add(new Organization("Senate", "public", OrganizationType.INSTITUTE));
+        orgRepo.add(new Organization("Senate", OrganizationNature.PUBLIC, OrganizationType.INSTITUTE));
         assertEquals(2, ctrl().getOrganizations().size());
     }
 

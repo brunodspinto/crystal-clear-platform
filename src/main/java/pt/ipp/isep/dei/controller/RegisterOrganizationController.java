@@ -53,11 +53,11 @@ public class RegisterOrganizationController {
      * Registers a new organization if no duplicate exists with the same name and type.
      *
      * @param name   the name of the organization.
-     * @param nature the legal nature (e.g. "public", "private", "social").
+     * @param nature the legal nature (public, private or social).
      * @param type   the type of the organization.
      * @return {@code true} if registered successfully, {@code false} if a duplicate exists.
      */
-    public boolean registerOrganization(String name, String nature, OrganizationType type) {
+    public boolean registerOrganization(String name, OrganizationNature nature, OrganizationType type) {
         if (organizationRepository.existsByNameAndType(name, type)) {
             return false;
         }

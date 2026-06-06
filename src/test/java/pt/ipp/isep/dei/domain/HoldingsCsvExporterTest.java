@@ -24,7 +24,7 @@ class HoldingsCsvExporterTest {
     }
 
     private Organization createOrg(String name) {
-        return new Organization(name, "private", OrganizationType.COMPANY);
+        return new Organization(name, OrganizationNature.PRIVATE, OrganizationType.COMPANY);
     }
 
     private Declaration createValidatedDeclaration(String tin) {

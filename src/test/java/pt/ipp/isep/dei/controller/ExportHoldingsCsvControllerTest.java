@@ -7,6 +7,7 @@ import pt.ipp.isep.dei.domain.Declaration;
 import pt.ipp.isep.dei.domain.DeclarationStatus;
 import pt.ipp.isep.dei.domain.DeclarationType;
 import pt.ipp.isep.dei.domain.Organization;
+import pt.ipp.isep.dei.domain.OrganizationNature;
 import pt.ipp.isep.dei.domain.OrganizationType;
 import pt.ipp.isep.dei.domain.PoliticalAgent;
 import pt.ipp.isep.dei.repository.DeclarationRepository;
@@ -38,7 +39,7 @@ class ExportHoldingsCsvControllerTest {
     }
 
     private Organization createOrg(String name) {
-        return new Organization(name, "private", OrganizationType.COMPANY);
+        return new Organization(name, OrganizationNature.PRIVATE, OrganizationType.COMPANY);
     }
 
     private Declaration createValidatedDeclaration(String tin) {

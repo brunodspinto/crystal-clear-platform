@@ -48,7 +48,7 @@ class RegisterOrganizationControllerTest {
         RegisterOrganizationController controller =
                 new RegisterOrganizationController(new OrganizationRepository());
 
-        boolean result = controller.registerOrganization("ACME Corp", "private", OrganizationType.COMPANY);
+        boolean result = controller.registerOrganization("ACME Corp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
 
         assertTrue(result);
     }
@@ -58,8 +58,8 @@ class RegisterOrganizationControllerTest {
         OrganizationRepository repo = new OrganizationRepository();
         RegisterOrganizationController controller = new RegisterOrganizationController(repo);
 
-        controller.registerOrganization("ACME Corp", "private", OrganizationType.COMPANY);
-        boolean second = controller.registerOrganization("ACME Corp", "public", OrganizationType.COMPANY);
+        controller.registerOrganization("ACME Corp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
+        boolean second = controller.registerOrganization("ACME Corp", OrganizationNature.PUBLIC, OrganizationType.COMPANY);
 
         assertFalse(second);
     }
@@ -69,8 +69,8 @@ class RegisterOrganizationControllerTest {
         OrganizationRepository repo = new OrganizationRepository();
         RegisterOrganizationController controller = new RegisterOrganizationController(repo);
 
-        controller.registerOrganization("ACME Corp", "private", OrganizationType.COMPANY);
-        boolean second = controller.registerOrganization("ACME Corp", "social", OrganizationType.FOUNDATION);
+        controller.registerOrganization("ACME Corp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
+        boolean second = controller.registerOrganization("ACME Corp", OrganizationNature.SOCIAL, OrganizationType.FOUNDATION);
 
         assertTrue(second);
     }
@@ -80,8 +80,8 @@ class RegisterOrganizationControllerTest {
         OrganizationRepository repo = new OrganizationRepository();
         RegisterOrganizationController controller = new RegisterOrganizationController(repo);
 
-        controller.registerOrganization("ACME Corp", "private", OrganizationType.COMPANY);
-        boolean second = controller.registerOrganization("acme corp", "public", OrganizationType.COMPANY);
+        controller.registerOrganization("ACME Corp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
+        boolean second = controller.registerOrganization("acme corp", OrganizationNature.PUBLIC, OrganizationType.COMPANY);
 
         assertFalse(second);
     }
@@ -92,7 +92,7 @@ class RegisterOrganizationControllerTest {
                 new RegisterOrganizationController(new OrganizationRepository());
 
         assertThrows(IllegalArgumentException.class, () ->
-                controller.registerOrganization(null, "private", OrganizationType.COMPANY));
+                controller.registerOrganization(null, OrganizationNature.PRIVATE, OrganizationType.COMPANY));
     }
 
     @Test
@@ -101,6 +101,6 @@ class RegisterOrganizationControllerTest {
                 new RegisterOrganizationController(new OrganizationRepository());
 
         assertThrows(IllegalArgumentException.class, () ->
-                controller.registerOrganization("ACME Corp", "private", null));
+                controller.registerOrganization("ACME Corp", OrganizationNature.PRIVATE, null));
     }
 }

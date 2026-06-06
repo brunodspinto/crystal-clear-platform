@@ -20,7 +20,7 @@ class ValidationRecordTest {
                 "12345678", "123456789", NOW, null);
         Declaration d = new Declaration(DeclarationType.INITIAL, agent, NOW);
         d.addPositionEntry(
-                new Organization("TechCorp", "private", OrganizationType.COMPANY),
+                new Organization("TechCorp", OrganizationNature.PRIVATE, OrganizationType.COMPANY),
                 "Director", PositionNature.PUBLIC,
                 50000, 0, 0, NOW, null);
         return d;

@@ -15,7 +15,7 @@ class DeclarationTest {
     }
 
     private Organization createOrg() {
-        return new Organization("TechCorp", "private", OrganizationType.COMPANY);
+        return new Organization("TechCorp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
     }
 
     private String createFunction() {
@@ -267,7 +267,7 @@ class DeclarationTest {
     }
 
     private Organization org() {
-        return new Organization("TechCorp", "private", OrganizationType.COMPANY);
+        return new Organization("TechCorp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
     }
 
     private Declaration declaration() {

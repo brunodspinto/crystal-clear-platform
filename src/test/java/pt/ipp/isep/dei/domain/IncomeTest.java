@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class IncomeTest {
 
     private Organization createOrg() {
-        return new Organization("TechCorp", "private", OrganizationType.COMPANY);
+        return new Organization("TechCorp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
     }
 
     @Test

@@ -17,7 +17,7 @@ class DeclarationRepositoryTest {
                 "12345678", "123456789", new Date(), null);
         Declaration d = new Declaration(type, agent, new Date());
         d.addPositionEntry(
-                new Organization("TechCorp", "private", OrganizationType.COMPANY),
+                new Organization("TechCorp", OrganizationNature.PRIVATE, OrganizationType.COMPANY),
                 "Director",
                 PositionNature.PUBLIC,
                 50000, 0, 0, new Date(), null);
@@ -133,7 +133,7 @@ class DeclarationRepositoryTest {
     @BeforeEach
     void setUp() {
         repo   = new DeclarationRepository();
-        org    = new Organization("Parlamento", "public", OrganizationType.POLITICAL_PARTY);
+        org    = new Organization("Parlamento", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY);
         agentA = new PoliticalAgent("Ana Costa", "ana@gov.pt",
                 "11111111", "111111111", JAN, null);
         agentB = new PoliticalAgent("Rui Pinto", "rui@gov.pt",
