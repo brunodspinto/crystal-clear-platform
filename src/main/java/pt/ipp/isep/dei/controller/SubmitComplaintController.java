@@ -72,8 +72,8 @@ public class SubmitComplaintController {
     }
 
     /**
-     * Submits a complaint on behalf of the currently logged-in citizen.
-     * The citizen's identity is retrieved from the active session.
+     * Submits a complaint with a single grievance on behalf of the currently
+     * logged-in citizen. The citizen's identity is retrieved from the active session.
      *
      * @param description       a description of the reported behaviour.
      * @param complaintDate     the date when the behaviour occurred.
@@ -90,6 +90,53 @@ public class SubmitComplaintController {
         }
         Complaint complaint = new Complaint(description, complaintDate, citizen,
                 politicalAgent, politicalFunction);
+        return complaintRepository.save(complaint);
+    }
+
+    /**
+     * Starts a new (empty) complaint about a political agent, on behalf of the
+     * currently logged-in citizen. Grievances are then added with
+     * {@link #addGrievance(Complaint, String, Date, PoliticalFunction)} and the
+     * complaint is persisted with {@link #saveComplaint(Complaint)}.
+     *
+     * @param politicalAgent the political agent the complaint is about.
+     * @return the new {@link Complaint}, or {@code null} if the citizen was not found.
+     */
+    public Complaint createComplaint(PoliticalAgent politicalAgent) {
+        Email email = authenticationRepository.getCurrentUserSession().getUserId();
+        Citizen citizen = citizenRepository.getCitizenByEmail(email.getEmail());
+        if (citizen == null) {
+            return null;
+        }
+        return new Complaint(citizen, politicalAgent);
+    }
+
+    /**
+     * Adds a grievance to an existing complaint. All grievances of the same
+     * complaint refer to the same political agent.
+     *
+     * @param complaint         the complaint to add the grievance to.
+     * @param description       a description of the reported behaviour.
+     * @param complaintDate     the date when the behaviour occurred.
+     * @param politicalFunction the function the agent held at the time.
+     * @throws IllegalArgumentException if the grievance data is invalid.
+     */
+    public void addGrievance(Complaint complaint, String description, Date complaintDate,
+                             PoliticalFunction politicalFunction) {
+        complaint.addItem(description, complaintDate, politicalFunction);
+    }
+
+    /**
+     * Persists a complaint that has at least one grievance.
+     *
+     * @param complaint the complaint to save.
+     * @return {@code true} if the complaint was saved; {@code false} if it is
+     *         {@code null} or has no grievances.
+     */
+    public boolean saveComplaint(Complaint complaint) {
+        if (complaint == null || complaint.getItemCount() == 0) {
+            return false;
+        }
         return complaintRepository.save(complaint);
     }
 }

@@ -113,4 +113,99 @@ class ComplaintTest {
         assertEquals(agent, complaint.getPoliticalAgent());
         assertEquals(PoliticalFunction.MINISTER, complaint.getPoliticalFunction());
     }
+
+    // --- multiple grievances --------------------------------------------------
+
+    @Test
+    void ensureSingleGrievanceConstructorCreatesOneItem() {
+        Citizen citizen = createTestCitizen();
+        PoliticalAgent agent = createTestAgent();
+        Complaint complaint = new Complaint("First", PAST_DATE, citizen, agent, PoliticalFunction.MAYOR);
+
+        assertEquals(1, complaint.getItemCount());
+        assertEquals(1, complaint.getItems().size());
+    }
+
+    @Test
+    void ensureEmptyComplaintConstructorWorks() {
+        Citizen citizen = createTestCitizen();
+        PoliticalAgent agent = createTestAgent();
+        Complaint complaint = new Complaint(citizen, agent);
+
+        assertEquals(0, complaint.getItemCount());
+        assertTrue(complaint.getItems().isEmpty());
+        assertEquals(citizen, complaint.getCitizen());
+        assertEquals(agent, complaint.getPoliticalAgent());
+    }
+
+    @Test
+    void ensureEmptyComplaintConstructorFailsWithNullCitizen() {
+        PoliticalAgent agent = createTestAgent();
+        assertThrows(IllegalArgumentException.class, () -> new Complaint(null, agent));
+    }
+
+    @Test
+    void ensureEmptyComplaintConstructorFailsWithNullAgent() {
+        Citizen citizen = createTestCitizen();
+        assertThrows(IllegalArgumentException.class, () -> new Complaint(citizen, null));
+    }
+
+    @Test
+    void ensureAddItemGrowsTheComplaint() {
+        Citizen citizen = createTestCitizen();
+        PoliticalAgent agent = createTestAgent();
+        Complaint complaint = new Complaint(citizen, agent);
+
+        complaint.addItem("First grievance", PAST_DATE, PoliticalFunction.MAYOR);
+        complaint.addItem("Second grievance", PAST_DATE, PoliticalFunction.DEPUTY);
+
+        assertEquals(2, complaint.getItemCount());
+        assertEquals("First grievance", complaint.getItems().get(0).getDescription());
+        assertEquals(PoliticalFunction.DEPUTY, complaint.getItems().get(1).getPoliticalFunction());
+    }
+
+    @Test
+    void ensureBackwardGettersReturnFirstGrievance() {
+        Citizen citizen = createTestCitizen();
+        PoliticalAgent agent = createTestAgent();
+        Complaint complaint = new Complaint(citizen, agent);
+
+        complaint.addItem("First grievance", PAST_DATE, PoliticalFunction.MINISTER);
+        complaint.addItem("Second grievance", PAST_DATE, PoliticalFunction.MAYOR);
+
+        assertEquals("First grievance", complaint.getDescription());
+        assertEquals(PoliticalFunction.MINISTER, complaint.getPoliticalFunction());
+        assertEquals(PAST_DATE, complaint.getComplaintDate());
+    }
+
+    @Test
+    void ensureBackwardGettersReturnNullWhenEmpty() {
+        Citizen citizen = createTestCitizen();
+        PoliticalAgent agent = createTestAgent();
+        Complaint complaint = new Complaint(citizen, agent);
+
+        assertNull(complaint.getDescription());
+        assertNull(complaint.getComplaintDate());
+        assertNull(complaint.getPoliticalFunction());
+    }
+
+    @Test
+    void ensureGetItemsIsUnmodifiable() {
+        Citizen citizen = createTestCitizen();
+        PoliticalAgent agent = createTestAgent();
+        Complaint complaint = new Complaint("Only grievance", PAST_DATE, citizen, agent, PoliticalFunction.MAYOR);
+
+        assertThrows(UnsupportedOperationException.class, () ->
+                complaint.getItems().add(new ComplaintItem("x", PAST_DATE, PoliticalFunction.DEPUTY)));
+    }
+
+    @Test
+    void ensureAddItemFailsWithInvalidGrievance() {
+        Citizen citizen = createTestCitizen();
+        PoliticalAgent agent = createTestAgent();
+        Complaint complaint = new Complaint(citizen, agent);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                complaint.addItem(null, PAST_DATE, PoliticalFunction.MAYOR));
+    }
 }

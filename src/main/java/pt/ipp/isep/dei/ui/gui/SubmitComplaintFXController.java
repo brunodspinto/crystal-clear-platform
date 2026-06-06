@@ -6,9 +6,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.util.StringConverter;
 import pt.ipp.isep.dei.controller.SubmitComplaintController;
+import pt.ipp.isep.dei.domain.Complaint;
+import pt.ipp.isep.dei.domain.ComplaintItem;
 import pt.ipp.isep.dei.domain.PoliticalAgent;
 import pt.ipp.isep.dei.domain.PoliticalFunction;
 
@@ -20,9 +23,12 @@ import java.util.ResourceBundle;
 
 /**
  * GUI controller for submitting a complaint about a political agent (US12).
- * The citizen picks the agent and the function held at the time, writes a
- * description, chooses the date of the behaviour, and submits. The logged-in
- * citizen is taken from the active session by the controller.
+ * A complaint targets a single political agent but may contain several
+ * grievances. The citizen picks the agent, then adds one or more grievances
+ * (function held at the time, description and date); the agent is locked after
+ * the first grievance is added. The whole complaint is persisted once, when the
+ * citizen presses "Submit complaint". The logged-in citizen is taken from the
+ * active session by the controller.
  */
 public class SubmitComplaintFXController implements Initializable {
 
@@ -30,10 +36,12 @@ public class SubmitComplaintFXController implements Initializable {
     @FXML private ComboBox<PoliticalFunction> functionCombo;
     @FXML private DatePicker datePicker;
     @FXML private TextArea descriptionArea;
+    @FXML private ListView<ComplaintItem> grievancesList;
     @FXML private Label messageLabel;
 
     private MainController mainController;
     private final SubmitComplaintController controller = new SubmitComplaintController();
+    private Complaint currentComplaint;
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
@@ -48,13 +56,12 @@ public class SubmitComplaintFXController implements Initializable {
         });
 
         functionCombo.setItems(FXCollections.observableArrayList(controller.getPoliticalFunctions()));
-        messageLabel.setText("");
+        clearMessage();
     }
 
     @FXML
-    private void handleSubmit() {
-        messageLabel.setStyle("-fx-text-fill: red;");
-        messageLabel.setText("");
+    private void handleAddGrievance() {
+        clearMessage();
 
         PoliticalAgent agent = agentCombo.getValue();
         PoliticalFunction function = functionCombo.getValue();
@@ -62,33 +69,55 @@ public class SubmitComplaintFXController implements Initializable {
         String description = descriptionArea.getText() == null ? "" : descriptionArea.getText().trim();
 
         if (agent == null || function == null || date == null || description.isBlank()) {
-            messageLabel.setText("Select an agent, a function, a date and write a description.");
+            showError("Select an agent, a function, a date and write a description.");
             return;
         }
 
         Date complaintDate = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-        boolean success;
+        if (currentComplaint == null) {
+            currentComplaint = controller.createComplaint(agent);
+            if (currentComplaint == null) {
+                showError("Could not identify the logged-in citizen.");
+                return;
+            }
+        }
+
         try {
-            success = controller.submitComplaint(description, complaintDate, agent, function);
+            controller.addGrievance(currentComplaint, description, complaintDate, function);
         } catch (IllegalArgumentException ex) {
-            messageLabel.setText(ex.getMessage());
+            showError(ex.getMessage());
             return;
         }
 
-        if (success) {
-            messageLabel.setStyle("-fx-text-fill: green;");
-            messageLabel.setText("Complaint successfully submitted!");
-            clearForm();
+        agentCombo.setDisable(true);
+        refreshGrievanceList();
+        clearGrievanceFields();
+        showSuccess("Grievance added (" + currentComplaint.getItemCount() + " in this complaint).");
+    }
+
+    @FXML
+    private void handleSubmit() {
+        clearMessage();
+
+        if (currentComplaint == null || currentComplaint.getItemCount() == 0) {
+            showError("Add at least one grievance before submitting.");
+            return;
+        }
+
+        int count = currentComplaint.getItemCount();
+        if (controller.saveComplaint(currentComplaint)) {
+            resetAll();
+            showSuccess("Complaint with " + count + " grievance(s) successfully submitted!");
         } else {
-            messageLabel.setText("Complaint not submitted.");
+            showError("Complaint not submitted.");
         }
     }
 
     @FXML
     private void handleClear() {
-        clearForm();
-        messageLabel.setText("");
+        resetAll();
+        clearMessage();
     }
 
     @FXML
@@ -98,10 +127,40 @@ public class SubmitComplaintFXController implements Initializable {
         }
     }
 
-    private void clearForm() {
-        agentCombo.getSelectionModel().clearSelection();
+    private void refreshGrievanceList() {
+        if (currentComplaint == null) {
+            grievancesList.getItems().clear();
+        } else {
+            grievancesList.setItems(FXCollections.observableArrayList(currentComplaint.getItems()));
+        }
+    }
+
+    private void clearGrievanceFields() {
         functionCombo.getSelectionModel().clearSelection();
         datePicker.setValue(null);
         descriptionArea.clear();
+    }
+
+    private void resetAll() {
+        currentComplaint = null;
+        agentCombo.setDisable(false);
+        agentCombo.getSelectionModel().clearSelection();
+        clearGrievanceFields();
+        grievancesList.getItems().clear();
+    }
+
+    private void showError(String message) {
+        messageLabel.getStyleClass().setAll("message-error");
+        messageLabel.setText(message);
+    }
+
+    private void showSuccess(String message) {
+        messageLabel.getStyleClass().setAll("message-success");
+        messageLabel.setText(message);
+    }
+
+    private void clearMessage() {
+        messageLabel.getStyleClass().clear();
+        messageLabel.setText("");
     }
 }

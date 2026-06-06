@@ -4,38 +4,48 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="12" xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="pt.ipp.isep.dei.ui.gui.SubmitComplaintFXController">
-    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.ipp.isep.dei.ui.gui.SubmitComplaintFXController"
+      styleClass="root-pane"
+      stylesheets="@../css/app.css"
+      spacing="10">
+    <padding><Insets top="20" right="28" bottom="20" left="28"/></padding>
 
-    <Label text="US12 — Submit Complaint" style="-fx-font-size: 15px; -fx-font-weight: bold;"/>
+    <Label text="US12 — Submit Complaint" styleClass="scene-title"/>
+    <Label text="A complaint targets one political agent and may contain several grievances."/>
 
-    <GridPane hgap="12" vgap="10">
+    <GridPane hgap="12" vgap="8">
         <columnConstraints>
-            <ColumnConstraints minWidth="120"/>
+            <ColumnConstraints minWidth="130"/>
             <ColumnConstraints minWidth="260" hgrow="ALWAYS"/>
         </columnConstraints>
 
-        <Label text="Political Agent:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="agentCombo" prefWidth="280" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Label text="Political Agent:" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="agentCombo" maxWidth="Infinity" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-        <Label text="Political Function:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="functionCombo" prefWidth="280" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <Label text="Political Function:" styleClass="field-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="functionCombo" maxWidth="Infinity" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-        <Label text="Complaint Date:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <Label text="Complaint Date:" styleClass="field-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
         <DatePicker fx:id="datePicker" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-        <Label text="Description:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-        <TextArea fx:id="descriptionArea" prefRowCount="5" wrapText="true"
+        <Label text="Description:" styleClass="field-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextArea fx:id="descriptionArea" prefRowCount="3" wrapText="true"
                   GridPane.rowIndex="3" GridPane.columnIndex="1"/>
     </GridPane>
 
-    <Label fx:id="messageLabel" style="-fx-text-fill: red;"/>
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Button text="Add grievance" onAction="#handleAddGrievance" styleClass="secondary-button"/>
+    </HBox>
+
+    <Label text="Grievances in this complaint:" styleClass="field-label"/>
+    <ListView fx:id="grievancesList" prefHeight="120" VBox.vgrow="ALWAYS"/>
+
+    <Label fx:id="messageLabel" maxWidth="Infinity"/>
 
     <HBox spacing="12" alignment="CENTER_LEFT">
-        <Button text="Submit" onAction="#handleSubmit" defaultButton="true"/>
-        <Button text="Clear"  onAction="#handleClear"/>
-        <Button text="Back"   onAction="#handleBack"/>
+        <Button text="Submit complaint" onAction="#handleSubmit" defaultButton="true" styleClass="primary-button"/>
+        <Button text="Clear" onAction="#handleClear" styleClass="secondary-button"/>
+        <Button text="Back" onAction="#handleBack" styleClass="secondary-button"/>
     </HBox>
 </VBox>

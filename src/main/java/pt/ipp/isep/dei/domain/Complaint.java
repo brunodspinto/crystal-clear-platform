@@ -1,22 +1,50 @@
 package pt.ipp.isep.dei.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Represents a complaint submitted by a citizen about a political agent.
- * All fields are immutable after creation. The submission date is set automatically.
+ * A complaint targets a single political agent but may contain several
+ * grievances ({@link ComplaintItem}), each with its own description, date and
+ * the political function the agent held at the time of that behaviour.
+ * The citizen, the political agent and the submission date are immutable;
+ * grievances are added through {@link #addItem(String, Date, PoliticalFunction)}.
  */
 public class Complaint implements Serializable {
-    private final String description;
-    private final Date complaintDate;
-    private final Date submissionDate;
+
     private final Citizen citizen;
     private final PoliticalAgent politicalAgent;
-    private final PoliticalFunction politicalFunction;
+    private final Date submissionDate;
+    private final List<ComplaintItem> items;
 
     /**
-     * Creates a new Complaint.
+     * Creates an empty complaint about a political agent. Grievances must be added
+     * afterwards with {@link #addItem(String, Date, PoliticalFunction)} before the
+     * complaint is saved.
+     *
+     * @param citizen        the citizen submitting the complaint.
+     * @param politicalAgent the political agent the complaint is about.
+     * @throws IllegalArgumentException if the citizen or the political agent is null.
+     */
+    public Complaint(Citizen citizen, PoliticalAgent politicalAgent) {
+        if (citizen == null) {
+            throw new IllegalArgumentException("Citizen cannot be null");
+        }
+        if (politicalAgent == null) {
+            throw new IllegalArgumentException("Political agent cannot be null");
+        }
+        this.citizen = citizen;
+        this.politicalAgent = politicalAgent;
+        this.submissionDate = new Date();
+        this.items = new ArrayList<>();
+    }
+
+    /**
+     * Creates a complaint with a single grievance. Kept for backward compatibility
+     * with callers that submit one grievance at a time.
      *
      * @param description       a description of the reported behaviour.
      * @param complaintDate     the date when the behaviour occurred (cannot be in the future).
@@ -27,77 +55,82 @@ public class Complaint implements Serializable {
      */
     public Complaint(String description, Date complaintDate, Citizen citizen,
                      PoliticalAgent politicalAgent, PoliticalFunction politicalFunction) {
-        if (description == null || description.isBlank()) {
-            throw new IllegalArgumentException("Description cannot be null or empty");
-        }
-        if (complaintDate == null) {
-            throw new IllegalArgumentException("Complaint date cannot be null");
-        }
-        if (complaintDate.after(new Date())) {
-            throw new IllegalArgumentException("Complaint date cannot be in the future");
-        }
-        if (citizen == null) {
-            throw new IllegalArgumentException("Citizen cannot be null");
-        }
-        if (politicalAgent == null) {
-            throw new IllegalArgumentException("Political agent cannot be null");
-        }
-        if (politicalFunction == null) {
-            throw new IllegalArgumentException("Political function cannot be null");
-        }
-        this.description = description;
-        this.complaintDate = complaintDate;
-        this.submissionDate = new Date();
-        this.citizen = citizen;
-        this.politicalAgent = politicalAgent;
-        this.politicalFunction = politicalFunction;
+        this(citizen, politicalAgent);
+        addItem(description, complaintDate, politicalFunction);
     }
 
     /**
-     * Gets description.
+     * Adds a grievance to this complaint. All grievances refer to the same
+     * political agent as the complaint.
      *
-     * @return the description of the reported behaviour.
+     * @param description       a description of the reported behaviour.
+     * @param complaintDate     the date when the behaviour occurred (cannot be in the future).
+     * @param politicalFunction the function the agent held at the time of the behaviour.
+     * @throws IllegalArgumentException if any argument is invalid.
      */
-    public String getDescription() { return description; }
+    public void addItem(String description, Date complaintDate, PoliticalFunction politicalFunction) {
+        items.add(new ComplaintItem(description, complaintDate, politicalFunction));
+    }
 
     /**
-     * Gets complaint date.
-     *
-     * @return the date when the behaviour occurred.
+     * @return an unmodifiable copy of the grievances of this complaint.
      */
-    public Date getComplaintDate() { return complaintDate; }
+    public List<ComplaintItem> getItems() {
+        return List.copyOf(items);
+    }
 
     /**
-     * Gets submission date.
-     *
-     * @return the date when the complaint was submitted (set automatically).
+     * @return the number of grievances in this complaint.
      */
-    public Date getSubmissionDate() { return submissionDate; }
+    public int getItemCount() {
+        return items.size();
+    }
 
     /**
-     * Gets citizen.
-     *
      * @return the citizen who submitted the complaint.
      */
-    public Citizen getCitizen() { return citizen; }
+    public Citizen getCitizen() {
+        return citizen;
+    }
 
     /**
-     * Gets political agent.
-     *
      * @return the political agent being complained about.
      */
-    public PoliticalAgent getPoliticalAgent() { return politicalAgent; }
+    public PoliticalAgent getPoliticalAgent() {
+        return politicalAgent;
+    }
 
     /**
-     * Gets political function.
-     *
-     * @return the political function the agent held at the time.
+     * @return the date when the complaint was submitted (set automatically).
      */
-    public PoliticalFunction getPoliticalFunction() { return politicalFunction; }
+    public Date getSubmissionDate() {
+        return submissionDate;
+    }
+
+    /**
+     * @return the description of the first grievance, or {@code null} if there is none.
+     */
+    public String getDescription() {
+        return items.isEmpty() ? null : items.get(0).getDescription();
+    }
+
+    /**
+     * @return the date of the first grievance, or {@code null} if there is none.
+     */
+    public Date getComplaintDate() {
+        return items.isEmpty() ? null : items.get(0).getComplaintDate();
+    }
+
+    /**
+     * @return the political function of the first grievance, or {@code null} if there is none.
+     */
+    public PoliticalFunction getPoliticalFunction() {
+        return items.isEmpty() ? null : items.get(0).getPoliticalFunction();
+    }
 
     @Override
     public String toString() {
-        return String.format("Complaint[agent=%s, function=%s, date=%s]",
-                politicalAgent.getName(), politicalFunction, complaintDate);
+        return String.format("Complaint about %s — %d grievance(s)",
+                politicalAgent.getName(), items.size());
     }
 }
