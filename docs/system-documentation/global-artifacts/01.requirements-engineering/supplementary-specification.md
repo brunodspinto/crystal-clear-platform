@@ -66,7 +66,7 @@ _Specifies or constraints the features inherent to the interaction of the
 system being developed with other external systems._
 
 * **User Interaction:** The application provides a console-based Input/Output interface to interact with the actors (e.g., Administrator, Political Agent, Ethics Committee Member, Product Owner).
-* **Graphical Interface:** A graphical user interface must be developed in **JavaFX 11**, covering the functionalities related to the **Citizen** and the **Journalist**.
+* **Graphical Interface:** A graphical user interface must be developed in **JavaFX 21**, covering the functionalities related to the **Citizen** and the **Journalist**.
 
 ### Physical Constraints
 

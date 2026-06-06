@@ -213,7 +213,7 @@ public ComplaintItem(String description, Date complaintDate, PoliticalFunction p
 
 * A new **Citizen** role was added to the authentication system.
 * A new **Citizen menu** with the option "Submit Complaint" was added (console UI). The console flow selects the agent once and then loops, collecting and confirming one grievance at a time and asking whether to add another grievance about the same agent, before persisting the whole complaint.
-* A **JavaFX 11 graphical interface** is also provided for the citizen: `SubmitComplaintFXController` + `SubmitComplaint.fxml`, reached from the Citizen menu of the GUI. It follows the FXML + Controller (MVC) pattern, delegates to the same `SubmitComplaintController`, and communicates with the rest of the GUI through the `MainController` mediator. The citizen presses **Add grievance** to append each grievance to a list (the agent is locked after the first one) and **Submit complaint** to persist them together.
+* A **JavaFX 21 graphical interface** is also provided for the citizen: `SubmitComplaintFXController` + `SubmitComplaint.fxml`, reached from the Citizen menu of the GUI. It follows the FXML + Controller (MVC) pattern, delegates to the same `SubmitComplaintController`, and communicates with the rest of the GUI through the `MainController` mediator. The citizen presses **Add grievance** to append each grievance to a list (the agent is locked after the first one) and **Submit complaint** to persist them together.
 * For demo purposes, two political agents and one citizen are bootstrapped when the system starts.
 * Demo credentials: **citizen@this.app / citizen**.
 
