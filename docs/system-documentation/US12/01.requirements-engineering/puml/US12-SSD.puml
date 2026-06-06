@@ -19,22 +19,27 @@ activate Citizen
     Citizen -> System : selects a political agent
     activate System
 
-        System --> Citizen : shows list of political functions\nand asks to select the role held at the time of the behaviour
+        System --> Citizen : asks for the first grievance
     deactivate System
 
-    Citizen -> System : selects a political function
-    activate System
+    loop for each grievance about the same agent
+        Citizen -> System : asks to add a grievance
+        activate System
+            System --> Citizen : shows list of political functions\nand asks to select the role held at the time of the behaviour
+        deactivate System
 
-        System --> Citizen : requests complaint data\n(complaint date, description)
-    deactivate System
+        Citizen -> System : selects a political function,\ntypes complaint date and description
+        activate System
+            System --> Citizen : shows grievance summary and requests confirmation
+        deactivate System
 
-    Citizen -> System : types complaint date and description
-    activate System
+        Citizen -> System : confirms the grievance
+        activate System
+            System --> Citizen : asks whether to add another grievance\nabout the same agent
+        deactivate System
+    end
 
-        System --> Citizen : shows complaint summary and requests confirmation
-    deactivate System
-
-    Citizen -> System : confirms submission
+    Citizen -> System : submits the complaint
     activate System
 
         System --> Citizen : displays operation success

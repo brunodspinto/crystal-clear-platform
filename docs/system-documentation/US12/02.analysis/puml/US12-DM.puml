@@ -22,9 +22,12 @@ class "Political Agent" as PoliticalAgent {
 }
 
 class Complaint {
+    submissionDate
+}
+
+class ComplaintItem {
     description
     complaintDate
-    submissionDate
 }
 
 enum PoliticalFunction {
@@ -37,6 +40,7 @@ enum PoliticalFunction {
 
 Citizen "1" -- "*" Complaint : submits
 Complaint "*" -- "1" PoliticalAgent : targets
-Complaint "*" -- "1" PoliticalFunction : references
+Complaint "1" *-- "1..*" ComplaintItem : groups
+ComplaintItem "*" -- "1" PoliticalFunction : references
 
 @enduml

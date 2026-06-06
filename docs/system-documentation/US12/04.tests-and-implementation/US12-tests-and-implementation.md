@@ -76,21 +76,81 @@
                 new Complaint("Description", PAST_DATE, citizen, agent, null));
     }
 
+**Test 10:** Check that a grievance (`ComplaintItem`) validates its own data — AC2, AC3, AC4.
+
+    @Test
+    void ensureGrievanceFailsWithFutureDate() {
+        Date futureDate = new Date(Long.MAX_VALUE);
+        assertThrows(IllegalArgumentException.class, () ->
+                new ComplaintItem("Description", futureDate, PoliticalFunction.MAYOR));
+    }
+
+**Test 11:** Check that several grievances can be added to the same complaint — AC6, AC7.
+
+    @Test
+    void ensureAddItemGrowsTheComplaint() {
+        Complaint complaint = new Complaint(citizen, agent);
+        complaint.addItem("First grievance", PAST_DATE, PoliticalFunction.MAYOR);
+        complaint.addItem("Second grievance", PAST_DATE, PoliticalFunction.DEPUTY);
+        assertEquals(2, complaint.getItemCount());
+        assertEquals(PoliticalFunction.DEPUTY, complaint.getItems().get(1).getPoliticalFunction());
+    }
+
+**Test 12:** Check that `createComplaint` returns an empty complaint for the authenticated citizen — AC1, AC5.
+
+    @Test
+    void ensureCreateComplaintReturnsEmptyComplaintForLoggedInCitizen() {
+        Complaint complaint = controller.createComplaint(agent);
+        assertNotNull(complaint);
+        assertEquals(0, complaint.getItemCount());
+        assertEquals(agent, complaint.getPoliticalAgent());
+    }
+
+**Test 13:** Check that a complaint with several grievances is persisted as a single complaint — AC6, AC7.
+
+    @Test
+    void ensureSaveComplaintStoresOneComplaintWithSeveralGrievances() {
+        Complaint complaint = controller.createComplaint(agent);
+        controller.addGrievance(complaint, "First", PAST_DATE, PoliticalFunction.MAYOR);
+        controller.addGrievance(complaint, "Second", PAST_DATE, PoliticalFunction.DEPUTY);
+        assertTrue(controller.saveComplaint(complaint));
+        assertEquals(1, complaintRepo.getComplaints().size());
+        assertEquals(2, complaintRepo.getComplaints().get(0).getItemCount());
+    }
+
+**Test 14:** Check that a complaint with no grievances is not submitted — AC7.
+
+    @Test
+    void ensureSaveComplaintFailsWhenNoGrievances() {
+        Complaint complaint = controller.createComplaint(agent);
+        assertFalse(controller.saveComplaint(complaint));
+        assertTrue(complaintRepo.getComplaints().isEmpty());
+    }
+
 
 ## 5. Construction (Implementation)
 
 ### Class SubmitComplaintController
 
 ```java
-public boolean submitComplaint(String description, Date complaintDate,
-                               PoliticalAgent politicalAgent, PoliticalFunction politicalFunction) {
+public Complaint createComplaint(PoliticalAgent politicalAgent) {
     Email email = authenticationRepository.getCurrentUserSession().getUserId();
     Citizen citizen = citizenRepository.getCitizenByEmail(email.getEmail());
     if (citizen == null) {
+        return null;
+    }
+    return new Complaint(citizen, politicalAgent);
+}
+
+public void addGrievance(Complaint complaint, String description, Date complaintDate,
+                         PoliticalFunction politicalFunction) {
+    complaint.addItem(description, complaintDate, politicalFunction);
+}
+
+public boolean saveComplaint(Complaint complaint) {
+    if (complaint == null || complaint.getItemCount() == 0) {
         return false;
     }
-    Complaint complaint = new Complaint(description, complaintDate, citizen,
-            politicalAgent, politicalFunction);
     return complaintRepository.save(complaint);
 }
 ```
@@ -98,8 +158,36 @@ public boolean submitComplaint(String description, Date complaintDate,
 ### Class Complaint
 
 ```java
-public Complaint(String description, Date complaintDate, Citizen citizen,
-                 PoliticalAgent politicalAgent, PoliticalFunction politicalFunction) {
+public Complaint(Citizen citizen, PoliticalAgent politicalAgent) {
+    if (citizen == null) {
+        throw new IllegalArgumentException("Citizen cannot be null");
+    }
+    if (politicalAgent == null) {
+        throw new IllegalArgumentException("Political agent cannot be null");
+    }
+    this.citizen = citizen;
+    this.politicalAgent = politicalAgent;
+    this.submissionDate = new Date();
+    this.items = new ArrayList<>();
+}
+
+public void addItem(String description, Date complaintDate, PoliticalFunction politicalFunction) {
+    items.add(new ComplaintItem(description, complaintDate, politicalFunction));
+}
+
+public List<ComplaintItem> getItems() {
+    return List.copyOf(items);
+}
+
+public int getItemCount() {
+    return items.size();
+}
+```
+
+### Class ComplaintItem
+
+```java
+public ComplaintItem(String description, Date complaintDate, PoliticalFunction politicalFunction) {
     if (description == null || description.isBlank()) {
         throw new IllegalArgumentException("Description cannot be null or empty");
     }
@@ -109,30 +197,23 @@ public Complaint(String description, Date complaintDate, Citizen citizen,
     if (complaintDate.after(new Date())) {
         throw new IllegalArgumentException("Complaint date cannot be in the future");
     }
-    if (citizen == null) {
-        throw new IllegalArgumentException("Citizen cannot be null");
-    }
-    if (politicalAgent == null) {
-        throw new IllegalArgumentException("Political agent cannot be null");
-    }
     if (politicalFunction == null) {
         throw new IllegalArgumentException("Political function cannot be null");
     }
     this.description = description;
     this.complaintDate = complaintDate;
-    this.submissionDate = new Date();
-    this.citizen = citizen;
-    this.politicalAgent = politicalAgent;
     this.politicalFunction = politicalFunction;
 }
 ```
+
+> A backward-compatible constructor `Complaint(description, date, citizen, agent, function)` is kept: it creates the complaint and adds the first grievance, so existing callers (and the assess-complaint US) keep working.
 
 
 ## 6. Integration and Demo
 
 * A new **Citizen** role was added to the authentication system.
-* A new **Citizen menu** with the option "Submit Complaint" was added (console UI).
-* A **JavaFX 11 graphical interface** is also provided for the citizen: `SubmitComplaintFXController` + `SubmitComplaint.fxml`, reached from the Citizen menu of the GUI. It follows the FXML + Controller (MVC) pattern, delegates to the same `SubmitComplaintController`, and communicates with the rest of the GUI through the `MainController` mediator.
+* A new **Citizen menu** with the option "Submit Complaint" was added (console UI). The console flow selects the agent once and then loops, collecting and confirming one grievance at a time and asking whether to add another grievance about the same agent, before persisting the whole complaint.
+* A **JavaFX 11 graphical interface** is also provided for the citizen: `SubmitComplaintFXController` + `SubmitComplaint.fxml`, reached from the Citizen menu of the GUI. It follows the FXML + Controller (MVC) pattern, delegates to the same `SubmitComplaintController`, and communicates with the rest of the GUI through the `MainController` mediator. The citizen presses **Add grievance** to append each grievance to a list (the agent is locked after the first one) and **Submit complaint** to persist them together.
 * For demo purposes, two political agents and one citizen are bootstrapped when the system starts.
 * Demo credentials: **citizen@this.app / citizen**.
 
@@ -141,5 +222,7 @@ public Complaint(String description, Date complaintDate, Citizen citizen,
 
 * The identity of the citizen who submitted the complaint is stored internally (associated with the `Complaint`) for audit purposes, but is not publicly disclosed — AC5.
 * The `submissionDate` is automatically set to `new Date()` at the time of Complaint instantiation — AC5.
-* The `complaintDate` (when the reported behaviour occurred) is provided by the citizen and is distinct from the `submissionDate`.
-* To support the object-serialization persistence requirement, `Complaint`, `ComplaintRepository`, `CitizenRepository` and `PoliticalAgentRepository` implement `java.io.Serializable` (`Citizen` and `PoliticalAgent` already do, through `User`; `PoliticalFunction` is an enum and is serializable by default), so they can be persisted together with the `Repositories` singleton.
+* A `Complaint` aggregates one or more `ComplaintItem` (grievances), each with its own `description`, `complaintDate` and `PoliticalFunction`; all grievances of a complaint refer to the same `PoliticalAgent` — AC6, AC7.
+* The `complaintDate` of each grievance (when the reported behaviour occurred) is provided by the citizen and is distinct from the complaint's `submissionDate`.
+* For backward compatibility, the convenience constructor `Complaint(description, date, citizen, agent, function)` and the getters `getDescription()` / `getComplaintDate()` / `getPoliticalFunction()` (which return the data of the first grievance) are preserved, so the assess-complaint US keeps working unchanged.
+* To support the object-serialization persistence requirement, `Complaint`, `ComplaintItem`, `ComplaintRepository`, `CitizenRepository` and `PoliticalAgentRepository` implement `java.io.Serializable` (`Citizen` and `PoliticalAgent` already do, through `User`; `PoliticalFunction` is an enum and is serializable by default), so the whole complaint object graph can be persisted together with the `Repositories` singleton.

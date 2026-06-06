@@ -11,6 +11,9 @@ class SubmitComplaintController {
     + SubmitComplaintController()
     + getPoliticalAgents() : List<PoliticalAgent>
     + getPoliticalFunctions() : List<PoliticalFunction>
+    + createComplaint(agent : PoliticalAgent) : Complaint
+    + addGrievance(complaint : Complaint, description : String,\n  date : Date, function : PoliticalFunction) : void
+    + saveComplaint(complaint : Complaint) : boolean
     + submitComplaint(description : String, date : Date,\n  agent : PoliticalAgent, function : PoliticalFunction) : boolean
 }
 
@@ -52,13 +55,27 @@ class ComplaintRepository {
 }
 
 class Complaint {
-    - description : String
-    - complaintDate : Date
     - submissionDate : Date
+    + Complaint(citizen, agent)
     + Complaint(description, date, citizen, agent, function)
+    + addItem(description, date, function)
+    + getItems() : List<ComplaintItem>
+    + getItemCount() : int
+    + getCitizen() : Citizen
+    + getPoliticalAgent() : PoliticalAgent
+    + getSubmissionDate() : Date
     + getDescription() : String
     + getComplaintDate() : Date
-    + getSubmissionDate() : Date
+    + getPoliticalFunction() : PoliticalFunction
+}
+
+class ComplaintItem {
+    - description : String
+    - complaintDate : Date
+    + ComplaintItem(description, date, function)
+    + getDescription() : String
+    + getComplaintDate() : Date
+    + getPoliticalFunction() : PoliticalFunction
 }
 
 class PoliticalAgent {
@@ -106,8 +123,9 @@ UserSession ..> Email
 
 ComplaintRepository "1" --> "*" Complaint : complaints
 
+Complaint "1" *--> "1..*" ComplaintItem : items
 Complaint "*" --> "1" Citizen : citizen
 Complaint "*" --> "1" PoliticalAgent : politicalAgent
-Complaint ..> PoliticalFunction
+ComplaintItem ..> PoliticalFunction
 
 @enduml

@@ -16,6 +16,7 @@ participant "email:Email" as EML
 participant ":CitizenRepository" as CitR
 participant ":ComplaintRepository" as CR
 participant "cpl:Complaint" as CPL
+participant "item:ComplaintItem" as ITM
 
 activate C
 
@@ -61,60 +62,66 @@ activate C
     C -> UI : selects political agent
     activate UI
 
-        UI -> CTRL : getPoliticalFunctions()
+        UI -> CTRL : createComplaint(politicalAgent)
         activate CTRL
-            CTRL --> UI : politicalFunctionList
-        deactivate CTRL
-
-        UI --> C : shows list of political functions\nand asks to select one
-    deactivate UI
-
-    C -> UI : selects political function
-    activate UI
-        UI --> C : requests complaint description and date
-    deactivate UI
-
-    C -> UI : types description and date
-    activate UI
-        UI --> C : shows complaint summary and requests confirmation
-    deactivate UI
-
-    C -> UI : confirms
-    activate UI
-
-        UI -> CTRL : submitComplaint(description, date, politicalAgent, politicalFunction)
-        activate CTRL
-
             CTRL -> AR : getCurrentUserSession()
             activate AR
                 AR --> CTRL : session
             deactivate AR
-
             CTRL -> SESS : getUserId()
             activate SESS
                 SESS --> CTRL : email
             deactivate SESS
-
             CTRL -> EML : getEmail()
             activate EML
                 EML --> CTRL : emailAddress
             deactivate EML
-
             CTRL -> CitR : getCitizenByEmail(emailAddress)
             activate CitR
                 CitR --> CTRL : citizen
             deactivate CitR
+            CTRL -> CPL ** : new Complaint(citizen, politicalAgent)
+            CTRL --> UI : complaint
+        deactivate CTRL
+    deactivate UI
 
-            CTRL -> CPL ** : new Complaint(description, date, citizen, politicalAgent, politicalFunction)
+    loop for each grievance about the same agent
+        UI -> CTRL : getPoliticalFunctions()
+        activate UI
+        activate CTRL
+            CTRL --> UI : politicalFunctionList
+        deactivate CTRL
+        UI --> C : shows list of political functions\nand requests description and date
+        deactivate UI
 
+        C -> UI : selects function, types description and date
+        activate UI
+            UI --> C : shows grievance summary and requests confirmation
+        deactivate UI
+
+        C -> UI : confirms grievance
+        activate UI
+            UI -> CTRL : addGrievance(complaint, description, date, function)
+            activate CTRL
+                CTRL -> CPL : addItem(description, date, function)
+                activate CPL
+                    CPL -> ITM ** : new ComplaintItem(description, date, function)
+                deactivate CPL
+            deactivate CTRL
+            UI --> C : asks whether to add another grievance
+        deactivate UI
+    end
+
+    C -> UI : finishes (no more grievances)
+    activate UI
+        UI -> CTRL : saveComplaint(complaint)
+        activate CTRL
             CTRL -> CR : save(complaint)
             activate CR
                 CR --> CTRL : success
             deactivate CR
-
             CTRL --> UI : success
         deactivate CTRL
-
         UI --> C : displays operation success
     deactivate UI
 

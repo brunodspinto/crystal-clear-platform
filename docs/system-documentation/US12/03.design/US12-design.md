@@ -16,16 +16,16 @@
 |                |                                                        | Citizen                   | **IE**: knows its own data (e.g. email).                                                                                                            |
 | Step 2         | ...knowing all registered political agents to show?    | Repositories              | **IE**: Repositories maintains Political Agents.                                                                                                    |
 |                |                                                        | PoliticalAgentRepository  | By applying **High Cohesion (HC) + Low Coupling (LC)** on class Repositories, it delegates the responsibility on PoliticalAgentRepository.          |
-| Step 3         | ...saving the selected political agent?                | SubmitComplaintUI         | **IE**: is responsible for keeping user selections until submission.                                                                                 |
+| Step 3         | ...creating the (empty) complaint for the selected agent and the authenticated citizen? | SubmitComplaintController | **Controller** + **Creator**: it knows the session/citizen and starts the complaint via `createComplaint(agent)`.                                  |
+|                | ...knowing the citizen and the submission date?        | Complaint                 | **IE**: owns its `citizen`, `politicalAgent` and `submissionDate` (set to `new Date()` on instantiation).                                          |
 | Step 4         | ...knowing all predefined political functions to show? | PoliticalFunction         | **IE**: the enum owns its own set of values.                                                                                                        |
-| Step 5         | ...saving the selected political function?             | SubmitComplaintUI         | **IE**: is responsible for keeping user selections until submission.                                                                                 |
-| Step 6         | ...requesting typed data?                              | SubmitComplaintUI         | **IE**: is responsible for user interactions.                                                                                                       |
-| Step 7         | ...saving the inputted data?                           | SubmitComplaintUI         | **IE**: is responsible for keeping the inputted data until submission.                                                                              |
-| Step 8         | ...showing all data and requesting confirmation?       | SubmitComplaintUI         | **IE**: is responsible for user interactions.                                                                                                       |
-| Step 9         | ...instantiating a new Complaint?                      | SubmitComplaintController | **Controller** + **Creator**: the controller orchestrates the creation and delegates persistence.                                                   |
-|                | ...validating all data (local validation)?             | Complaint                 | **IE**: owns its own data and is responsible for its own consistency.                                                                               |
-|                | ...recording the submission date automatically?        | Complaint                 | **IE**: owns its `submissionDate`, which is set to `new Date()` on instantiation.                                                             |
-|                | ...persisting the new Complaint?                       | ComplaintRepository       | **Pure Fabrication** + **IE**: the repository is responsible for storing and retrieving all Complaint instances.                                    |
+| Step 5         | ...requesting and keeping the grievance data (function, description, date) until confirmation? | SubmitComplaintUI | **IE**: is responsible for user interactions and for the current selections.                                                                       |
+| Step 6         | ...showing the grievance summary and requesting confirmation? | SubmitComplaintUI  | **IE**: is responsible for user interactions.                                                                                                       |
+| Step 7         | ...adding a confirmed grievance to the complaint?      | SubmitComplaintController | **Controller**: delegates to the complaint via `addGrievance(complaint, ...)`.                                                                      |
+|                | ...creating each grievance and validating its data?    | Complaint / ComplaintItem | **Creator** + **IE**: `Complaint.addItem(...)` instantiates a `ComplaintItem`, which validates its own description, date and function.             |
+| Step 8         | ...asking whether to add another grievance about the same agent (loop)? | SubmitComplaintUI | **IE**: drives the dialogue with the actor.                                                                                                         |
+| Step 9         | ...persisting the complaint with all its grievances?   | SubmitComplaintController | **Controller**: `saveComplaint(complaint)` checks there is at least one grievance and delegates persistence.                                       |
+|                | ...storing and retrieving all Complaint instances?     | ComplaintRepository       | **Pure Fabrication** + **IE**: the repository is responsible for storing and retrieving all Complaint instances.                                    |
 | Step 10        | ...informing operation success?                        | SubmitComplaintUI         | **IE**: is responsible for user interactions.                                                                                                       |
 
 ### Systematization
@@ -33,6 +33,7 @@
 According to the taken rationale, the conceptual classes promoted to software classes are:
 
 * Complaint
+* ComplaintItem
 * PoliticalAgent
 * PoliticalFunction
 * Citizen
