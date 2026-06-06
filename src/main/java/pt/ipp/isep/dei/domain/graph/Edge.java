@@ -1,5 +1,7 @@
 package pt.ipp.isep.dei.domain.graph;
 
+import java.io.Serializable;
+
 /**
  * A relation between two entities, identified by their ids.
  * <p>
@@ -7,7 +9,9 @@ package pt.ipp.isep.dei.domain.graph;
  * lands and the relation taxonomy stabilises, this will likely become an enum
  * (kinship, employment, ownership, membership, ...).
  */
-public class Edge {
+public class Edge implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final String fromId;
     private final String toId;

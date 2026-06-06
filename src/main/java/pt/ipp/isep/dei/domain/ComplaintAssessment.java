@@ -1,12 +1,15 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Represents the assessment of a complaint by an Ethics Committee Member.
  * If the outcome is INVALID, a reason must be provided.
  */
-public class ComplaintAssessment {
+public class ComplaintAssessment implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final EthicsCommitteeMember member;
     private final Complaint complaint;

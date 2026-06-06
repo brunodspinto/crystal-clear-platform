@@ -1,5 +1,6 @@
 package pt.ipp.isep.dei.domain.graph;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,9 @@ import java.util.List;
  * corresponding outgoing edges), keeping the implementation within
  * the PPROG-level Collections coverage.
  */
-public class RelationGraph {
+public class RelationGraph implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final List<String> nodeIds = new ArrayList<>();
     private final List<List<Edge>> outgoing = new ArrayList<>();

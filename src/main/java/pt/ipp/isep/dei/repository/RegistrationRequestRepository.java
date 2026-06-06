@@ -4,13 +4,14 @@ import pt.ipp.isep.dei.domain.RegistrationRequest;
 import pt.ipp.isep.dei.domain.RegistrationStatus;
 import pt.ipp.isep.dei.domain.UserRole;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Stores and manages registration requests (US01/US02).
  */
-public class RegistrationRequestRepository {
+public class RegistrationRequestRepository implements Serializable {
 
     private final List<RegistrationRequest> requests = new ArrayList<>();
 

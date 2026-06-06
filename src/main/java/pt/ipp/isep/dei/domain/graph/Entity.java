@@ -1,9 +1,13 @@
 package pt.ipp.isep.dei.domain.graph;
 
+import java.io.Serializable;
+
 /**
  * The type Entity.
  */
-public abstract class Entity {
+public abstract class Entity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final String id;
     private final String type;

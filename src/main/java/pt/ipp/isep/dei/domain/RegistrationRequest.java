@@ -1,12 +1,15 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Represents a registration request submitted by a future user (US01).
  * Remains PENDING until an Administrator approves or rejects it (US02).
  */
-public class RegistrationRequest {
+public class RegistrationRequest implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final String fullName;
     private final String email;

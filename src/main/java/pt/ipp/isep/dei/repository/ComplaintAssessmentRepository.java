@@ -2,13 +2,16 @@ package pt.ipp.isep.dei.repository;
 
 import pt.ipp.isep.dei.domain.ComplaintAssessment;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Repository for storing {@link ComplaintAssessment} records.
  */
-public class ComplaintAssessmentRepository {
+public class ComplaintAssessmentRepository implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final List<ComplaintAssessment> assessments;
 

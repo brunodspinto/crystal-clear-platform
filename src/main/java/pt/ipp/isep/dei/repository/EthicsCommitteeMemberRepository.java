@@ -2,13 +2,16 @@ package pt.ipp.isep.dei.repository;
 
 import pt.ipp.isep.dei.domain.EthicsCommitteeMember;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Repository for storing and retrieving {@link EthicsCommitteeMember} instances.
  */
-public class EthicsCommitteeMemberRepository {
+public class EthicsCommitteeMemberRepository implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final List<EthicsCommitteeMember> members;
 
