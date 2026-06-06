@@ -15,21 +15,24 @@ public class Repositories implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private static Repositories instance;
+
+    // Serializable repositories: their content is persisted across runs.
     private final OrganizationRepository organizationRepository;
-    private final TaskCategoryRepository taskCategoryRepository;
-    // The authentication repository wraps the auth library (not serializable),
-    // so it is kept transient and rebuilt on load. The users are registered
-    // again by the Bootstrap on startup.
-    private transient AuthenticationRepository authenticationRepository;
     private final PoliticalAgentRepository politicalAgentRepository;
     private final CitizenRepository citizenRepository;
     private final ComplaintRepository complaintRepository;
-    private final DeclarationRepository declarationRepository;
-    private final GraphRepository graphRepository;
-    private final EthicsCommitteeMemberRepository ethicsCommitteeMemberRepository;
-    private final ValidationRecordRepository validationRecordRepository;
-    private final RegistrationRequestRepository registrationRequestRepository;
-    private final ComplaintAssessmentRepository complaintAssessmentRepository;
+
+    // Transient repositories: not yet serializable (or, in the case of
+    // authentication, they wrap a non-serializable library). They are rebuilt on
+    // load and repopulated by the Bootstrap on startup.
+    private transient AuthenticationRepository authenticationRepository;
+    private transient TaskCategoryRepository taskCategoryRepository;
+    private transient DeclarationRepository declarationRepository;
+    private transient GraphRepository graphRepository;
+    private transient EthicsCommitteeMemberRepository ethicsCommitteeMemberRepository;
+    private transient ValidationRecordRepository validationRecordRepository;
+    private transient RegistrationRequestRepository registrationRequestRepository;
+    private transient ComplaintAssessmentRepository complaintAssessmentRepository;
 
     /**
      * The Singleton's constructor should always be private to prevent direct construction calls with the new operator.
@@ -63,9 +66,31 @@ public class Repositories implements Serializable {
         return instance;
     }
 
+    /**
+     * Replaces the singleton instance, typically with one loaded from disk by
+     * {@link RepositoriesFile}. Used to support object-serialization persistence
+     * across successive runs.
+     *
+     * @param repositories the instance to use as the singleton.
+     */
+    public static void setInstance(Repositories repositories) {
+        instance = repositories;
+    }
+
+    /**
+     * Restores the transient (non-serialized) repositories after deserialization.
+     * Their content is then repopulated by the Bootstrap on startup.
+     */
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         authenticationRepository = new AuthenticationRepository();
+        taskCategoryRepository = new TaskCategoryRepository();
+        declarationRepository = new DeclarationRepository();
+        graphRepository = new GraphRepository();
+        ethicsCommitteeMemberRepository = new EthicsCommitteeMemberRepository();
+        validationRecordRepository = new ValidationRecordRepository();
+        registrationRequestRepository = new RegistrationRequestRepository();
+        complaintAssessmentRepository = new ComplaintAssessmentRepository();
     }
 
     /**

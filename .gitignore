@@ -10,3 +10,6 @@ Thumbs.db
 .venv/
 
 **/__pycache__/
+
+# Serialized application data (object persistence between runs)
+repositories.dat
