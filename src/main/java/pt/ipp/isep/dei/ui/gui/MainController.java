@@ -119,6 +119,10 @@ public class MainController {
                 ((RegisterOrganizationFXController) child).setMainController(this);
             } else if (child instanceof ExportDeclarationCsvFXController) {
                 ((ExportDeclarationCsvFXController) child).setMainController(this);
+            } else if (child instanceof ReviewRegistrationFXController) {
+                ((ReviewRegistrationFXController) child).setMainController(this);
+            } else if (child instanceof ConsultAssetsFXController) {
+                ((ConsultAssetsFXController) child).setMainController(this);
             } else if (child instanceof StatisticsAnalysisFXController) {
                 StatisticsAnalysisFXController stats = (StatisticsAnalysisFXController) child;
                 stats.setMainController(this);

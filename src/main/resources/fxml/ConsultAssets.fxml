@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.ipp.isep.dei.ui.gui.ConsultAssetsFXController"
+      styleClass="root-pane"
+      stylesheets="@../css/app.css"
+      spacing="10">
+    <padding><Insets top="20" right="28" bottom="20" left="28"/></padding>
+
+    <Label text="US11 — Consult Political Agent Assets" styleClass="scene-title"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Label text="Agent:" styleClass="field-label"/>
+        <ComboBox fx:id="agentCombo" prefWidth="220"/>
+        <Label text="Reference date:" styleClass="field-label"/>
+        <DatePicker fx:id="datePicker"/>
+        <Button text="Search" onAction="#handleSearch" styleClass="primary-button"/>
+        <Button text="Back"   onAction="#handleBack"   styleClass="secondary-button"/>
+    </HBox>
+
+    <Label fx:id="maskNotice"
+           text="Sensitive values are masked. Log in as a journalist to see full details."
+           style="-fx-text-fill: #888888; -fx-font-style: italic;"/>
+
+    <Label fx:id="messageLabel" maxWidth="Infinity"/>
+
+    <TableView fx:id="assetsTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colType"   text="Type"    prefWidth="140"/>
+            <TableColumn fx:id="colValue"  text="Value"   prefWidth="120"/>
+            <TableColumn fx:id="colDetail" text="Details" prefWidth="340"/>
+        </columns>
+        <placeholder><Label text="No assets to display."/></placeholder>
+    </TableView>
+</VBox>
