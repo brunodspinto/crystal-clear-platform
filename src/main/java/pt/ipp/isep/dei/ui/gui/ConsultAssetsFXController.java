@@ -9,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.StringConverter;
 import pt.ipp.isep.dei.controller.ConsultAssetsController;
 import pt.ipp.isep.dei.domain.AssetEntry;
 import pt.ipp.isep.dei.domain.AssetType;
@@ -48,11 +47,7 @@ public class ConsultAssetsFXController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        agentCombo.setItems(FXCollections.observableArrayList(controller.getPoliticalAgents()));
-        agentCombo.setConverter(new StringConverter<>() {
-            @Override public String toString(PoliticalAgent a) { return a == null ? "" : a.getName(); }
-            @Override public PoliticalAgent fromString(String s) { return null; }
-        });
+        agentCombo.getItems().addAll(controller.getPoliticalAgents());
 
         colType.setCellValueFactory(new PropertyValueFactory<>("type"));
         colValue.setCellValueFactory(new PropertyValueFactory<>("value"));

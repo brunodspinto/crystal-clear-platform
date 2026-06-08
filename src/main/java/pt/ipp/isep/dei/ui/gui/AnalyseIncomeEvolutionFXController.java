@@ -1,13 +1,11 @@
 package pt.ipp.isep.dei.ui.gui;
 
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.StringConverter;
 import pt.ipp.isep.dei.controller.AnalyseIncomeEvolutionController;
 import pt.ipp.isep.dei.domain.Declaration;
 import pt.ipp.isep.dei.domain.Income;
@@ -47,11 +45,7 @@ public class AnalyseIncomeEvolutionFXController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        agentCombo.setItems(FXCollections.observableArrayList(controller.getPoliticalAgents()));
-        agentCombo.setConverter(new StringConverter<>() {
-            @Override public String toString(PoliticalAgent a) { return a == null ? "" : a.getName(); }
-            @Override public PoliticalAgent fromString(String s) { return null; }
-        });
+        agentCombo.getItems().addAll(controller.getPoliticalAgents());
 
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("date"));

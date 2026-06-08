@@ -1,5 +1,7 @@
 package pt.ipp.isep.dei.ui.gui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -10,7 +12,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.StringConverter;
 import pt.ipp.isep.dei.controller.ConsultIntegratedSituationController;
 import pt.ipp.isep.dei.domain.AssetEntry;
 import pt.ipp.isep.dei.domain.BusinessParticipation;
@@ -58,18 +59,20 @@ public class IntegratedSituationFXController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        agentCombo.setItems(FXCollections.observableArrayList(controller.getPoliticalAgents()));
-        agentCombo.setConverter(new StringConverter<>() {
-            @Override public String toString(PoliticalAgent a) { return a == null ? "" : a.getName(); }
-            @Override public PoliticalAgent fromString(String s) { return null; }
-        });
+        agentCombo.getItems().addAll(controller.getPoliticalAgents());
 
         colType.setCellValueFactory(new PropertyValueFactory<>("type"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         declarationsTable.getSelectionModel().selectedItemProperty().addListener(
-                (obs, old, selected) -> showDetails(selected));
+                new ChangeListener<DeclarationRow>() {
+                    @Override
+                    public void changed(ObservableValue<? extends DeclarationRow> obs,
+                                        DeclarationRow old, DeclarationRow selected) {
+                        showDetails(selected);
+                    }
+                });
 
         clearMessage();
     }
