@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.ipp.isep.dei.ui.gui.IntegratedSituationFXController"
+      styleClass="root-pane"
+      stylesheets="@../css/app.css"
+      spacing="10">
+    <padding><Insets top="20" right="28" bottom="20" left="28"/></padding>
+
+    <Label text="US09 — Consult Integrated Situation" styleClass="scene-title"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Label text="Agent:" styleClass="field-label"/>
+        <ComboBox fx:id="agentCombo" prefWidth="220"/>
+        <Label text="Reference date:" styleClass="field-label"/>
+        <DatePicker fx:id="datePicker"/>
+        <Button text="Search" onAction="#handleSearch" styleClass="primary-button"/>
+        <Button text="Back"   onAction="#handleBack"   styleClass="secondary-button"/>
+    </HBox>
+
+    <Label fx:id="messageLabel" maxWidth="Infinity"/>
+
+    <TableView fx:id="declarationsTable" prefHeight="180">
+        <columns>
+            <TableColumn fx:id="colType"   text="Type"             prefWidth="200"/>
+            <TableColumn fx:id="colDate"   text="Submission date"  prefWidth="140"/>
+            <TableColumn fx:id="colStatus" text="Status"           prefWidth="120"/>
+        </columns>
+        <placeholder><Label text="No declarations to display."/></placeholder>
+    </TableView>
+
+    <Label text="Details of the selected declaration:" styleClass="field-label"/>
+    <TextArea fx:id="detailsArea" editable="false" wrapText="true" VBox.vgrow="ALWAYS"/>
+</VBox>

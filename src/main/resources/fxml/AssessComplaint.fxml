@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.ipp.isep.dei.ui.gui.AssessComplaintFXController"
+      styleClass="root-pane"
+      stylesheets="@../css/app.css"
+      spacing="10">
+    <padding><Insets top="20" right="28" bottom="20" left="28"/></padding>
+
+    <Label text="US27 — Assess Complaint" styleClass="scene-title"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Label text="Complaint:" styleClass="field-label"/>
+        <ComboBox fx:id="complaintCombo" prefWidth="320"/>
+    </HBox>
+
+    <GridPane hgap="12" vgap="6">
+        <columnConstraints>
+            <ColumnConstraints minWidth="130"/>
+            <ColumnConstraints minWidth="260" hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <Label text="Political Agent:" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <Label fx:id="detailAgent" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Citizen:" styleClass="field-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <Label fx:id="detailCitizen" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Submitted:" styleClass="field-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <Label fx:id="detailSubmitted" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <Label text="Grievances:" styleClass="field-label"/>
+    <ListView fx:id="grievancesList" prefHeight="120"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Label text="Outcome:" styleClass="field-label"/>
+        <ComboBox fx:id="outcomeCombo" prefWidth="160"/>
+    </HBox>
+
+    <Label text="Reason (mandatory if invalid):" styleClass="field-label"/>
+    <TextArea fx:id="reasonArea" prefRowCount="3" wrapText="true"/>
+
+    <Label fx:id="messageLabel" maxWidth="Infinity"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Button text="Assess" onAction="#handleAssess" defaultButton="true" styleClass="primary-button"/>
+        <Button text="Back" onAction="#handleBack" styleClass="secondary-button"/>
+    </HBox>
+</VBox>

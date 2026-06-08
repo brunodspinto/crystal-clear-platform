@@ -123,6 +123,10 @@ public class MainController {
                 ((ReviewRegistrationFXController) child).setMainController(this);
             } else if (child instanceof ConsultAssetsFXController) {
                 ((ConsultAssetsFXController) child).setMainController(this);
+            } else if (child instanceof IntegratedSituationFXController) {
+                ((IntegratedSituationFXController) child).setMainController(this);
+            } else if (child instanceof AssessComplaintFXController) {
+                ((AssessComplaintFXController) child).setMainController(this);
             } else if (child instanceof StatisticsAnalysisFXController) {
                 StatisticsAnalysisFXController stats = (StatisticsAnalysisFXController) child;
                 stats.setMainController(this);
