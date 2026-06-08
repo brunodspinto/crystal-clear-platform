@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.ipp.isep.dei.ui.gui.ListOrganizationsFXController"
+      styleClass="root-pane"
+      stylesheets="@../css/app.css"
+      spacing="10">
+    <padding><Insets top="20" right="28" bottom="20" left="28"/></padding>
+
+    <Label text="US03 — List Institutions" styleClass="scene-title"/>
+
+    <TableView fx:id="orgTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colType"   text="Type"    prefWidth="160"/>
+            <TableColumn fx:id="colName"   text="Name"    prefWidth="300"/>
+            <TableColumn fx:id="colNature" text="Nature"  prefWidth="140"/>
+        </columns>
+        <placeholder><Label text="No institutions registered yet."/></placeholder>
+    </TableView>
+
+    <Label fx:id="messageLabel" maxWidth="Infinity"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Button text="Back" onAction="#handleBack" styleClass="secondary-button"/>
+    </HBox>
+</VBox>
