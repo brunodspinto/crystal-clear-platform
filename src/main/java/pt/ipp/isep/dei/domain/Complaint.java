@@ -15,6 +15,8 @@ import java.util.List;
  */
 public class Complaint implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private final Citizen citizen;
     private final PoliticalAgent politicalAgent;
     private final Date submissionDate;

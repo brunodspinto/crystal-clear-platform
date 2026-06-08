@@ -12,6 +12,9 @@ import java.util.List;
  * The type Organization repository.
  */
 public class OrganizationRepository implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private final List<Organization> organizations;
 
     /**

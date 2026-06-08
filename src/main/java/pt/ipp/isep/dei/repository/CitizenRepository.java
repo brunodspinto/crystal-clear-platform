@@ -10,6 +10,9 @@ import java.util.List;
  * Repository for storing and retrieving {@link Citizen} instances.
  */
 public class CitizenRepository implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private final List<Citizen> citizens;
 
     /**

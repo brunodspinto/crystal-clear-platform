@@ -10,6 +10,9 @@ import java.util.List;
  * Repository for storing and retrieving {@link PoliticalAgent} instances.
  */
 public class PoliticalAgentRepository implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private final List<PoliticalAgent> politicalAgents;
 
     /**

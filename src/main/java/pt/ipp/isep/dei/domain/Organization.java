@@ -8,6 +8,9 @@ import java.util.List;
  * The type Organization.
  */
 public class Organization implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private static int nextGeneratedVat = 1;
 
     private final String vatNumber;

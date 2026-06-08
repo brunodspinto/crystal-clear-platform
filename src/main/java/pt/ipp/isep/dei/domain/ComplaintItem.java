@@ -12,6 +12,8 @@ import java.util.Date;
  */
 public class ComplaintItem implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private final String description;
     private final Date complaintDate;
     private final PoliticalFunction politicalFunction;

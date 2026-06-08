@@ -11,6 +11,9 @@ import java.util.List;
  * Allows duplicate complaints (the same citizen may submit multiple complaints).
  */
 public class ComplaintRepository implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private final List<Complaint> complaints;
 
     /**
