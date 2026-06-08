@@ -8,44 +8,18 @@ autonumber
 actor "Citizen" as C
 participant ":SubmitComplaintUI" as UI
 participant ":SubmitComplaintController" as CTRL
-participant "Repositories" as REPOS
+participant ":PoliticalAgentMapper" as PAM
 participant ":PoliticalAgentRepository" as PAR
 participant ":AuthenticationRepository" as AR
 participant "session:UserSession" as SESS
-participant "email:Email" as EML
 participant ":CitizenRepository" as CitR
 participant ":ComplaintRepository" as CR
 participant "cpl:Complaint" as CPL
-participant "item:ComplaintItem" as ITM
 
 activate C
 
     C -> UI : requests to submit a complaint
     activate UI
-
-        UI -> CTRL** : create
-        activate CTRL
-            CTRL -> REPOS : getInstance()
-            activate REPOS
-                REPOS --> CTRL : repositories
-            deactivate REPOS
-            CTRL -> REPOS : getPoliticalAgentRepository()
-            activate REPOS
-                REPOS --> CTRL : politicalAgentRepository
-            deactivate REPOS
-            CTRL -> REPOS : getCitizenRepository()
-            activate REPOS
-                REPOS --> CTRL : citizenRepository
-            deactivate REPOS
-            CTRL -> REPOS : getComplaintRepository()
-            activate REPOS
-                REPOS --> CTRL : complaintRepository
-            deactivate REPOS
-            CTRL -> REPOS : getAuthenticationRepository()
-            activate REPOS
-                REPOS --> CTRL : authenticationRepository
-            deactivate REPOS
-        deactivate CTRL
 
         UI -> CTRL : getPoliticalAgents()
         activate CTRL
@@ -53,35 +27,31 @@ activate C
             activate PAR
                 PAR --> CTRL : politicalAgentList
             deactivate PAR
-            CTRL --> UI : politicalAgentList
+            CTRL -> PAM : toDTO(politicalAgentList)
+            activate PAM
+                PAM --> CTRL : agentDtoList
+            deactivate PAM
+            CTRL --> UI : agentDtoList
         deactivate CTRL
 
-        UI --> C : shows list of political agents\nand asks to select one
+        UI --> C : shows list of agents (DTO)\nand asks to select one
     deactivate UI
 
-    C -> UI : selects political agent
+    C -> UI : selects a political agent (DTO)
     activate UI
 
-        UI -> CTRL : createComplaint(politicalAgent)
+        UI -> CTRL : startComplaint(agentDto)
         activate CTRL
-            CTRL -> AR : getCurrentUserSession()
-            activate AR
-                AR --> CTRL : session
-            deactivate AR
-            CTRL -> SESS : getUserId()
-            activate SESS
-                SESS --> CTRL : email
-            deactivate SESS
-            CTRL -> EML : getEmail()
-            activate EML
-                EML --> CTRL : emailAddress
-            deactivate EML
-            CTRL -> CitR : getCitizenByEmail(emailAddress)
-            activate CitR
-                CitR --> CTRL : citizen
-            deactivate CitR
+            ref over CTRL, AR, SESS, CitR
+                obtain the authenticated citizen
+                (session -> email -> CitizenRepository)
+            end ref
+            CTRL -> PAR : getByEmail(agentDto.email)
+            activate PAR
+                PAR --> CTRL : politicalAgent
+            deactivate PAR
             CTRL -> CPL ** : new Complaint(citizen, politicalAgent)
-            CTRL --> UI : complaint
+            CTRL --> UI : true
         deactivate CTRL
     deactivate UI
 
@@ -91,32 +61,24 @@ activate C
         activate CTRL
             CTRL --> UI : politicalFunctionList
         deactivate CTRL
-        UI --> C : shows list of political functions\nand requests description and date
+        UI --> C : shows functions and requests description and date
         deactivate UI
 
-        C -> UI : selects function, types description and date
+        C -> UI : selects function, types description and date, confirms
         activate UI
-            UI --> C : shows grievance summary and requests confirmation
-        deactivate UI
-
-        C -> UI : confirms grievance
-        activate UI
-            UI -> CTRL : addGrievance(complaint, description, date, function)
+            UI -> CTRL : addGrievance(description, date, function)
             activate CTRL
                 CTRL -> CPL : addItem(description, date, function)
-                activate CPL
-                    CPL -> ITM ** : new ComplaintItem(description, date, function)
-                deactivate CPL
             deactivate CTRL
             UI --> C : asks whether to add another grievance
         deactivate UI
     end
 
-    C -> UI : finishes (no more grievances)
+    C -> UI : submits the complaint
     activate UI
-        UI -> CTRL : saveComplaint(complaint)
+        UI -> CTRL : submitComplaint()
         activate CTRL
-            CTRL -> CR : save(complaint)
+            CTRL -> CR : save(cpl)
             activate CR
                 CR --> CTRL : success
             deactivate CR

@@ -9,12 +9,40 @@ class SubmitComplaintUI {
 
 class SubmitComplaintController {
     + SubmitComplaintController()
-    + getPoliticalAgents() : List<PoliticalAgent>
+    + getPoliticalAgents() : List<PoliticalAgentDTO>
     + getPoliticalFunctions() : List<PoliticalFunction>
-    + createComplaint(agent : PoliticalAgent) : Complaint
-    + addGrievance(complaint : Complaint, description : String,\n  date : Date, function : PoliticalFunction) : void
-    + saveComplaint(complaint : Complaint) : boolean
-    + submitComplaint(description : String, date : Date,\n  agent : PoliticalAgent, function : PoliticalFunction) : boolean
+    + startComplaint(agentDto : PoliticalAgentDTO) : boolean
+    + addGrievance(description : String, date : Date,\n  function : PoliticalFunction) : void
+    + getCurrentGrievances() : List<ComplaintItemDTO>
+    + getCurrentGrievanceCount() : int
+    + submitComplaint() : boolean
+    + cancelComplaint() : void
+}
+
+class PoliticalAgentDTO <<DTO>> {
+    - name : String
+    - email : String
+    + getName() : String
+    + getEmail() : String
+}
+
+class ComplaintItemDTO <<DTO>> {
+    - description : String
+    - complaintDate : Date
+    - politicalFunction : PoliticalFunction
+    + getDescription() : String
+    + getComplaintDate() : Date
+    + getPoliticalFunction() : PoliticalFunction
+}
+
+class PoliticalAgentMapper {
+    + toDTO(agent : PoliticalAgent) : PoliticalAgentDTO
+    + toDTO(agents : List<PoliticalAgent>) : List<PoliticalAgentDTO>
+}
+
+class ComplaintItemMapper {
+    + toDTO(item : ComplaintItem) : ComplaintItemDTO
+    + toDTO(items : List<ComplaintItem>) : List<ComplaintItemDTO>
 }
 
 class Repositories <<Singleton>> {
@@ -78,9 +106,15 @@ class ComplaintItem {
     + getPoliticalFunction() : PoliticalFunction
 }
 
-class PoliticalAgent {
+abstract class User {
     - name : String
     - email : String
+    + getName() : String
+    + getEmail() : String
+    + hasEmail(email : String) : boolean
+}
+
+class PoliticalAgent {
     - nationalIdentityCard : String
     - taxIdentificationNumber : String
     - mandateStart : Date
@@ -88,10 +122,12 @@ class PoliticalAgent {
 }
 
 class Citizen {
-    - email : String
-    - name : String
-    + hasEmail(email : String) : boolean
+    - nationalIdCardNumber : String
+    + getNationalIdCardNumber() : String
 }
+
+User <|-- PoliticalAgent
+User <|-- Citizen
 
 enum PoliticalFunction {
     MINISTER
@@ -102,6 +138,8 @@ enum PoliticalFunction {
 }
 
 SubmitComplaintUI .> SubmitComplaintController
+SubmitComplaintUI ..> PoliticalAgentDTO
+SubmitComplaintUI ..> ComplaintItemDTO
 
 SubmitComplaintController ..> Repositories
 SubmitComplaintController ..> PoliticalAgentRepository
@@ -111,6 +149,14 @@ SubmitComplaintController ..> AuthenticationRepository
 SubmitComplaintController ..> UserSession
 SubmitComplaintController ..> Email
 SubmitComplaintController ..> Complaint
+SubmitComplaintController ..> PoliticalAgentMapper
+SubmitComplaintController ..> ComplaintItemMapper
+
+PoliticalAgentMapper ..> PoliticalAgent
+PoliticalAgentMapper ..> PoliticalAgentDTO
+ComplaintItemMapper ..> ComplaintItem
+ComplaintItemMapper ..> ComplaintItemDTO
+ComplaintItemDTO ..> PoliticalFunction
 
 Repositories -> "1" Repositories : instance
 Repositories --> "1" PoliticalAgentRepository : politicalAgentRepository

@@ -96,24 +96,23 @@
         assertEquals(PoliticalFunction.DEPUTY, complaint.getItems().get(1).getPoliticalFunction());
     }
 
-**Test 12:** Check that `createComplaint` returns an empty complaint for the authenticated citizen — AC1, AC5.
+**Test 12:** Check that `startComplaint` works for the authenticated citizen — AC1, AC5.
 
     @Test
-    void ensureCreateComplaintReturnsEmptyComplaintForLoggedInCitizen() {
-        Complaint complaint = controller.createComplaint(agent);
-        assertNotNull(complaint);
-        assertEquals(0, complaint.getItemCount());
-        assertEquals(agent, complaint.getPoliticalAgent());
+    void ensureStartComplaintWorksForLoggedInCitizen() {
+        PoliticalAgentDTO agentDto = controller.getPoliticalAgents().get(0);
+        assertTrue(controller.startComplaint(agentDto));
+        assertEquals(0, controller.getCurrentGrievanceCount());
     }
 
 **Test 13:** Check that a complaint with several grievances is persisted as a single complaint — AC6, AC7.
 
     @Test
-    void ensureSaveComplaintStoresOneComplaintWithSeveralGrievances() {
-        Complaint complaint = controller.createComplaint(agent);
-        controller.addGrievance(complaint, "First", PAST_DATE, PoliticalFunction.MAYOR);
-        controller.addGrievance(complaint, "Second", PAST_DATE, PoliticalFunction.DEPUTY);
-        assertTrue(controller.saveComplaint(complaint));
+    void ensureSubmitComplaintStoresOneComplaintWithSeveralGrievances() {
+        controller.startComplaint(controller.getPoliticalAgents().get(0));
+        controller.addGrievance("First", PAST_DATE, PoliticalFunction.MAYOR);
+        controller.addGrievance("Second", PAST_DATE, PoliticalFunction.DEPUTY);
+        assertTrue(controller.submitComplaint());
         assertEquals(1, complaintRepo.getComplaints().size());
         assertEquals(2, complaintRepo.getComplaints().get(0).getItemCount());
     }
@@ -121,37 +120,90 @@
 **Test 14:** Check that a complaint with no grievances is not submitted — AC7.
 
     @Test
-    void ensureSaveComplaintFailsWhenNoGrievances() {
-        Complaint complaint = controller.createComplaint(agent);
-        assertFalse(controller.saveComplaint(complaint));
+    void ensureSubmitComplaintFailsWhenNoGrievances() {
+        controller.startComplaint(controller.getPoliticalAgents().get(0));
+        assertFalse(controller.submitComplaint());
         assertTrue(complaintRepo.getComplaints().isEmpty());
     }
 
 
 ## 5. Construction (Implementation)
 
-### Class SubmitComplaintController
+### Class SubmitComplaintController (DTO-based, keeps the complaint being built)
 
 ```java
-public Complaint createComplaint(PoliticalAgent politicalAgent) {
+public List<PoliticalAgentDTO> getPoliticalAgents() {
+    return politicalAgentMapper.toDTO(politicalAgentRepository.getAll());
+}
+
+public boolean startComplaint(PoliticalAgentDTO agentDto) {
+    if (agentDto == null) {
+        return false;
+    }
     Email email = authenticationRepository.getCurrentUserSession().getUserId();
     Citizen citizen = citizenRepository.getCitizenByEmail(email.getEmail());
     if (citizen == null) {
-        return null;
-    }
-    return new Complaint(citizen, politicalAgent);
-}
-
-public void addGrievance(Complaint complaint, String description, Date complaintDate,
-                         PoliticalFunction politicalFunction) {
-    complaint.addItem(description, complaintDate, politicalFunction);
-}
-
-public boolean saveComplaint(Complaint complaint) {
-    if (complaint == null || complaint.getItemCount() == 0) {
         return false;
     }
-    return complaintRepository.save(complaint);
+    PoliticalAgent agent = politicalAgentRepository.getByEmail(agentDto.email);
+    if (agent == null) {
+        return false;
+    }
+    currentComplaint = new Complaint(citizen, agent);
+    return true;
+}
+
+public void addGrievance(String description, Date complaintDate, PoliticalFunction politicalFunction) {
+    if (currentComplaint == null) {
+        throw new IllegalStateException("No complaint in progress. Call startComplaint first.");
+    }
+    currentComplaint.addItem(description, complaintDate, politicalFunction);
+}
+
+public List<ComplaintItemDTO> getCurrentGrievances() {
+    if (currentComplaint == null) {
+        return new ArrayList<>();
+    }
+    return complaintItemMapper.toDTO(currentComplaint.getItems());
+}
+
+public boolean submitComplaint() {
+    if (currentComplaint == null || currentComplaint.getItemCount() == 0) {
+        return false;
+    }
+    boolean saved = complaintRepository.save(currentComplaint);
+    currentComplaint = null;
+    return saved;
+}
+```
+
+### Class PoliticalAgentDTO (and PoliticalAgentMapper)
+
+```java
+public class PoliticalAgentDTO {          // a plain "bag of data", no business logic
+    private final String name;
+    private final String email;           // identifier to map back to the domain
+
+    public PoliticalAgentDTO(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+    public String getName()  { return name; }
+    public String getEmail() { return email; }
+    @Override public String toString() { return name; }
+}
+
+public class PoliticalAgentMapper {
+    public PoliticalAgentDTO toDTO(PoliticalAgent agent) {
+        return new PoliticalAgentDTO(agent.getName(), agent.getEmail());
+    }
+    public List<PoliticalAgentDTO> toDTO(List<PoliticalAgent> agents) {
+        List<PoliticalAgentDTO> dtos = new ArrayList<>();
+        for (PoliticalAgent agent : agents) {
+            dtos.add(toDTO(agent));
+        }
+        return dtos;
+    }
 }
 ```
 
@@ -220,6 +272,7 @@ public ComplaintItem(String description, Date complaintDate, PoliticalFunction p
 
 ## 7. Observations
 
+* Following the ESOFT **DTO pattern**, the controller never hands domain objects to the UI: `getPoliticalAgents()` returns `List<PoliticalAgentDTO>` and `getCurrentGrievances()` returns `List<ComplaintItemDTO>` (converted by `PoliticalAgentMapper` / `ComplaintItemMapper`), and the UI sends a `PoliticalAgentDTO` back to `startComplaint(...)`. The complaint being built is kept inside the controller, so the **UI is decoupled from the domain** and works only with DTOs and primitives.
 * The identity of the citizen who submitted the complaint is stored internally (associated with the `Complaint`) for audit purposes, but is not publicly disclosed — AC5.
 * The `submissionDate` is automatically set to `new Date()` at the time of Complaint instantiation — AC5.
 * A `Complaint` aggregates one or more `ComplaintItem` (grievances), each with its own `description`, `complaintDate` and `PoliticalFunction`; all grievances of a complaint refer to the same `PoliticalAgent` — AC6, AC7.
