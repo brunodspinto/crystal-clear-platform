@@ -1,13 +1,16 @@
 package pt.ipp.isep.dei.controller;
 
 import pt.ipp.isep.dei.domain.RegistrationRequest;
-import pt.ipp.isep.dei.domain.UserRole;
+import pt.ipp.isep.dei.dto.RegistrationRequestDTO;
 import pt.ipp.isep.dei.repository.AuthenticationRepository;
 import pt.ipp.isep.dei.repository.RegistrationRequestRepository;
 import pt.ipp.isep.dei.repository.Repositories;
 import pt.ipp.isep.dei.service.EmailService;
 import pt.ipp.isep.dei.service.EmailServiceFactory;
+import pt.isep.lei.esoft.auth.UserSession;
+import pt.isep.lei.esoft.auth.mappers.dto.UserRoleDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,7 +63,7 @@ public class ReviewRegistrationController {
      */
     public void approveRequest(RegistrationRequest request) {
         request.approve();
-        String roleId = roleIdFor(request.getRole());
+        String roleId = roleIdFor(request);
         authRepository.addUserWithRole(request.getFullName(), request.getEmail(),
                 request.getPassword(), roleId);
         emailService.sendNotification(
@@ -86,7 +89,83 @@ public class ReviewRegistrationController {
         );
     }
 
-    private static String roleIdFor(UserRole role) {
-        return role.name();
+    /**
+     * Returns the pending requests as DTOs. Caller must be an administrator.
+     *
+     * @return list of pending request DTOs
+     */
+    public List<RegistrationRequestDTO> getPendingRequestsAsDTO() {
+        requireAdminSession();
+        List<RegistrationRequest> pending = repository.getPendingRequests();
+        List<RegistrationRequestDTO> dtos = new ArrayList<>();
+        for (RegistrationRequest r : pending) {
+            dtos.add(toDTO(r));
+        }
+        return dtos;
+    }
+
+    /**
+     * Approves the pending request identified by email. Caller must be an administrator.
+     *
+     * @param email the email of the request to approve
+     */
+    public void approveRequestByEmail(String email) {
+        requireAdminSession();
+        RegistrationRequest request = repository.findPendingByEmail(email);
+        if (request == null) {
+            throw new IllegalArgumentException("No pending request found for: " + email);
+        }
+        approveRequest(request);
+    }
+
+    /**
+     * Rejects the pending request identified by email. Caller must be an administrator.
+     *
+     * @param email  the email of the request to reject
+     * @param reason the reason for rejection
+     */
+    public void rejectRequestByEmail(String email, String reason) {
+        requireAdminSession();
+        RegistrationRequest request = repository.findPendingByEmail(email);
+        if (request == null) {
+            throw new IllegalArgumentException("No pending request found for: " + email);
+        }
+        rejectRequest(request, reason);
+    }
+
+    private void requireAdminSession() {
+        UserSession session = authRepository.getCurrentUserSession();
+        if (session == null || !session.isLoggedIn()) {
+            throw new IllegalStateException("No active session.");
+        }
+        if (!sessionHasAdminRole(session)) {
+            throw new IllegalStateException("Only administrators may perform this action.");
+        }
+    }
+
+    private boolean sessionHasAdminRole(UserSession session) {
+        List<UserRoleDTO> roles = session.getUserRoles();
+        if (roles == null) {
+            return false;
+        }
+        boolean found = false;
+        int i = 0;
+        while (!found && i < roles.size()) {
+            if (AuthenticationController.ROLE_ADMIN.equals(roles.get(i).getDescription())) {
+                found = true;
+            }
+            i++;
+        }
+        return found;
+    }
+
+    private static RegistrationRequestDTO toDTO(RegistrationRequest r) {
+        return new RegistrationRequestDTO(
+                r.getFullName(), r.getEmail(), r.getRole(),
+                r.getSubmissionDate(), r.getIdentificationDocument());
+    }
+
+    private static String roleIdFor(RegistrationRequest request) {
+        return request.getRole().name();
     }
 }

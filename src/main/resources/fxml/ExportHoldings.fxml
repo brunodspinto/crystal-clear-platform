@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.ipp.isep.dei.ui.gui.ExportHoldingsCsvFXController"
+      styleClass="root-pane"
+      stylesheets="@../css/app.css"
+      spacing="10">
+    <padding><Insets top="20" right="28" bottom="20" left="28"/></padding>
+
+    <Label text="US25 — Export Holdings Dataset to CSV" styleClass="scene-title"/>
+
+    <GridPane hgap="12" vgap="8">
+        <columnConstraints>
+            <ColumnConstraints minWidth="100"/>
+            <ColumnConstraints minWidth="300" hgrow="ALWAYS"/>
+            <ColumnConstraints minWidth="90"/>
+        </columnConstraints>
+
+        <Label text="Output file:" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="filePathField" promptText="e.g. holdings.csv" styleClass="input-field"
+                   GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Button text="Browse..." onAction="#handleBrowse" styleClass="secondary-button"
+                GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+    </GridPane>
+
+    <Label fx:id="messageLabel" maxWidth="Infinity"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Button text="Export" onAction="#handleExport" defaultButton="true" styleClass="primary-button"/>
+        <Button text="Back"   onAction="#handleBack"   styleClass="secondary-button"/>
+    </HBox>
+</VBox>

@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -69,11 +71,19 @@ public class RegisterSceneController implements Initializable {
 
         messageLabel.setText("");
 
-        passwordField.textProperty().addListener((obs, oldVal, newVal) ->
-                updatePasswordHint(newVal));
+        passwordField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> obs, String oldVal, String newVal) {
+                updatePasswordHint(newVal);
+            }
+        });
 
-        roleComboBox.valueProperty().addListener((obs, oldRole, newRole) ->
-                updateDocumentRow(newRole));
+        roleComboBox.valueProperty().addListener(new ChangeListener<UserRole>() {
+            @Override
+            public void changed(ObservableValue<? extends UserRole> obs, UserRole oldRole, UserRole newRole) {
+                updateDocumentRow(newRole);
+            }
+        });
     }
 
     // ── Event handlers ─────────────────────────────────────────────────────────

@@ -50,7 +50,7 @@ public class RegisterController {
      * @return the boolean
      */
     public boolean requiresDocument(UserRole role) {
-        return role == UserRole.JOURNALIST || role == UserRole.CITIZEN;
+        return role.requiresDocument();
     }
 
     /**
@@ -60,13 +60,7 @@ public class RegisterController {
      * @return the document label
      */
     public String getDocumentLabel(UserRole role) {
-        if (role == UserRole.JOURNALIST) {
-            return "Press card number (Cartão de Jornalista): ";
-        }
-        if (role == UserRole.CITIZEN) {
-            return "National identity card number (Cartão de Cidadão): ";
-        }
-        return null;
+        return role.getDocumentLabel();
     }
 
     /**

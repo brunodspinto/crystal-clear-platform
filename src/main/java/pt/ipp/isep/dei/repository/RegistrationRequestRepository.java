@@ -68,4 +68,20 @@ public class RegistrationRequestRepository implements Serializable {
     public List<RegistrationRequest> getAll() {
         return new ArrayList<>(requests);
     }
+
+    /**
+     * Returns the first pending request with the given email, or null if none.
+     *
+     * @param email the email
+     * @return the registration request
+     */
+    public RegistrationRequest findPendingByEmail(String email) {
+        for (RegistrationRequest r : requests) {
+            if (r.getEmail().equalsIgnoreCase(email)
+                    && r.getStatus() == RegistrationStatus.PENDING) {
+                return r;
+            }
+        }
+        return null;
+    }
 }
