@@ -138,19 +138,25 @@ public class ReviewRegistrationController {
         if (session == null || !session.isLoggedIn()) {
             throw new IllegalStateException("No active session.");
         }
-        boolean isAdmin = false;
-        List<UserRoleDTO> roles = session.getUserRoles();
-        if (roles != null) {
-            for (UserRoleDTO role : roles) {
-                if (AuthenticationController.ROLE_ADMIN.equals(role.getDescription())) {
-                    isAdmin = true;
-                    break;
-                }
-            }
-        }
-        if (!isAdmin) {
+        if (!sessionHasAdminRole(session)) {
             throw new IllegalStateException("Only administrators may perform this action.");
         }
+    }
+
+    private boolean sessionHasAdminRole(UserSession session) {
+        List<UserRoleDTO> roles = session.getUserRoles();
+        if (roles == null) {
+            return false;
+        }
+        boolean found = false;
+        int i = 0;
+        while (!found && i < roles.size()) {
+            if (AuthenticationController.ROLE_ADMIN.equals(roles.get(i).getDescription())) {
+                found = true;
+            }
+            i++;
+        }
+        return found;
     }
 
     private static RegistrationRequestDTO toDTO(RegistrationRequest r) {

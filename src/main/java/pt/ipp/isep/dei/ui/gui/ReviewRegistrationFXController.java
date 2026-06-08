@@ -59,11 +59,16 @@ public class ReviewRegistrationFXController implements Initializable {
                     }
                 });
 
-        requestList.setCellFactory(lv -> new javafx.scene.control.ListCell<RegistrationRequestDTO>() {
+        requestList.setCellFactory(new javafx.util.Callback<ListView<RegistrationRequestDTO>, javafx.scene.control.ListCell<RegistrationRequestDTO>>() {
             @Override
-            protected void updateItem(RegistrationRequestDTO r, boolean empty) {
-                super.updateItem(r, empty);
-                setText(empty || r == null ? null : r.getFullName() + " (" + r.getRole() + ")");
+            public javafx.scene.control.ListCell<RegistrationRequestDTO> call(ListView<RegistrationRequestDTO> lv) {
+                return new javafx.scene.control.ListCell<RegistrationRequestDTO>() {
+                    @Override
+                    protected void updateItem(RegistrationRequestDTO r, boolean empty) {
+                        super.updateItem(r, empty);
+                        setText(empty || r == null ? null : r.getFullName() + " (" + r.getRole() + ")");
+                    }
+                };
             }
         });
     }
