@@ -28,12 +28,15 @@ class OrganizationRepository {
 }
 
 class Organization {
+    - vatNumber : String
     - name : String
     - nature : OrganizationNature
+    - type : OrganizationType
     + Organization(name : String, nature : OrganizationNature, type : OrganizationType)
     + getName() : String
     + getNature() : OrganizationNature
     + getType() : OrganizationType
+    + getVatNumber() : String
 }
 
 enum OrganizationType {
