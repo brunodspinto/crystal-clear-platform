@@ -8,6 +8,7 @@ autonumber
 actor "Citizen" as C
 participant ":SubmitComplaintUI" as UI
 participant ":SubmitComplaintController" as CTRL
+participant "Repositories" as REPOS
 participant ":PoliticalAgentMapper" as PAM
 participant ":PoliticalAgentRepository" as PAR
 participant ":AuthenticationRepository" as AR
@@ -20,6 +21,30 @@ activate C
 
     C -> UI : requests to submit a complaint
     activate UI
+
+        UI -> CTRL** : create
+        activate CTRL
+            CTRL -> REPOS : getInstance()
+            activate REPOS
+                REPOS --> CTRL : repositories
+            deactivate REPOS
+            CTRL -> REPOS : getPoliticalAgentRepository()
+            activate REPOS
+                REPOS --> CTRL : politicalAgentRepository
+            deactivate REPOS
+            CTRL -> REPOS : getCitizenRepository()
+            activate REPOS
+                REPOS --> CTRL : citizenRepository
+            deactivate REPOS
+            CTRL -> REPOS : getComplaintRepository()
+            activate REPOS
+                REPOS --> CTRL : complaintRepository
+            deactivate REPOS
+            CTRL -> REPOS : getAuthenticationRepository()
+            activate REPOS
+                REPOS --> CTRL : authenticationRepository
+            deactivate REPOS
+        deactivate CTRL
 
         UI -> CTRL : getPoliticalAgents()
         activate CTRL
