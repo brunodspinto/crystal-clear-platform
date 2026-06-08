@@ -1,8 +1,7 @@
 package pt.ipp.isep.dei.ui.console;
 
 import pt.ipp.isep.dei.controller.SubmitComplaintController;
-import pt.ipp.isep.dei.domain.Complaint;
-import pt.ipp.isep.dei.domain.PoliticalAgent;
+import pt.ipp.isep.dei.dto.PoliticalAgentDTO;
 import pt.ipp.isep.dei.domain.PoliticalFunction;
 import pt.ipp.isep.dei.ui.console.utils.Utils;
 
@@ -15,11 +14,14 @@ import java.util.List;
  * grievances: after each grievance is confirmed (or discarded), the citizen is
  * asked whether to add another grievance about the same agent. The whole
  * complaint is persisted once, at the end.
+ *
+ * <p>The UI works only with DTOs ({@link PoliticalAgentDTO}) and primitives; it
+ * never touches domain objects (ESOFT &mdash; DTO pattern).</p>
  */
 public class SubmitComplaintUI implements Runnable {
 
     private final SubmitComplaintController controller;
-    private PoliticalAgent selectedAgent;
+    private PoliticalAgentDTO selectedAgent;
 
     /**
      * Creates the UI and initializes the controller.
@@ -41,29 +43,29 @@ public class SubmitComplaintUI implements Runnable {
             return;
         }
 
-        Complaint complaint = controller.createComplaint(selectedAgent);
-        if (complaint == null) {
-            System.out.println("\nCould not identify the logged-in citizen. Operation cancelled.");
+        if (!controller.startComplaint(selectedAgent)) {
+            System.out.println("\nCould not start the complaint (citizen or agent not found). Operation cancelled.");
             return;
         }
 
-        int added = 0;
         boolean addMore = true;
         while (addMore) {
-            if (collectAndAddGrievance(complaint)) {
-                added = added + 1;
-                System.out.println("\nGrievance added (" + added + " in this complaint so far).");
+            if (collectAndAddGrievance()) {
+                System.out.println("\nGrievance added (" + controller.getCurrentGrievanceCount()
+                        + " in this complaint so far).");
             }
             addMore = Utils.confirm("Add another grievance about " + selectedAgent.getName() + "? (y/n)");
         }
 
-        if (added == 0) {
+        if (controller.getCurrentGrievanceCount() == 0) {
+            controller.cancelComplaint();
             System.out.println("\nNo grievances added. Complaint not submitted.");
             return;
         }
 
-        if (controller.saveComplaint(complaint)) {
-            System.out.println("\nComplaint with " + added + " grievance(s) successfully submitted!");
+        int count = controller.getCurrentGrievanceCount();
+        if (controller.submitComplaint()) {
+            System.out.println("\nComplaint with " + count + " grievance(s) successfully submitted!");
         } else {
             System.out.println("\nComplaint not submitted!");
         }
@@ -73,11 +75,10 @@ public class SubmitComplaintUI implements Runnable {
      * Collects a single grievance (function, description and date), shows it for
      * confirmation, and adds it to the complaint if confirmed.
      *
-     * @param complaint the complaint being built.
      * @return {@code true} if a grievance was added; {@code false} if it was
      *         cancelled, discarded or invalid.
      */
-    private boolean collectAndAddGrievance(Complaint complaint) {
+    private boolean collectAndAddGrievance() {
         PoliticalFunction function = displayAndSelectPoliticalFunction();
         if (function == null) {
             System.out.println("\nGrievance cancelled.");
@@ -88,7 +89,7 @@ public class SubmitComplaintUI implements Runnable {
         Date complaintDate = Utils.readDateFromConsole("Complaint date (dd-MM-yyyy): ");
 
         System.out.println("\n--- Confirm Grievance ---");
-        System.out.printf("Political Agent   : %s%n", complaint.getPoliticalAgent().getName());
+        System.out.printf("Political Agent   : %s%n", selectedAgent.getName());
         System.out.printf("Political Function: %s%n", function);
         System.out.printf("Complaint Date    : %s%n", complaintDate);
         System.out.printf("Description       : %s%n", description);
@@ -99,7 +100,7 @@ public class SubmitComplaintUI implements Runnable {
         }
 
         try {
-            controller.addGrievance(complaint, description, complaintDate, function);
+            controller.addGrievance(description, complaintDate, function);
             return true;
         } catch (IllegalArgumentException ex) {
             System.out.println("\nInvalid grievance: " + ex.getMessage());
@@ -110,15 +111,15 @@ public class SubmitComplaintUI implements Runnable {
     /**
      * Displays the list of political agents and returns the one selected by the citizen.
      *
-     * @return the selected {@link PoliticalAgent}, or {@code null} if none exist or cancelled.
+     * @return the selected {@link PoliticalAgentDTO}, or {@code null} if none exist or cancelled.
      */
-    private PoliticalAgent displayAndSelectPoliticalAgent() {
-        List<PoliticalAgent> agents = controller.getPoliticalAgents();
+    private PoliticalAgentDTO displayAndSelectPoliticalAgent() {
+        List<PoliticalAgentDTO> agents = controller.getPoliticalAgents();
         if (agents.isEmpty()) {
             System.out.println("No political agents registered in the system.");
             return null;
         }
-        return (PoliticalAgent) Utils.showAndSelectOne(agents, "Select a political agent:");
+        return (PoliticalAgentDTO) Utils.showAndSelectOne(agents, "Select a political agent:");
     }
 
     /**

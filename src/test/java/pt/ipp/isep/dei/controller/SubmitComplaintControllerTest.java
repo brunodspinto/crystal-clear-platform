@@ -2,6 +2,8 @@ package pt.ipp.isep.dei.controller;
 
 import org.junit.jupiter.api.Test;
 import pt.ipp.isep.dei.domain.*;
+import pt.ipp.isep.dei.dto.ComplaintItemDTO;
+import pt.ipp.isep.dei.dto.PoliticalAgentDTO;
 import pt.ipp.isep.dei.repository.*;
 
 import java.util.Date;
@@ -26,8 +28,20 @@ class SubmitComplaintControllerTest {
         return authRepo;
     }
 
+    private SubmitComplaintController controllerLoggedInWithCitizen(
+            PoliticalAgent agent, ComplaintRepository complaintRepo) {
+        PoliticalAgentRepository agentRepo = new PoliticalAgentRepository();
+        agentRepo.save(agent);
+        CitizenRepository citizenRepo = new CitizenRepository();
+        citizenRepo.save(new Citizen("citizen@test.com", "Test Citizen", "CC222222222"));
+        AuthenticationRepository authRepo = createAuthRepoLoggedInAs("citizen@test.com", "Test Citizen");
+        return new SubmitComplaintController(agentRepo, citizenRepo, complaintRepo, authRepo);
+    }
+
+    // --- lists (Domain -> UI via DTO) -----------------------------------------
+
     @Test
-    void ensureGetPoliticalAgentsReturnsAll() {
+    void ensureGetPoliticalAgentsReturnsDTOsForAllAgents() {
         PoliticalAgentRepository agentRepo = new PoliticalAgentRepository();
         agentRepo.save(createTestAgent());
 
@@ -35,7 +49,10 @@ class SubmitComplaintControllerTest {
                 agentRepo, new CitizenRepository(),
                 new ComplaintRepository(), new AuthenticationRepository());
 
-        assertEquals(1, controller.getPoliticalAgents().size());
+        List<PoliticalAgentDTO> agents = controller.getPoliticalAgents();
+        assertEquals(1, agents.size());
+        assertEquals("Agent Name", agents.get(0).getName());
+        assertEquals("agent@gov.pt", agents.get(0).getEmail());
     }
 
     @Test
@@ -53,152 +70,126 @@ class SubmitComplaintControllerTest {
                 new PoliticalAgentRepository(), new CitizenRepository(),
                 new ComplaintRepository(), new AuthenticationRepository());
 
-        List<PoliticalFunction> functions = controller.getPoliticalFunctions();
-        assertEquals(PoliticalFunction.values().length, functions.size());
+        assertEquals(PoliticalFunction.values().length, controller.getPoliticalFunctions().size());
     }
+
+    // --- startComplaint (UI -> Domain via DTO) --------------------------------
 
     @Test
-    void ensureSubmitComplaintWorksWhenCitizenIsAuthenticated() {
-        PoliticalAgentRepository agentRepo = new PoliticalAgentRepository();
-        PoliticalAgent agent = createTestAgent();
-        agentRepo.save(agent);
-
-        CitizenRepository citizenRepo = new CitizenRepository();
-        citizenRepo.save(new Citizen("citizen@test.com", "Test Citizen", "CC222222222"));
-
-        ComplaintRepository complaintRepo = new ComplaintRepository();
-        AuthenticationRepository authRepo = createAuthRepoLoggedInAs("citizen@test.com", "Test Citizen");
-
-        SubmitComplaintController controller = new SubmitComplaintController(
-                agentRepo, citizenRepo, complaintRepo, authRepo);
-
-        boolean result = controller.submitComplaint("Valid complaint", PAST_DATE, agent, PoliticalFunction.MAYOR);
-
-        assertTrue(result);
-    }
-
-    @Test
-    void ensureSubmitComplaintFailsWhenCitizenNotInRepository() {
-        PoliticalAgentRepository agentRepo = new PoliticalAgentRepository();
-        PoliticalAgent agent = createTestAgent();
-        agentRepo.save(agent);
-
-        CitizenRepository citizenRepo = new CitizenRepository();
-        // citizen authenticated but not saved in the citizen repository
-
-        ComplaintRepository complaintRepo = new ComplaintRepository();
-        AuthenticationRepository authRepo = createAuthRepoLoggedInAs("unknown@test.com", "Unknown");
-
-        SubmitComplaintController controller = new SubmitComplaintController(
-                agentRepo, citizenRepo, complaintRepo, authRepo);
-
-        boolean result = controller.submitComplaint("Valid complaint", PAST_DATE, agent, PoliticalFunction.MAYOR);
-
-        assertFalse(result);
-    }
-
-    @Test
-    void ensureSubmitComplaintSavesToRepository() {
-        PoliticalAgentRepository agentRepo = new PoliticalAgentRepository();
-        PoliticalAgent agent = createTestAgent();
-        agentRepo.save(agent);
-
-        CitizenRepository citizenRepo = new CitizenRepository();
-        citizenRepo.save(new Citizen("citizen@test.com", "Test Citizen", "CC222222222"));
-
-        ComplaintRepository complaintRepo = new ComplaintRepository();
-        AuthenticationRepository authRepo = createAuthRepoLoggedInAs("citizen@test.com", "Test Citizen");
-
-        SubmitComplaintController controller = new SubmitComplaintController(
-                agentRepo, citizenRepo, complaintRepo, authRepo);
-
-        controller.submitComplaint("First complaint", PAST_DATE, agent, PoliticalFunction.DEPUTY);
-        controller.submitComplaint("Second complaint", PAST_DATE, agent, PoliticalFunction.MINISTER);
-
-        assertEquals(2, complaintRepo.getComplaints().size());
-    }
-
-    // --- multiple grievances within one complaint -----------------------------
-
-    private SubmitComplaintController controllerLoggedInWithCitizen(
-            PoliticalAgent agent, ComplaintRepository complaintRepo) {
-        PoliticalAgentRepository agentRepo = new PoliticalAgentRepository();
-        agentRepo.save(agent);
-        CitizenRepository citizenRepo = new CitizenRepository();
-        citizenRepo.save(new Citizen("citizen@test.com", "Test Citizen", "CC222222222"));
-        AuthenticationRepository authRepo = createAuthRepoLoggedInAs("citizen@test.com", "Test Citizen");
-        return new SubmitComplaintController(agentRepo, citizenRepo, complaintRepo, authRepo);
-    }
-
-    @Test
-    void ensureCreateComplaintReturnsEmptyComplaintForLoggedInCitizen() {
+    void ensureStartComplaintWorksForLoggedInCitizen() {
         PoliticalAgent agent = createTestAgent();
         SubmitComplaintController controller = controllerLoggedInWithCitizen(agent, new ComplaintRepository());
 
-        Complaint complaint = controller.createComplaint(agent);
-
-        assertNotNull(complaint);
-        assertEquals(0, complaint.getItemCount());
-        assertEquals(agent, complaint.getPoliticalAgent());
+        PoliticalAgentDTO agentDto = controller.getPoliticalAgents().get(0);
+        assertTrue(controller.startComplaint(agentDto));
+        assertEquals(0, controller.getCurrentGrievanceCount());
     }
 
     @Test
-    void ensureCreateComplaintReturnsNullWhenCitizenNotInRepository() {
+    void ensureStartComplaintFailsWhenCitizenNotInRepository() {
         PoliticalAgentRepository agentRepo = new PoliticalAgentRepository();
-        PoliticalAgent agent = createTestAgent();
-        agentRepo.save(agent);
+        agentRepo.save(createTestAgent());
         AuthenticationRepository authRepo = createAuthRepoLoggedInAs("unknown@test.com", "Unknown");
 
         SubmitComplaintController controller = new SubmitComplaintController(
                 agentRepo, new CitizenRepository(), new ComplaintRepository(), authRepo);
 
-        assertNull(controller.createComplaint(agent));
+        assertFalse(controller.startComplaint(controller.getPoliticalAgents().get(0)));
     }
 
     @Test
-    void ensureAddGrievanceAddsItemsToTheSameComplaint() {
+    void ensureStartComplaintFailsWhenAgentNotFound() {
         PoliticalAgent agent = createTestAgent();
         SubmitComplaintController controller = controllerLoggedInWithCitizen(agent, new ComplaintRepository());
 
-        Complaint complaint = controller.createComplaint(agent);
-        controller.addGrievance(complaint, "First", PAST_DATE, PoliticalFunction.MAYOR);
-        controller.addGrievance(complaint, "Second", PAST_DATE, PoliticalFunction.DEPUTY);
-
-        assertEquals(2, complaint.getItemCount());
+        PoliticalAgentDTO unknown = new PoliticalAgentDTO("Ghost", "ghost@gov.pt");
+        assertFalse(controller.startComplaint(unknown));
     }
 
     @Test
-    void ensureSaveComplaintStoresOneComplaintWithSeveralGrievances() {
+    void ensureStartComplaintFailsWithNullDto() {
+        PoliticalAgent agent = createTestAgent();
+        SubmitComplaintController controller = controllerLoggedInWithCitizen(agent, new ComplaintRepository());
+
+        assertFalse(controller.startComplaint(null));
+    }
+
+    // --- grievances -----------------------------------------------------------
+
+    @Test
+    void ensureAddGrievanceGrowsTheComplaintAndExposesDTOs() {
+        PoliticalAgent agent = createTestAgent();
+        SubmitComplaintController controller = controllerLoggedInWithCitizen(agent, new ComplaintRepository());
+        controller.startComplaint(controller.getPoliticalAgents().get(0));
+
+        controller.addGrievance("First", PAST_DATE, PoliticalFunction.MAYOR);
+        controller.addGrievance("Second", PAST_DATE, PoliticalFunction.DEPUTY);
+
+        assertEquals(2, controller.getCurrentGrievanceCount());
+        List<ComplaintItemDTO> grievances = controller.getCurrentGrievances();
+        assertEquals(2, grievances.size());
+        assertEquals("First", grievances.get(0).getDescription());
+        assertEquals(PoliticalFunction.DEPUTY, grievances.get(1).getPoliticalFunction());
+    }
+
+    @Test
+    void ensureAddGrievanceWithoutStartFails() {
+        PoliticalAgent agent = createTestAgent();
+        SubmitComplaintController controller = controllerLoggedInWithCitizen(agent, new ComplaintRepository());
+
+        assertThrows(IllegalStateException.class, () ->
+                controller.addGrievance("First", PAST_DATE, PoliticalFunction.MAYOR));
+    }
+
+    // --- submit ---------------------------------------------------------------
+
+    @Test
+    void ensureSubmitComplaintStoresOneComplaintWithSeveralGrievances() {
         PoliticalAgent agent = createTestAgent();
         ComplaintRepository complaintRepo = new ComplaintRepository();
         SubmitComplaintController controller = controllerLoggedInWithCitizen(agent, complaintRepo);
 
-        Complaint complaint = controller.createComplaint(agent);
-        controller.addGrievance(complaint, "First", PAST_DATE, PoliticalFunction.MAYOR);
-        controller.addGrievance(complaint, "Second", PAST_DATE, PoliticalFunction.DEPUTY);
+        controller.startComplaint(controller.getPoliticalAgents().get(0));
+        controller.addGrievance("First", PAST_DATE, PoliticalFunction.MAYOR);
+        controller.addGrievance("Second", PAST_DATE, PoliticalFunction.DEPUTY);
 
-        assertTrue(controller.saveComplaint(complaint));
+        assertTrue(controller.submitComplaint());
         assertEquals(1, complaintRepo.getComplaints().size());
         assertEquals(2, complaintRepo.getComplaints().get(0).getItemCount());
+        // after submit, the in-progress complaint is cleared
+        assertEquals(0, controller.getCurrentGrievanceCount());
     }
 
     @Test
-    void ensureSaveComplaintFailsWhenNoGrievances() {
+    void ensureSubmitComplaintFailsWhenNoGrievances() {
         PoliticalAgent agent = createTestAgent();
         ComplaintRepository complaintRepo = new ComplaintRepository();
         SubmitComplaintController controller = controllerLoggedInWithCitizen(agent, complaintRepo);
 
-        Complaint complaint = controller.createComplaint(agent);
+        controller.startComplaint(controller.getPoliticalAgents().get(0));
 
-        assertFalse(controller.saveComplaint(complaint));
+        assertFalse(controller.submitComplaint());
         assertTrue(complaintRepo.getComplaints().isEmpty());
     }
 
     @Test
-    void ensureSaveComplaintFailsWhenComplaintIsNull() {
+    void ensureSubmitComplaintFailsWhenNothingStarted() {
         PoliticalAgent agent = createTestAgent();
         SubmitComplaintController controller = controllerLoggedInWithCitizen(agent, new ComplaintRepository());
 
-        assertFalse(controller.saveComplaint(null));
+        assertFalse(controller.submitComplaint());
+    }
+
+    @Test
+    void ensureCancelComplaintResetsTheInProgressComplaint() {
+        PoliticalAgent agent = createTestAgent();
+        SubmitComplaintController controller = controllerLoggedInWithCitizen(agent, new ComplaintRepository());
+        controller.startComplaint(controller.getPoliticalAgents().get(0));
+        controller.addGrievance("First", PAST_DATE, PoliticalFunction.MAYOR);
+
+        controller.cancelComplaint();
+
+        assertEquals(0, controller.getCurrentGrievanceCount());
+        assertTrue(controller.getCurrentGrievances().isEmpty());
     }
 }

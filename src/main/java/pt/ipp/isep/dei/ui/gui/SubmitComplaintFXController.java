@@ -8,11 +8,9 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
-import javafx.util.StringConverter;
 import pt.ipp.isep.dei.controller.SubmitComplaintController;
-import pt.ipp.isep.dei.domain.Complaint;
-import pt.ipp.isep.dei.domain.ComplaintItem;
-import pt.ipp.isep.dei.domain.PoliticalAgent;
+import pt.ipp.isep.dei.dto.ComplaintItemDTO;
+import pt.ipp.isep.dei.dto.PoliticalAgentDTO;
 import pt.ipp.isep.dei.domain.PoliticalFunction;
 
 import java.net.URL;
@@ -27,21 +25,24 @@ import java.util.ResourceBundle;
  * grievances. The citizen picks the agent, then adds one or more grievances
  * (function held at the time, description and date); the agent is locked after
  * the first grievance is added. The whole complaint is persisted once, when the
- * citizen presses "Submit complaint". The logged-in citizen is taken from the
- * active session by the controller.
+ * citizen presses "Submit complaint".
+ *
+ * <p>The UI works only with DTOs ({@link PoliticalAgentDTO}, {@link ComplaintItemDTO})
+ * and primitives; the complaint being built is kept by the controller, so the UI
+ * never touches domain objects (ESOFT &mdash; DTO pattern).</p>
  */
 public class SubmitComplaintFXController implements Initializable {
 
-    @FXML private ComboBox<PoliticalAgent> agentCombo;
+    @FXML private ComboBox<PoliticalAgentDTO> agentCombo;
     @FXML private ComboBox<PoliticalFunction> functionCombo;
     @FXML private DatePicker datePicker;
     @FXML private TextArea descriptionArea;
-    @FXML private ListView<ComplaintItem> grievancesList;
+    @FXML private ListView<ComplaintItemDTO> grievancesList;
     @FXML private Label messageLabel;
 
     private MainController mainController;
     private final SubmitComplaintController controller = new SubmitComplaintController();
-    private Complaint currentComplaint;
+    private boolean complaintStarted;
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
@@ -50,11 +51,6 @@ public class SubmitComplaintFXController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         agentCombo.setItems(FXCollections.observableArrayList(controller.getPoliticalAgents()));
-        agentCombo.setConverter(new StringConverter<>() {
-            @Override public String toString(PoliticalAgent a) { return a == null ? "" : a.getName(); }
-            @Override public PoliticalAgent fromString(String s) { return null; }
-        });
-
         functionCombo.setItems(FXCollections.observableArrayList(controller.getPoliticalFunctions()));
         clearMessage();
     }
@@ -63,7 +59,7 @@ public class SubmitComplaintFXController implements Initializable {
     private void handleAddGrievance() {
         clearMessage();
 
-        PoliticalAgent agent = agentCombo.getValue();
+        PoliticalAgentDTO agent = agentCombo.getValue();
         PoliticalFunction function = functionCombo.getValue();
         LocalDate date = datePicker.getValue();
         String description = descriptionArea.getText() == null ? "" : descriptionArea.getText().trim();
@@ -75,38 +71,38 @@ public class SubmitComplaintFXController implements Initializable {
 
         Date complaintDate = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-        if (currentComplaint == null) {
-            currentComplaint = controller.createComplaint(agent);
-            if (currentComplaint == null) {
-                showError("Could not identify the logged-in citizen.");
+        if (!complaintStarted) {
+            if (!controller.startComplaint(agent)) {
+                showError("Could not start the complaint (could not identify the citizen or agent).");
                 return;
             }
+            complaintStarted = true;
+            agentCombo.setDisable(true);
         }
 
         try {
-            controller.addGrievance(currentComplaint, description, complaintDate, function);
+            controller.addGrievance(description, complaintDate, function);
         } catch (IllegalArgumentException ex) {
             showError(ex.getMessage());
             return;
         }
 
-        agentCombo.setDisable(true);
         refreshGrievanceList();
         clearGrievanceFields();
-        showSuccess("Grievance added (" + currentComplaint.getItemCount() + " in this complaint).");
+        showSuccess("Grievance added (" + controller.getCurrentGrievanceCount() + " in this complaint).");
     }
 
     @FXML
     private void handleSubmit() {
         clearMessage();
 
-        if (currentComplaint == null || currentComplaint.getItemCount() == 0) {
+        if (controller.getCurrentGrievanceCount() == 0) {
             showError("Add at least one grievance before submitting.");
             return;
         }
 
-        int count = currentComplaint.getItemCount();
-        if (controller.saveComplaint(currentComplaint)) {
+        int count = controller.getCurrentGrievanceCount();
+        if (controller.submitComplaint()) {
             resetAll();
             showSuccess("Complaint with " + count + " grievance(s) successfully submitted!");
         } else {
@@ -122,17 +118,14 @@ public class SubmitComplaintFXController implements Initializable {
 
     @FXML
     private void handleBack() {
+        controller.cancelComplaint();
         if (mainController != null) {
             mainController.showCitizenMenu();
         }
     }
 
     private void refreshGrievanceList() {
-        if (currentComplaint == null) {
-            grievancesList.getItems().clear();
-        } else {
-            grievancesList.setItems(FXCollections.observableArrayList(currentComplaint.getItems()));
-        }
+        grievancesList.setItems(FXCollections.observableArrayList(controller.getCurrentGrievances()));
     }
 
     private void clearGrievanceFields() {
@@ -142,7 +135,8 @@ public class SubmitComplaintFXController implements Initializable {
     }
 
     private void resetAll() {
-        currentComplaint = null;
+        controller.cancelComplaint();
+        complaintStarted = false;
         agentCombo.setDisable(false);
         agentCombo.getSelectionModel().clearSelection();
         clearGrievanceFields();

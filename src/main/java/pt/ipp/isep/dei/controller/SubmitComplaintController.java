@@ -4,6 +4,10 @@ import pt.ipp.isep.dei.domain.Citizen;
 import pt.ipp.isep.dei.domain.Complaint;
 import pt.ipp.isep.dei.domain.PoliticalAgent;
 import pt.ipp.isep.dei.domain.PoliticalFunction;
+import pt.ipp.isep.dei.dto.ComplaintItemDTO;
+import pt.ipp.isep.dei.dto.PoliticalAgentDTO;
+import pt.ipp.isep.dei.mapper.ComplaintItemMapper;
+import pt.ipp.isep.dei.mapper.PoliticalAgentMapper;
 import pt.ipp.isep.dei.repository.AuthenticationRepository;
 import pt.ipp.isep.dei.repository.CitizenRepository;
 import pt.ipp.isep.dei.repository.ComplaintRepository;
@@ -11,18 +15,31 @@ import pt.ipp.isep.dei.repository.PoliticalAgentRepository;
 import pt.ipp.isep.dei.repository.Repositories;
 import pt.isep.lei.esoft.auth.domain.model.Email;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Controller responsible for handling the submission of a citizen complaint (US12).
+ *
+ * <p>Following the ESOFT DTO pattern, the controller never exposes domain objects
+ * to the UI: it provides the political agents and the grievances as Data Transfer
+ * Objects (via mappers) and it keeps the complaint being built internally, so the
+ * UI stays decoupled from the domain.</p>
  */
 public class SubmitComplaintController {
+
     private final PoliticalAgentRepository politicalAgentRepository;
     private final CitizenRepository citizenRepository;
     private final ComplaintRepository complaintRepository;
     private final AuthenticationRepository authenticationRepository;
+
+    private final PoliticalAgentMapper politicalAgentMapper = new PoliticalAgentMapper();
+    private final ComplaintItemMapper complaintItemMapper = new ComplaintItemMapper();
+
+    /** The complaint currently being built (not exposed to the UI). */
+    private Complaint currentComplaint;
 
     /**
      * Creates a controller using the singleton repositories.
@@ -54,12 +71,12 @@ public class SubmitComplaintController {
     }
 
     /**
-     * Returns all registered political agents available for selection.
+     * Returns all registered political agents as DTOs for the UI to select one.
      *
-     * @return list of {@link PoliticalAgent}.
+     * @return list of {@link PoliticalAgentDTO}.
      */
-    public List<PoliticalAgent> getPoliticalAgents() {
-        return politicalAgentRepository.getAll();
+    public List<PoliticalAgentDTO> getPoliticalAgents() {
+        return politicalAgentMapper.toDTO(politicalAgentRepository.getAll());
     }
 
     /**
@@ -72,71 +89,85 @@ public class SubmitComplaintController {
     }
 
     /**
-     * Submits a complaint with a single grievance on behalf of the currently
-     * logged-in citizen. The citizen's identity is retrieved from the active session.
+     * Starts a new complaint about the selected political agent, on behalf of the
+     * currently logged-in citizen. The agent DTO is mapped back to the domain agent.
      *
-     * @param description       a description of the reported behaviour.
-     * @param complaintDate     the date when the behaviour occurred.
-     * @param politicalAgent    the political agent being complained about.
-     * @param politicalFunction the function the agent held at the time.
-     * @return {@code true} if the complaint was saved, {@code false} if the citizen was not found.
+     * @param agentDto the selected political agent (DTO).
+     * @return {@code true} if the complaint was started; {@code false} if the agent
+     *         DTO is null, the citizen is not found, or the agent is not found.
      */
-    public boolean submitComplaint(String description, Date complaintDate,
-                                   PoliticalAgent politicalAgent, PoliticalFunction politicalFunction) {
+    public boolean startComplaint(PoliticalAgentDTO agentDto) {
+        if (agentDto == null) {
+            return false;
+        }
         Email email = authenticationRepository.getCurrentUserSession().getUserId();
         Citizen citizen = citizenRepository.getCitizenByEmail(email.getEmail());
         if (citizen == null) {
             return false;
         }
-        Complaint complaint = new Complaint(description, complaintDate, citizen,
-                politicalAgent, politicalFunction);
-        return complaintRepository.save(complaint);
-    }
-
-    /**
-     * Starts a new (empty) complaint about a political agent, on behalf of the
-     * currently logged-in citizen. Grievances are then added with
-     * {@link #addGrievance(Complaint, String, Date, PoliticalFunction)} and the
-     * complaint is persisted with {@link #saveComplaint(Complaint)}.
-     *
-     * @param politicalAgent the political agent the complaint is about.
-     * @return the new {@link Complaint}, or {@code null} if the citizen was not found.
-     */
-    public Complaint createComplaint(PoliticalAgent politicalAgent) {
-        Email email = authenticationRepository.getCurrentUserSession().getUserId();
-        Citizen citizen = citizenRepository.getCitizenByEmail(email.getEmail());
-        if (citizen == null) {
-            return null;
+        PoliticalAgent agent = politicalAgentRepository.getByEmail(agentDto.getEmail());
+        if (agent == null) {
+            return false;
         }
-        return new Complaint(citizen, politicalAgent);
+        currentComplaint = new Complaint(citizen, agent);
+        return true;
     }
 
     /**
-     * Adds a grievance to an existing complaint. All grievances of the same
-     * complaint refer to the same political agent.
+     * Adds a grievance to the complaint being built.
      *
-     * @param complaint         the complaint to add the grievance to.
      * @param description       a description of the reported behaviour.
      * @param complaintDate     the date when the behaviour occurred.
      * @param politicalFunction the function the agent held at the time.
+     * @throws IllegalStateException    if no complaint has been started.
      * @throws IllegalArgumentException if the grievance data is invalid.
      */
-    public void addGrievance(Complaint complaint, String description, Date complaintDate,
-                             PoliticalFunction politicalFunction) {
-        complaint.addItem(description, complaintDate, politicalFunction);
+    public void addGrievance(String description, Date complaintDate, PoliticalFunction politicalFunction) {
+        if (currentComplaint == null) {
+            throw new IllegalStateException("No complaint in progress. Call startComplaint first.");
+        }
+        currentComplaint.addItem(description, complaintDate, politicalFunction);
     }
 
     /**
-     * Persists a complaint that has at least one grievance.
+     * Returns the grievances already added to the complaint being built, as DTOs.
      *
-     * @param complaint the complaint to save.
-     * @return {@code true} if the complaint was saved; {@code false} if it is
-     *         {@code null} or has no grievances.
+     * @return list of {@link ComplaintItemDTO} (empty if no complaint is in progress).
      */
-    public boolean saveComplaint(Complaint complaint) {
-        if (complaint == null || complaint.getItemCount() == 0) {
+    public List<ComplaintItemDTO> getCurrentGrievances() {
+        if (currentComplaint == null) {
+            return new ArrayList<>();
+        }
+        return complaintItemMapper.toDTO(currentComplaint.getItems());
+    }
+
+    /**
+     * @return the number of grievances in the complaint being built.
+     */
+    public int getCurrentGrievanceCount() {
+        return currentComplaint == null ? 0 : currentComplaint.getItemCount();
+    }
+
+    /**
+     * Persists the complaint being built (with all its grievances) and clears the
+     * in-progress state.
+     *
+     * @return {@code true} if the complaint was saved; {@code false} if there is no
+     *         complaint in progress or it has no grievances.
+     */
+    public boolean submitComplaint() {
+        if (currentComplaint == null || currentComplaint.getItemCount() == 0) {
             return false;
         }
-        return complaintRepository.save(complaint);
+        boolean saved = complaintRepository.save(currentComplaint);
+        currentComplaint = null;
+        return saved;
+    }
+
+    /**
+     * Discards the complaint being built, if any.
+     */
+    public void cancelComplaint() {
+        currentComplaint = null;
     }
 }
