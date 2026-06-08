@@ -66,28 +66,21 @@ activate Admin
 
             CTRL -> REPO : existsByNameAndType(name, type)
             activate REPO
-                REPO --> CTRL : result
+                REPO --> CTRL : false
             deactivate REPO
 
-            alt result = false (no duplicate)
+            CTRL -> ORG** : create(name, nature, type)
 
-                CTRL -> ORG** : create(name, nature, type)
+            CTRL -> REPO : save(org)
+            activate REPO
+                REPO --> CTRL : saved
+            deactivate REPO
 
-                CTRL -> REPO : save(org)
-                activate REPO
-                    REPO --> CTRL : saved
-                deactivate REPO
+            CTRL --> UI : success
 
-                CTRL --> UI : success
-
-            else result = true (duplicate exists)
-
-                CTRL --> UI : failure
-
-            end
         deactivate CTRL
 
-        UI --> Admin : displays operation (in)success
+        UI --> Admin : displays operation success
     deactivate UI
 
 deactivate Admin
