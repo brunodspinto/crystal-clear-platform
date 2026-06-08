@@ -2,7 +2,6 @@ package pt.ipp.isep.dei.ui.console;
 
 import pt.ipp.isep.dei.controller.ReviewRegistrationController;
 import pt.ipp.isep.dei.domain.RegistrationRequest;
-import pt.ipp.isep.dei.domain.UserRole;
 import pt.ipp.isep.dei.ui.console.utils.Utils;
 
 import java.util.ArrayList;
@@ -65,10 +64,9 @@ public class ReviewRegistrationUI implements Runnable {
         System.out.printf("Email   : %s%n", r.getEmail());
         System.out.printf("Role    : %s%n", r.getRole());
         System.out.printf("Submitted: %s%n", r.getSubmissionDate());
-        if (r.getRole() == UserRole.JOURNALIST) {
-            System.out.printf("Press card: %s%n", r.getIdentificationDocument());
-        } else if (r.getRole() == UserRole.CITIZEN) {
-            System.out.printf("National ID: %s%n", r.getIdentificationDocument());
+        String docLabel = r.getRole().getDocumentLabel();
+        if (docLabel != null) {
+            System.out.printf("%s%s%n", docLabel, r.getIdentificationDocument());
         }
     }
 }

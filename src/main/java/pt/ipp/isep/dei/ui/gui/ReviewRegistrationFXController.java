@@ -1,5 +1,7 @@
 package pt.ipp.isep.dei.ui.gui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -8,8 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import pt.ipp.isep.dei.controller.ReviewRegistrationController;
-import pt.ipp.isep.dei.domain.RegistrationRequest;
-import pt.ipp.isep.dei.domain.UserRole;
+import pt.ipp.isep.dei.dto.RegistrationRequestDTO;
 
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -21,7 +22,7 @@ import java.util.ResourceBundle;
  */
 public class ReviewRegistrationFXController implements Initializable {
 
-    @FXML private ListView<RegistrationRequest> requestList;
+    @FXML private ListView<RegistrationRequestDTO> requestList;
     @FXML private Label detailName;
     @FXML private Label detailEmail;
     @FXML private Label detailRole;
@@ -36,6 +37,11 @@ public class ReviewRegistrationFXController implements Initializable {
     private final ReviewRegistrationController controller = new ReviewRegistrationController();
     private static final SimpleDateFormat DATE_FMT = new SimpleDateFormat("dd-MM-yyyy");
 
+    /**
+     * Sets main controller.
+     *
+     * @param mainController the main controller
+     */
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
@@ -45,11 +51,17 @@ public class ReviewRegistrationFXController implements Initializable {
         loadRequests();
 
         requestList.getSelectionModel().selectedItemProperty().addListener(
-                (obs, old, selected) -> showDetails(selected));
+                new ChangeListener<RegistrationRequestDTO>() {
+                    @Override
+                    public void changed(ObservableValue<? extends RegistrationRequestDTO> obs,
+                                        RegistrationRequestDTO old, RegistrationRequestDTO selected) {
+                        showDetails(selected);
+                    }
+                });
 
-        requestList.setCellFactory(lv -> new javafx.scene.control.ListCell<>() {
+        requestList.setCellFactory(lv -> new javafx.scene.control.ListCell<RegistrationRequestDTO>() {
             @Override
-            protected void updateItem(RegistrationRequest r, boolean empty) {
+            protected void updateItem(RegistrationRequestDTO r, boolean empty) {
                 super.updateItem(r, empty);
                 setText(empty || r == null ? null : r.getFullName() + " (" + r.getRole() + ")");
             }
@@ -57,13 +69,13 @@ public class ReviewRegistrationFXController implements Initializable {
     }
 
     private void loadRequests() {
-        List<RegistrationRequest> pending = controller.getPendingRequests();
+        List<RegistrationRequestDTO> pending = controller.getPendingRequestsAsDTO();
         requestList.setItems(FXCollections.observableArrayList(pending));
         clearDetails();
         clearMessage();
     }
 
-    private void showDetails(RegistrationRequest r) {
+    private void showDetails(RegistrationRequestDTO r) {
         if (r == null) {
             clearDetails();
             return;
@@ -72,10 +84,9 @@ public class ReviewRegistrationFXController implements Initializable {
         detailEmail.setText(r.getEmail());
         detailRole.setText(r.getRole().toString());
         detailDate.setText(DATE_FMT.format(r.getSubmissionDate()));
-        if (r.getRole() == UserRole.JOURNALIST) {
-            detailDoc.setText("Press card: " + r.getIdentificationDocument());
-        } else if (r.getRole() == UserRole.CITIZEN) {
-            detailDoc.setText("National ID: " + r.getIdentificationDocument());
+        String docLabel = r.getRole().getDocumentLabel();
+        if (docLabel != null && r.getIdentificationDocument() != null) {
+            detailDoc.setText(docLabel.replace(": ", ": ") + r.getIdentificationDocument());
         } else {
             detailDoc.setText("");
         }
@@ -97,23 +108,23 @@ public class ReviewRegistrationFXController implements Initializable {
 
     @FXML
     private void handleAccept() {
-        RegistrationRequest selected = requestList.getSelectionModel().getSelectedItem();
+        RegistrationRequestDTO selected = requestList.getSelectionModel().getSelectedItem();
         if (selected == null) return;
-        controller.approveRequest(selected);
+        controller.approveRequestByEmail(selected.getEmail());
         showSuccess("Request from " + selected.getFullName() + " ACCEPTED.");
         loadRequests();
     }
 
     @FXML
     private void handleReject() {
-        RegistrationRequest selected = requestList.getSelectionModel().getSelectedItem();
+        RegistrationRequestDTO selected = requestList.getSelectionModel().getSelectedItem();
         if (selected == null) return;
         String reason = reasonArea.getText() == null ? "" : reasonArea.getText().trim();
         if (reason.isBlank()) {
             showError("Rejection reason is mandatory.");
             return;
         }
-        controller.rejectRequest(selected, reason);
+        controller.rejectRequestByEmail(selected.getEmail(), reason);
         showSuccess("Request from " + selected.getFullName() + " REJECTED.");
         loadRequests();
     }
