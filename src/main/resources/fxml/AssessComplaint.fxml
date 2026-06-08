@@ -15,7 +15,7 @@
 
     <HBox spacing="12" alignment="CENTER_LEFT">
         <Label text="Complaint:" styleClass="field-label"/>
-        <ComboBox fx:id="complaintCombo" prefWidth="320"/>
+        <ComboBox fx:id="complaintCombo" prefWidth="320" onAction="#handleComplaintSelected"/>
     </HBox>
 
     <GridPane hgap="12" vgap="6">

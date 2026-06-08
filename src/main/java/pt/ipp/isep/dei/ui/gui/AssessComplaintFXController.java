@@ -1,13 +1,13 @@
 package pt.ipp.isep.dei.ui.gui;
 
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
-import javafx.util.StringConverter;
 import pt.ipp.isep.dei.controller.AssessComplaintController;
 import pt.ipp.isep.dei.domain.Complaint;
 import pt.ipp.isep.dei.domain.ComplaintItem;
@@ -44,22 +44,20 @@ public class AssessComplaintFXController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loadComplaints();
-
-        complaintCombo.setConverter(new StringConverter<>() {
-            @Override public String toString(Complaint c) { return c == null ? "" : c.toString(); }
-            @Override public Complaint fromString(String s) { return null; }
-        });
-        complaintCombo.getSelectionModel().selectedItemProperty().addListener(
-                (obs, old, selected) -> showDetails(selected));
-
-        outcomeCombo.setItems(FXCollections.observableArrayList(ComplaintOutcome.values()));
+        outcomeCombo.getItems().addAll(ComplaintOutcome.values());
 
         clearDetails();
         clearMessage();
     }
 
     private void loadComplaints() {
-        complaintCombo.setItems(FXCollections.observableArrayList(controller.getComplaints()));
+        complaintCombo.getItems().clear();
+        complaintCombo.getItems().addAll(controller.getComplaints());
+    }
+
+    @FXML
+    private void handleComplaintSelected(ActionEvent event) {
+        showDetails(complaintCombo.getValue());
     }
 
     private void showDetails(Complaint c) {
