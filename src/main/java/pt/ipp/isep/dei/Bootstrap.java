@@ -27,6 +27,7 @@ public class Bootstrap implements Runnable {
      */
     public void run(boolean firstRun) {
         addUsers();
+        reRegisterApprovedUsers();
 
         if (firstRun) {
             addTaskCategories();
@@ -37,6 +38,26 @@ public class Bootstrap implements Runnable {
             addEthicsCommitteeMembers();
             addValidatedDeclaration();
             addUS10IncomeHistory();
+        }
+    }
+
+    /**
+     * Re-creates the login account of every approved registration request. The
+     * accounts live in the authentication library (which is not serializable and
+     * therefore transient), so they must be rebuilt on every startup from the
+     * persisted requests, otherwise an approved user could no longer log in after
+     * the application is restarted.
+     */
+    private void reRegisterApprovedUsers() {
+        AuthenticationRepository authenticationRepository = Repositories.getInstance().getAuthenticationRepository();
+        RegistrationRequestRepository registrationRequestRepository =
+                Repositories.getInstance().getRegistrationRequestRepository();
+
+        for (RegistrationRequest request : registrationRequestRepository.getAll()) {
+            if (request.getStatus() == RegistrationStatus.APPROVED) {
+                authenticationRepository.addUserWithRole(request.getFullName(), request.getEmail(),
+                        request.getPassword(), request.getRole().name());
+            }
         }
     }
 
