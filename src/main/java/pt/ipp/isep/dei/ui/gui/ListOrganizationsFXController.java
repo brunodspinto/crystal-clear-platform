@@ -8,8 +8,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import pt.ipp.isep.dei.controller.ListOrganizationsController;
-import pt.ipp.isep.dei.domain.Organization;
 import pt.ipp.isep.dei.domain.OrganizationType;
+import pt.ipp.isep.dei.dto.OrganizationDTO;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -45,14 +45,14 @@ public class ListOrganizationsFXController implements Initializable {
     }
 
     private void loadOrganizations() {
-        Map<OrganizationType, List<Organization>> grouped = controller.getOrganizationsGroupedByType();
+        Map<OrganizationType, List<OrganizationDTO>> grouped = controller.getOrganizationsGroupedByType();
         List<OrgRow> rows = new ArrayList<>();
-        for (Map.Entry<OrganizationType, List<Organization>> entry : grouped.entrySet()) {
-            for (Organization org : entry.getValue()) {
+        for (Map.Entry<OrganizationType, List<OrganizationDTO>> entry : grouped.entrySet()) {
+            for (OrganizationDTO org : entry.getValue()) {
                 rows.add(new OrgRow(
                         entry.getKey().toString(),
                         org.getName(),
-                        org.getNature() != null ? org.getNature().toString() : ""
+                        org.getNatureDesignation()
                 ));
             }
         }

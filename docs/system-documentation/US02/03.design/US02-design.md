@@ -18,6 +18,7 @@
 | Step 6         | ...informing operation (in)success?                                                | ReviewRegistrationUI            | **Information Expert**: the UI is responsible for user interactions and feedback.                                                                                  |
 | Step 3/4       | ...sending the decision notification to the user?                                   | EmailService                    | **Polymorphism / Protected Variations**: an interface hides the concrete provider; the controller depends on the abstraction, not on a specific implementation.    |
 | Step 3/4       | ...choosing the email provider defined in the configuration file?                   | EmailServiceFactory             | **Pure Fabrication / Factory**: isolates the logic that reads the config file and instantiates the right EmailService, keeping the controller free of that concern. |
+| Step 2         | ...carrying request data to the UI?                                                 | RegistrationRequestDTO          | **DTO / Low Coupling**: the controller converts each pending RegistrationRequest into a DTO, so the UI never touches the domain entity and identifies the request by email when approving or rejecting. |
 
 ### Systematization
 
@@ -35,6 +36,7 @@ Other software classes (i.e. Pure Fabrication) identified:
 * GmailEmailService
 * DeiEmailService
 * EmailServiceFactory
+* RegistrationRequestDTO
 
 ## 3.2. Sequence Diagram (SD)
 

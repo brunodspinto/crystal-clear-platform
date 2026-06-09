@@ -2,6 +2,7 @@ package pt.ipp.isep.dei.controller;
 
 import pt.ipp.isep.dei.domain.Organization;
 import pt.ipp.isep.dei.domain.OrganizationType;
+import pt.ipp.isep.dei.dto.OrganizationDTO;
 import pt.ipp.isep.dei.repository.OrganizationRepository;
 import pt.ipp.isep.dei.repository.Repositories;
 
@@ -37,11 +38,12 @@ public class ListOrganizationsController {
 
     /**
      * Returns all registered organizations grouped by type and sorted alphabetically by name within each group.
+     * The organizations are returned as DTOs so the UI does not depend on the domain entity.
      * The map preserves the declaration order of {@link OrganizationType}.
      *
-     * @return a map from each {@link OrganizationType} to the sorted list of organizations of that type.
+     * @return a map from each {@link OrganizationType} to the sorted list of organization DTOs of that type.
      */
-    public Map<OrganizationType, List<Organization>> getOrganizationsGroupedByType() {
+    public Map<OrganizationType, List<OrganizationDTO>> getOrganizationsGroupedByType() {
         List<Organization> all = organizationRepository.getOrganizations();
 
         Map<OrganizationType, List<Organization>> grouped = new EnumMap<>(OrganizationType.class);
@@ -64,6 +66,21 @@ public class ListOrganizationsController {
             });
         }
 
-        return grouped;
+        Map<OrganizationType, List<OrganizationDTO>> groupedDTOs = new EnumMap<>(OrganizationType.class);
+        for (Map.Entry<OrganizationType, List<Organization>> entry : grouped.entrySet()) {
+            List<OrganizationDTO> dtos = new ArrayList<>();
+            for (Organization org : entry.getValue()) {
+                dtos.add(toDTO(org));
+            }
+            groupedDTOs.put(entry.getKey(), dtos);
+        }
+
+        return groupedDTOs;
+    }
+
+    private static OrganizationDTO toDTO(Organization org) {
+        String typeDesignation = org.getType() != null ? org.getType().toString() : "";
+        String natureDesignation = org.getNature() != null ? org.getNature().toString() : "";
+        return new OrganizationDTO(org.getName(), typeDesignation, natureDesignation);
     }
 }
