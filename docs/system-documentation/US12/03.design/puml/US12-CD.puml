@@ -78,6 +78,7 @@ class CitizenRepository {
 }
 
 class ComplaintRepository {
+    + createComplaint(citizen : Citizen, agent : PoliticalAgent) : Complaint
     + save(complaint : Complaint) : boolean
     + getComplaints() : List<Complaint>
 }
@@ -167,6 +168,7 @@ Repositories --> "1" AuthenticationRepository : authenticationRepository
 AuthenticationRepository --> "0..1" UserSession : current >
 UserSession ..> Email
 
+ComplaintRepository ..> Complaint : «create»
 ComplaintRepository "1" --> "*" Complaint : complaints
 
 Complaint "1" *--> "1..*" ComplaintItem : items

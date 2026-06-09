@@ -109,7 +109,7 @@ public class SubmitComplaintController {
         if (agent == null) {
             return false;
         }
-        currentComplaint = new Complaint(citizen, agent);
+        currentComplaint = complaintRepository.createComplaint(citizen, agent);
         return true;
     }
 

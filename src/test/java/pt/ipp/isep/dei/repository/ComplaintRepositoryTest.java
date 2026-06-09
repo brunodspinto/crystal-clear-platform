@@ -43,4 +43,18 @@ class ComplaintRepositoryTest {
         ComplaintRepository repo = new ComplaintRepository();
         assertTrue(repo.getComplaints().isEmpty());
     }
+
+    @Test
+    void ensureCreateComplaintInstantiatesWithoutStoring() {
+        ComplaintRepository repo = new ComplaintRepository();
+        Citizen citizen = new Citizen("citizen@test.com", "Test Citizen", "CC333333333");
+        PoliticalAgent agent = new PoliticalAgent("Agent", "agent@gov.pt", "12345678", "123456789",
+                new Date(), null);
+
+        Complaint complaint = repo.createComplaint(citizen, agent);
+
+        assertNotNull(complaint);
+        assertEquals(0, complaint.getItemCount());
+        assertTrue(repo.getComplaints().isEmpty()); // created (Creator) but not stored until save
+    }
 }

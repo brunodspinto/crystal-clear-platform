@@ -83,7 +83,15 @@ activate C
             activate PAR
                 PAR --> CTRL : politicalAgent
             deactivate PAR
-            CTRL -> CPL ** : new Complaint(citizen, politicalAgent)
+            CTRL -> CR : createComplaint(citizen, politicalAgent)
+            activate CR
+                CR -> CPL** : create(citizen, politicalAgent)
+                note right of CPL
+                    the Complaint constructor
+                    validates citizen and agent (IE)
+                end note
+                CR --> CTRL : cpl
+            deactivate CR
             CTRL --> UI : true
         deactivate CTRL
     deactivate UI

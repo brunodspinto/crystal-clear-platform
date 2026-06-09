@@ -145,11 +145,12 @@ public boolean startComplaint(PoliticalAgentDTO agentDto) {
     if (citizen == null) {
         return false;
     }
-    PoliticalAgent agent = politicalAgentRepository.getByEmail(agentDto.email);
+    PoliticalAgent agent = politicalAgentRepository.getByEmail(agentDto.getEmail());
     if (agent == null) {
         return false;
     }
-    currentComplaint = new Complaint(citizen, agent);
+    // GRASP Creator: the repository (which records Complaints) instantiates it.
+    currentComplaint = complaintRepository.createComplaint(citizen, agent);
     return true;
 }
 

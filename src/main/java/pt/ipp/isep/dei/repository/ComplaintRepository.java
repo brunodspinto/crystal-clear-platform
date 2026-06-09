@@ -1,6 +1,8 @@
 package pt.ipp.isep.dei.repository;
 
+import pt.ipp.isep.dei.domain.Citizen;
 import pt.ipp.isep.dei.domain.Complaint;
+import pt.ipp.isep.dei.domain.PoliticalAgent;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,6 +23,22 @@ public class ComplaintRepository implements Serializable {
      */
     public ComplaintRepository() {
         complaints = new ArrayList<>();
+    }
+
+    /**
+     * Creates a new (empty) complaint for the given citizen and political agent.
+     * Following the GRASP <b>Creator</b> pattern, the repository &mdash; which
+     * records all {@link Complaint} instances &mdash; is responsible for
+     * instantiating them; the complaint validates its own citizen and agent in its
+     * constructor (Information Expert). The complaint is only stored later, via
+     * {@link #save}, once the citizen has finished adding grievances.
+     *
+     * @param citizen        the citizen submitting the complaint.
+     * @param politicalAgent the political agent the complaint is about.
+     * @return the newly created (not yet stored) complaint.
+     */
+    public Complaint createComplaint(Citizen citizen, PoliticalAgent politicalAgent) {
+        return new Complaint(citizen, politicalAgent);
     }
 
     /**
