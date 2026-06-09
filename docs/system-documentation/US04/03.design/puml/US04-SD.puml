@@ -73,10 +73,6 @@ activate Admin
                 deactivate REPO
 
                 REPO -> ORG** : create(name, nature, type)
-                note right of ORG
-                    the Organization constructor
-                    validates its own data (IE)
-                end note
 
                 REPO --> CTRL : true
             deactivate REPO
