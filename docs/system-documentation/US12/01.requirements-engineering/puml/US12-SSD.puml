@@ -25,17 +25,22 @@ activate Citizen
     loop for each grievance about the same agent
         Citizen -> System : asks to add a grievance
         activate System
-            System --> Citizen : shows list of political functions\nand asks to select the role held at the time of the behaviour
+            System --> Citizen : shows list of political functions\nand asks to select one
         deactivate System
 
-        Citizen -> System : selects a political function,\ntypes complaint date and description
+        Citizen -> System : selects a political function
+        activate System
+            System --> Citizen : requests the complaint date and description
+        deactivate System
+
+        Citizen -> System : types the complaint date and description
         activate System
             System --> Citizen : shows grievance summary and requests confirmation
         deactivate System
 
         Citizen -> System : confirms the grievance
         activate System
-            System --> Citizen : asks whether to add another grievance\nabout the same agent
+            System --> Citizen : asks to add another grievance\nabout the same agent
         deactivate System
     end
 
