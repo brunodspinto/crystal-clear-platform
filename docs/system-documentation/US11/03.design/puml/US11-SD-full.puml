@@ -141,14 +141,14 @@ activate Actor
                                 CTRL --> UI : false
                             else
                                 loop for each role in roles
-                                    CTRL -> CTRL : role.getDescription().equals("Journalist") ?
+                                    CTRL -> CTRL : role.getDescription().equals("JOURNALIST") ?
                                     activate CTRL
                                     deactivate CTRL
                                 end
 
                                 note right of CTRL
                                     AC4: returns true if any role
-                                    description equals "Journalist";
+                                    description equals "JOURNALIST";
                                     false otherwise (Citizen).
                                 end note
 

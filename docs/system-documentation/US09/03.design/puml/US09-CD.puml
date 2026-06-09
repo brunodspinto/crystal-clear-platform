@@ -9,8 +9,8 @@ class ConsultIntegratedSituationUI {
 
 class ConsultIntegratedSituationController {
     + ConsultIntegratedSituationController()
-    + getPoliticalAgents()
-    + getIntegratedSituation(agent, referenceDate)
+    + getPoliticalAgents() : List<PoliticalAgent>
+    + getIntegratedSituation(agent, referenceDate) : List<Declaration>
 }
 
 class Repositories <<Singleton>> {
@@ -22,11 +22,11 @@ class Repositories <<Singleton>> {
 }
 
 class PoliticalAgentRepository {
-    + getAll()
+    + getAll() : List<PoliticalAgent>
 }
 
 class DeclarationRepository {
-    + getValidatedDeclarationsForAgentUpTo(agent, referenceDate)
+    + getValidatedDeclarationsForAgentUpTo(agent, referenceDate) : List<Declaration>
 }
 
 class PoliticalAgent {
@@ -89,8 +89,8 @@ class AssetEntry {
 
 class BusinessParticipation {
     - companyNIF
-    - numberOfShares
-    - marketValue
+    - totalValueInStocks
+    - companyPercentage
 }
 
 ConsultIntegratedSituationUI .> ConsultIntegratedSituationController

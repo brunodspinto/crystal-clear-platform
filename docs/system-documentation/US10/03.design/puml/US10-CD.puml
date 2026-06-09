@@ -9,8 +9,8 @@ class AnalyseIncomeEvolutionUI {
 
 class AnalyseIncomeEvolutionController {
     + AnalyseIncomeEvolutionController()
-    + getPoliticalAgents()
-    + getIncomeEvolution(agent, startDate, endDate)
+    + getPoliticalAgents() : List<PoliticalAgent>
+    + getIncomeEvolution(agent, startDate, endDate) : List<Declaration>
 }
 
 class Repositories <<Singleton>> {
@@ -22,11 +22,11 @@ class Repositories <<Singleton>> {
 }
 
 class PoliticalAgentRepository {
-    + getAll()
+    + getAll() : List<PoliticalAgent>
 }
 
 class DeclarationRepository {
-    + getValidatedDeclarationsForAgentBetween(agent, startDate, endDate)
+    + getValidatedDeclarationsForAgentBetween(agent, startDate, endDate) : List<Declaration>
 }
 
 class PoliticalAgent {

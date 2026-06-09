@@ -9,9 +9,9 @@ class ConsultAssetsUI {
 
 class ConsultAssetsController {
     + ConsultAssetsController()
-    + getPoliticalAgents()
-    + getAssetsAt(agent, referenceDate)
-    + isCurrentUserJournalist()
+    + getPoliticalAgents() : List<PoliticalAgent>
+    + getAssetsAt(agent, referenceDate) : List<AssetEntry>
+    + isCurrentUserJournalist() : boolean
 }
 
 class Repositories <<Singleton>> {
@@ -24,20 +24,20 @@ class Repositories <<Singleton>> {
 }
 
 class AuthenticationRepository {
-    + getCurrentUserSession()
+    + getCurrentUserSession() : UserSession
 }
 
 class UserSession {
-    + isLoggedIn()
-    + getUserRoles()
+    + isLoggedIn() : boolean
+    + getUserRoles() : List<UserRoleDTO>
 }
 
 class PoliticalAgentRepository {
-    + getAll()
+    + getAll() : List<PoliticalAgent>
 }
 
 class DeclarationRepository {
-    + getValidatedDeclarationsForAgentUpTo(agent, referenceDate)
+    + getValidatedDeclarationsForAgentUpTo(agent, referenceDate) : List<Declaration>
 }
 
 class PoliticalAgent {
@@ -118,6 +118,12 @@ AssetEntry "0..1" -- "0..1" RealEstate : details >
 AssetEntry "0..1" -- "0..1" VehicleAsset : details >
 AssetEntry "0..1" -- "0..1" StockAsset : details >
 
+note bottom of AssetEntry
+    {xor} exactly one of RealEstate /
+    VehicleAsset / StockAsset is set,
+    according to the AssetType.
+end note
+
 note right of ConsultAssetsController
     getAssetsAt validates inputs:
     throws IllegalArgumentException if agent or
@@ -126,8 +132,11 @@ note right of ConsultAssetsController
 
     AC4: isCurrentUserJournalist() returns true when the
     current UserSession is logged in and has a role
-    whose description equals "Journalist"; the UI uses
+    whose description equals "JOURNALIST"; the UI uses
     the boolean to decide whether to mask sensitive values.
+    The comparison uses the role description string because
+    the AuthLib exposes roles as UserRoleDTO (id/description),
+    so the description is the only stable identifier available.
 end note
 
 note bottom of DeclarationRepository

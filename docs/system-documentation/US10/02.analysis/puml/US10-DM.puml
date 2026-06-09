@@ -10,8 +10,6 @@ hide methods
 class Journalist {
     name
     email
-    phone
-    pressCardNumber
 }
 
 class "Political Agent" as PoliticalAgent {
@@ -19,14 +17,12 @@ class "Political Agent" as PoliticalAgent {
     email
     nationalIdentityCard
     taxIdentificationNumber
-    politicalFunction
     mandateStart
     mandateEnd
 }
 
 class "Declaration of Interests" as Declaration {
     id
-    name
     submissionDate
 }
 
@@ -36,35 +32,39 @@ enum DeclarationStatus {
     REJECTED
 }
 
-enum Type {
+enum DeclarationType {
     INITIAL
     REGULAR
     EXCEPTIONAL
 }
 
-enum PoliticalFunction {
-    MINISTER
-    DEPUTY
-    COUNCILLOR
-    PARISH_COUNCIL_PRESIDENT
-    MAYOR
-}
-
 class Income {
     amount
     source
-    institution
     date
 }
 
-Journalist "*" -- "*" PoliticalAgent : analyses income of
+class SubsidyEntry {
+    amount
+    description
+    date
+}
 
-PoliticalAgent "*" -- "*" Declaration : has
+Journalist "*" -- "*" PoliticalAgent : analyses income of >
 
-PoliticalAgent "1" -- "1" PoliticalFunction : has
+PoliticalAgent "1" -- "*" Declaration : submits >
 
-Declaration "1" -- "1" Type : has
-Declaration "1" -- "1" DeclarationStatus : has
-Declaration "1" -- "*" Income : has
+Declaration "*" -- "1" DeclarationType : has >
+Declaration "*" -- "1" DeclarationStatus : has >
+
+Declaration "1" *-- "*" Income : includes >
+Declaration "1" *-- "*" SubsidyEntry : includes >
+
+note bottom of Declaration
+    US10 considers only VALIDATED declarations
+    within the requested period; the income
+    evolution is computed from the declared
+    incomes and subsidies over time.
+end note
 
 @enduml

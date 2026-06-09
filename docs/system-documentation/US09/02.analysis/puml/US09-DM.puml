@@ -17,14 +17,12 @@ class "Political Agent" as PoliticalAgent {
     email
     nationalIdentityCard
     taxIdentificationNumber
-    politicalFunction
     mandateStart
     mandateEnd
 }
 
 class "Declaration of Interests" as Declaration {
     id
-    name
     submissionDate
 }
 
@@ -34,61 +32,84 @@ enum DeclarationStatus {
     REJECTED
 }
 
-enum Type {
+enum DeclarationType {
     INITIAL
     REGULAR
     EXCEPTIONAL
 }
 
-enum PoliticalFunction {
-    MINISTER
-    DEPUTY
-    COUNCILLOR
-    PARISH_COUNCIL_PRESIDENT
-    MAYOR
+class PositionEntry {
+    functionDesignation
+    grossSalary
+    sideIncomeConsulting
+    sideIncomeBoardMemberships
+    startDate
+    endDate
 }
 
 class Income {
     amount
     source
-    institution
     date
 }
 
-class Asset {
-    acquisitionValue
-    marketValue
+class SubsidyEntry {
+    amount
+    description
+    date
+}
+
+class AssetEntry {
+    assetValue
+}
+
+enum AssetType {
+    REAL_ESTATE
+    VEHICLES
+    STOCKS
 }
 
 class "Real Estate" as RealEstate {
     description
+    municipality
 }
 
-class PositionEntry {
-    remuneration
-    startDate
-    endDate
+class VehicleAsset {
+    description
+}
+
+class StockAsset {
+    description
 }
 
 class BusinessParticipation {
-    numberOfShares
-    marketValue
+    companyNIF
+    totalValueInStocks
+    companyPercentage
 }
 
-EthicsCommitteeMember "*" -- "*" PoliticalAgent : consults
+EthicsCommitteeMember "*" -- "*" PoliticalAgent : consults situation of >
 
-PoliticalAgent "*" -- "*" Declaration : has
+PoliticalAgent "1" -- "*" Declaration : submits >
 
-PoliticalAgent "1" -- "1" PoliticalFunction : has
+Declaration "*" -- "1" DeclarationType : has >
+Declaration "*" -- "1" DeclarationStatus : has >
 
-Declaration "1" -- "1" Type : has
-Declaration "1" -- "1" DeclarationStatus : has
-Declaration "1" -- "*" Income : has
-Declaration "1" -- "*" Asset : has
+Declaration "1" *-- "*" PositionEntry : holds >
+Declaration "1" *-- "*" Income : includes >
+Declaration "1" *-- "*" SubsidyEntry : includes >
+Declaration "1" *-- "*" AssetEntry : declares >
+Declaration "1" *-- "*" BusinessParticipation : declares >
 
-Declaration "1" -- "*" PositionEntry : has
-Declaration "1" -- "*" BusinessParticipation : has
+AssetEntry "*" -- "1" AssetType : classified as >
+AssetEntry "0..1" -- "0..1" RealEstate : details >
+AssetEntry "0..1" -- "0..1" VehicleAsset : details >
+AssetEntry "0..1" -- "0..1" StockAsset : details >
 
-Asset "1" -- "1" RealEstate : can be
+note bottom of AssetEntry
+    {xor} an AssetEntry details exactly one of
+    RealEstate / VehicleAsset / StockAsset,
+    according to its AssetType.
+end note
 
 @enduml

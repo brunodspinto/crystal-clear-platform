@@ -10,8 +10,6 @@ hide methods
 class Journalist {
     name
     email
-    phone
-    pressCardNumber
 }
 
 class Citizen {
@@ -24,14 +22,12 @@ class "Political Agent" as PoliticalAgent {
     email
     nationalIdentityCard
     taxIdentificationNumber
-    politicalFunction
     mandateStart
     mandateEnd
 }
 
 class "Declaration of Interests" as Declaration {
     id
-    name
     submissionDate
 }
 
@@ -41,40 +37,54 @@ enum DeclarationStatus {
     REJECTED
 }
 
-enum Type {
+enum DeclarationType {
     INITIAL
     REGULAR
     EXCEPTIONAL
 }
 
-enum PoliticalFunction {
-    MINISTER
-    DEPUTY
-    COUNCILLOR
-    PARISH_COUNCIL_PRESIDENT
-    MAYOR
+class AssetEntry {
+    assetValue
 }
 
-class Asset {
-    acquisitionValue
-    marketValue
+enum AssetType {
+    REAL_ESTATE
+    VEHICLES
+    STOCKS
 }
 
 class "Real Estate" as RealEstate {
     description
+    municipality
 }
 
-Journalist "*" -- "*" PoliticalAgent : consults assets of
-Citizen "*" -- "*" PoliticalAgent : consults assets of
+class VehicleAsset {
+    description
+}
 
-PoliticalAgent "*" -- "*" Declaration : has
+class StockAsset {
+    description
+}
 
-PoliticalAgent "1" -- "1" PoliticalFunction : has
+Journalist "*" -- "*" PoliticalAgent : consults assets of >
+Citizen "*" -- "*" PoliticalAgent : consults assets of >
 
-Declaration "1" -- "1" Type : has
-Declaration "1" -- "1" DeclarationStatus : has
-Declaration "1" -- "*" Asset : has
+PoliticalAgent "1" -- "*" Declaration : submits >
 
-Asset "1" -- "1" RealEstate : can be
+Declaration "*" -- "1" DeclarationType : has >
+Declaration "*" -- "1" DeclarationStatus : has >
+
+Declaration "1" *-- "*" AssetEntry : declares >
+
+AssetEntry "*" -- "1" AssetType : classified as >
+AssetEntry "0..1" -- "0..1" RealEstate : details >
+AssetEntry "0..1" -- "0..1" VehicleAsset : details >
+AssetEntry "0..1" -- "0..1" StockAsset : details >
+
+note bottom of AssetEntry
+    {xor} an AssetEntry details exactly one of
+    RealEstate / VehicleAsset / StockAsset,
+    according to its AssetType.
+end note
 
 @enduml
