@@ -21,18 +21,19 @@ public class Repositories implements Serializable {
     private final PoliticalAgentRepository politicalAgentRepository;
     private final CitizenRepository citizenRepository;
     private final ComplaintRepository complaintRepository;
+    private final TaskCategoryRepository taskCategoryRepository;
+    private final DeclarationRepository declarationRepository;
+    private final EthicsCommitteeMemberRepository ethicsCommitteeMemberRepository;
+    private final ValidationRecordRepository validationRecordRepository;
+    private final RegistrationRequestRepository registrationRequestRepository;
+    private final ComplaintAssessmentRepository complaintAssessmentRepository;
 
-    // Transient repositories: not yet serializable (or, in the case of
-    // authentication, they wrap a non-serializable library). They are rebuilt on
-    // load and repopulated by the Bootstrap on startup.
+    // Transient repositories: the authentication repository wraps a
+    // non-serializable library, and the graph repository holds derived data that
+    // is rebuilt at runtime. They are recreated on load and repopulated by the
+    // Bootstrap on startup.
     private transient AuthenticationRepository authenticationRepository;
-    private transient TaskCategoryRepository taskCategoryRepository;
-    private transient DeclarationRepository declarationRepository;
     private transient GraphRepository graphRepository;
-    private transient EthicsCommitteeMemberRepository ethicsCommitteeMemberRepository;
-    private transient ValidationRecordRepository validationRecordRepository;
-    private transient RegistrationRequestRepository registrationRequestRepository;
-    private transient ComplaintAssessmentRepository complaintAssessmentRepository;
 
     /**
      * The Singleton's constructor should always be private to prevent direct construction calls with the new operator.
@@ -84,13 +85,7 @@ public class Repositories implements Serializable {
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         authenticationRepository = new AuthenticationRepository();
-        taskCategoryRepository = new TaskCategoryRepository();
-        declarationRepository = new DeclarationRepository();
         graphRepository = new GraphRepository();
-        ethicsCommitteeMemberRepository = new EthicsCommitteeMemberRepository();
-        validationRecordRepository = new ValidationRecordRepository();
-        registrationRequestRepository = new RegistrationRequestRepository();
-        complaintAssessmentRepository = new ComplaintAssessmentRepository();
     }
 
     /**

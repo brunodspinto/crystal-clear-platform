@@ -208,6 +208,24 @@ public class Declaration implements Serializable {
     }
 
     /**
+     * Advances the shared id counter so that it stays above the numeric part of
+     * an id restored from disk. Called by the repository after deserialization to
+     * avoid colliding with declarations created in a previous run.
+     *
+     * @param loadedId an id previously assigned (format {@code DECL-<n>}).
+     */
+    public static void registerLoadedId(String loadedId) {
+        try {
+            int n = Integer.parseInt(loadedId.substring(loadedId.indexOf('-') + 1));
+            if (n >= nextId) {
+                nextId = n + 1;
+            }
+        } catch (NumberFormatException | IndexOutOfBoundsException ignored) {
+            // id not in the expected format; leave the counter unchanged.
+        }
+    }
+
+    /**
      * Gets id.
      *
      * @return the unique identifier of this declaration.

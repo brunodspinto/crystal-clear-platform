@@ -2,13 +2,16 @@ package pt.ipp.isep.dei.repository;
 
 import pt.ipp.isep.dei.domain.ValidationRecord;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Repository for storing and retrieving {@link ValidationRecord} instances.
  */
-public class ValidationRecordRepository {
+public class ValidationRecordRepository implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final List<ValidationRecord> records;
 

@@ -1,9 +1,13 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
+
 /**
  * The type Task category.
  */
-public class TaskCategory {
+public class TaskCategory implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final String description;
 

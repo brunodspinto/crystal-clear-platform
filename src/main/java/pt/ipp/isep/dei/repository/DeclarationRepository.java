@@ -4,6 +4,9 @@ import pt.ipp.isep.dei.domain.Declaration;
 import pt.ipp.isep.dei.domain.DeclarationStatus;
 import pt.ipp.isep.dei.domain.PoliticalAgent;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -14,7 +17,9 @@ import java.util.List;
 /**
  * Repository for storing and retrieving {@link Declaration} instances.
  */
-public class DeclarationRepository {
+public class DeclarationRepository implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final List<Declaration> declarations;
 
@@ -23,6 +28,18 @@ public class DeclarationRepository {
      */
     public DeclarationRepository() {
         declarations = new ArrayList<>();
+    }
+
+    /**
+     * After loading the persisted declarations, advances the id counter past the
+     * highest id already in use so new declarations do not collide with the ones
+     * restored from disk.
+     */
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        for (Declaration d : declarations) {
+            Declaration.registerLoadedId(d.getId());
+        }
     }
 
     /**

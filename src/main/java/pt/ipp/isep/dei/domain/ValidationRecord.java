@@ -1,5 +1,6 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,7 +10,9 @@ import java.util.List;
  * on a Declaration of Interests. Each validation (approval or rejection) produces exactly
  * one ValidationRecord, stored permanently for audit purposes (AC4 of US08).
  */
-public class ValidationRecord {
+public class ValidationRecord implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final EthicsCommitteeMember member;
     private final Declaration declaration;

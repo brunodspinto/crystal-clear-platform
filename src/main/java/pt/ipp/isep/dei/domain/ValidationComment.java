@@ -1,11 +1,15 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
+
 /**
  * Represents a comment attached to a specific section of a rejected Declaration of Interests.
  * A ValidationComment is always part of a {@link ValidationRecord} and is created
  * when a declaration is returned for correction (AC2 of US08).
  */
-public class ValidationComment {
+public class ValidationComment implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final String section;
     private final String comment;

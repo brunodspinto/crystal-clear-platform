@@ -13,15 +13,31 @@ import java.util.Date;
 public class Bootstrap implements Runnable {
 
     public void run() {
-        addTaskCategories();
-        addOrganization();
-        addUS04Organizations();
-        addPoliticalAgents();
-        addCitizens();
-        addEthicsCommitteeMembers();
+        run(true);
+    }
+
+    /**
+     * Seeds the repositories on startup.
+     *
+     * @param firstRun {@code true} when there is no persisted data yet. The
+     *                 authentication users/roles live in a transient repository and
+     *                 are recreated on every run; the remaining data lives in
+     *                 persisted repositories and is only seeded on the first run,
+     *                 otherwise it would be duplicated on every launch.
+     */
+    public void run(boolean firstRun) {
         addUsers();
-        addValidatedDeclaration();
-        addUS10IncomeHistory();
+
+        if (firstRun) {
+            addTaskCategories();
+            addOrganization();
+            addUS04Organizations();
+            addPoliticalAgents();
+            addCitizens();
+            addEthicsCommitteeMembers();
+            addValidatedDeclaration();
+            addUS10IncomeHistory();
+        }
     }
 
     private void addOrganization() {

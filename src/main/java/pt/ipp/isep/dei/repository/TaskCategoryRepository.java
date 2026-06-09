@@ -2,13 +2,17 @@ package pt.ipp.isep.dei.repository;
 
 import pt.ipp.isep.dei.domain.TaskCategory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The type Task category repository.
  */
-public class TaskCategoryRepository {
+public class TaskCategoryRepository implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private final List<TaskCategory> taskCategories;
 
     /**

@@ -16,12 +16,13 @@ public class Main {
      */
     public static void main(String[] args) {
         Repositories loaded = new RepositoriesFile().load();
+        boolean firstRun = loaded == null;
         if (loaded != null) {
             Repositories.setInstance(loaded);
         }
 
         Bootstrap bootstrap = new Bootstrap();
-        bootstrap.run();
+        bootstrap.run(firstRun);
         System.out.println(".");
         try {
             MainMenuUI menu = new MainMenuUI();
