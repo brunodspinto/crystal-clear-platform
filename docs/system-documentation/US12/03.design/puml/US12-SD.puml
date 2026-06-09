@@ -59,19 +59,27 @@ activate C
             CTRL --> UI : agentDtoList
         deactivate CTRL
 
-        UI --> C : shows list of agents (DTO)\nand asks to select one
+        UI --> C : shows list of agents \nand asks to select one
     deactivate UI
 
-    C -> UI : selects a political agent (DTO)
+    C -> UI : selects a political agent
     activate UI
 
         UI -> CTRL : startComplaint(agentDto)
         activate CTRL
-            ref over CTRL, AR, SESS, CitR
-                obtain the authenticated citizen
-                (session -> email -> CitizenRepository)
-            end ref
-            CTRL -> PAR : getByEmail(agentDto.email)
+            CTRL -> AR : getCurrentUserSession()
+            activate AR
+                AR --> CTRL : session
+            deactivate AR
+            CTRL -> SESS : getUserId()
+            activate SESS
+                SESS --> CTRL : email
+            deactivate SESS
+            CTRL -> CitR : getCitizenByEmail(email.getEmail())
+            activate CitR
+                CitR --> CTRL : citizen
+            deactivate CitR
+            CTRL -> PAR : getByEmail(agentDto.getEmail())
             activate PAR
                 PAR --> CTRL : politicalAgent
             deactivate PAR
@@ -86,16 +94,26 @@ activate C
         activate CTRL
             CTRL --> UI : politicalFunctionList
         deactivate CTRL
-        UI --> C : shows functions and requests description and date
+        UI --> C : shows political functions and asks to select one
         deactivate UI
 
-        C -> UI : selects function, types description and date, confirms
+        C -> UI : selects a political function
+        activate UI
+            UI --> C : requests the complaint date and description
+        deactivate UI
+
+        C -> UI : types the complaint date and description
+        activate UI
+            UI --> C : shows grievance summary and requests confirmation
+        deactivate UI
+
+        C -> UI : confirms the grievance
         activate UI
             UI -> CTRL : addGrievance(description, date, function)
             activate CTRL
                 CTRL -> CPL : addItem(description, date, function)
             deactivate CTRL
-            UI --> C : asks whether to add another grievance
+            UI --> C : asks to add another grievance
         deactivate UI
     end
 
