@@ -7,7 +7,7 @@
     @Test
     void ensureOrganizationUS04CreationFailsWithNullName() {
         assertThrows(IllegalArgumentException.class, () ->
-                new Organization(null, "nature", OrganizationType.COMPANY));
+                new Organization(null, OrganizationNature.PRIVATE, OrganizationType.COMPANY));
     }
 
 **Test 2:** Check that it is not possible to create an Organization with a blank name — AC1.
@@ -15,7 +15,7 @@
     @Test
     void ensureOrganizationUS04CreationFailsWithBlankName() {
         assertThrows(IllegalArgumentException.class, () ->
-                new Organization("   ", "nature", OrganizationType.COMPANY));
+                new Organization("   ", OrganizationNature.PRIVATE, OrganizationType.COMPANY));
     }
 
 **Test 3:** Check that it is not possible to create an Organization with a null type — AC2.
@@ -23,18 +23,16 @@
     @Test
     void ensureOrganizationUS04CreationFailsWithNullType() {
         assertThrows(IllegalArgumentException.class, () ->
-                new Organization("Test Org", "nature", null));
+                new Organization("Test Org", OrganizationNature.PRIVATE, null));
     }
 
 **Test 4:** Check that the repository rejects duplicate organizations with the same name and type — AC3.
 
     @Test
-    void ensureSaveDuplicateOrganizationFails() {
+    void ensureRegisterDuplicateOrganizationFails() {
         OrganizationRepository repo = new OrganizationRepository();
-        Organization org = new Organization("ACME Corp", "private", OrganizationType.COMPANY);
-        repo.save(org);
-        Organization dup = new Organization("ACME Corp", "public", OrganizationType.COMPANY);
-        assertFalse(repo.save(dup));
+        repo.registerOrganization("ACME Corp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
+        assertFalse(repo.registerOrganization("ACME Corp", OrganizationNature.PUBLIC, OrganizationType.COMPANY));
     }
 
 **Test 5:** Check that two organizations with the same name but different types are both allowed — AC3.
@@ -42,10 +40,8 @@
     @Test
     void ensureSameNameDifferentTypeIsAllowed() {
         OrganizationRepository repo = new OrganizationRepository();
-        Organization org1 = new Organization("ACME Corp", "private", OrganizationType.COMPANY);
-        Organization org2 = new Organization("ACME Corp", "social", OrganizationType.FOUNDATION);
-        repo.save(org1);
-        assertTrue(repo.save(org2));
+        repo.registerOrganization("ACME Corp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
+        assertTrue(repo.registerOrganization("ACME Corp", OrganizationNature.SOCIAL, OrganizationType.FOUNDATION));
     }
 
 **Test 6:** Check that `existsByNameAndType` is case-insensitive — AC3.
@@ -53,7 +49,7 @@
     @Test
     void ensureExistsByNameAndTypeIsCaseInsensitive() {
         OrganizationRepository repo = new OrganizationRepository();
-        repo.save(new Organization("ACME Corp", "social", OrganizationType.FOUNDATION));
+        repo.registerOrganization("ACME Corp", OrganizationNature.SOCIAL, OrganizationType.FOUNDATION);
         assertTrue(repo.existsByNameAndType("acme corp", OrganizationType.FOUNDATION));
     }
 
@@ -92,13 +88,11 @@
 
 ### Class RegisterOrganizationController
 
+The controller only coordinates the use case (GRASP Controller): it delegates the creation and the global (duplicate) validation to the repository, which is the Creator.
+
 ```java
 public boolean registerOrganization(String name, OrganizationNature nature, OrganizationType type) {
-    if (organizationRepository.existsByNameAndType(name, type)) {
-        return false;
-    }
-    Organization organization = new Organization(name, nature, type);
-    return organizationRepository.save(organization);
+    return organizationRepository.registerOrganization(name, nature, type);
 }
 ```
 
@@ -130,7 +124,16 @@ public Organization(String name, OrganizationNature nature, OrganizationType typ
 
 ### Class OrganizationRepository
 
+Following GRASP **Creator**, the repository records all `Organization` instances, so it is the class responsible for creating them. The `Organization` validates its own data in its constructor (Information Expert).
+
 ```java
+public boolean registerOrganization(String name, OrganizationNature nature, OrganizationType type) {
+    if (existsByNameAndType(name, type)) {          // global (duplicate) validation
+        return false;
+    }
+    return organizations.add(new Organization(name, nature, type));   // Creator
+}
+
 public boolean existsByNameAndType(String name, OrganizationType type) {
     for (Organization org : organizations) {
         if (org.getType() != null
@@ -140,13 +143,6 @@ public boolean existsByNameAndType(String name, OrganizationType type) {
         }
     }
     return false;
-}
-
-public boolean save(Organization organization) {
-    if (existsByNameAndType(organization.getName(), organization.getType())) {
-        return false;
-    }
-    return organizations.add(organization.clone());
 }
 ```
 

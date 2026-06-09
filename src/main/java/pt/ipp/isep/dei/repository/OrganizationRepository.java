@@ -2,6 +2,7 @@ package pt.ipp.isep.dei.repository;
 
 import pt.ipp.isep.dei.domain.Employee;
 import pt.ipp.isep.dei.domain.Organization;
+import pt.ipp.isep.dei.domain.OrganizationNature;
 import pt.ipp.isep.dei.domain.OrganizationType;
 
 import java.io.Serializable;
@@ -101,11 +102,31 @@ public class OrganizationRepository implements Serializable {
     }
 
     /**
-     * Saves a new organization if no duplicate with the same name and type exists.
-     * A clone of the organization is stored to protect internal state.
+     * Registers a new organization, creating it if no duplicate with the same
+     * name and type already exists. Following the GRASP <b>Creator</b> pattern,
+     * the repository &mdash; which records all {@link Organization} instances &mdash;
+     * is responsible for instantiating the new organization; the organization
+     * validates its own data in its constructor (Information Expert).
      *
-     * @param organization the organization to save.
-     * @return {@code true} if saved successfully, {@code false} if a duplicate exists.
+     * @param name   the organization name.
+     * @param nature the legal nature (public, private or social).
+     * @param type   the organization type.
+     * @return {@code true} if registered; {@code false} if a duplicate exists.
+     */
+    public boolean registerOrganization(String name, OrganizationNature nature, OrganizationType type) {
+        if (existsByNameAndType(name, type)) {
+            return false;
+        }
+        return organizations.add(new Organization(name, nature, type));
+    }
+
+    /**
+     * Stores an already-built organization if no duplicate with the same name and
+     * type exists (a defensive clone is kept). Useful for seeding and for callers
+     * that already hold an {@link Organization} instance.
+     *
+     * @param organization the organization to store.
+     * @return {@code true} if stored; {@code false} if a duplicate exists.
      */
     public boolean save(Organization organization) {
         if (existsByNameAndType(organization.getName(), organization.getType())) {

@@ -64,16 +64,21 @@ activate Admin
         UI -> CTRL : registerOrganization(name, nature, type)
         activate CTRL
 
-            CTRL -> REPO : existsByNameAndType(name, type)
+            CTRL -> REPO : registerOrganization(name, nature, type)
             activate REPO
-                REPO --> CTRL : false
-            deactivate REPO
 
-            CTRL -> ORG** : create(name, nature, type)
+                REPO -> REPO : existsByNameAndType(name, type)
+                activate REPO
+                    REPO --> REPO : false
+                deactivate REPO
 
-            CTRL -> REPO : save(org)
-            activate REPO
-                REPO --> CTRL : saved
+                REPO -> ORG** : create(name, nature, type)
+                note right of ORG
+                    the Organization constructor
+                    validates its own data (IE)
+                end note
+
+                REPO --> CTRL : true
             deactivate REPO
 
             CTRL --> UI : success

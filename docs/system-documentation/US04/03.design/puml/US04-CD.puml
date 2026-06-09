@@ -23,8 +23,9 @@ class Repositories <<Singleton>> {
 }
 
 class OrganizationRepository {
-    + save(organization : Organization) : boolean
+    + registerOrganization(name : String, nature : OrganizationNature,\n  type : OrganizationType) : boolean
     + existsByNameAndType(name : String, type : OrganizationType) : boolean
+    + save(organization : Organization) : boolean
 }
 
 class Organization {
@@ -57,11 +58,11 @@ RegisterOrganizationUI .> RegisterOrganizationController
 
 RegisterOrganizationController ..> Repositories
 RegisterOrganizationController ..> OrganizationRepository
-RegisterOrganizationController ..> Organization
 
 Repositories -> "1" Repositories : instance
 Repositories --> "1" OrganizationRepository : organizationRepository
 
+OrganizationRepository ..> Organization : «create»
 OrganizationRepository "1" --> "*" Organization : organizations
 
 Organization ..> OrganizationType

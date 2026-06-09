@@ -93,54 +93,46 @@ class OrganizationRepositoryTest {
         assertNull(result);
     }
 
-    // --- US04 Tests (save + existsByNameAndType) ---
+    // --- US04 Tests (registerOrganization + existsByNameAndType) ---
 
     @Test
-    void ensureSaveOrganizationWorks() {
+    void ensureRegisterOrganizationWorks() {
         OrganizationRepository repo = new OrganizationRepository();
-        Organization org = new Organization("ACME Corp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
-        assertTrue(repo.save(org));
+        assertTrue(repo.registerOrganization("ACME Corp", OrganizationNature.PRIVATE, OrganizationType.COMPANY));
     }
 
     @Test
-    void ensureSaveDuplicateOrganizationFails() {
+    void ensureRegisterDuplicateOrganizationFails() {
         OrganizationRepository repo = new OrganizationRepository();
-        Organization org = new Organization("ACME Corp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
-        repo.save(org);
-        Organization dup = new Organization("ACME Corp", OrganizationNature.PUBLIC, OrganizationType.COMPANY);
-        assertFalse(repo.save(dup));
+        repo.registerOrganization("ACME Corp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
+        assertFalse(repo.registerOrganization("ACME Corp", OrganizationNature.PUBLIC, OrganizationType.COMPANY));
     }
 
     @Test
     void ensureSameNameDifferentTypeIsAllowed() {
         OrganizationRepository repo = new OrganizationRepository();
-        Organization org1 = new Organization("ACME Corp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
-        Organization org2 = new Organization("ACME Corp", OrganizationNature.SOCIAL, OrganizationType.FOUNDATION);
-        repo.save(org1);
-        assertTrue(repo.save(org2));
+        repo.registerOrganization("ACME Corp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
+        assertTrue(repo.registerOrganization("ACME Corp", OrganizationNature.SOCIAL, OrganizationType.FOUNDATION));
     }
 
     @Test
     void ensureExistsByNameAndTypeWorks() {
         OrganizationRepository repo = new OrganizationRepository();
-        Organization org = new Organization("ACME Corp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
-        repo.save(org);
+        repo.registerOrganization("ACME Corp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
         assertTrue(repo.existsByNameAndType("ACME Corp", OrganizationType.COMPANY));
     }
 
     @Test
     void ensureExistsByNameAndTypeIsCaseInsensitive() {
         OrganizationRepository repo = new OrganizationRepository();
-        Organization org = new Organization("ACME Corp", OrganizationNature.SOCIAL, OrganizationType.FOUNDATION);
-        repo.save(org);
+        repo.registerOrganization("ACME Corp", OrganizationNature.SOCIAL, OrganizationType.FOUNDATION);
         assertTrue(repo.existsByNameAndType("acme corp", OrganizationType.FOUNDATION));
     }
 
     @Test
     void ensureExistsByNameAndTypeReturnsFalseForDifferentType() {
         OrganizationRepository repo = new OrganizationRepository();
-        Organization org = new Organization("ACME Corp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
-        repo.save(org);
+        repo.registerOrganization("ACME Corp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
         assertFalse(repo.existsByNameAndType("ACME Corp", OrganizationType.FOUNDATION));
     }
 }

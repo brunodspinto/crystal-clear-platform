@@ -1,6 +1,5 @@
 package pt.ipp.isep.dei.controller;
 
-import pt.ipp.isep.dei.domain.Organization;
 import pt.ipp.isep.dei.domain.OrganizationNature;
 import pt.ipp.isep.dei.domain.OrganizationType;
 import pt.ipp.isep.dei.repository.OrganizationRepository;
@@ -50,7 +49,10 @@ public class RegisterOrganizationController {
     }
 
     /**
-     * Registers a new organization if no duplicate exists with the same name and type.
+     * Registers a new organization. Following the GRASP Controller pattern, the
+     * controller only coordinates the use case: it delegates the creation and the
+     * global (duplicate) validation to the {@link OrganizationRepository}, which
+     * records the organizations and is therefore their Creator.
      *
      * @param name   the name of the organization.
      * @param nature the legal nature (public, private or social).
@@ -58,10 +60,6 @@ public class RegisterOrganizationController {
      * @return {@code true} if registered successfully, {@code false} if a duplicate exists.
      */
     public boolean registerOrganization(String name, OrganizationNature nature, OrganizationType type) {
-        if (organizationRepository.existsByNameAndType(name, type)) {
-            return false;
-        }
-        Organization organization = new Organization(name, nature, type);
-        return organizationRepository.save(organization);
+        return organizationRepository.registerOrganization(name, nature, type);
     }
 }
