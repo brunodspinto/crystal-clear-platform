@@ -140,7 +140,7 @@ class DetectConflictsControllerTest {
                 controller.runQuery(DetectConflictsController.QUERY_PUBLIC_OFFICIALS_INFLUENCING, null);
 
         assertEquals(1, chains.size());
-        assertEquals("O1", chains.get(0).getFirst());
+        assertEquals("P1", chains.get(0).getFirst());
         assertEquals("C1", chains.get(0).getLast());
     }
 
@@ -174,7 +174,8 @@ class DetectConflictsControllerTest {
     void ensureQ5DetectsAppointmentByOrgMember() {
         RelationGraph graph = new RelationGraph();
         graph.addEdge(new Edge("P1", "P2", ConflictDetector.REL_APPOINTED_BY, 1.0));
-        graph.addEdge(new Edge("P2", "O1", ConflictDetector.REL_MEMBER_OF, 1.0));
+        graph.addEdge(new Edge("P2", "J1", ConflictDetector.REL_HOLDS_POSITION, 1.0));
+        graph.addEdge(new Edge("J1", "O1", ConflictDetector.REL_IN_ORGANIZATION, 1.0));
 
         GraphRepository repo = new GraphRepository();
         repo.setRelationGraph(graph);
