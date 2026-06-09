@@ -68,17 +68,6 @@ public class Repositories implements Serializable {
     }
 
     /**
-     * Replaces the singleton instance, typically with one loaded from disk by
-     * {@link RepositoriesFile}. Used to support object-serialization persistence
-     * across successive runs.
-     *
-     * @param repositories the instance to use as the singleton.
-     */
-    public static void setInstance(Repositories repositories) {
-        instance = repositories;
-    }
-
-    /**
      * Restores the transient (non-serialized) repositories after deserialization.
      * Their content is then repopulated by the Bootstrap on startup.
      */
@@ -86,6 +75,19 @@ public class Repositories implements Serializable {
         in.defaultReadObject();
         authenticationRepository = new AuthenticationRepository();
         graphRepository = new GraphRepository();
+    }
+
+    /**
+     * Adopts the instance read from disk as the singleton instance. Called by the
+     * serialization mechanism after {@link #readObject}; whatever it returns
+     * replaces the deserialized object, which keeps the Singleton guarantee
+     * (a single instance) without exposing a public setter.
+     *
+     * @return the singleton instance.
+     */
+    private Object readResolve() {
+        instance = this;
+        return instance;
     }
 
     /**

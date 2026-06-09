@@ -20,9 +20,6 @@ public class App extends Application {
     public void start(Stage stage) throws Exception {
         Repositories loaded = new RepositoriesFile().load();
         boolean firstRun = loaded == null;
-        if (loaded != null) {
-            Repositories.setInstance(loaded);
-        }
         new Bootstrap().run(firstRun);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Main.fxml"));
