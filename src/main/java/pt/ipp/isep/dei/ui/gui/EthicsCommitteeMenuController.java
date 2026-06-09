@@ -55,35 +55,37 @@ public class EthicsCommitteeMenuController {
         open("/fxml/Subnetwork.fxml");
     }
 
-    @FXML
-    private void handleUs14() {
-        showStatistics(StatsScreen.US14);
-    }
-
-    @FXML
-    private void handleUs17() {
-        showStatistics(StatsScreen.US17);
-    }
-
-    @FXML
-    private void handleUs18() {
-        showStatistics(StatsScreen.US18);
-    }
-
-    @FXML
-    private void handleUs28() {
-        showStatistics(StatsScreen.US28);
-    }
-
-    @FXML
-    private void handleUs30() {
-        showStatistics(StatsScreen.US30);
-    }
-
-    @FXML
-    private void handleUs31() {
-        showStatistics(StatsScreen.US31);
-    }
+    // Statistical analyses (US14/17/18/28/30/31) are presented in the Jupyter
+    // notebook, not in the GUI. Kept here so the screens can be re-enabled later.
+    // @FXML
+    // private void handleUs14() {
+    //     showStatistics(StatsScreen.US14);
+    // }
+    //
+    // @FXML
+    // private void handleUs17() {
+    //     showStatistics(StatsScreen.US17);
+    // }
+    //
+    // @FXML
+    // private void handleUs18() {
+    //     showStatistics(StatsScreen.US18);
+    // }
+    //
+    // @FXML
+    // private void handleUs28() {
+    //     showStatistics(StatsScreen.US28);
+    // }
+    //
+    // @FXML
+    // private void handleUs30() {
+    //     showStatistics(StatsScreen.US30);
+    // }
+    //
+    // @FXML
+    // private void handleUs31() {
+    //     showStatistics(StatsScreen.US31);
+    // }
 
     @FXML
     private void handleLogout() {
@@ -99,9 +101,10 @@ public class EthicsCommitteeMenuController {
         }
     }
 
-    private void showStatistics(StatsScreen screen) {
-        if (mainController != null) {
-            mainController.showStatistics(screen);
-        }
-    }
+    // Used by the statistical-analysis buttons, currently disabled (see above).
+    // private void showStatistics(StatsScreen screen) {
+    //     if (mainController != null) {
+    //         mainController.showStatistics(screen);
+    //     }
+    // }
 }

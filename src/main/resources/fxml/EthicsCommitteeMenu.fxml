@@ -25,6 +25,8 @@
         <Button text="Find Pathway" onAction="#handleFindPath" styleClass="primary-button" maxWidth="300"/>
         <Button text="Influence Subnetwork" onAction="#handleSubnetwork" styleClass="primary-button" maxWidth="300"/>
 
+        <!-- Statistical analyses are presented in the Jupyter notebook, not in the GUI -->
+        <!--
         <Label text="Statistical analyses" styleClass="field-label"/>
         <Button text="US14 — Declaration Statistics" onAction="#handleUs14" styleClass="primary-button" maxWidth="300"/>
         <Button text="US17 — Top Companies by Stock Value" onAction="#handleUs17" styleClass="primary-button" maxWidth="300"/>
@@ -32,6 +34,7 @@
         <Button text="US28 — Role vs Asset Correlation" onAction="#handleUs28" styleClass="primary-button" maxWidth="300"/>
         <Button text="US30 — Residual Analysis" onAction="#handleUs30" styleClass="primary-button" maxWidth="300"/>
         <Button text="US31 — Shareholding Non-linearity" onAction="#handleUs31" styleClass="primary-button" maxWidth="300"/>
+        -->
 
         <Button text="Logout" onAction="#handleLogout" styleClass="secondary-button" maxWidth="300"/>
     </VBox>
