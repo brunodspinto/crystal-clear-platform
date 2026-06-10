@@ -5,6 +5,9 @@ import pt.ipp.isep.dei.domain.Declaration;
 import pt.ipp.isep.dei.domain.DeclarationStatus;
 import pt.ipp.isep.dei.domain.DeclarationType;
 import pt.ipp.isep.dei.domain.PoliticalAgent;
+import pt.ipp.isep.dei.dto.DeclarationDTO;
+import pt.ipp.isep.dei.dto.PoliticalAgentDTO;
+import pt.ipp.isep.dei.mapper.PoliticalAgentMapper;
 import pt.ipp.isep.dei.repository.DeclarationRepository;
 import pt.ipp.isep.dei.repository.PoliticalAgentRepository;
 
@@ -14,7 +17,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -28,6 +30,18 @@ class AnalyseIncomeEvolutionControllerTest {
     private PoliticalAgent agentMaria() {
         return new PoliticalAgent("Maria Costa", "maria@gov.pt", "22222222", "100000002",
                 date(2020, Calendar.JANUARY, 1), null);
+    }
+
+    private PoliticalAgentDTO dto(PoliticalAgent agent) {
+        return new PoliticalAgentMapper().toDTO(agent);
+    }
+
+    private PoliticalAgentRepository repoWith(PoliticalAgent... agents) {
+        PoliticalAgentRepository repo = new PoliticalAgentRepository();
+        for (PoliticalAgent a : agents) {
+            repo.save(a);
+        }
+        return repo;
     }
 
     private Date date(int year, int month, int day) {
@@ -78,13 +92,13 @@ class AnalyseIncomeEvolutionControllerTest {
         declRepo.save(joaoPending);
 
         AnalyseIncomeEvolutionController controller =
-                new AnalyseIncomeEvolutionController(new PoliticalAgentRepository(), declRepo);
+                new AnalyseIncomeEvolutionController(repoWith(joao), declRepo);
 
-        List<Declaration> result = controller.getIncomeEvolution(joao,
+        List<DeclarationDTO> result = controller.getIncomeEvolution(dto(joao),
                 date(2024, Calendar.JANUARY, 1), date(2024, Calendar.DECEMBER, 31));
 
         assertEquals(1, result.size());
-        assertSame(joaoValidated, result.get(0));
+        assertEquals(joaoValidated.getId(), result.get(0).getId());
     }
 
     @Test
@@ -105,9 +119,9 @@ class AnalyseIncomeEvolutionControllerTest {
         declRepo.save(after);
 
         AnalyseIncomeEvolutionController controller =
-                new AnalyseIncomeEvolutionController(new PoliticalAgentRepository(), declRepo);
+                new AnalyseIncomeEvolutionController(repoWith(joao), declRepo);
 
-        List<Declaration> result = controller.getIncomeEvolution(joao,
+        List<DeclarationDTO> result = controller.getIncomeEvolution(dto(joao),
                 date(2024, Calendar.MARCH, 1), date(2024, Calendar.JUNE, 30));
 
         assertEquals(3, result.size());
@@ -128,15 +142,15 @@ class AnalyseIncomeEvolutionControllerTest {
         declRepo.save(first);
 
         AnalyseIncomeEvolutionController controller =
-                new AnalyseIncomeEvolutionController(new PoliticalAgentRepository(), declRepo);
+                new AnalyseIncomeEvolutionController(repoWith(joao), declRepo);
 
-        List<Declaration> result = controller.getIncomeEvolution(joao,
+        List<DeclarationDTO> result = controller.getIncomeEvolution(dto(joao),
                 date(2024, Calendar.JANUARY, 1), date(2024, Calendar.DECEMBER, 31));
 
         assertEquals(3, result.size());
-        assertSame(first, result.get(0));
-        assertSame(mid, result.get(1));
-        assertSame(last, result.get(2));
+        assertEquals(first.getId(), result.get(0).getId());
+        assertEquals(mid.getId(), result.get(1).getId());
+        assertEquals(last.getId(), result.get(2).getId());
     }
 
     @Test
@@ -146,9 +160,9 @@ class AnalyseIncomeEvolutionControllerTest {
         declRepo.save(validatedDeclaration(joao, date(2025, Calendar.JANUARY, 1)));
 
         AnalyseIncomeEvolutionController controller =
-                new AnalyseIncomeEvolutionController(new PoliticalAgentRepository(), declRepo);
+                new AnalyseIncomeEvolutionController(repoWith(joao), declRepo);
 
-        List<Declaration> result = controller.getIncomeEvolution(joao,
+        List<DeclarationDTO> result = controller.getIncomeEvolution(dto(joao),
                 date(2024, Calendar.JANUARY, 1), date(2024, Calendar.DECEMBER, 31));
 
         assertTrue(result.isEmpty());
@@ -160,7 +174,7 @@ class AnalyseIncomeEvolutionControllerTest {
                 new AnalyseIncomeEvolutionController(new PoliticalAgentRepository(), new DeclarationRepository());
 
         assertThrows(IllegalArgumentException.class,
-                () -> controller.getIncomeEvolution(agentJoao(),
+                () -> controller.getIncomeEvolution(dto(agentJoao()),
                         date(2024, Calendar.JUNE, 30), date(2024, Calendar.JANUARY, 1)));
     }
 
@@ -179,9 +193,9 @@ class AnalyseIncomeEvolutionControllerTest {
                 new AnalyseIncomeEvolutionController(new PoliticalAgentRepository(), new DeclarationRepository());
 
         assertThrows(IllegalArgumentException.class,
-                () -> controller.getIncomeEvolution(agentJoao(), null, new Date()));
+                () -> controller.getIncomeEvolution(dto(agentJoao()), null, new Date()));
         assertThrows(IllegalArgumentException.class,
-                () -> controller.getIncomeEvolution(agentJoao(), new Date(), null));
+                () -> controller.getIncomeEvolution(dto(agentJoao()), new Date(), null));
     }
 
     @Test

@@ -10,6 +10,9 @@ import pt.ipp.isep.dei.domain.PoliticalAgent;
 import pt.ipp.isep.dei.domain.RealEstate;
 import pt.ipp.isep.dei.domain.StockAsset;
 import pt.ipp.isep.dei.domain.VehicleAsset;
+import pt.ipp.isep.dei.dto.AssetEntryDTO;
+import pt.ipp.isep.dei.dto.PoliticalAgentDTO;
+import pt.ipp.isep.dei.mapper.PoliticalAgentMapper;
 import pt.ipp.isep.dei.repository.AuthenticationRepository;
 import pt.ipp.isep.dei.repository.DeclarationRepository;
 import pt.ipp.isep.dei.repository.PoliticalAgentRepository;
@@ -34,6 +37,18 @@ class ConsultAssetsControllerTest {
     private PoliticalAgent agentMaria() {
         return new PoliticalAgent("Maria Costa", "maria@gov.pt", "22222222", "100000002",
                 date(2020, Calendar.JANUARY, 1), null);
+    }
+
+    private PoliticalAgentDTO dto(PoliticalAgent agent) {
+        return new PoliticalAgentMapper().toDTO(agent);
+    }
+
+    private PoliticalAgentRepository repoWith(PoliticalAgent... agents) {
+        PoliticalAgentRepository repo = new PoliticalAgentRepository();
+        for (PoliticalAgent a : agents) {
+            repo.save(a);
+        }
+        return repo;
     }
 
     private Date date(int year, int month, int day) {
@@ -80,9 +95,9 @@ class ConsultAssetsControllerTest {
         declRepo.save(validatedDeclarationWithRealEstate(joao, date(2024, Calendar.JUNE, 15), 150000.0));
 
         ConsultAssetsController controller =
-                new ConsultAssetsController(new PoliticalAgentRepository(), declRepo, null);
+                new ConsultAssetsController(repoWith(joao), declRepo, null);
 
-        List<AssetEntry> result = controller.getAssetsAt(joao, date(2024, Calendar.DECEMBER, 31));
+        List<AssetEntryDTO> result = controller.getAssetsAt(dto(joao), date(2024, Calendar.DECEMBER, 31));
 
         assertEquals(2, result.size());
     }
@@ -96,12 +111,12 @@ class ConsultAssetsControllerTest {
         declRepo.save(validatedDeclarationWithRealEstate(joao, date(2025, Calendar.MARCH, 1), 200000.0));
 
         ConsultAssetsController controller =
-                new ConsultAssetsController(new PoliticalAgentRepository(), declRepo, null);
+                new ConsultAssetsController(repoWith(joao), declRepo, null);
 
-        List<AssetEntry> result = controller.getAssetsAt(joao, date(2024, Calendar.DECEMBER, 31));
+        List<AssetEntryDTO> result = controller.getAssetsAt(dto(joao), date(2024, Calendar.DECEMBER, 31));
 
         assertEquals(1, result.size());
-        assertEquals(100000.0, result.get(0).getAssetValue());
+        assertEquals(100000.0, result.get(0).getValue());
     }
 
     @Test
@@ -114,19 +129,20 @@ class ConsultAssetsControllerTest {
         declRepo.save(pending);
 
         ConsultAssetsController controller =
-                new ConsultAssetsController(new PoliticalAgentRepository(), declRepo, null);
+                new ConsultAssetsController(repoWith(joao), declRepo, null);
 
-        List<AssetEntry> result = controller.getAssetsAt(joao, date(2024, Calendar.DECEMBER, 31));
+        List<AssetEntryDTO> result = controller.getAssetsAt(dto(joao), date(2024, Calendar.DECEMBER, 31));
 
         assertTrue(result.isEmpty());
     }
 
     @Test
     void ensureEmptyResultWhenNoDeclarationsExistForAgent() {
+        PoliticalAgent joao = agentJoao();
         ConsultAssetsController controller =
-                new ConsultAssetsController(new PoliticalAgentRepository(), new DeclarationRepository(), null);
+                new ConsultAssetsController(repoWith(joao), new DeclarationRepository(), null);
 
-        List<AssetEntry> result = controller.getAssetsAt(agentJoao(), new Date());
+        List<AssetEntryDTO> result = controller.getAssetsAt(dto(joao), new Date());
 
         assertTrue(result.isEmpty());
     }
@@ -146,7 +162,7 @@ class ConsultAssetsControllerTest {
                 new ConsultAssetsController(new PoliticalAgentRepository(), new DeclarationRepository(), null);
 
         assertThrows(IllegalArgumentException.class,
-                () -> controller.getAssetsAt(agentJoao(), null));
+                () -> controller.getAssetsAt(dto(agentJoao()), null));
     }
 
     @Test
@@ -198,9 +214,9 @@ class ConsultAssetsControllerTest {
         declRepo.save(rejected);
 
         ConsultAssetsController controller =
-                new ConsultAssetsController(new PoliticalAgentRepository(), declRepo, null);
+                new ConsultAssetsController(repoWith(joao), declRepo, null);
 
-        List<AssetEntry> result = controller.getAssetsAt(joao, date(2024, Calendar.DECEMBER, 31));
+        List<AssetEntryDTO> result = controller.getAssetsAt(dto(joao), date(2024, Calendar.DECEMBER, 31));
 
         assertTrue(result.isEmpty());
     }
@@ -218,9 +234,9 @@ class ConsultAssetsControllerTest {
         declRepo.save(d);
 
         ConsultAssetsController controller =
-                new ConsultAssetsController(new PoliticalAgentRepository(), declRepo, null);
+                new ConsultAssetsController(repoWith(joao), declRepo, null);
 
-        List<AssetEntry> result = controller.getAssetsAt(joao, date(2024, Calendar.DECEMBER, 31));
+        List<AssetEntryDTO> result = controller.getAssetsAt(dto(joao), date(2024, Calendar.DECEMBER, 31));
 
         assertEquals(3, result.size());
     }
@@ -268,9 +284,9 @@ class ConsultAssetsControllerTest {
         declRepo.save(validatedDeclarationWithRealEstate(joao, referenceDate, 100000.0));
 
         ConsultAssetsController controller =
-                new ConsultAssetsController(new PoliticalAgentRepository(), declRepo, null);
+                new ConsultAssetsController(repoWith(joao), declRepo, null);
 
-        List<AssetEntry> result = controller.getAssetsAt(joao, referenceDate);
+        List<AssetEntryDTO> result = controller.getAssetsAt(dto(joao), referenceDate);
 
         assertEquals(1, result.size());
     }

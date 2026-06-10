@@ -7,9 +7,8 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import pt.ipp.isep.dei.controller.AnalyseIncomeEvolutionController;
-import pt.ipp.isep.dei.domain.Declaration;
-import pt.ipp.isep.dei.domain.Income;
-import pt.ipp.isep.dei.domain.PoliticalAgent;
+import pt.ipp.isep.dei.dto.DeclarationDTO;
+import pt.ipp.isep.dei.dto.PoliticalAgentDTO;
 
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -21,7 +20,7 @@ import java.util.ResourceBundle;
 
 public class AnalyseIncomeEvolutionFXController implements Initializable {
 
-    @FXML private ComboBox<PoliticalAgent> agentCombo;
+    @FXML private ComboBox<PoliticalAgentDTO> agentCombo;
     @FXML private DatePicker startPicker;
     @FXML private DatePicker endPicker;
     @FXML private Label messageLabel;
@@ -60,7 +59,7 @@ public class AnalyseIncomeEvolutionFXController implements Initializable {
         declarationTable.getItems().clear();
         incomeChart.getData().clear();
 
-        PoliticalAgent agent = agentCombo.getValue();
+        PoliticalAgentDTO agent = agentCombo.getValue();
         LocalDate start = startPicker.getValue();
         LocalDate end = endPicker.getValue();
 
@@ -72,7 +71,7 @@ public class AnalyseIncomeEvolutionFXController implements Initializable {
         Date startDate = Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant());
         Date endDate = Date.from(end.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-        List<Declaration> declarations;
+        List<DeclarationDTO> declarations;
         try {
             declarations = controller.getIncomeEvolution(agent, startDate, endDate);
         } catch (IllegalArgumentException ex) {
@@ -86,11 +85,11 @@ public class AnalyseIncomeEvolutionFXController implements Initializable {
         }
 
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        for (Declaration d : declarations) {
-            double total = totalIncome(d.getIncomes());
+        for (DeclarationDTO d : declarations) {
+            double total = d.getTotalIncome();
             String dateLabel = DATE_FMT.format(d.getSubmissionDate());
             declarationTable.getItems().add(new DeclarationRow(
-                    d.getId(), dateLabel, d.getType().toString(),
+                    d.getId(), dateLabel, d.getType(),
                     String.format("%.2f €", total), d.getIncomes().size()
             ));
             series.getData().add(new XYChart.Data<>(dateLabel, total));
@@ -103,14 +102,6 @@ public class AnalyseIncomeEvolutionFXController implements Initializable {
         if (mainController != null) {
             mainController.showJournalistMenu();
         }
-    }
-
-    private double totalIncome(List<Income> incomes) {
-        double sum = 0;
-        for (Income i : incomes) {
-            sum = sum + i.getAmount();
-        }
-        return sum;
     }
 
     /** Row model for the TableView. */

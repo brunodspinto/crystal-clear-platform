@@ -7,6 +7,7 @@ autonumber
 
 participant ":AnalyseIncomeEvolutionController" as CTRL
 participant ":PoliticalAgentRepository" as PAR
+participant ":PoliticalAgentMapper" as PAM
 
 autonumber 2
  -> CTRL : getPoliticalAgents()
@@ -19,9 +20,14 @@ activate CTRL
             PAR --> CTRL : agents
         deactivate PAR
 
+        CTRL -> PAM : toDTO(agents)
+        activate PAM
+            PAM --> CTRL : agentsDto
+        deactivate PAM
+
     end
     autonumber 3
-    <-- CTRL : agents
+    <-- CTRL : agentsDto
 deactivate CTRL
 
 @enduml

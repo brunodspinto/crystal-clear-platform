@@ -1,7 +1,10 @@
 package pt.ipp.isep.dei.controller;
 
-import pt.ipp.isep.dei.domain.Declaration;
 import pt.ipp.isep.dei.domain.PoliticalAgent;
+import pt.ipp.isep.dei.dto.DeclarationDTO;
+import pt.ipp.isep.dei.dto.PoliticalAgentDTO;
+import pt.ipp.isep.dei.mapper.DeclarationMapper;
+import pt.ipp.isep.dei.mapper.PoliticalAgentMapper;
 import pt.ipp.isep.dei.repository.DeclarationRepository;
 import pt.ipp.isep.dei.repository.PoliticalAgentRepository;
 import pt.ipp.isep.dei.repository.Repositories;
@@ -14,14 +17,16 @@ import java.util.List;
  * on a given reference date (US09).
  * <p>
  * The integrated situation is the set of validated declarations submitted by the agent
- * on or before the reference date. The UI is responsible for combining the entries
- * (positions, subsidies, assets, business participations) of those declarations into a
- * single view.
+ * on or before the reference date. The UI receives the data as DTOs (ESOFT &mdash; DTO
+ * pattern) and is responsible for combining the entry lines (positions, subsidies,
+ * assets, business participations) of those declarations into a single view.
  */
 public class ConsultIntegratedSituationController {
 
     private final PoliticalAgentRepository politicalAgentRepository;
     private final DeclarationRepository declarationRepository;
+    private final PoliticalAgentMapper politicalAgentMapper = new PoliticalAgentMapper();
+    private final DeclarationMapper declarationMapper = new DeclarationMapper();
 
     /**
      * Creates a controller using the singleton repositories.
@@ -46,30 +51,36 @@ public class ConsultIntegratedSituationController {
 
     /**
      * Returns all registered political agents available for selection by the
-     * Ethics Committee member (AC1).
+     * Ethics Committee member (AC1), as DTOs.
      *
-     * @return list of {@link PoliticalAgent}.
+     * @return list of {@link PoliticalAgentDTO}.
      */
-    public List<PoliticalAgent> getPoliticalAgents() {
-        return politicalAgentRepository.getAll();
+    public List<PoliticalAgentDTO> getPoliticalAgents() {
+        return politicalAgentMapper.toDTO(politicalAgentRepository.getAll());
     }
 
     /**
      * Returns the validated declarations of the given agent submitted on or before
-     * the reference date (AC2). The list is empty when no declarations match (AC3).
+     * the reference date (AC2), as DTOs. The list is empty when no declarations
+     * match (AC3).
      *
-     * @param agent         the selected political agent.
+     * @param agentDto      the selected political agent (identified by email).
      * @param referenceDate the date for which the integrated situation is requested.
-     * @return list of matching declarations; never null.
-     * @throws IllegalArgumentException if any argument is null.
+     * @return list of matching declaration DTOs; never null.
+     * @throws IllegalArgumentException if any argument is null or the agent is unknown.
      */
-    public List<Declaration> getIntegratedSituation(PoliticalAgent agent, Date referenceDate) {
-        if (agent == null) {
+    public List<DeclarationDTO> getIntegratedSituation(PoliticalAgentDTO agentDto, Date referenceDate) {
+        if (agentDto == null) {
             throw new IllegalArgumentException("Agent cannot be null.");
         }
         if (referenceDate == null) {
             throw new IllegalArgumentException("Reference date cannot be null.");
         }
-        return declarationRepository.getValidatedDeclarationsForAgentUpTo(agent, referenceDate);
+        PoliticalAgent agent = politicalAgentRepository.getByEmail(agentDto.getEmail());
+        if (agent == null) {
+            throw new IllegalArgumentException("Unknown political agent.");
+        }
+        return declarationMapper.toDTO(
+                declarationRepository.getValidatedDeclarationsForAgentUpTo(agent, referenceDate));
     }
 }

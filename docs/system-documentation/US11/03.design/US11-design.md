@@ -17,6 +17,7 @@
 | Step 3         | ...exposing the asset type, value and, when applicable, the real-estate, vehicle or stock detail?        | AssetEntry                      | **Information Expert**: an `AssetEntry` owns its `assetType`, `assetValue` and the optional `RealEstate` / `VehicleAsset` / `StockAsset` detail.             |
 | Step 4         | ...deciding whether sensitive financial data should be masked? (AC4)                                     | ConsultAssetsController         | The controller exposes `isCurrentUserJournalist()`; the boolean drives the masking logic.                                                                    |
 | Step 4         | ...applying the masking when presenting the asset list to the actor?                                     | ConsultAssetsUI                 | **Pure Fabrication**: the UI uses the boolean returned by the controller and prints either the full value or `***` accordingly.                              |
+| Step 2/3       | ...transferring the agents and asset entries to the UI without exposing the domain objects? | PoliticalAgentMapper / AssetEntryMapper | **DTO** + **Low Coupling** + **Pure Fabrication**: the mappers convert the domain objects into `PoliticalAgentDTO` / `AssetEntryDTO`; the asset DTO flags sensitive details so the UI can mask them (AC4). |
 
 ### Systematization
 

@@ -19,6 +19,7 @@
 | Step 3         | ...producing the income data of each declaration (incomes, subsidies, type, submission date)?                | Declaration                       | **Information Expert**: a `Declaration` aggregates its `Income` and `SubsidyEntry` collections and owns its `type` and `submissionDate`.                     |
 | Step 3         | ...exposing the amount, source and date of a single income entry?                                            | Income                            | **Information Expert**: an `Income` owns its own attributes.                                                                                                 |
 | Step 3         | ...presenting the chronologically ordered list of declarations with the income evolution to the actor?       | AnalyseIncomeEvolutionUI          | **Pure Fabrication**: iterates the declarations returned by the controller and prints each one.                                                              |
+| Step 2/3       | ...transferring the agents and declarations data to the UI without exposing the domain objects? | PoliticalAgentMapper / DeclarationMapper | **DTO** + **Low Coupling** + **Pure Fabrication**: the mappers convert the domain objects into `PoliticalAgentDTO` / `DeclarationDTO` (with the total income precomputed), so the UI only depends on DTOs. |
 
 ### Systematization
 

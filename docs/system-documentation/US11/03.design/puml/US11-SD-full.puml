@@ -12,6 +12,8 @@ participant ":Repositories" as REPOS
 participant ":PoliticalAgentRepository" as PAR
 participant ":DeclarationRepository" as DR
 participant ":AuthenticationRepository" as AUTH
+participant ":PoliticalAgentMapper" as PAM
+participant ":AssetEntryMapper" as AEM
 participant "d:Declaration" as DEC
 participant "session:UserSession" as SESS
 
@@ -51,7 +53,12 @@ activate Actor
                 PAR --> CTRL : agents
             deactivate PAR
 
-            CTRL --> UI : agents
+            CTRL -> PAM : toDTO(agents)
+            activate PAM
+                PAM --> CTRL : agentsDto
+            deactivate PAM
+
+            CTRL --> UI : agentsDto
         deactivate CTRL
 
         UI --> Actor : shows agent list, requests selection
@@ -66,14 +73,19 @@ activate Actor
     Actor -> UI : enters reference date
     activate UI
 
-        UI -> CTRL : getAssetsAt(agent, referenceDate)
+        UI -> CTRL : getAssetsAt(agentDto, referenceDate)
         activate CTRL
 
-            alt agent == null
+            alt agentDto == null
                 CTRL --> UI : throw IllegalArgumentException("Agent cannot be null.")
             else referenceDate == null
                 CTRL --> UI : throw IllegalArgumentException("Reference date cannot be null.")
             else valid input
+                CTRL -> PAR : getByEmail(agentDto.getEmail())
+                activate PAR
+                    PAR --> CTRL : agent
+                deactivate PAR
+
                 CTRL -> DR : getValidatedDeclarationsForAgentUpTo(agent, referenceDate)
                 activate DR
 
@@ -103,11 +115,16 @@ activate Actor
                     end
                 end
 
-                CTRL --> UI : assets
+                CTRL -> AEM : toDTO(assets)
+                activate AEM
+                    AEM --> CTRL : assetsDto
+                deactivate AEM
+
+                CTRL --> UI : assetsDto
             end
         deactivate CTRL
 
-        alt assets is empty (AC3)
+        alt assetsDto is empty (AC3)
             UI --> Actor : shows "no validated declarations up to that date"
         else
             UI -> CTRL : isCurrentUserJournalist()

@@ -3,6 +3,10 @@ package pt.ipp.isep.dei.controller;
 import pt.ipp.isep.dei.domain.AssetEntry;
 import pt.ipp.isep.dei.domain.Declaration;
 import pt.ipp.isep.dei.domain.PoliticalAgent;
+import pt.ipp.isep.dei.dto.AssetEntryDTO;
+import pt.ipp.isep.dei.dto.PoliticalAgentDTO;
+import pt.ipp.isep.dei.mapper.AssetEntryMapper;
+import pt.ipp.isep.dei.mapper.PoliticalAgentMapper;
 import pt.ipp.isep.dei.repository.AuthenticationRepository;
 import pt.ipp.isep.dei.repository.DeclarationRepository;
 import pt.ipp.isep.dei.repository.PoliticalAgentRepository;
@@ -25,6 +29,8 @@ public class ConsultAssetsController {
     private final PoliticalAgentRepository politicalAgentRepository;
     private final DeclarationRepository declarationRepository;
     private final AuthenticationRepository authenticationRepository;
+    private final PoliticalAgentMapper politicalAgentMapper = new PoliticalAgentMapper();
+    private final AssetEntryMapper assetEntryMapper = new AssetEntryMapper();
 
     /**
      * Creates a controller using the singleton repositories.
@@ -55,10 +61,10 @@ public class ConsultAssetsController {
      * Returns all registered political agents available for selection by the
      * actor (AC1).
      *
-     * @return list of {@link PoliticalAgent}.
+     * @return list of {@link PoliticalAgentDTO}.
      */
-    public List<PoliticalAgent> getPoliticalAgents() {
-        return politicalAgentRepository.getAll();
+    public List<PoliticalAgentDTO> getPoliticalAgents() {
+        return politicalAgentMapper.toDTO(politicalAgentRepository.getAll());
     }
 
     /**
@@ -66,17 +72,21 @@ public class ConsultAssetsController {
      * reference date, gathered across every validated declaration (AC2).
      * Empty when no declarations match (AC3).
      *
-     * @param agent         the selected political agent.
+     * @param agentDto      the selected political agent (identified by email).
      * @param referenceDate the date for which the assets are requested.
-     * @return list of matching {@link AssetEntry}; never null.
-     * @throws IllegalArgumentException if any argument is null.
+     * @return list of matching {@link AssetEntryDTO}; never null.
+     * @throws IllegalArgumentException if any argument is null or the agent is unknown.
      */
-    public List<AssetEntry> getAssetsAt(PoliticalAgent agent, Date referenceDate) {
-        if (agent == null) {
+    public List<AssetEntryDTO> getAssetsAt(PoliticalAgentDTO agentDto, Date referenceDate) {
+        if (agentDto == null) {
             throw new IllegalArgumentException("Agent cannot be null.");
         }
         if (referenceDate == null) {
             throw new IllegalArgumentException("Reference date cannot be null.");
+        }
+        PoliticalAgent agent = politicalAgentRepository.getByEmail(agentDto.getEmail());
+        if (agent == null) {
+            throw new IllegalArgumentException("Unknown political agent.");
         }
         List<Declaration> declarations =
                 declarationRepository.getValidatedDeclarationsForAgentUpTo(agent, referenceDate);
@@ -86,7 +96,7 @@ public class ConsultAssetsController {
                 assets.add(a);
             }
         }
-        return assets;
+        return assetEntryMapper.toDTO(assets);
     }
 
     /**

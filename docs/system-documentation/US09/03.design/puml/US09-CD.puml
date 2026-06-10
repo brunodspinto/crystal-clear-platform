@@ -9,8 +9,38 @@ class ConsultIntegratedSituationUI {
 
 class ConsultIntegratedSituationController {
     + ConsultIntegratedSituationController()
-    + getPoliticalAgents() : List<PoliticalAgent>
-    + getIntegratedSituation(agent, referenceDate) : List<Declaration>
+    + getPoliticalAgents() : List<PoliticalAgentDTO>
+    + getIntegratedSituation(agentDto, referenceDate) : List<DeclarationDTO>
+}
+
+class PoliticalAgentDTO {
+    - name : String
+    - email : String
+}
+
+class DeclarationDTO {
+    - id : String
+    - type : String
+    - submissionDate : Date
+    - status : String
+    - summary : String
+    - details : String
+    - positions : List<String>
+    - incomes : List<String>
+    - subsidies : List<String>
+    - assets : List<String>
+    - businessParticipations : List<String>
+    - totalIncome : double
+}
+
+class PoliticalAgentMapper {
+    + toDTO(agent) : PoliticalAgentDTO
+    + toDTO(agents) : List<PoliticalAgentDTO>
+}
+
+class DeclarationMapper {
+    + toDTO(declaration) : DeclarationDTO
+    + toDTO(declarations) : List<DeclarationDTO>
 }
 
 class Repositories <<Singleton>> {
@@ -23,6 +53,7 @@ class Repositories <<Singleton>> {
 
 class PoliticalAgentRepository {
     + getAll() : List<PoliticalAgent>
+    + getByEmail(email) : PoliticalAgent
 }
 
 class DeclarationRepository {
@@ -103,12 +134,15 @@ ConsultIntegratedSituationController ..> DeclarationRepository
 ConsultIntegratedSituationController ..> PoliticalAgent
 ConsultIntegratedSituationController ..> Declaration
 
-ConsultIntegratedSituationUI ..> Declaration
-ConsultIntegratedSituationUI ..> PositionEntry
-ConsultIntegratedSituationUI ..> Income
-ConsultIntegratedSituationUI ..> SubsidyEntry
-ConsultIntegratedSituationUI ..> AssetEntry
-ConsultIntegratedSituationUI ..> BusinessParticipation
+ConsultIntegratedSituationUI ..> PoliticalAgentDTO
+ConsultIntegratedSituationUI ..> DeclarationDTO
+
+ConsultIntegratedSituationController ..> PoliticalAgentMapper
+ConsultIntegratedSituationController ..> DeclarationMapper
+PoliticalAgentMapper ..> PoliticalAgent
+PoliticalAgentMapper ..> PoliticalAgentDTO
+DeclarationMapper ..> Declaration
+DeclarationMapper ..> DeclarationDTO
 
 PoliticalAgentRepository --> "*" PoliticalAgent : agents
 DeclarationRepository --> "*" Declaration : declarations
@@ -129,9 +163,12 @@ note bottom of DeclarationRepository
 end note
 
 note right of ConsultIntegratedSituationController
-    getIntegratedSituation validates inputs:
-    throws IllegalArgumentException if agent or
-    referenceDate is null, before calling the repository.
+    getIntegratedSituation validates inputs (throws
+    IllegalArgumentException if agentDto or referenceDate
+    is null), resolves the agent by email via
+    getByEmail, and returns DTOs built by the
+    DeclarationMapper (DTO pattern), so the UI never
+    touches domain objects.
 end note
 
 @enduml

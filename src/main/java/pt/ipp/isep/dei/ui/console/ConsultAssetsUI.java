@@ -1,12 +1,8 @@
 package pt.ipp.isep.dei.ui.console;
 
 import pt.ipp.isep.dei.controller.ConsultAssetsController;
-import pt.ipp.isep.dei.domain.AssetEntry;
-import pt.ipp.isep.dei.domain.AssetType;
-import pt.ipp.isep.dei.domain.PoliticalAgent;
-import pt.ipp.isep.dei.domain.RealEstate;
-import pt.ipp.isep.dei.domain.StockAsset;
-import pt.ipp.isep.dei.domain.VehicleAsset;
+import pt.ipp.isep.dei.dto.AssetEntryDTO;
+import pt.ipp.isep.dei.dto.PoliticalAgentDTO;
 import pt.ipp.isep.dei.ui.console.utils.Utils;
 
 import java.util.Date;
@@ -37,7 +33,7 @@ public class ConsultAssetsUI implements Runnable {
     public void run() {
         System.out.println("\n\n--- Consult Assets ----------------------------");
 
-        PoliticalAgent agent = displayAndSelectPoliticalAgent();
+        PoliticalAgentDTO agent = displayAndSelectPoliticalAgent();
         if (agent == null) {
             System.out.println("\nOperation cancelled.");
             return;
@@ -45,7 +41,7 @@ public class ConsultAssetsUI implements Runnable {
 
         Date referenceDate = Utils.readDateFromConsole("Reference date (dd-MM-yyyy): ");
 
-        List<AssetEntry> assets;
+        List<AssetEntryDTO> assets;
         try {
             assets = controller.getAssetsAt(agent, referenceDate);
         } catch (IllegalArgumentException ex) {
@@ -61,21 +57,21 @@ public class ConsultAssetsUI implements Runnable {
 
         boolean fullDetails = controller.isCurrentUserJournalist();
         showHeader(agent, referenceDate, assets.size(), fullDetails);
-        for (AssetEntry a : assets) {
+        for (AssetEntryDTO a : assets) {
             showAsset(a, fullDetails);
         }
     }
 
-    private PoliticalAgent displayAndSelectPoliticalAgent() {
-        List<PoliticalAgent> agents = controller.getPoliticalAgents();
+    private PoliticalAgentDTO displayAndSelectPoliticalAgent() {
+        List<PoliticalAgentDTO> agents = controller.getPoliticalAgents();
         if (agents.isEmpty()) {
             System.out.println("No political agents registered in the system.");
             return null;
         }
-        return (PoliticalAgent) Utils.showAndSelectOne(agents, "Select a political agent:");
+        return (PoliticalAgentDTO) Utils.showAndSelectOne(agents, "Select a political agent:");
     }
 
-    private void showHeader(PoliticalAgent agent, Date referenceDate, int count, boolean fullDetails) {
+    private void showHeader(PoliticalAgentDTO agent, Date referenceDate, int count, boolean fullDetails) {
         System.out.println("\n--- Assets ---");
         System.out.printf("Political Agent : %s%n", agent.getName());
         System.out.printf("Reference Date  : %s%n", referenceDate);
@@ -85,25 +81,15 @@ public class ConsultAssetsUI implements Runnable {
         }
     }
 
-    private void showAsset(AssetEntry a, boolean fullDetails) {
-        String value = fullDetails ? String.format("%.2f", a.getAssetValue()) : "***";
-        System.out.println("- Type: " + a.getAssetType() + ", Value: " + value);
-        if (a.getAssetType() == AssetType.REAL_ESTATE) {
-            RealEstate re = a.getRealEstate();
-            System.out.println("    Real Estate: " + re.getDescription() + " (" + re.getMunicipality() + ")");
-        } else if (a.getAssetType() == AssetType.VEHICLES) {
-            VehicleAsset v = a.getVehicleAsset();
-            if (fullDetails) {
-                System.out.println("    Vehicle: " + v);
+    private void showAsset(AssetEntryDTO a, boolean fullDetails) {
+        String value = fullDetails ? String.format("%.2f", a.getValue()) : "***";
+        System.out.println("- Type: " + a.getType() + ", Value: " + value);
+        if (!a.getDetail().isEmpty()) {
+            if (a.isSensitiveDetail() && !fullDetails) {
+                String label = a.getDetail().split(":")[0];
+                System.out.println("    " + label + ": ***");
             } else {
-                System.out.println("    Vehicle: ***");
-            }
-        } else if (a.getAssetType() == AssetType.STOCKS) {
-            StockAsset s = a.getStockAsset();
-            if (fullDetails) {
-                System.out.println("    Stocks: " + s);
-            } else {
-                System.out.println("    Stocks: ***");
+                System.out.println("    " + a.getDetail());
             }
         }
     }

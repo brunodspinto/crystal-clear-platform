@@ -9,6 +9,9 @@ import pt.ipp.isep.dei.domain.OrganizationNature;
 import pt.ipp.isep.dei.domain.OrganizationType;
 import pt.ipp.isep.dei.domain.PoliticalAgent;
 import pt.ipp.isep.dei.domain.PositionNature;
+import pt.ipp.isep.dei.dto.DeclarationDTO;
+import pt.ipp.isep.dei.dto.PoliticalAgentDTO;
+import pt.ipp.isep.dei.mapper.PoliticalAgentMapper;
 import pt.ipp.isep.dei.repository.DeclarationRepository;
 import pt.ipp.isep.dei.repository.PoliticalAgentRepository;
 
@@ -18,7 +21,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -32,6 +34,18 @@ class ConsultIntegratedSituationControllerTest {
     private PoliticalAgent agentMaria() {
         return new PoliticalAgent("Maria Costa", "maria@gov.pt", "22222222", "100000002",
                 date(2020, Calendar.JANUARY, 1), null);
+    }
+
+    private PoliticalAgentDTO dto(PoliticalAgent agent) {
+        return new PoliticalAgentMapper().toDTO(agent);
+    }
+
+    private PoliticalAgentRepository repoWith(PoliticalAgent... agents) {
+        PoliticalAgentRepository repo = new PoliticalAgentRepository();
+        for (PoliticalAgent a : agents) {
+            repo.save(a);
+        }
+        return repo;
     }
 
     private Date date(int year, int month, int day) {
@@ -82,12 +96,12 @@ class ConsultIntegratedSituationControllerTest {
         declRepo.save(joaoPending);
 
         ConsultIntegratedSituationController controller =
-                new ConsultIntegratedSituationController(new PoliticalAgentRepository(), declRepo);
+                new ConsultIntegratedSituationController(repoWith(joao, maria), declRepo);
 
-        List<Declaration> result = controller.getIntegratedSituation(joao, date(2024, Calendar.DECEMBER, 31));
+        List<DeclarationDTO> result = controller.getIntegratedSituation(dto(joao), date(2024, Calendar.DECEMBER, 31));
 
         assertEquals(1, result.size());
-        assertSame(joaoValidated, result.get(0));
+        assertEquals(joaoValidated.getId(), result.get(0).getId());
     }
 
     @Test
@@ -104,9 +118,9 @@ class ConsultIntegratedSituationControllerTest {
         declRepo.save(after);
 
         ConsultIntegratedSituationController controller =
-                new ConsultIntegratedSituationController(new PoliticalAgentRepository(), declRepo);
+                new ConsultIntegratedSituationController(repoWith(joao), declRepo);
 
-        List<Declaration> result = controller.getIntegratedSituation(joao, date(2024, Calendar.JUNE, 30));
+        List<DeclarationDTO> result = controller.getIntegratedSituation(dto(joao), date(2024, Calendar.JUNE, 30));
 
         assertEquals(2, result.size());
     }
@@ -118,9 +132,9 @@ class ConsultIntegratedSituationControllerTest {
         declRepo.save(validatedDeclaration(joao, date(2025, Calendar.JANUARY, 1)));
 
         ConsultIntegratedSituationController controller =
-                new ConsultIntegratedSituationController(new PoliticalAgentRepository(), declRepo);
+                new ConsultIntegratedSituationController(repoWith(joao), declRepo);
 
-        List<Declaration> result = controller.getIntegratedSituation(joao, date(2024, Calendar.JANUARY, 1));
+        List<DeclarationDTO> result = controller.getIntegratedSituation(dto(joao), date(2024, Calendar.JANUARY, 1));
 
         assertTrue(result.isEmpty());
     }
@@ -140,7 +154,7 @@ class ConsultIntegratedSituationControllerTest {
                 new ConsultIntegratedSituationController(new PoliticalAgentRepository(), new DeclarationRepository());
 
         assertThrows(IllegalArgumentException.class,
-                () -> controller.getIntegratedSituation(agentJoao(), null));
+                () -> controller.getIntegratedSituation(dto(agentJoao()), null));
     }
 
     @Test
@@ -153,9 +167,9 @@ class ConsultIntegratedSituationControllerTest {
         declRepo.save(rejected);
 
         ConsultIntegratedSituationController controller =
-                new ConsultIntegratedSituationController(new PoliticalAgentRepository(), declRepo);
+                new ConsultIntegratedSituationController(repoWith(joao), declRepo);
 
-        List<Declaration> result = controller.getIntegratedSituation(joao, date(2024, Calendar.DECEMBER, 31));
+        List<DeclarationDTO> result = controller.getIntegratedSituation(dto(joao), date(2024, Calendar.DECEMBER, 31));
 
         assertTrue(result.isEmpty());
     }
@@ -176,9 +190,9 @@ class ConsultIntegratedSituationControllerTest {
         declRepo.save(exceptional);
 
         ConsultIntegratedSituationController controller =
-                new ConsultIntegratedSituationController(new PoliticalAgentRepository(), declRepo);
+                new ConsultIntegratedSituationController(repoWith(joao), declRepo);
 
-        List<Declaration> result = controller.getIntegratedSituation(joao, date(2024, Calendar.DECEMBER, 31));
+        List<DeclarationDTO> result = controller.getIntegratedSituation(dto(joao), date(2024, Calendar.DECEMBER, 31));
 
         assertEquals(3, result.size());
     }
@@ -209,13 +223,13 @@ class ConsultIntegratedSituationControllerTest {
         declRepo.save(d);
 
         ConsultIntegratedSituationController controller =
-                new ConsultIntegratedSituationController(new PoliticalAgentRepository(), declRepo);
+                new ConsultIntegratedSituationController(repoWith(joao), declRepo);
 
-        List<Declaration> result = controller.getIntegratedSituation(joao, date(2024, Calendar.DECEMBER, 31));
+        List<DeclarationDTO> result = controller.getIntegratedSituation(dto(joao), date(2024, Calendar.DECEMBER, 31));
 
         assertEquals(1, result.size());
-        assertEquals(1, result.get(0).getPositionEntries().size());
+        assertEquals(1, result.get(0).getPositions().size());
         assertEquals(1, result.get(0).getIncomes().size());
-        assertEquals(1, result.get(0).getSubsidyEntries().size());
+        assertEquals(1, result.get(0).getSubsidies().size());
     }
 }

@@ -9,9 +9,31 @@ class ConsultAssetsUI {
 
 class ConsultAssetsController {
     + ConsultAssetsController()
-    + getPoliticalAgents() : List<PoliticalAgent>
-    + getAssetsAt(agent, referenceDate) : List<AssetEntry>
+    + getPoliticalAgents() : List<PoliticalAgentDTO>
+    + getAssetsAt(agentDto, referenceDate) : List<AssetEntryDTO>
     + isCurrentUserJournalist() : boolean
+}
+
+class PoliticalAgentDTO {
+    - name : String
+    - email : String
+}
+
+class AssetEntryDTO {
+    - type : String
+    - value : double
+    - detail : String
+    - sensitiveDetail : boolean
+}
+
+class PoliticalAgentMapper {
+    + toDTO(agent) : PoliticalAgentDTO
+    + toDTO(agents) : List<PoliticalAgentDTO>
+}
+
+class AssetEntryMapper {
+    + toDTO(entry) : AssetEntryDTO
+    + toDTO(entries) : List<AssetEntryDTO>
 }
 
 class Repositories <<Singleton>> {
@@ -34,6 +56,7 @@ class UserSession {
 
 class PoliticalAgentRepository {
     + getAll() : List<PoliticalAgent>
+    + getByEmail(email) : PoliticalAgent
 }
 
 class DeclarationRepository {
@@ -88,11 +111,15 @@ class StockAsset {
 }
 
 ConsultAssetsUI .> ConsultAssetsController
-ConsultAssetsUI ..> AssetEntry
-ConsultAssetsUI ..> RealEstate
-ConsultAssetsUI ..> VehicleAsset
-ConsultAssetsUI ..> StockAsset
-ConsultAssetsUI ..> AssetType
+ConsultAssetsUI ..> PoliticalAgentDTO
+ConsultAssetsUI ..> AssetEntryDTO
+
+ConsultAssetsController ..> PoliticalAgentMapper
+ConsultAssetsController ..> AssetEntryMapper
+PoliticalAgentMapper ..> PoliticalAgent
+PoliticalAgentMapper ..> PoliticalAgentDTO
+AssetEntryMapper ..> AssetEntry
+AssetEntryMapper ..> AssetEntryDTO
 
 ConsultAssetsController ..> Repositories
 Repositories ..> AuthenticationRepository
@@ -125,10 +152,14 @@ note bottom of AssetEntry
 end note
 
 note right of ConsultAssetsController
-    getAssetsAt validates inputs:
-    throws IllegalArgumentException if agent or
-    referenceDate is null. Then iterates the validated
-    declarations and collects each AssetEntry.
+    getAssetsAt validates inputs (throws
+    IllegalArgumentException if agentDto or referenceDate
+    is null), resolves the agent by email via getByEmail,
+    iterates the validated declarations collecting each
+    AssetEntry, and returns DTOs built by the
+    AssetEntryMapper (DTO pattern). The mapper marks
+    vehicle/stock details as sensitive so the UI can
+    mask them for non-journalists.
 
     AC4: isCurrentUserJournalist() returns true when the
     current UserSession is logged in and has a role

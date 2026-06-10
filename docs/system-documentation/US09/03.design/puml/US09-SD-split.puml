@@ -39,7 +39,7 @@ activate ECM
         end ref
 
         activate CTRL
-            CTRL --> UI : agents
+            CTRL --> UI : agentsDto
         deactivate CTRL
 
         UI --> ECM : shows agent list, requests selection
@@ -53,10 +53,10 @@ activate ECM
     ECM -> UI : enters reference date
     activate UI
 
-        UI -> CTRL : getIntegratedSituation(agent, referenceDate)
+        UI -> CTRL : getIntegratedSituation(agentDto, referenceDate)
         activate CTRL
 
-            alt agent == null
+            alt agentDto == null
                 CTRL --> UI : throw IllegalArgumentException("Agent cannot be null.")
             else referenceDate == null
                 CTRL --> UI : throw IllegalArgumentException("Reference date cannot be null.")
@@ -65,11 +65,11 @@ activate ECM
                     Get Validated Declarations For Agent Up To
                 end ref
 
-                CTRL --> UI : declarations
+                CTRL --> UI : declarationsDto
             end
         deactivate CTRL
 
-        alt declarations is empty (AC3)
+        alt declarationsDto is empty (AC3)
             UI --> ECM : shows "no validated declarations up to that date"
         else
             ref over UI
