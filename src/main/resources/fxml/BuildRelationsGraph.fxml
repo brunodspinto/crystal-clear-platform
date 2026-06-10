@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.ipp.isep.dei.ui.gui.BuildRelationsGraphFXController"
+      styleClass="root-pane"
+      stylesheets="@../css/app.css"
+      spacing="10">
+    <padding><Insets top="24" right="32" bottom="24" left="32"/></padding>
+
+    <Label text="US20 — Build Relations Graph" styleClass="scene-title"/>
+    <Label text="Builds the relations graph from a CSV file and optionally renders it to an SVG (needs Graphviz)."/>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Relations CSV:" styleClass="field-label" minWidth="120"/>
+        <TextField fx:id="pathField" promptText="Choose a file..." editable="false"
+                   styleClass="input-field" HBox.hgrow="ALWAYS"/>
+        <Button text="Browse..." onAction="#handleBrowse" styleClass="secondary-button"/>
+    </HBox>
+
+    <Label fx:id="messageLabel" maxWidth="Infinity" wrapText="true"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Button text="Build Graph" onAction="#handleBuild" defaultButton="true" styleClass="primary-button"/>
+        <Button fx:id="renderButton" text="Render SVG..." onAction="#handleRenderSvg" styleClass="secondary-button"/>
+        <Button text="Back" onAction="#handleBack" styleClass="secondary-button"/>
+    </HBox>
+</VBox>

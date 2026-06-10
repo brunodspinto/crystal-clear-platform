@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.ipp.isep.dei.ui.gui.GlobalSupportMatrixFXController"
+      styleClass="root-pane"
+      stylesheets="@../css/app.css"
+      spacing="10">
+    <padding><Insets top="24" right="32" bottom="24" left="32"/></padding>
+
+    <Label text="US33 — Global Support Adjacency Matrix" styleClass="scene-title"/>
+    <Label text="Shows the adjacency matrix of the support graph (undirected, unweighted) for a temporal snapshot."/>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Snapshot date:" styleClass="field-label" minWidth="120"/>
+        <DatePicker fx:id="datePicker" promptText="yyyy-MM-dd"/>
+        <Button text="Show Matrix" onAction="#handleShow" defaultButton="true" styleClass="primary-button"/>
+    </HBox>
+
+    <Label fx:id="messageLabel" maxWidth="Infinity" wrapText="true"/>
+
+    <TextArea fx:id="matrixArea" editable="false" wrapText="false" VBox.vgrow="ALWAYS"
+              style="-fx-font-family: 'Courier New', monospace;"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Button text="Back" onAction="#handleBack" styleClass="secondary-button"/>
+    </HBox>
+</VBox>

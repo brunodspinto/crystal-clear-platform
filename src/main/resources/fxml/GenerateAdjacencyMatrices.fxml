@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.ipp.isep.dei.ui.gui.GenerateAdjacencyMatricesFXController"
+      styleClass="root-pane"
+      stylesheets="@../css/app.css"
+      spacing="10">
+    <padding><Insets top="24" right="32" bottom="24" left="32"/></padding>
+
+    <Label text="US21 — Adjacency Matrices" styleClass="scene-title"/>
+    <Label text="Shows the adjacency matrix of each relation of the graph built in US20, plus the global matrix."/>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button text="Generate" onAction="#handleGenerate" defaultButton="true" styleClass="primary-button"/>
+        <Label text="Matrix:" styleClass="field-label"/>
+        <ComboBox fx:id="matrixCombo" onAction="#handleMatrixSelected" styleClass="combo-box" prefWidth="280"/>
+    </HBox>
+
+    <Label fx:id="messageLabel" maxWidth="Infinity" wrapText="true"/>
+
+    <TextArea fx:id="matrixArea" editable="false" wrapText="false" VBox.vgrow="ALWAYS"
+              style="-fx-font-family: 'Courier New', monospace;"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Button text="Back" onAction="#handleBack" styleClass="secondary-button"/>
+    </HBox>
+</VBox>

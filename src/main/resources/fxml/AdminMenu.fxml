@@ -19,6 +19,10 @@
     <Button text="Review Registration Requests" onAction="#handleReviewRegistration" styleClass="primary-button" maxWidth="260"/>
     <Button text="Register Organization" onAction="#handleRegisterOrganization" styleClass="primary-button" maxWidth="260"/>
     <Button text="Load Entities from CSV" onAction="#handleLoadEntities" styleClass="primary-button" maxWidth="260"/>
+    <Button text="Build Relations Graph" onAction="#handleBuildRelationsGraph" styleClass="primary-button" maxWidth="260"/>
+    <Button text="Adjacency Matrices" onAction="#handleAdjacencyMatrices" styleClass="primary-button" maxWidth="260"/>
+    <Button text="Global Support Matrix" onAction="#handleGlobalSupportMatrix" styleClass="primary-button" maxWidth="260"/>
+    <Button text="Export Declaration Graph (CSV)" onAction="#handleExportDeclarationGraph" styleClass="primary-button" maxWidth="260"/>
     <Button text="Export Declaration (CSV)" onAction="#handleExportDeclarationCsv" styleClass="primary-button" maxWidth="260"/>
     <Button text="Export Holdings (CSV)" onAction="#handleExportHoldings" styleClass="primary-button" maxWidth="260"/>
     <Button text="Export Graph (SVG)" onAction="#handleExportGraph" styleClass="primary-button" maxWidth="260"/>
