@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import pt.ipp.isep.dei.domain.Organization;
 import pt.ipp.isep.dei.domain.OrganizationNature;
 import pt.ipp.isep.dei.domain.OrganizationType;
+import pt.ipp.isep.dei.dto.OrganizationDTO;
 import pt.ipp.isep.dei.repository.OrganizationRepository;
 
 import java.util.List;
@@ -18,7 +19,7 @@ class ListOrganizationsControllerTest {
         OrganizationRepository repo = new OrganizationRepository();
         ListOrganizationsController controller = new ListOrganizationsController(repo);
 
-        Map<OrganizationType, List<Organization>> result = controller.getOrganizationsGroupedByType();
+        Map<OrganizationType, List<OrganizationDTO>> result = controller.getOrganizationsGroupedByType();
 
         for (OrganizationType type : OrganizationType.values()) {
             assertTrue(result.get(type).isEmpty());
@@ -31,10 +32,23 @@ class ListOrganizationsControllerTest {
         repo.save(new Organization("Parliament", OrganizationNature.PUBLIC, OrganizationType.INSTITUTE));
         ListOrganizationsController controller = new ListOrganizationsController(repo);
 
-        Map<OrganizationType, List<Organization>> result = controller.getOrganizationsGroupedByType();
+        Map<OrganizationType, List<OrganizationDTO>> result = controller.getOrganizationsGroupedByType();
 
         assertEquals(1, result.get(OrganizationType.INSTITUTE).size());
         assertEquals("Parliament", result.get(OrganizationType.INSTITUTE).get(0).getName());
+    }
+
+    @Test
+    void ensureDtoCarriesTypeAndNatureDesignations() {
+        OrganizationRepository repo = new OrganizationRepository();
+        repo.save(new Organization("Parliament", OrganizationNature.PUBLIC, OrganizationType.INSTITUTE));
+        ListOrganizationsController controller = new ListOrganizationsController(repo);
+
+        OrganizationDTO dto = controller.getOrganizationsGroupedByType()
+                .get(OrganizationType.INSTITUTE).get(0);
+
+        assertEquals("Institute", dto.getTypeDesignation());
+        assertEquals("Public", dto.getNatureDesignation());
     }
 
     @Test
@@ -45,7 +59,7 @@ class ListOrganizationsControllerTest {
         repo.save(new Organization("Mango Party", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY));
         ListOrganizationsController controller = new ListOrganizationsController(repo);
 
-        List<Organization> parties = controller.getOrganizationsGroupedByType().get(OrganizationType.POLITICAL_PARTY);
+        List<OrganizationDTO> parties = controller.getOrganizationsGroupedByType().get(OrganizationType.POLITICAL_PARTY);
 
         assertEquals("Alpha Party", parties.get(0).getName());
         assertEquals("Mango Party", parties.get(1).getName());
@@ -59,7 +73,7 @@ class ListOrganizationsControllerTest {
         repo.save(new Organization("Green Foundation", OrganizationNature.SOCIAL, OrganizationType.FOUNDATION));
         ListOrganizationsController controller = new ListOrganizationsController(repo);
 
-        Map<OrganizationType, List<Organization>> result = controller.getOrganizationsGroupedByType();
+        Map<OrganizationType, List<OrganizationDTO>> result = controller.getOrganizationsGroupedByType();
 
         assertEquals(1, result.get(OrganizationType.COMPANY).size());
         assertEquals(1, result.get(OrganizationType.FOUNDATION).size());
@@ -72,7 +86,7 @@ class ListOrganizationsControllerTest {
         OrganizationRepository repo = new OrganizationRepository();
         ListOrganizationsController controller = new ListOrganizationsController(repo);
 
-        Map<OrganizationType, List<Organization>> result = controller.getOrganizationsGroupedByType();
+        Map<OrganizationType, List<OrganizationDTO>> result = controller.getOrganizationsGroupedByType();
 
         for (OrganizationType type : OrganizationType.values()) {
             assertTrue(result.containsKey(type));
@@ -86,7 +100,7 @@ class ListOrganizationsControllerTest {
         repo.save(new Organization("Alpha Assoc", OrganizationNature.SOCIAL, OrganizationType.ASSOCIATION));
         ListOrganizationsController controller = new ListOrganizationsController(repo);
 
-        List<Organization> assocs = controller.getOrganizationsGroupedByType().get(OrganizationType.ASSOCIATION);
+        List<OrganizationDTO> assocs = controller.getOrganizationsGroupedByType().get(OrganizationType.ASSOCIATION);
 
         assertEquals("Alpha Assoc", assocs.get(0).getName());
         assertEquals("zebra Assoc", assocs.get(1).getName());

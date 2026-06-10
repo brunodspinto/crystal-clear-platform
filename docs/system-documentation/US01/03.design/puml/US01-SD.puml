@@ -17,6 +17,19 @@ activate User
 
     User -> UI : asks to register on the platform
     activate UI
+        UI --> CTRL** : create()
+        activate CTRL
+            CTRL -> REPOS : getInstance()
+            activate REPOS
+                REPOS --> CTRL : repositories
+            deactivate REPOS
+
+            CTRL -> REPOS_SINGLETON : getRegistrationRequestRepository()
+            activate REPOS_SINGLETON
+                REPOS_SINGLETON --> CTRL : registrationRequestRepository
+            deactivate REPOS_SINGLETON
+        deactivate CTRL
+
         UI -> CTRL : getAvailableRoles()
         activate CTRL
             CTRL --> UI : roles
@@ -53,16 +66,6 @@ activate User
             activate RR
                 RR --> CTRL : rr
             deactivate RR
-
-            CTRL -> REPOS : getInstance()
-            activate REPOS
-                REPOS --> CTRL : repositories
-            deactivate REPOS
-
-            CTRL -> REPOS_SINGLETON : getRegistrationRequestRepository()
-            activate REPOS_SINGLETON
-                REPOS_SINGLETON --> CTRL : registrationRequestRepository
-            deactivate REPOS_SINGLETON
 
             CTRL -> REPO : save(rr)
             activate REPO

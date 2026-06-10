@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.ipp.isep.dei.ui.gui.ExportDeclarationGraphFXController"
+      styleClass="root-pane"
+      stylesheets="@../css/app.css"
+      spacing="10">
+    <padding><Insets top="24" right="32" bottom="24" left="32"/></padding>
+
+    <Label text="US37 — Export Declaration Interest Graph" styleClass="scene-title"/>
+    <Label text="Exports the entities and relations of the declaration graph to CSV, inferring family ties from an optional seed file."
+           wrapText="true"/>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Family seed:" styleClass="field-label" minWidth="120"/>
+        <TextField fx:id="familySeedField" promptText="Optional CSV with declared kinships..." editable="false"
+                   styleClass="input-field" HBox.hgrow="ALWAYS"/>
+        <Button text="Browse..." onAction="#handleBrowseFamilySeed" styleClass="secondary-button"/>
+        <Button text="Clear" onAction="#handleClearFamilySeed" styleClass="secondary-button"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Entities CSV:" styleClass="field-label" minWidth="120"/>
+        <TextField fx:id="entitiesField" promptText="Choose a file..." editable="false"
+                   styleClass="input-field" HBox.hgrow="ALWAYS"/>
+        <Button text="Browse..." onAction="#handleBrowseEntities" styleClass="secondary-button"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Relations CSV:" styleClass="field-label" minWidth="120"/>
+        <TextField fx:id="relationsField" promptText="Choose a file..." editable="false"
+                   styleClass="input-field" HBox.hgrow="ALWAYS"/>
+        <Button text="Browse..." onAction="#handleBrowseRelations" styleClass="secondary-button"/>
+    </HBox>
+
+    <Label fx:id="messageLabel" maxWidth="Infinity" wrapText="true"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Button text="Export" onAction="#handleExport" defaultButton="true" styleClass="primary-button"/>
+        <Button text="Back" onAction="#handleBack" styleClass="secondary-button"/>
+    </HBox>
+</VBox>

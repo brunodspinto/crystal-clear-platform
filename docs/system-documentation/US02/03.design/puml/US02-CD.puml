@@ -9,9 +9,24 @@ class ReviewRegistrationUI {
 
 class ReviewRegistrationController {
     + ReviewRegistrationController()
-    + getPendingRequests() : List<RegistrationRequest>
+    + getPendingRequestsAsDTO() : List<RegistrationRequestDTO>
+    + approveRequestByEmail(email : String) : void
+    + rejectRequestByEmail(email : String, reason : String) : void
     + approveRequest(request : RegistrationRequest) : void
     + rejectRequest(request : RegistrationRequest, reason : String) : void
+}
+
+class RegistrationRequestDTO {
+    - fullName : String
+    - email : String
+    - role : UserRole
+    - submissionDate : Date
+    - identificationDocument : String
+    + getFullName() : String
+    + getEmail() : String
+    + getRole() : UserRole
+    + getSubmissionDate() : Date
+    + getIdentificationDocument() : String
 }
 
 class RegistrationRequest {
@@ -33,6 +48,7 @@ class RegistrationRequest {
 
 class RegistrationRequestRepository {
     + getPendingRequests() : List<RegistrationRequest>
+    + findPendingByEmail(email : String) : RegistrationRequest
 }
 
 class AuthenticationRepository {
@@ -77,6 +93,8 @@ enum RegistrationStatus {
 }
 
 ReviewRegistrationUI .> ReviewRegistrationController
+ReviewRegistrationUI ..> RegistrationRequestDTO
+ReviewRegistrationController ..> RegistrationRequestDTO : creates
 ReviewRegistrationController .> Repositories
 ReviewRegistrationController ..> RegistrationRequestRepository
 ReviewRegistrationController ..> AuthenticationRepository

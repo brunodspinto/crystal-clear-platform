@@ -35,6 +35,26 @@ public class AdminMenuController {
     }
 
     @FXML
+    private void handleBuildRelationsGraph() {
+        open("/fxml/BuildRelationsGraph.fxml");
+    }
+
+    @FXML
+    private void handleAdjacencyMatrices() {
+        open("/fxml/GenerateAdjacencyMatrices.fxml");
+    }
+
+    @FXML
+    private void handleGlobalSupportMatrix() {
+        open("/fxml/GlobalSupportMatrix.fxml");
+    }
+
+    @FXML
+    private void handleExportDeclarationGraph() {
+        open("/fxml/ExportDeclarationGraph.fxml");
+    }
+
+    @FXML
     private void handleExportDeclarationCsv() {
         open("/fxml/ExportDeclarationCsv.fxml");
     }

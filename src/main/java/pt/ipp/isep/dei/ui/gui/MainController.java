@@ -133,6 +133,14 @@ public class MainController {
                 ((ReviewRegistrationFXController) child).setMainController(this);
             } else if (child instanceof ConsultAssetsFXController) {
                 ((ConsultAssetsFXController) child).setMainController(this);
+            } else if (child instanceof BuildRelationsGraphFXController) {
+                ((BuildRelationsGraphFXController) child).setMainController(this);
+            } else if (child instanceof GenerateAdjacencyMatricesFXController) {
+                ((GenerateAdjacencyMatricesFXController) child).setMainController(this);
+            } else if (child instanceof GlobalSupportMatrixFXController) {
+                ((GlobalSupportMatrixFXController) child).setMainController(this);
+            } else if (child instanceof ExportDeclarationGraphFXController) {
+                ((ExportDeclarationGraphFXController) child).setMainController(this);
             } else if (child instanceof IntegratedSituationFXController) {
                 ((IntegratedSituationFXController) child).setMainController(this);
             } else if (child instanceof AssessComplaintFXController) {

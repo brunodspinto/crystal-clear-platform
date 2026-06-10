@@ -1,8 +1,8 @@
 package pt.ipp.isep.dei.ui.console;
 
 import pt.ipp.isep.dei.controller.ListOrganizationsController;
-import pt.ipp.isep.dei.domain.Organization;
 import pt.ipp.isep.dei.domain.OrganizationType;
+import pt.ipp.isep.dei.dto.OrganizationDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -28,14 +28,14 @@ public class ListOrganizationsUI implements Runnable {
     public void run() {
         System.out.println("\n\n--- List Institutions -------------------------");
 
-        Map<OrganizationType, List<Organization>> grouped = controller.getOrganizationsGroupedByType();
+        Map<OrganizationType, List<OrganizationDTO>> grouped = controller.getOrganizationsGroupedByType();
 
         boolean anyFound = false;
-        for (Map.Entry<OrganizationType, List<Organization>> entry : grouped.entrySet()) {
+        for (Map.Entry<OrganizationType, List<OrganizationDTO>> entry : grouped.entrySet()) {
             if (!entry.getValue().isEmpty()) {
                 anyFound = true;
                 System.out.println("\n[ " + entry.getKey() + " ]");
-                for (Organization org : entry.getValue()) {
+                for (OrganizationDTO org : entry.getValue()) {
                     System.out.println("  - " + org.getName());
                 }
             }
