@@ -35,6 +35,6 @@ public class VehicleAsset implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("VehicleAsset{description='%s'}", description);
+        return description;
     }
 }

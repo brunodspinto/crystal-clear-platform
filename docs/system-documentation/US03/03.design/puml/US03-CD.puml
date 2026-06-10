@@ -9,7 +9,16 @@ class ListOrganizationsUI {
 
 class ListOrganizationsController {
     + ListOrganizationsController()
-    + getOrganizationsGroupedByType() : Map<OrganizationType, List<Organization>>
+    + getOrganizationsGroupedByType() : Map<OrganizationType, List<OrganizationDTO>>
+}
+
+class OrganizationDTO {
+    - name : String
+    - typeDesignation : String
+    - natureDesignation : String
+    + getName() : String
+    + getTypeDesignation() : String
+    + getNatureDesignation() : String
 }
 
 class OrganizationRepository {
@@ -38,6 +47,8 @@ enum OrganizationType {
 }
 
 ListOrganizationsUI .> ListOrganizationsController
+ListOrganizationsUI ..> OrganizationDTO
+ListOrganizationsController ..> OrganizationDTO : creates
 ListOrganizationsController .> Repositories
 ListOrganizationsController ..> OrganizationRepository
 Repositories -> "1" Repositories : instance

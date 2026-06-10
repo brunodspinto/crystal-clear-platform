@@ -13,6 +13,7 @@
 | Step 2         | ...knowing all registered organizations?                                           | OrganizationRepository         | **Information Expert**: the repository holds all Organization instances.                                                                                    |
 | Step 2         | ...grouping organizations by type?                                                 | ListOrganizationsController    | **Information Expert / Pure Fabrication**: the controller owns the grouping and sorting logic, keeping domain classes free of presentation concerns.         |
 | Step 2         | ...sorting organizations alphabetically within each group?                         | ListOrganizationsController    | Uses a `Comparator` with `compareToIgnoreCase`, consistent with the Comparable/Comparator pattern taught in PPROG.                                          |
+| Step 3         | ...carrying organization data to the UI?                                           | OrganizationDTO                | **DTO / Low Coupling**: the controller converts each Organization into a DTO, so the UI never depends on the domain entity and only receives display data.   |
 | Step 3         | ...displaying the grouped result to the actor?                                     | ListOrganizationsUI            | **Information Expert**: the UI is responsible for user interactions and feedback.                                                                           |
 
 ### Systematization
@@ -26,6 +27,7 @@ Other software classes (i.e. Pure Fabrication) identified:
 * ListOrganizationsUI
 * ListOrganizationsController
 * OrganizationRepository
+* OrganizationDTO
 
 ## 3.2. Sequence Diagram (SD)
 

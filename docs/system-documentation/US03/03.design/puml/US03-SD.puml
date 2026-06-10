@@ -11,15 +11,15 @@ participant ":ListOrganizationsController" as CTRL
 participant "Repositories" as REPOS
 participant "repositories:Repositories" as REPOS_SINGLETON
 participant ":OrganizationRepository" as REPO
+participant "dto:OrganizationDTO" as DTO
 
 activate PA
 
     PA -> UI : asks to list institutions
     activate UI
 
-        UI -> CTRL : getOrganizationsGroupedByType()
+        UI --> CTRL** : create()
         activate CTRL
-
             CTRL -> REPOS : getInstance()
             activate REPOS
                 REPOS --> CTRL : repositories
@@ -29,13 +29,26 @@ activate PA
             activate REPOS_SINGLETON
                 REPOS_SINGLETON --> CTRL : organizationRepository
             deactivate REPOS_SINGLETON
+        deactivate CTRL
+
+        UI -> CTRL : getOrganizationsGroupedByType()
+        activate CTRL
 
             CTRL -> REPO : getOrganizations()
             activate REPO
                 REPO --> CTRL : organizations
             deactivate REPO
 
-            CTRL --> UI : grouped (EnumMap<OrganizationType, List<Organization>>)
+            note right of CTRL
+                groups organizations by type and
+                sorts alphabetically within each group
+            end note
+
+            loop for each organization
+                CTRL --> DTO** : new OrganizationDTO(name,\ntypeDesignation, natureDesignation)
+            end
+
+            CTRL --> UI : grouped (Map<OrganizationType, List<OrganizationDTO>>)
         deactivate CTRL
 
         UI --> PA : displays institutions grouped by type,\nsorted alphabetically within each group

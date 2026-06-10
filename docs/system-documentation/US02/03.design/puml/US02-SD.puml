@@ -10,7 +10,9 @@ participant ":ReviewRegistrationUI" as UI
 participant ":ReviewRegistrationController" as CTRL
 participant "Repositories" as REPOS
 participant "repositories:Repositories" as REPOS_SINGLETON
+participant "EmailServiceFactory" as FACTORY
 participant ":RegistrationRequestRepository" as REPO
+participant "dto:RegistrationRequestDTO" as DTO
 participant "rr:RegistrationRequest" as RR
 participant ":AuthenticationRepository" as AUTH
 participant ":EmailService" as EMAIL
@@ -19,7 +21,8 @@ activate Admin
 
     Admin -> UI : asks to review registration requests
     activate UI
-        UI -> CTRL : getPendingRequests()
+
+        UI --> CTRL** : create()
         activate CTRL
             CTRL -> REPOS : getInstance()
             activate REPOS
@@ -31,11 +34,29 @@ activate Admin
                 REPOS_SINGLETON --> CTRL : registrationRequestRepository
             deactivate REPOS_SINGLETON
 
+            CTRL -> REPOS_SINGLETON : getAuthenticationRepository()
+            activate REPOS_SINGLETON
+                REPOS_SINGLETON --> CTRL : authenticationRepository
+            deactivate REPOS_SINGLETON
+
+            CTRL -> FACTORY : create()
+            activate FACTORY
+                FACTORY --> CTRL : emailService
+            deactivate FACTORY
+        deactivate CTRL
+
+        UI -> CTRL : getPendingRequestsAsDTO()
+        activate CTRL
             CTRL -> REPO : getPendingRequests()
             activate REPO
                 REPO --> CTRL : pendingRequests
             deactivate REPO
-            CTRL --> UI : pendingRequests
+
+            loop for each request in pendingRequests
+                CTRL --> DTO** : new RegistrationRequestDTO(fullName, email, role,\nsubmissionDate, identificationDocument)
+            end
+
+            CTRL --> UI : pendingRequestDTOs
         deactivate CTRL
         UI --> Admin : displays list of pending requests
     deactivate UI
@@ -48,22 +69,16 @@ activate Admin
     alt accept
         Admin -> UI : confirms acceptance
         activate UI
-            UI -> CTRL : approveRequest(rr)
+            UI -> CTRL : approveRequestByEmail(dto.getEmail())
             activate CTRL
+                CTRL -> REPO : findPendingByEmail(email)
+                activate REPO
+                    REPO --> CTRL : rr
+                deactivate REPO
                 CTRL -> RR : approve()
                 activate RR
                     RR --> CTRL : ok
                 deactivate RR
-                CTRL -> REPOS : getInstance()
-                activate REPOS
-                    REPOS --> CTRL : repositories
-                deactivate REPOS
-
-                CTRL -> REPOS_SINGLETON : getAuthenticationRepository()
-                activate REPOS_SINGLETON
-                    REPOS_SINGLETON --> CTRL : authenticationRepository
-                deactivate REPOS_SINGLETON
-
                 CTRL -> AUTH : addUserWithRole(fullName, email, password, roleId)
                 activate AUTH
                     AUTH --> CTRL : ok
@@ -80,8 +95,12 @@ activate Admin
     else reject
         Admin -> UI : confirms rejection with reason
         activate UI
-            UI -> CTRL : rejectRequest(rr, reason)
+            UI -> CTRL : rejectRequestByEmail(dto.getEmail(), reason)
             activate CTRL
+                CTRL -> REPO : findPendingByEmail(email)
+                activate REPO
+                    REPO --> CTRL : rr
+                deactivate REPO
                 CTRL -> RR : reject(reason)
                 activate RR
                     RR --> CTRL : ok
