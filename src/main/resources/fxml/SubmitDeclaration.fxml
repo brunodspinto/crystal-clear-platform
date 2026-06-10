@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+  SubmitDeclaration.fxml — US06: Submit a Declaration of Interests.
+  Controller: pt.ipp.isep.dei.ui.gui.SubmitDeclarationFXController
+  Loaded by: MainController.showSubmitDeclaration()
+-->
+<VBox xmlns="http://javafx.com/javafx/11"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="pt.ipp.isep.dei.ui.gui.SubmitDeclarationFXController"
+      stylesheets="@../css/app.css"
+      spacing="0">
+
+    <!-- ── Header ──────────────────────────────────────────────────────────── -->
+    <VBox styleClass="root-pane" spacing="6">
+        <padding><Insets top="16" right="20" bottom="12" left="20"/></padding>
+        <Label text="Submit Declaration of Interests" styleClass="scene-title"/>
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="Declaration Type:" styleClass="field-label"/>
+            <ComboBox fx:id="typeCombo" prefWidth="180" styleClass="input-field"/>
+        </HBox>
+    </VBox>
+
+    <Separator/>
+
+    <!-- ── Sections (Accordion) ────────────────────────────────────────────── -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" hbarPolicy="NEVER">
+        <content>
+            <Accordion>
+
+                <!-- ── 1. Position Entries ───────────────────────────────────── -->
+                <TitledPane text="1. Position / Job Entries (required)" expanded="true">
+                    <content>
+                    <VBox spacing="8">
+                        <padding><Insets top="10" right="14" bottom="10" left="14"/></padding>
+
+                        <!-- Form row 1 -->
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Organisation:" minWidth="90"/>
+                            <ComboBox fx:id="posOrgCombo" prefWidth="200" styleClass="input-field"/>
+                            <Label text="Function:"/>
+                            <TextField fx:id="posFunctionField" promptText="e.g. Minister"
+                                       prefWidth="160" styleClass="input-field"/>
+                            <Label text="Nature:"/>
+                            <ComboBox fx:id="posNatureCombo" prefWidth="110" styleClass="input-field"/>
+                        </HBox>
+
+                        <!-- Form row 2 -->
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Gross Salary:" minWidth="90"/>
+                            <TextField fx:id="posGrossField" promptText="Annual €"
+                                       prefWidth="110" styleClass="input-field"/>
+                            <Label text="Consulting:"/>
+                            <TextField fx:id="posConsultingField" promptText="Side income €"
+                                       prefWidth="110" styleClass="input-field"/>
+                            <Label text="Board:"/>
+                            <TextField fx:id="posBoardField" promptText="Board fees €"
+                                       prefWidth="110" styleClass="input-field"/>
+                        </HBox>
+
+                        <!-- Form row 3 -->
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Start Date:" minWidth="90"/>
+                            <TextField fx:id="posStartField" promptText="dd-MM-yyyy"
+                                       prefWidth="120" styleClass="input-field"/>
+                            <Label text="End Date:"/>
+                            <TextField fx:id="posEndField" promptText="dd-MM-yyyy (optional)"
+                                       prefWidth="180" styleClass="input-field"/>
+                            <Button text="Add" onAction="#handleAddPosition"
+                                    styleClass="primary-button" prefWidth="70"/>
+                            <Button text="Remove selected" onAction="#handleRemovePosition"
+                                    styleClass="secondary-button"/>
+                        </HBox>
+
+                        <!-- Position table -->
+                        <TableView fx:id="posTable" prefHeight="130">
+                            <columns>
+                                <TableColumn fx:id="posColOrg"    text="Organisation" prefWidth="170"/>
+                                <TableColumn fx:id="posColFunc"   text="Function"     prefWidth="150"/>
+                                <TableColumn fx:id="posColNature" text="Nature"       prefWidth="80"/>
+                                <TableColumn fx:id="posColGross"  text="Gross (€)"   prefWidth="100"/>
+                                <TableColumn fx:id="posColStart"  text="Start"        prefWidth="100"/>
+                            </columns>
+                            <placeholder><Label text="No position entries added yet."/></placeholder>
+                        </TableView>
+                    </VBox>
+                    </content>
+                </TitledPane>
+
+                <!-- ── 2. Subsidy Entries ─────────────────────────────────────── -->
+                <TitledPane text="2. Support and Subsidies">
+                    <content>
+                    <VBox spacing="8">
+                        <padding><Insets top="10" right="14" bottom="10" left="14"/></padding>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Organisation:" minWidth="90"/>
+                            <ComboBox fx:id="subOrgCombo" prefWidth="200" styleClass="input-field"/>
+                            <Label text="Amount (€):"/>
+                            <TextField fx:id="subAmountField" promptText="0.00"
+                                       prefWidth="110" styleClass="input-field"/>
+                            <Label text="Description:"/>
+                            <TextField fx:id="subDescField" promptText="e.g. Research grant"
+                                       prefWidth="200" styleClass="input-field"/>
+                            <Label text="Date:"/>
+                            <TextField fx:id="subDateField" promptText="dd-MM-yyyy"
+                                       prefWidth="110" styleClass="input-field"/>
+                            <Button text="Add" onAction="#handleAddSubsidy"
+                                    styleClass="primary-button" prefWidth="70"/>
+                            <Button text="Remove" onAction="#handleRemoveSubsidy"
+                                    styleClass="secondary-button"/>
+                        </HBox>
+                        <TableView fx:id="subTable" prefHeight="120">
+                            <columns>
+                                <TableColumn fx:id="subColOrg"    text="Organisation" prefWidth="200"/>
+                                <TableColumn fx:id="subColAmount" text="Amount (€)"   prefWidth="120"/>
+                                <TableColumn fx:id="subColDesc"   text="Description"  prefWidth="280"/>
+                            </columns>
+                            <placeholder><Label text="No subsidy entries added yet."/></placeholder>
+                        </TableView>
+                    </VBox>
+                    </content>
+                </TitledPane>
+
+                <!-- ── 3. Asset Entries ───────────────────────────────────────── -->
+                <TitledPane text="3. Assets (Real Estate, Vehicles, Stocks)">
+                    <content>
+                    <VBox spacing="8">
+                        <padding><Insets top="10" right="14" bottom="10" left="14"/></padding>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Asset Type:" minWidth="80"/>
+                            <ComboBox fx:id="assetTypeCombo" prefWidth="140" styleClass="input-field"/>
+                            <Label text="Value (€):"/>
+                            <TextField fx:id="assetValueField" promptText="Estimated value"
+                                       prefWidth="130" styleClass="input-field"/>
+                            <Label text="Detail:"/>
+                            <TextField fx:id="assetDetailField"
+                                       promptText="Description / model / ticker"
+                                       prefWidth="220" styleClass="input-field"/>
+                            <Button text="Add" onAction="#handleAddAsset"
+                                    styleClass="primary-button" prefWidth="70"/>
+                            <Button text="Remove" onAction="#handleRemoveAsset"
+                                    styleClass="secondary-button"/>
+                        </HBox>
+                        <Label text="Detail field: for Real Estate enter description, for Vehicles enter model, for Stocks enter share name."
+                               style="-fx-font-size:11px; -fx-text-fill:#888888;"/>
+                        <TableView fx:id="assetTable" prefHeight="120">
+                            <columns>
+                                <TableColumn fx:id="assetColType"   text="Type"       prefWidth="130"/>
+                                <TableColumn fx:id="assetColValue"  text="Value (€)"  prefWidth="120"/>
+                                <TableColumn fx:id="assetColDetail" text="Detail"     prefWidth="300"/>
+                            </columns>
+                            <placeholder><Label text="No asset entries added yet."/></placeholder>
+                        </TableView>
+                    </VBox>
+                    </content>
+                </TitledPane>
+
+                <!-- ── 4. Business Participations ────────────────────────────── -->
+                <TitledPane text="4. Business Participations (Quotas / Shares)">
+                    <content>
+                    <VBox spacing="8">
+                        <padding><Insets top="10" right="14" bottom="10" left="14"/></padding>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Organisation:" minWidth="90"/>
+                            <ComboBox fx:id="bizOrgCombo" prefWidth="200" styleClass="input-field"/>
+                            <Label text="Company NIF:"/>
+                            <TextField fx:id="bizNifField" promptText="9-digit NIF"
+                                       prefWidth="120" styleClass="input-field"/>
+                            <Label text="Total Value (€):"/>
+                            <TextField fx:id="bizValueField" promptText="0.00"
+                                       prefWidth="110" styleClass="input-field"/>
+                            <Label text="Percentage (%):"/>
+                            <TextField fx:id="bizPctField" promptText="0–100"
+                                       prefWidth="90" styleClass="input-field"/>
+                            <Button text="Add" onAction="#handleAddBusiness"
+                                    styleClass="primary-button" prefWidth="70"/>
+                            <Button text="Remove" onAction="#handleRemoveBusiness"
+                                    styleClass="secondary-button"/>
+                        </HBox>
+                        <TableView fx:id="bizTable" prefHeight="120">
+                            <columns>
+                                <TableColumn fx:id="bizColOrg"   text="Organisation"  prefWidth="180"/>
+                                <TableColumn fx:id="bizColNif"   text="NIF"           prefWidth="110"/>
+                                <TableColumn fx:id="bizColValue" text="Total Value (€)" prefWidth="130"/>
+                                <TableColumn fx:id="bizColPct"   text="Percentage"    prefWidth="100"/>
+                            </columns>
+                            <placeholder><Label text="No business participations added yet."/></placeholder>
+                        </TableView>
+                    </VBox>
+                    </content>
+                </TitledPane>
+
+            </Accordion>
+        </content>
+    </ScrollPane>
+
+    <!-- ── Footer ──────────────────────────────────────────────────────────── -->
+    <VBox spacing="8">
+        <padding><Insets top="10" right="20" bottom="16" left="20"/></padding>
+        <Label fx:id="messageLabel" wrapText="true" maxWidth="Infinity"/>
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Back" onAction="#handleBack" styleClass="secondary-button"/>
+            <Button fx:id="submitButton" text="Submit Declaration"
+                    onAction="#handleSubmit" styleClass="primary-button" prefWidth="200"/>
+        </HBox>
+    </VBox>
+
+</VBox>

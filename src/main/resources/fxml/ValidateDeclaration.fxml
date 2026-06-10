@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+  ValidateDeclaration.fxml - US08: Validate a submitted Declaration of Interests.
+  Controller: pt.ipp.isep.dei.ui.gui.ValidateDeclarationFXController
+  Loaded by: MainController.showValidateDeclaration()
+-->
+<VBox xmlns="http://javafx.com/javafx/11"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="pt.ipp.isep.dei.ui.gui.ValidateDeclarationFXController"
+      stylesheets="@../css/app.css"
+      spacing="0">
+
+    <!-- ── Header ──────────────────────────────────────────────────────────── -->
+    <VBox styleClass="root-pane" spacing="4">
+        <padding><Insets top="14" right="20" bottom="10" left="20"/></padding>
+        <Label text="Validate Declaration of Interests" styleClass="scene-title"/>
+        <Label text="Select a pending declaration to review and validate."
+               style="-fx-font-size:11px; -fx-text-fill:#666666;"/>
+    </VBox>
+
+    <Separator/>
+
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" hbarPolicy="NEVER">
+        <content>
+            <VBox spacing="12">
+                <padding><Insets top="14" right="20" bottom="14" left="20"/></padding>
+
+                <!-- ── Pending declarations table ──────────────────────────── -->
+                <Label text="Pending Declarations" styleClass="field-label"/>
+                <TableView fx:id="pendingTable" prefHeight="180">
+                    <columns>
+                        <TableColumn fx:id="colId"    text="ID"          prefWidth="180"/>
+                        <TableColumn fx:id="colAgent" text="Agent"       prefWidth="180"/>
+                        <TableColumn fx:id="colType"  text="Type"        prefWidth="120"/>
+                        <TableColumn fx:id="colDate"  text="Submitted"   prefWidth="110"/>
+                    </columns>
+                </TableView>
+                <HBox alignment="CENTER_RIGHT">
+                    <Button fx:id="reviewButton" text="Review selected declaration"
+                            onAction="#handleReview" styleClass="primary-button"
+                            prefWidth="220"/>
+                </HBox>
+
+                <!-- ── Review panel (hidden until a declaration is selected) ─ -->
+                <VBox fx:id="reviewPanel" spacing="10"
+                      style="-fx-border-color:#cccccc; -fx-border-radius:5;
+                             -fx-background-color:#fafafa; -fx-background-radius:5;">
+                    <padding><Insets top="12" right="14" bottom="12" left="14"/></padding>
+
+                    <Label text="Declaration Details" styleClass="field-label"/>
+                    <TextArea fx:id="detailsArea" editable="false" wrapText="true"
+                              prefHeight="180" styleClass="input-field"
+                              style="-fx-font-family:'monospace'; -fx-font-size:11px;"/>
+
+                    <Separator/>
+
+                    <!-- Outcome selection -->
+                    <Label text="Validation Outcome" styleClass="field-label"/>
+                    <HBox spacing="20" alignment="CENTER_LEFT">
+                        <fx:define>
+                            <ToggleGroup fx:id="outcomeGroup"/>
+                        </fx:define>
+                        <RadioButton fx:id="rbValidated" text="Validated"
+                                     toggleGroup="$outcomeGroup" selected="true"/>
+                        <RadioButton fx:id="rbReturned"  text="Returned for Correction"
+                                     toggleGroup="$outcomeGroup"/>
+                    </HBox>
+
+                    <!-- Comments section (visible only when RETURNED_FOR_CORRECTION) -->
+                    <VBox fx:id="commentsSection" spacing="8">
+                        <Label text="Comments (AC2 — identify each inconsistency by section)"
+                               styleClass="field-label"/>
+
+                        <!-- Add comment form -->
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Section:" minWidth="60"/>
+                            <TextField fx:id="sectionField"
+                                       promptText="e.g. Income Section"
+                                       prefWidth="200" styleClass="input-field"/>
+                            <Label text="Comment:"/>
+                            <TextField fx:id="commentField"
+                                       promptText="Describe the inconsistency"
+                                       prefWidth="320" styleClass="input-field"
+                                       HBox.hgrow="ALWAYS"/>
+                            <Button text="Add" onAction="#handleAddComment"
+                                    styleClass="primary-button" prefWidth="70"/>
+                            <Button text="Remove" onAction="#handleRemoveComment"
+                                    styleClass="secondary-button"/>
+                        </HBox>
+
+                        <TableView fx:id="commentsTable" prefHeight="120">
+                            <columns>
+                                <TableColumn fx:id="colSection" text="Section" prefWidth="200"/>
+                                <TableColumn fx:id="colComment" text="Comment" prefWidth="440"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+
+                    <!-- Review action buttons -->
+                    <HBox spacing="10" alignment="CENTER_RIGHT">
+                        <Button text="Cancel" onAction="#handleCancelReview"
+                                styleClass="secondary-button"/>
+                        <Button fx:id="confirmButton" text="Confirm Validation"
+                                onAction="#handleConfirm" styleClass="primary-button"
+                                prefWidth="190"/>
+                    </HBox>
+                </VBox>
+
+            </VBox>
+        </content>
+    </ScrollPane>
+
+    <!-- ── Footer ──────────────────────────────────────────────────────────── -->
+    <Separator/>
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <padding><Insets top="8" right="20" bottom="10" left="20"/></padding>
+        <Label fx:id="messageLabel" wrapText="true" HBox.hgrow="ALWAYS"/>
+        <Button text="Back" onAction="#handleBack" styleClass="secondary-button"/>
+    </HBox>
+
+</VBox>

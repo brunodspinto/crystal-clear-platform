@@ -91,6 +91,16 @@ public class MainController {
         loadCenter("/fxml/StatisticsView.fxml");
     }
 
+    // ── US06 ──────────────────────────────────────────────────────────────────
+    public void showSubmitDeclaration() {
+        loadCenter("/fxml/SubmitDeclaration.fxml");
+    }
+
+    // ── US08 ──────────────────────────────────────────────────────────────────
+    public void showValidateDeclaration() {
+        loadCenter("/fxml/ValidateDeclaration.fxml");
+    }
+
     void loadCenter(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -134,6 +144,10 @@ public class MainController {
                     stats.setScreen(pendingStatsScreen);
                     pendingStatsScreen = null;
                 }
+            } else if (child instanceof SubmitDeclarationFXController) {
+                ((SubmitDeclarationFXController) child).setMainController(this);
+            } else if (child instanceof ValidateDeclarationFXController) {
+                ((ValidateDeclarationFXController) child).setMainController(this);
             }
 
             root.setCenter(view);
