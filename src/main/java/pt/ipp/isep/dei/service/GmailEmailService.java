@@ -8,5 +8,6 @@ public class GmailEmailService implements EmailService {
     @Override
     public void sendNotification(String toEmail, String subject, String body) {
         System.out.printf("[Gmail] To: %s | Subject: %s%n%s%n", toEmail, subject, body);
+        NotificationLogger.log("Gmail", toEmail, subject, body);
     }
 }

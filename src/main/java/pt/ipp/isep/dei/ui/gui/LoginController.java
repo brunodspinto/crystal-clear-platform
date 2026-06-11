@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -70,11 +71,33 @@ public class LoginController implements Initializable {
 
         boolean ok = authController.doLogin(email, password);
         if (!ok) {
-            messageLabel.setText("Invalid credentials.");
+            String rejectionReason = authController.getRejectionReason(email);
+            if (rejectionReason != null) {
+                showRejectionPopup(rejectionReason);
+            } else {
+                messageLabel.setText("Invalid credentials.");
+            }
             return;
         }
 
+        String welcomeName = authController.consumeFirstLoginWelcome(email);
+        if (welcomeName != null && mainController != null && mainController.getStage() != null) {
+            Toast.show(mainController.getStage(),
+                    "Registration approved ✅",
+                    "Welcome, " + welcomeName + "! Your account is active.");
+        }
+
         dispatchByRole();
+    }
+
+    private void showRejectionPopup(String reason) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Registration Rejected");
+        alert.setHeaderText("Your registration request was rejected.");
+        alert.setContentText("Reason: " + reason
+                + "\n\nYou cannot log in. Please submit a new registration request.");
+        alert.showAndWait();
+        messageLabel.setText("Registration rejected. See the message above.");
     }
 
     @FXML
