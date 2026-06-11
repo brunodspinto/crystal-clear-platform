@@ -49,14 +49,13 @@ public class FamilyRelationshipInferrer {
         List<Edge> toAdd = new ArrayList<>();
         for (Edge e : rels) {
             FamilyRelationshipType type = FamilyRelationshipType.fromLabel(e.getLabel());
-            if (type == null || !type.isSymmetric()) {
-                continue;
-            }
-            Edge rev = new Edge(e.getToId(), e.getFromId(), e.getLabel(), e.getWeight());
-            String key = key(rev);
-            if (!existing.contains(key)) {
-                toAdd.add(rev);
-                existing.add(key);
+            if (type != null && type.isSymmetric()) {
+                Edge rev = new Edge(e.getToId(), e.getFromId(), e.getLabel(), e.getWeight());
+                String key = key(rev);
+                if (!existing.contains(key)) {
+                    toAdd.add(rev);
+                    existing.add(key);
+                }
             }
         }
         rels.addAll(toAdd);
@@ -66,15 +65,14 @@ public class FamilyRelationshipInferrer {
         List<Edge> toAdd = new ArrayList<>();
         for (Edge e : rels) {
             FamilyRelationshipType type = FamilyRelationshipType.fromLabel(e.getLabel());
-            if (type == null || type.isSymmetric()) {
-                continue;
-            }
-            FamilyRelationshipType inverse = type.getInverse();
-            Edge inv = new Edge(e.getToId(), e.getFromId(), inverse.getLabel(), e.getWeight());
-            String key = key(inv);
-            if (!existing.contains(key)) {
-                toAdd.add(inv);
-                existing.add(key);
+            if (type != null && !type.isSymmetric()) {
+                FamilyRelationshipType inverse = type.getInverse();
+                Edge inv = new Edge(e.getToId(), e.getFromId(), inverse.getLabel(), e.getWeight());
+                String key = key(inv);
+                if (!existing.contains(key)) {
+                    toAdd.add(inv);
+                    existing.add(key);
+                }
             }
         }
         rels.addAll(toAdd);
