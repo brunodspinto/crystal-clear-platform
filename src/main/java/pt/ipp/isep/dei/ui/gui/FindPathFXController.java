@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
 
 /**
  * GUI controller for the pathway verification between two entities (US34).
- * The administrator picks the source and target entities and the screen shows
+ * The Ethics Committee Member picks the source and target entities and the screen shows
  * whether they are connected in the support graph and, if so, the shortest
  * distance (number of edges). Reuses the same {@link FindPathController} as
  * the console UI.
@@ -92,7 +92,7 @@ public class FindPathFXController implements Initializable {
     @FXML
     private void handleBack() {
         if (mainController != null) {
-            mainController.showAdminMenu();
+            mainController.showEthicsCommitteeMenu();
         }
     }
 
