@@ -121,21 +121,6 @@ public class OrganizationRepository implements Serializable {
     }
 
     /**
-     * Stores an already-built organization if no duplicate with the same name and
-     * type exists (a defensive clone is kept). Useful for seeding and for callers
-     * that already hold an {@link Organization} instance.
-     *
-     * @param organization the organization to store.
-     * @return {@code true} if stored; {@code false} if a duplicate exists.
-     */
-    public boolean save(Organization organization) {
-        if (existsByNameAndType(organization.getName(), organization.getType())) {
-            return false;
-        }
-        return organizations.add(organization.clone());
-    }
-
-    /**
      * Returns an unmodifiable copy of all organizations in the repository.
      *
      * @return list of all organizations.

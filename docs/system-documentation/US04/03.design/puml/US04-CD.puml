@@ -25,7 +25,6 @@ class Repositories <<Singleton>> {
 class OrganizationRepository {
     + registerOrganization(name : String, nature : OrganizationNature,\n  type : OrganizationType) : boolean
     + existsByNameAndType(name : String, type : OrganizationType) : boolean
-    + save(organization : Organization) : boolean
 }
 
 class Organization {

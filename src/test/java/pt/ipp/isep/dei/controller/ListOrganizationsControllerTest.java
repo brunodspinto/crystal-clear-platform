@@ -29,7 +29,7 @@ class ListOrganizationsControllerTest {
     @Test
     void ensureOrganizationAppearsInCorrectGroup() {
         OrganizationRepository repo = new OrganizationRepository();
-        repo.save(new Organization("Parliament", OrganizationNature.PUBLIC, OrganizationType.INSTITUTE));
+        repo.registerOrganization("Parliament", OrganizationNature.PUBLIC, OrganizationType.INSTITUTE);
         ListOrganizationsController controller = new ListOrganizationsController(repo);
 
         Map<OrganizationType, List<OrganizationDTO>> result = controller.getOrganizationsGroupedByType();
@@ -41,7 +41,7 @@ class ListOrganizationsControllerTest {
     @Test
     void ensureDtoCarriesTypeAndNatureDesignations() {
         OrganizationRepository repo = new OrganizationRepository();
-        repo.save(new Organization("Parliament", OrganizationNature.PUBLIC, OrganizationType.INSTITUTE));
+        repo.registerOrganization("Parliament", OrganizationNature.PUBLIC, OrganizationType.INSTITUTE);
         ListOrganizationsController controller = new ListOrganizationsController(repo);
 
         OrganizationDTO dto = controller.getOrganizationsGroupedByType()
@@ -54,9 +54,9 @@ class ListOrganizationsControllerTest {
     @Test
     void ensureOrganizationsAreSortedAlphabeticallyWithinGroup() {
         OrganizationRepository repo = new OrganizationRepository();
-        repo.save(new Organization("Zebra Party", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY));
-        repo.save(new Organization("Alpha Party", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY));
-        repo.save(new Organization("Mango Party", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY));
+        repo.registerOrganization("Zebra Party", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY);
+        repo.registerOrganization("Alpha Party", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY);
+        repo.registerOrganization("Mango Party", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY);
         ListOrganizationsController controller = new ListOrganizationsController(repo);
 
         List<OrganizationDTO> parties = controller.getOrganizationsGroupedByType().get(OrganizationType.POLITICAL_PARTY);
@@ -69,8 +69,8 @@ class ListOrganizationsControllerTest {
     @Test
     void ensureOrganizationsOfDifferentTypesAreInSeparateGroups() {
         OrganizationRepository repo = new OrganizationRepository();
-        repo.save(new Organization("Tech Corp", OrganizationNature.PRIVATE, OrganizationType.COMPANY));
-        repo.save(new Organization("Green Foundation", OrganizationNature.SOCIAL, OrganizationType.FOUNDATION));
+        repo.registerOrganization("Tech Corp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
+        repo.registerOrganization("Green Foundation", OrganizationNature.SOCIAL, OrganizationType.FOUNDATION);
         ListOrganizationsController controller = new ListOrganizationsController(repo);
 
         Map<OrganizationType, List<OrganizationDTO>> result = controller.getOrganizationsGroupedByType();
@@ -96,8 +96,8 @@ class ListOrganizationsControllerTest {
     @Test
     void ensureSortingIsCaseInsensitive() {
         OrganizationRepository repo = new OrganizationRepository();
-        repo.save(new Organization("zebra Assoc", OrganizationNature.SOCIAL, OrganizationType.ASSOCIATION));
-        repo.save(new Organization("Alpha Assoc", OrganizationNature.SOCIAL, OrganizationType.ASSOCIATION));
+        repo.registerOrganization("zebra Assoc", OrganizationNature.SOCIAL, OrganizationType.ASSOCIATION);
+        repo.registerOrganization("Alpha Assoc", OrganizationNature.SOCIAL, OrganizationType.ASSOCIATION);
         ListOrganizationsController controller = new ListOrganizationsController(repo);
 
         List<OrganizationDTO> assocs = controller.getOrganizationsGroupedByType().get(OrganizationType.ASSOCIATION);
