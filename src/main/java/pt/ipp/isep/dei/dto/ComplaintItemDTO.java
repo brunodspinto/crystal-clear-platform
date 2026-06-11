@@ -21,7 +21,7 @@ public class ComplaintItemDTO {
      * Creates a grievance DTO.
      *
      * @param description       the grievance description.
-     * @param complaintDate     the date of the reported behaviour.
+     * @param complaintDate     the date of the reported behavior.
      * @param politicalFunction the function the agent held at the time.
      */
     public ComplaintItemDTO(String description, Date complaintDate, PoliticalFunction politicalFunction) {
@@ -38,7 +38,7 @@ public class ComplaintItemDTO {
     }
 
     /**
-     * @return the date when the reported behaviour occurred.
+     * @return the date when the reported behavior occurred.
      */
     public Date getComplaintDate() {
         return complaintDate;
