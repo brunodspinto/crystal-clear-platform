@@ -156,6 +156,8 @@ public class MainController {
                 ((SubmitDeclarationFXController) child).setMainController(this);
             } else if (child instanceof ValidateDeclarationFXController) {
                 ((ValidateDeclarationFXController) child).setMainController(this);
+            } else if (child instanceof  FindPathFXController) {
+                ((FindPathFXController) child).setMainController(this);
             }
 
             root.setCenter(view);
