@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.ipp.isep.dei.ui.gui.NetworkDynamicsFXController"
+      styleClass="root-pane"
+      stylesheets="@../css/app.css"
+      spacing="10">
+    <padding><Insets top="20" right="28" bottom="20" left="28"/></padding>
+
+    <Label text="US32 — Network Dynamics Over Time" styleClass="scene-title"/>
+    <Label text="Add one or more snapshot dates; for each date a snapshot of the active entities and relations of the network is shown."
+           wrapText="true"/>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Date:" styleClass="field-label"/>
+        <TextField fx:id="dateField" promptText="yyyy-MM-dd" styleClass="input-field" prefWidth="160"/>
+        <Button text="Add" onAction="#handleAddDate" styleClass="primary-button"/>
+        <Button text="Remove Selected" onAction="#handleRemoveDate" styleClass="secondary-button"/>
+    </HBox>
+
+    <ListView fx:id="datesList" prefHeight="90"/>
+
+    <Label fx:id="messageLabel" maxWidth="Infinity" wrapText="true"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Button text="Generate Snapshots" onAction="#handleGenerate" defaultButton="true" styleClass="primary-button"/>
+        <Button text="Back" onAction="#handleBack" styleClass="secondary-button"/>
+    </HBox>
+
+    <TextArea fx:id="resultArea" editable="false" wrapText="false" VBox.vgrow="ALWAYS"
+              style="-fx-font-family: 'Courier New', monospace;"/>
+</VBox>
