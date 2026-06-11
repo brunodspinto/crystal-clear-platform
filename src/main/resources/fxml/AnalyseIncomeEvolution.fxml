@@ -10,7 +10,7 @@
       fx:controller="pt.ipp.isep.dei.ui.gui.AnalyseIncomeEvolutionFXController">
     <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
 
-    <Label text="US10 — Income Evolution" style="-fx-font-size: 15px; -fx-font-weight: bold;"/>
+    <Label text="Income Evolution" style="-fx-font-size: 15px; -fx-font-weight: bold;"/>
 
     <HBox spacing="12" alignment="CENTER_LEFT">
         <Label text="Agent:"/>

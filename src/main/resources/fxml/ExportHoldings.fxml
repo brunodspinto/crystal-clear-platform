@@ -11,7 +11,7 @@
       spacing="10">
     <padding><Insets top="20" right="28" bottom="20" left="28"/></padding>
 
-    <Label text="US25 — Export Holdings Dataset to CSV" styleClass="scene-title"/>
+    <Label text="Export Holdings Dataset to CSV" styleClass="scene-title"/>
 
     <GridPane hgap="12" vgap="8">
         <columnConstraints>
