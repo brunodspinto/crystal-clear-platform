@@ -55,10 +55,9 @@ public class EntityCsvParser {
             String line;
             while ((line = reader.readLine()) != null) {
                 String trimmed = line.trim();
-                if (trimmed.isEmpty() || trimmed.startsWith("#")) {
-                    continue;
+                if (!trimmed.isEmpty() && !trimmed.startsWith("#")) {
+                    lines.add(trimmed);
                 }
-                lines.add(trimmed);
             }
         } finally {
             reader.close();
