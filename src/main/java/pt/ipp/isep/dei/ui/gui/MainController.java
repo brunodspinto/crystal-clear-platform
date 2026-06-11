@@ -156,6 +156,12 @@ public class MainController {
                 ((SubmitDeclarationFXController) child).setMainController(this);
             } else if (child instanceof ValidateDeclarationFXController) {
                 ((ValidateDeclarationFXController) child).setMainController(this);
+            } else if (child instanceof LoadEntitiesFromCsvFXController) {
+                ((LoadEntitiesFromCsvFXController) child).setMainController(this);
+            } else if (child instanceof ExportGraphSvgFXController) {
+                ((ExportGraphSvgFXController) child).setMainController(this);
+            } else if (child instanceof NetworkDynamicsFXController) {
+                ((NetworkDynamicsFXController) child).setMainController(this);
             }
 
             root.setCenter(view);
