@@ -11,7 +11,7 @@
       spacing="10">
     <padding><Insets top="24" right="32" bottom="24" left="32"/></padding>
 
-    <Label text="US21 — Adjacency Matrices" styleClass="scene-title"/>
+    <Label text="Adjacency Matrices" styleClass="scene-title"/>
     <Label text="Shows the adjacency matrix of each relation of the graph built in US20, plus the global matrix."/>
 
     <HBox spacing="10" alignment="CENTER_LEFT">

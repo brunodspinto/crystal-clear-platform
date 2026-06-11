@@ -11,7 +11,7 @@
       spacing="10">
     <padding><Insets top="20" right="28" bottom="20" left="28"/></padding>
 
-    <Label text="US12 — Submit Complaint" styleClass="scene-title"/>
+    <Label text="Submit Complaint" styleClass="scene-title"/>
     <Label text="A complaint targets one political agent and may contain several grievances."/>
 
     <GridPane hgap="12" vgap="8">

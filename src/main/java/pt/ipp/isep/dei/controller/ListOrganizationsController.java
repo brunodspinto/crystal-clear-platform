@@ -3,6 +3,7 @@ package pt.ipp.isep.dei.controller;
 import pt.ipp.isep.dei.domain.Organization;
 import pt.ipp.isep.dei.domain.OrganizationType;
 import pt.ipp.isep.dei.dto.OrganizationDTO;
+import pt.ipp.isep.dei.mapper.OrganizationMapper;
 import pt.ipp.isep.dei.repository.OrganizationRepository;
 import pt.ipp.isep.dei.repository.Repositories;
 
@@ -19,6 +20,7 @@ import java.util.Map;
 public class ListOrganizationsController {
 
     private final OrganizationRepository organizationRepository;
+    private final OrganizationMapper organizationMapper = new OrganizationMapper();
 
     /**
      * Creates a controller using the singleton repository.
@@ -68,19 +70,9 @@ public class ListOrganizationsController {
 
         Map<OrganizationType, List<OrganizationDTO>> groupedDTOs = new EnumMap<>(OrganizationType.class);
         for (Map.Entry<OrganizationType, List<Organization>> entry : grouped.entrySet()) {
-            List<OrganizationDTO> dtos = new ArrayList<>();
-            for (Organization org : entry.getValue()) {
-                dtos.add(toDTO(org));
-            }
-            groupedDTOs.put(entry.getKey(), dtos);
+            groupedDTOs.put(entry.getKey(), organizationMapper.toDTO(entry.getValue()));
         }
 
         return groupedDTOs;
-    }
-
-    private static OrganizationDTO toDTO(Organization org) {
-        String typeDesignation = org.getType() != null ? org.getType().toString() : "";
-        String natureDesignation = org.getNature() != null ? org.getNature().toString() : "";
-        return new OrganizationDTO(org.getName(), typeDesignation, natureDesignation);
     }
 }

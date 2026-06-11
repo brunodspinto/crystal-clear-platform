@@ -96,9 +96,8 @@ public class GenerateAdjacencyMatricesFXController implements Initializable {
             matrix = result.getGlobalMatrix();
         } else {
             for (LabeledAdjacencyMatrix entry : result.getMatrices()) {
-                if (entry.getLabel().equals(selected)) {
+                if (matrix == null && entry.getLabel().equals(selected)) {
                     matrix = entry.getMatrix();
-                    break;
                 }
             }
         }

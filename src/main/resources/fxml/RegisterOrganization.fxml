@@ -11,7 +11,7 @@
       spacing="10">
     <padding><Insets top="24" right="32" bottom="24" left="32"/></padding>
 
-    <Label text="US04 — Register Organization" styleClass="scene-title"/>
+    <Label text="Register Organization" styleClass="scene-title"/>
 
     <GridPane hgap="12" vgap="6">
         <columnConstraints>
