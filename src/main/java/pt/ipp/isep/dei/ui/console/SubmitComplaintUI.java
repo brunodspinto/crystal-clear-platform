@@ -76,7 +76,7 @@ public class SubmitComplaintUI implements Runnable {
      * confirmation, and adds it to the complaint if confirmed.
      *
      * @return {@code true} if a grievance was added; {@code false} if it was
-     *         cancelled, discarded or invalid.
+     *         canceled, discarded or invalid.
      */
     private boolean collectAndAddGrievance() {
         PoliticalFunction function = displayAndSelectPoliticalFunction();

@@ -153,7 +153,7 @@ public class SubmitComplaintController {
      * in-progress state.
      *
      * @return {@code true} if the complaint was saved; {@code false} if there is no
-     *         complaint in progress or it has no grievances.
+     *         complaint in progress, or it has no grievances.
      */
     public boolean submitComplaint() {
         if (currentComplaint == null || currentComplaint.getItemCount() == 0) {
