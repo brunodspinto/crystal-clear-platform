@@ -11,7 +11,7 @@
       spacing="10">
     <padding><Insets top="20" right="28" bottom="20" left="28"/></padding>
 
-    <Label text="US02 — Review Registration Requests" styleClass="scene-title"/>
+    <Label text="Review Registration Requests" styleClass="scene-title"/>
 
     <HBox spacing="16" VBox.vgrow="ALWAYS">
 

@@ -11,7 +11,7 @@
       spacing="10">
     <padding><Insets top="24" right="32" bottom="24" left="32"/></padding>
 
-    <Label text="US33 — Global Support Adjacency Matrix" styleClass="scene-title"/>
+    <Label text="Global Support Adjacency Matrix" styleClass="scene-title"/>
     <Label text="Shows the adjacency matrix of the support graph (undirected, unweighted) for a temporal snapshot."/>
 
     <HBox spacing="10" alignment="CENTER_LEFT">
