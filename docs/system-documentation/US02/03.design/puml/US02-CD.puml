@@ -16,6 +16,11 @@ class ReviewRegistrationController {
     + rejectRequest(request : RegistrationRequest, reason : String) : void
 }
 
+class RegistrationRequestMapper {
+    + toDTO(request : RegistrationRequest) : RegistrationRequestDTO
+    + toDTO(requests : List<RegistrationRequest>) : List<RegistrationRequestDTO>
+}
+
 class RegistrationRequestDTO {
     - fullName : String
     - email : String
@@ -94,7 +99,9 @@ enum RegistrationStatus {
 
 ReviewRegistrationUI .> ReviewRegistrationController
 ReviewRegistrationUI ..> RegistrationRequestDTO
-ReviewRegistrationController ..> RegistrationRequestDTO : creates
+ReviewRegistrationController --> "1" RegistrationRequestMapper : registrationRequestMapper
+RegistrationRequestMapper ..> RegistrationRequestDTO : creates
+RegistrationRequestMapper ..> RegistrationRequest
 ReviewRegistrationController .> Repositories
 ReviewRegistrationController ..> RegistrationRequestRepository
 ReviewRegistrationController ..> AuthenticationRepository

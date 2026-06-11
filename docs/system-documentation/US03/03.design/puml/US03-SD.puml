@@ -11,6 +11,7 @@ participant ":ListOrganizationsController" as CTRL
 participant "Repositories" as REPOS
 participant "repositories:Repositories" as REPOS_SINGLETON
 participant ":OrganizationRepository" as REPO
+participant ":OrganizationMapper" as MAPPER
 participant "dto:OrganizationDTO" as DTO
 
 activate PA
@@ -29,6 +30,8 @@ activate PA
             activate REPOS_SINGLETON
                 REPOS_SINGLETON --> CTRL : organizationRepository
             deactivate REPOS_SINGLETON
+
+            CTRL --> MAPPER** : create()
         deactivate CTRL
 
         UI -> CTRL : getOrganizationsGroupedByType()
@@ -44,8 +47,14 @@ activate PA
                 sorts alphabetically within each group
             end note
 
-            loop for each organization
-                CTRL --> DTO** : new OrganizationDTO(name,\ntypeDesignation, natureDesignation)
+            loop for each group of organizations
+                CTRL -> MAPPER : toDTO(organizations)
+                activate MAPPER
+                    loop for each organization
+                        MAPPER --> DTO** : new OrganizationDTO(name,\ntypeDesignation, natureDesignation)
+                    end
+                    MAPPER --> CTRL : organizationDTOs
+                deactivate MAPPER
             end
 
             CTRL --> UI : grouped (Map<OrganizationType, List<OrganizationDTO>>)

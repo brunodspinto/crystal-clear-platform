@@ -12,6 +12,7 @@ participant "Repositories" as REPOS
 participant "repositories:Repositories" as REPOS_SINGLETON
 participant "EmailServiceFactory" as FACTORY
 participant ":RegistrationRequestRepository" as REPO
+participant ":RegistrationRequestMapper" as MAPPER
 participant "dto:RegistrationRequestDTO" as DTO
 participant "rr:RegistrationRequest" as RR
 participant ":AuthenticationRepository" as AUTH
@@ -43,6 +44,8 @@ activate Admin
             activate FACTORY
                 FACTORY --> CTRL : emailService
             deactivate FACTORY
+
+            CTRL --> MAPPER** : create()
         deactivate CTRL
 
         UI -> CTRL : getPendingRequestsAsDTO()
@@ -52,9 +55,13 @@ activate Admin
                 REPO --> CTRL : pendingRequests
             deactivate REPO
 
-            loop for each request in pendingRequests
-                CTRL --> DTO** : new RegistrationRequestDTO(fullName, email, role,\nsubmissionDate, identificationDocument)
-            end
+            CTRL -> MAPPER : toDTO(pendingRequests)
+            activate MAPPER
+                loop for each request in pendingRequests
+                    MAPPER --> DTO** : new RegistrationRequestDTO(fullName, email, role,\nsubmissionDate, identificationDocument)
+                end
+                MAPPER --> CTRL : pendingRequestDTOs
+            deactivate MAPPER
 
             CTRL --> UI : pendingRequestDTOs
         deactivate CTRL

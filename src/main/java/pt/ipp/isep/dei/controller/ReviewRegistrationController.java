@@ -2,6 +2,7 @@ package pt.ipp.isep.dei.controller;
 
 import pt.ipp.isep.dei.domain.RegistrationRequest;
 import pt.ipp.isep.dei.dto.RegistrationRequestDTO;
+import pt.ipp.isep.dei.mapper.RegistrationRequestMapper;
 import pt.ipp.isep.dei.repository.AuthenticationRepository;
 import pt.ipp.isep.dei.repository.RegistrationRequestRepository;
 import pt.ipp.isep.dei.repository.Repositories;
@@ -10,7 +11,6 @@ import pt.ipp.isep.dei.service.EmailServiceFactory;
 import pt.isep.lei.esoft.auth.UserSession;
 import pt.isep.lei.esoft.auth.mappers.dto.UserRoleDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,6 +21,7 @@ public class ReviewRegistrationController {
     private final RegistrationRequestRepository repository;
     private final AuthenticationRepository authRepository;
     private final EmailService emailService;
+    private final RegistrationRequestMapper registrationRequestMapper = new RegistrationRequestMapper();
 
     /**
      * Instantiates a new Review registration controller.
@@ -97,11 +98,7 @@ public class ReviewRegistrationController {
     public List<RegistrationRequestDTO> getPendingRequestsAsDTO() {
         requireAdminSession();
         List<RegistrationRequest> pending = repository.getPendingRequests();
-        List<RegistrationRequestDTO> dtos = new ArrayList<>();
-        for (RegistrationRequest r : pending) {
-            dtos.add(toDTO(r));
-        }
-        return dtos;
+        return registrationRequestMapper.toDTO(pending);
     }
 
     /**
@@ -157,12 +154,6 @@ public class ReviewRegistrationController {
             i++;
         }
         return found;
-    }
-
-    private static RegistrationRequestDTO toDTO(RegistrationRequest r) {
-        return new RegistrationRequestDTO(
-                r.getFullName(), r.getEmail(), r.getRole(),
-                r.getSubmissionDate(), r.getIdentificationDocument());
     }
 
     private static String roleIdFor(RegistrationRequest request) {
