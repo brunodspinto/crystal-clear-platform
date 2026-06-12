@@ -12,7 +12,7 @@
 
 <VBox prefHeight="480.0" prefWidth="720.0" spacing="10.0" styleClass="root-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.ui.gui.ConsultAssetsFXController">
    <children>
-      <Label styleClass="scene-title" text="US11 — Consult Political Agent Assets" />
+      <Label styleClass="scene-title" text="Consult Political Agent Assets" />
       <HBox alignment="CENTER_LEFT" spacing="12.0">
          <children>
             <Label styleClass="field-label" text="Agent:" />
@@ -27,9 +27,10 @@
       <Label fx:id="messageLabel" maxWidth="Infinity" />
       <TableView fx:id="assetsTable" VBox.vgrow="ALWAYS">
          <columns>
-            <TableColumn fx:id="colType" prefWidth="140.0" text="Type" />
-            <TableColumn fx:id="colValue" prefWidth="120.0" text="Value" />
-            <TableColumn fx:id="colDetail" prefWidth="340.0" text="Details" />
+            <TableColumn fx:id="colAgent" prefWidth="160.0" text="Agent" />
+            <TableColumn fx:id="colType" prefWidth="130.0" text="Type" />
+            <TableColumn fx:id="colValue" prefWidth="110.0" text="Value" />
+            <TableColumn fx:id="colDetail" prefWidth="280.0" text="Details" />
          </columns>
          <placeholder>
             <Label text="No assets to display." />
