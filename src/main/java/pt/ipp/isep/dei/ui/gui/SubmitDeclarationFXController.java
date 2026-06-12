@@ -265,7 +265,7 @@ public class SubmitDeclarationFXController implements Initializable {
     @FXML
     private void handleAddPosition() {
         OrganizationDTO org  = posOrgCombo.getValue();
-        String func          = possFunctionField();
+        String func          = readPosFunction();
         PositionNature nature = posNatureCombo.getValue();
         Double gross         = parseDouble(posGrossField);
         Double consulting    = parseDouble(posConsultingField);
@@ -403,7 +403,7 @@ public class SubmitDeclarationFXController implements Initializable {
         List<Object[]> positions = new ArrayList<>();
         for (PositionRow r : positionRows) {
             positions.add(new Object[]{r.orgName, r.functionText, r.natureEnum,
-                    r.grossVal, r.consultingVal, r.boardVal, r.startDate, r.endDate});
+                    r.grossVal, r.consultingVal, r.boardVal, r.startDateVal, r.endDate});
         }
 
         List<Object[]> subsidies = new ArrayList<>();
@@ -456,9 +456,9 @@ public class SubmitDeclarationFXController implements Initializable {
         });
     }
 
-    private String possFunctionField() {
-        String t = posFunctionField.getText();
-        return (t == null || t.isBlank()) ? null : t.trim();
+    private String readPosFunction() {
+        String text = posFunctionField.getText();
+        return (text == null || text.isBlank()) ? null : text.trim();
     }
 
     private Double parseDouble(TextField f) {
@@ -469,10 +469,10 @@ public class SubmitDeclarationFXController implements Initializable {
         try { return Long.parseLong(f.getText().trim()); } catch (Exception e) { return null; }
     }
 
-    private Date parseDate(TextField f) {
-        String t = f == null ? null : f.getText();
-        if (t == null || t.isBlank()) return null;
-        try { return DATE_FMT.parse(t.trim()); } catch (ParseException e) { return null; }
+    private Date parseDate(TextField field) {
+        String text = field == null ? null : field.getText();
+        if (text == null || text.isBlank()) return null;
+        try { return DATE_FMT.parse(text.trim()); } catch (ParseException e) { return null; }
     }
 
     private Object buildAssetDetail(AssetType type, String detail) {
@@ -540,13 +540,13 @@ public class SubmitDeclarationFXController implements Initializable {
         final String functionText;
         final PositionNature natureEnum;
         final double grossVal, consultingVal, boardVal;
-        final Date startDate2, endDate;
+        final Date startDateVal, endDate;
 
         PositionRow(String orgName, String func, PositionNature nature,
                     double gross, double consulting, double board, Date start, Date end) {
             this.orgName = orgName; this.functionText = func; this.natureEnum = nature;
             this.grossVal = gross; this.consultingVal = consulting; this.boardVal = board;
-            this.startDate2 = start; this.endDate = end;
+            this.startDateVal = start; this.endDate = end;
             this.org = orgName; this.function = func; this.nature = nature.toString();
             this.grossSalary = String.format("%.2f", gross);
             this.startDate = start != null ? new SimpleDateFormat("dd-MM-yyyy").format(start) : "";

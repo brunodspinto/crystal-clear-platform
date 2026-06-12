@@ -62,8 +62,8 @@ public class SubnetworkController {
      */
     public List<String> getEntityIds() {
         List<String> ids = new ArrayList<>();
-        RelationGraph rg = requireRelationGraph();
-        for (String id : rg.nodes()) {
+        RelationGraph relationGraph = requireRelationGraph();
+        for (String id : relationGraph.nodes()) {
             ids.add(id);
         }
         return ids;
@@ -79,8 +79,8 @@ public class SubnetworkController {
      * @throws IllegalArgumentException if {@code originId} is unknown
      */
     public SubnetworkResult extractSubnetwork(String originId) {
-        SupportGraph sg = getSupportGraph();
-        return SubnetworkExtractor.extract(sg, originId);
+        SupportGraph graph = getSupportGraph();
+        return SubnetworkExtractor.extract(graph, originId);
     }
 
     /**
@@ -101,12 +101,12 @@ public class SubnetworkController {
 
         // Load typed entities from CSV so the exporter can apply shapes/colours
         List<Entity> allEntities = EntityCsvParser.parse(entitiesCsv);
-        RelationGraph rg         = requireRelationGraph();
+        RelationGraph relationGraph         = requireRelationGraph();
 
         // Filter entities and edges to those present in the subnetwork
         boolean[] inSubnet = buildMembershipSet(result);
         List<Entity> subEntities = filterEntities(allEntities, result);
-        List<Edge>   subEdges    = filterEdges(rg, inSubnet, result);
+        List<Edge>   subEdges    = filterEdges(relationGraph, inSubnet, result);
 
         // Build DOT string (visualisation — exempt from AC2)
         String dot = GraphDotExporter.export(subEntities, subEdges);
@@ -145,12 +145,12 @@ public class SubnetworkController {
     // -------------------------------------------------------------------------
 
     private RelationGraph requireRelationGraph() {
-        RelationGraph rg = graphRepository.getRelationGraph();
-        if (rg == null) {
+        RelationGraph relationGraph = graphRepository.getRelationGraph();
+        if (relationGraph == null) {
             throw new IllegalStateException(
                     "No relations graph available. Build the graph first (US20).");
         }
-        return rg;
+        return relationGraph;
     }
 
     private SupportGraph getSupportGraph() {
@@ -193,13 +193,13 @@ public class SubnetworkController {
         return filtered;
     }
 
-    private List<Edge> filterEdges(RelationGraph rg,
+    private List<Edge> filterEdges(RelationGraph relationGraph,
                                     boolean[] ignored,
                                     SubnetworkResult result) {
         List<Edge> filtered = new ArrayList<>();
-        for (String nodeId : rg.nodes()) {
+        for (String nodeId : relationGraph.nodes()) {
             if (!containedInResult(result, nodeId)) continue;
-            for (Edge e : rg.neighbors(nodeId)) {
+            for (Edge e : relationGraph.neighbors(nodeId)) {
                 if (containedInResult(result, e.getToId())) {
                     filtered.add(e);
                 }

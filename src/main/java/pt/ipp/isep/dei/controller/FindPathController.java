@@ -51,10 +51,10 @@ public class FindPathController {
      * @throws IllegalStateException if no relations graph has been built yet
      */
     public List<String> getEntityIds() {
-        SupportGraph sg = getSupportGraph();
+        SupportGraph graph = getSupportGraph();
         List<String> ids = new ArrayList<>();
-        for (int i = 0; i < sg.size(); i++) {
-            ids.add(sg.getRegistry().idAt(i));
+        for (int i = 0; i < graph.size(); i++) {
+            ids.add(graph.getRegistry().idAt(i));
         }
         return ids;
     }
@@ -70,8 +70,8 @@ public class FindPathController {
      * @throws IllegalArgumentException if either id is unknown
      */
     public PathResult findPath(String sourceId, String targetId) {
-        SupportGraph sg = getSupportGraph();
-        int distance = PathFinder.shortestDistance(sg, sourceId, targetId);
+        SupportGraph graph = getSupportGraph();
+        int distance = PathFinder.shortestDistance(graph, sourceId, targetId);
         return new PathResult(sourceId, targetId, distance);
     }
 
@@ -82,12 +82,12 @@ public class FindPathController {
     /** Lazily builds and caches the support graph. */
     private SupportGraph getSupportGraph() {
         if (supportGraph == null) {
-            RelationGraph rg = graphRepository.getRelationGraph();
-            if (rg == null) {
+            RelationGraph relationGraph = graphRepository.getRelationGraph();
+            if (relationGraph == null) {
                 throw new IllegalStateException(
                         "No relations graph available. Build the graph first (US20).");
             }
-            supportGraph = new SupportGraph(rg);
+            supportGraph = new SupportGraph(relationGraph);
         }
         return supportGraph;
     }
