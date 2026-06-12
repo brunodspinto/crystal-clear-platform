@@ -102,7 +102,7 @@ enum OrganizationNature {
 }
 
 class "Declaration of Interests" as Declaration {
-    name
+    id
     submissionDate
 }
 
@@ -118,6 +118,14 @@ enum DeclarationStatus {
     REJECTED
 }
 
+class HouseholdMember {
+    name
+}
+enum HouseholdRelation {
+    SPOUSE
+    DESCENDANT
+    OTHER
+}
 class PositionEntry {
     grossSalary
     sideIncomeConsulting
@@ -174,11 +182,6 @@ class BusinessParticipation {
     companyPercentage
 }
 
-class AuditLog {
-    action
-    timestamp
-    details
-}
 
 class ValidationRecord {
     validationDate
@@ -195,9 +198,11 @@ class ValidationComment {
 }
 
 class Complaint {
+    submissionDate
+}
+class ComplaintItem {
     description
     complaintDate
-    submissionDate
 }
 
 class ComplaintAssessment {
@@ -294,7 +299,7 @@ User <|-- ProductOwner
 RegistrationRequest "1" -- "1" Role : requests >
 RegistrationRequest "1" -- "1" Status : has >
 RegistrationRequest ..> User : results in / activates >
-Administrator "*" -- "*" RegistrationRequest : reviews >
+Administrator "1" -- "*" RegistrationRequest : reviews >
 RegistrationRequest "1" -- "0..1" RejectionReason : has >
 RegistrationRequest "0..1" -- "0..1" Function : specifies >
 RegistrationRequest "0..1" -- "0..1" Organization : specifies >
@@ -310,6 +315,8 @@ PoliticalAgent "1" -- "*" Declaration : submits / has >
 Declaration "*" -- "1" DeclarationType : classified as >
 Declaration "*" -- "1" DeclarationStatus : has >
 
+Declaration "1" *-- "*" HouseholdMember : declares >
+HouseholdMember "*" -- "1" HouseholdRelation : related as >
 Declaration "1" *-- "*" PositionEntry : includes >
 Declaration "1" *-- "*" Income : includes >
 Declaration "1" *-- "*" SubsidyEntry : includes >
@@ -341,7 +348,8 @@ ValidationRecord "1" *-- "*" ValidationComment : contains >
 
 Citizen "1" -- "*" Complaint : submits >
 Complaint "*" -- "1" PoliticalAgent : targets >
-Complaint "*" -- "1" PoliticalFunction : references >
+Complaint "1" *-- "*" ComplaintItem : contains >
+ComplaintItem "*" -- "1" PoliticalFunction : references >
 
 EthicsCommitteeMember "1" -- "*" ComplaintAssessment : performs >
 ComplaintAssessment "*" -- "1" Complaint : assesses >
@@ -351,7 +359,6 @@ Journalist "*" -- "*" PoliticalAgent : analyses income of >
 Journalist "*" -- "*" PoliticalAgent : consults assets of >
 Citizen "*" -- "*" PoliticalAgent : consults assets of >
 
-User "1" -- "*" AuditLog : generates >
 
 Entity "*" -- "1" EntityType : classified as >
 Entity <|-- GraphPerson
