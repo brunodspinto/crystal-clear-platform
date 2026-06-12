@@ -3,9 +3,11 @@ package pt.ipp.isep.dei.controller;
 import pt.ipp.isep.dei.domain.graph.Edge;
 import pt.ipp.isep.dei.domain.graph.Entity;
 import pt.ipp.isep.dei.domain.graph.NetworkSnapshot;
+import pt.ipp.isep.dei.domain.graph.SnapshotDateCsvParser;
 import pt.ipp.isep.dei.repository.GraphRepository;
 import pt.ipp.isep.dei.repository.Repositories;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +52,19 @@ public class NetworkDynamicsController {
      * @return list of snapshots, one per date
      * @throws IllegalArgumentException if dates is null or empty
      */
+    /**
+     * Loads snapshot dates from a CSV file.
+     * The expected format is a "SnapshotDate" header followed by one date
+     * per line in yyyy-MM-dd format.
+     *
+     * @param filePath the path of the CSV file
+     * @return the list of valid dates found in the file
+     * @throws IOException if the file cannot be read
+     */
+    public List<String> loadDatesFromCsv(String filePath) throws IOException {
+        return SnapshotDateCsvParser.parse(filePath);
+    }
+
     public List<NetworkSnapshot> buildSnapshots(List<String> dates) {
         if (dates == null || dates.isEmpty()) {
             throw new IllegalArgumentException("At least one date must be provided.");

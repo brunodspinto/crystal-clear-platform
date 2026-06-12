@@ -6,14 +6,16 @@ import pt.ipp.isep.dei.domain.graph.Entity;
 import pt.ipp.isep.dei.domain.graph.NetworkSnapshot;
 import pt.ipp.isep.dei.ui.console.utils.Utils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * UI for US32: shows the network dynamics over time.
- * The user enters a list of dates; for each date a snapshot of active entities
- * and relations is displayed.
+ * The user provides a list of dates, either typed in the console or loaded
+ * from a CSV file; for each date a snapshot of active entities and relations
+ * is displayed.
  */
 public class NetworkDynamicsUI implements Runnable {
 
@@ -48,6 +50,21 @@ public class NetworkDynamicsUI implements Runnable {
     }
 
     private List<String> collectDates() {
+        List<String> options = new ArrayList<>();
+        options.add("Enter the dates in the console");
+        options.add("Load the dates from a CSV file");
+        int option = Utils.showAndSelectIndex(options,
+                "\nHow do you want to provide the snapshot dates?");
+        if (option == 0) {
+            return collectDatesFromConsole();
+        }
+        if (option == 1) {
+            return collectDatesFromCsv();
+        }
+        return new ArrayList<>();
+    }
+
+    private List<String> collectDatesFromConsole() {
         List<String> dates = new ArrayList<>();
         System.out.println("\nEnter snapshot dates in yyyy-MM-dd format.");
         do {
@@ -61,6 +78,27 @@ public class NetworkDynamicsUI implements Runnable {
             }
         } while (Utils.confirm("Add another date? (y/n)"));
         return dates;
+    }
+
+    private List<String> collectDatesFromCsv() {
+        String path = Utils.readLineFromConsole(
+                "Path of the CSV file (header \"SnapshotDate\", one date per line): ");
+        if (path == null || path.isBlank()) {
+            System.out.println("File path cannot be blank.");
+            return new ArrayList<>();
+        }
+        try {
+            List<String> dates = controller.loadDatesFromCsv(path.trim());
+            if (dates.isEmpty()) {
+                System.out.println("No valid dates were found in the file.");
+            } else {
+                System.out.println(dates.size() + " date(s) loaded from the file.");
+            }
+            return dates;
+        } catch (IOException e) {
+            System.out.println("Could not read the file: " + e.getMessage());
+            return new ArrayList<>();
+        }
     }
 
     private void displaySnapshots(List<NetworkSnapshot> snapshots) {

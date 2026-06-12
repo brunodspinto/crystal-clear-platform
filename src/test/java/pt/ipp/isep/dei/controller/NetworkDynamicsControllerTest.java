@@ -1,11 +1,16 @@
 package pt.ipp.isep.dei.controller;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import pt.ipp.isep.dei.domain.graph.Edge;
 import pt.ipp.isep.dei.domain.graph.NetworkSnapshot;
 import pt.ipp.isep.dei.domain.graph.Person;
 import pt.ipp.isep.dei.repository.GraphRepository;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -14,6 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.function.Executable;
 class NetworkDynamicsControllerTest {
+
+    @TempDir
+    Path tempDir;
 
     private GraphRepository repoWithPerson(String id, String start, String end) {
         GraphRepository repo = new GraphRepository();
@@ -85,6 +93,26 @@ class NetworkDynamicsControllerTest {
                 controller.buildSnapshots(Collections.emptyList());
             }
         });
+    }
+
+    @Test
+    void ensureLoadDatesFromCsvReadsValidDates() throws IOException {
+        Path file = tempDir.resolve("dates.csv");
+        PrintWriter writer = new PrintWriter(new FileWriter(file.toFile()));
+        try {
+            writer.println("SnapshotDate");
+            writer.println("2010-01-01");
+            writer.println("2011-02-28");
+        } finally {
+            writer.close();
+        }
+
+        NetworkDynamicsController controller = new NetworkDynamicsController(new GraphRepository());
+        List<String> dates = controller.loadDatesFromCsv(file.toString());
+
+        assertEquals(2, dates.size());
+        assertEquals("2010-01-01", dates.get(0));
+        assertEquals("2011-02-28", dates.get(1));
     }
 
     @Test
