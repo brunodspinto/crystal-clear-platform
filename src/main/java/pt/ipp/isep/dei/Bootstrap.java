@@ -88,9 +88,9 @@ public class Bootstrap implements Runnable {
      */
     private void addUS04Organizations() {
         OrganizationRepository orgRepo = Repositories.getInstance().getOrganizationRepository();
-        orgRepo.save(new Organization("PartyX", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY));
-        orgRepo.save(new Organization("TechCorp", OrganizationNature.PRIVATE, OrganizationType.COMPANY));
-        orgRepo.save(new Organization("GreenFoundation", OrganizationNature.SOCIAL, OrganizationType.FOUNDATION));
+        orgRepo.registerOrganization("PartyX", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY);
+        orgRepo.registerOrganization("TechCorp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);
+        orgRepo.registerOrganization("GreenFoundation", OrganizationNature.SOCIAL, OrganizationType.FOUNDATION);
     }
 
     private void addPoliticalAgents() {

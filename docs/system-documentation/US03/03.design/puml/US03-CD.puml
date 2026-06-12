@@ -39,8 +39,10 @@ class Repositories {
 class Organization {
     - name : String
     - type : OrganizationType
+    - nature : OrganizationNature
     + getName() : String
     + getType() : OrganizationType
+    + getNature() : OrganizationNature
 }
 
 enum OrganizationType {
@@ -49,6 +51,12 @@ enum OrganizationType {
     FOUNDATION
     INSTITUTE
     ASSOCIATION
+}
+
+enum OrganizationNature {
+    PUBLIC
+    PRIVATE
+    SOCIAL
 }
 
 ListOrganizationsUI .> ListOrganizationsController
@@ -62,5 +70,6 @@ Repositories -> "1" Repositories : instance
 Repositories --> "1" OrganizationRepository : organizationRepository
 OrganizationRepository "1" --> "*" Organization : stores
 Organization "1" --> "1" OrganizationType : type
+Organization "1" --> "1" OrganizationNature : nature
 
 @enduml

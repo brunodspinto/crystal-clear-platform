@@ -182,7 +182,8 @@ class ConsultIntegratedSituationControllerTest {
         Declaration initial = new Declaration(DeclarationType.INITIAL, joao, date(2024, Calendar.JANUARY, 10));
         initial.setStatus(DeclarationStatus.VALIDATED);
         Declaration regular = validatedDeclaration(joao, date(2024, Calendar.MAY, 10));
-        Declaration exceptional = new Declaration(DeclarationType.EXCEPTIONAL, joao, date(2024, Calendar.JULY, 10));
+        Declaration exceptional = new Declaration(DeclarationType.EXCEPTIONAL, joao, date(2024, Calendar.JULY, 10),
+                "DECL-1", "Correcting an omission");
         exceptional.setStatus(DeclarationStatus.VALIDATED);
 
         declRepo.save(initial);

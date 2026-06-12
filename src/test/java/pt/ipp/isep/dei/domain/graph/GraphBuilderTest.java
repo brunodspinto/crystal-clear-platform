@@ -60,6 +60,54 @@ class GraphBuilderTest {
     }
 
     @Test
+    void ensureSymmetricRelationGetsReverseEdge() {
+        List<Entity> entities = Arrays.asList(person("A"), person("B"));
+        List<Edge> edges = Arrays.asList(new Edge("A", "B", "relativeOf", 1.0));
+
+        RelationGraph g = GraphBuilder.build(entities, edges);
+
+        assertEquals(1, g.neighbors("B").size());
+        assertEquals("A", g.neighbors("B").get(0).getToId());
+        assertEquals("relativeOf", g.neighbors("B").get(0).getLabel());
+    }
+
+    @Test
+    void ensureDirectedRelationIsNotMirrored() {
+        List<Entity> entities = Arrays.asList(person("A"), person("B"));
+        List<Edge> edges = Arrays.asList(new Edge("A", "B", "appointedBy", 1.0));
+
+        RelationGraph g = GraphBuilder.build(entities, edges);
+
+        assertTrue(g.neighbors("B").isEmpty());
+    }
+
+    @Test
+    void ensureReverseIsNotDuplicatedWhenCsvHasBothDirections() {
+        List<Entity> entities = Arrays.asList(person("A"), person("B"));
+        List<Edge> edges = Arrays.asList(
+                new Edge("A", "B", "friendOf", 1.0),
+                new Edge("B", "A", "friendOf", 1.0));
+
+        RelationGraph g = GraphBuilder.build(entities, edges);
+
+        assertEquals(1, g.neighbors("A").size());
+        assertEquals(1, g.neighbors("B").size());
+    }
+
+    @Test
+    void ensureMirroredEdgeKeepsDates() {
+        List<Entity> entities = Arrays.asList(person("A"), person("B"));
+        List<Edge> edges = Arrays.asList(
+                new Edge("A", "B", "associatedWith", 1.0, "2020-01-01", "2024-12-31"));
+
+        RelationGraph g = GraphBuilder.build(entities, edges);
+
+        Edge reverse = g.neighbors("B").get(0);
+        assertEquals("2020-01-01", reverse.getStartDate());
+        assertEquals("2024-12-31", reverse.getEndDate());
+    }
+
+    @Test
     void ensureNullEntitiesIsRejected() {
         assertThrows(IllegalArgumentException.class,
                 () -> GraphBuilder.build(null, new ArrayList<>()));

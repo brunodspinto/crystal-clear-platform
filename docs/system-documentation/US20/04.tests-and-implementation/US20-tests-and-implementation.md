@@ -208,6 +208,6 @@ Demo plan (sprint review):
 ## 7. Observations
 
 - `RelationType` is still kept as a free-form `String` on `Edge`. Promoting it to an enum is blocked on the US19 taxonomy being final — flagged in the README checklist.
-- The graph is **directed**: `addEdge(from -> to)` does not register the reverse. Queries that need symmetric semantics should compose with `AdjacencyMatrix.transpose()` (US21).
+- The graph is stored as **directed** adjacency lists, but `GraphBuilder` mirrors the symmetric relation types (`relativeOf`, `friendOf`, `associatedWith`): when the CSV only has one direction, the reverse edge is added automatically (keeping label, weight and dates). Directional types like `appointedBy` or `ownerOf` are never mirrored. This way US21/US22/US23 can just traverse outgoing edges without missing the other half of a bidirectional relation.
 - `RelationCsvParser` swallows malformed lines instead of throwing, by design — the goal is to keep the demo running even when the source CSV has noise. A stricter mode could be added later if needed.
 - `GraphBuilder` accepts edges that point to ids not in the entity list and registers them as nodes anyway. This keeps the graph self-consistent (every endpoint of an edge is a node) at the cost of letting unknown ids slip through silently.

@@ -24,6 +24,8 @@ public class DeclarationDTO {
     private final List<String> assets;
     private final List<String> businessParticipations;
     private final double totalIncome;
+    private final String agentName;
+    private final int attachmentsCount;
 
     /**
      * Creates a declaration DTO.
@@ -40,12 +42,15 @@ public class DeclarationDTO {
      * @param assets                 the asset entries, one line each.
      * @param businessParticipations the business participations, one line each.
      * @param totalIncome            the sum of all income amounts.
+     * @param agentName              the name of the agent that submitted it.
+     * @param attachmentsCount       the number of attachments.
      */
     public DeclarationDTO(String id, String type, Date submissionDate, String status,
                           String summary, String details,
                           List<String> positions, List<String> incomes,
                           List<String> subsidies, List<String> assets,
-                          List<String> businessParticipations, double totalIncome) {
+                          List<String> businessParticipations, double totalIncome,
+                          String agentName, int attachmentsCount) {
         this.id = id;
         this.type = type;
         this.submissionDate = submissionDate;
@@ -58,6 +63,8 @@ public class DeclarationDTO {
         this.assets = assets;
         this.businessParticipations = businessParticipations;
         this.totalIncome = totalIncome;
+        this.agentName = agentName;
+        this.attachmentsCount = attachmentsCount;
     }
 
     /**
@@ -142,6 +149,20 @@ public class DeclarationDTO {
      */
     public double getTotalIncome() {
         return totalIncome;
+    }
+
+    /**
+     * @return the name of the political agent that submitted the declaration.
+     */
+    public String getAgentName() {
+        return agentName;
+    }
+
+    /**
+     * @return the number of attachments of the declaration.
+     */
+    public int getAttachmentsCount() {
+        return attachmentsCount;
     }
 
     @Override

@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="pt.ipp.isep.dei.ui.gui.RegisterOrganizationFXController"
-      styleClass="root-pane"
-      stylesheets="@../css/app.css"
-      spacing="10">
-    <padding><Insets top="24" right="32" bottom="24" left="32"/></padding>
-
-    <Label text="Register Organization" styleClass="scene-title"/>
-
-    <GridPane hgap="12" vgap="6">
-        <columnConstraints>
-            <ColumnConstraints minWidth="120"/>
-            <ColumnConstraints minWidth="300" hgrow="ALWAYS"/>
-        </columnConstraints>
-
-        <Label text="Name:" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <TextField fx:id="nameField" promptText="Organization name" styleClass="input-field"
-                   GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-
-        <Label text="Type:" styleClass="field-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="typeCombo" promptText="Select a type" maxWidth="Infinity"
-                  GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-
-        <Label text="Nature:" styleClass="field-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="natureCombo" promptText="Select a nature" maxWidth="Infinity"
-                  GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-    </GridPane>
-
-    <Label fx:id="messageLabel" maxWidth="Infinity"/>
-
-    <HBox spacing="12" alignment="CENTER_LEFT">
-        <Button text="Register" onAction="#handleRegister" defaultButton="true" styleClass="primary-button"/>
-        <Button text="Clear" onAction="#handleClear" styleClass="secondary-button"/>
-        <Button text="Back" onAction="#handleBack" styleClass="secondary-button"/>
-    </HBox>
+<VBox prefHeight="480.0" prefWidth="720.0" spacing="10.0" styleClass="root-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.ui.gui.RegisterOrganizationFXController">
+   <children>
+      <Label styleClass="scene-title" text="Register Organization" />
+      <GridPane hgap="12.0" vgap="6.0">
+         <children>
+            <Label styleClass="field-label" text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <TextField fx:id="nameField" promptText="Organization name" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Label styleClass="field-label" text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <ComboBox fx:id="typeCombo" maxWidth="Infinity" promptText="Select a type" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label styleClass="field-label" text="Nature:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <ComboBox fx:id="natureCombo" maxWidth="Infinity" promptText="Select a nature" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         </children>
+         <columnConstraints>
+            <ColumnConstraints minWidth="120.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="300.0" />
+         </columnConstraints>
+      </GridPane>
+      <Label fx:id="messageLabel" maxWidth="Infinity" />
+      <HBox alignment="CENTER_LEFT" spacing="12.0">
+         <children>
+            <Button defaultButton="true" mnemonicParsing="false" onAction="#handleRegister" styleClass="primary-button" text="Register" />
+            <Button mnemonicParsing="false" onAction="#handleClear" styleClass="secondary-button" text="Clear" />
+            <Button mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="24.0" left="32.0" right="32.0" top="24.0" />
+   </padding>
 </VBox>

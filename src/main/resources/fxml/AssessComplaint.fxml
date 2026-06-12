@@ -1,54 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="pt.ipp.isep.dei.ui.gui.AssessComplaintFXController"
-      styleClass="root-pane"
-      stylesheets="@../css/app.css"
-      spacing="10">
-    <padding><Insets top="20" right="28" bottom="20" left="28"/></padding>
-
-    <Label text="Assess Complaint" styleClass="scene-title"/>
-
-    <HBox spacing="12" alignment="CENTER_LEFT">
-        <Label text="Complaint:" styleClass="field-label"/>
-        <ComboBox fx:id="complaintCombo" prefWidth="320" onAction="#handleComplaintSelected"/>
-    </HBox>
-
-    <GridPane hgap="12" vgap="6">
-        <columnConstraints>
-            <ColumnConstraints minWidth="130"/>
-            <ColumnConstraints minWidth="260" hgrow="ALWAYS"/>
-        </columnConstraints>
-
-        <Label text="Political Agent:" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <Label fx:id="detailAgent" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-
-        <Label text="Citizen:" styleClass="field-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <Label fx:id="detailCitizen" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-
-        <Label text="Submitted:" styleClass="field-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-        <Label fx:id="detailSubmitted" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-    </GridPane>
-
-    <Label text="Grievances:" styleClass="field-label"/>
-    <ListView fx:id="grievancesList" prefHeight="120"/>
-
-    <HBox spacing="12" alignment="CENTER_LEFT">
-        <Label text="Outcome:" styleClass="field-label"/>
-        <ComboBox fx:id="outcomeCombo" prefWidth="160"/>
-    </HBox>
-
-    <Label text="Reason (mandatory if invalid):" styleClass="field-label"/>
-    <TextArea fx:id="reasonArea" prefRowCount="3" wrapText="true"/>
-
-    <Label fx:id="messageLabel" maxWidth="Infinity"/>
-
-    <HBox spacing="12" alignment="CENTER_LEFT">
-        <Button text="Assess" onAction="#handleAssess" defaultButton="true" styleClass="primary-button"/>
-        <Button text="Back" onAction="#handleBack" styleClass="secondary-button"/>
-    </HBox>
+<VBox prefHeight="480.0" prefWidth="720.0" spacing="10.0" styleClass="root-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.ui.gui.AssessComplaintFXController">
+   <children>
+      <Label styleClass="scene-title" text="Assess Complaint" />
+      <HBox alignment="CENTER_LEFT" spacing="12.0">
+         <children>
+            <Label styleClass="field-label" text="Complaint:" />
+            <ComboBox fx:id="complaintCombo" onAction="#handleComplaintSelected" prefWidth="320.0" />
+         </children>
+      </HBox>
+      <GridPane hgap="12.0" vgap="6.0">
+         <children>
+            <Label styleClass="field-label" text="Political Agent:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <Label fx:id="detailAgent" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Label styleClass="field-label" text="Citizen:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <Label fx:id="detailCitizen" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label styleClass="field-label" text="Submitted:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <Label fx:id="detailSubmitted" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         </children>
+         <columnConstraints>
+            <ColumnConstraints minWidth="130.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="260.0" />
+         </columnConstraints>
+      </GridPane>
+      <Label styleClass="field-label" text="Grievances:" />
+      <ListView fx:id="grievancesList" prefHeight="120.0" />
+      <HBox alignment="CENTER_LEFT" spacing="12.0">
+         <children>
+            <Label styleClass="field-label" text="Outcome:" />
+            <ComboBox fx:id="outcomeCombo" prefWidth="160.0" />
+         </children>
+      </HBox>
+      <Label styleClass="field-label" text="Reason (mandatory if invalid):" />
+      <TextArea fx:id="reasonArea" prefRowCount="3" wrapText="true" />
+      <Label fx:id="messageLabel" maxWidth="Infinity" />
+      <HBox alignment="CENTER_LEFT" spacing="12.0">
+         <children>
+            <Button defaultButton="true" mnemonicParsing="false" onAction="#handleAssess" styleClass="primary-button" text="Assess" />
+            <Button mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="28.0" right="28.0" top="20.0" />
+   </padding>
 </VBox>

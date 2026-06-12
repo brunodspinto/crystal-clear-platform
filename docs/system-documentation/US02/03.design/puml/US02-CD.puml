@@ -57,6 +57,7 @@ class RegistrationRequestRepository {
 }
 
 class AuthenticationRepository {
+    + getCurrentUserSession() : UserSession
     + addUserWithRole(name : String, email : String, password : String, roleId : String) : void
 }
 

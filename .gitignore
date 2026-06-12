@@ -13,3 +13,6 @@ Thumbs.db
 
 # Serialized application data (object persistence between runs)
 repositories.dat
+
+# Notification log written by the EmailService implementations
+notifications.txt

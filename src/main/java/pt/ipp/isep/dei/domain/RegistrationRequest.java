@@ -19,6 +19,7 @@ public class RegistrationRequest implements Serializable {
     private final Date submissionDate;
     private RegistrationStatus status;
     private String rejectionReason;
+    private boolean welcomeShown;
 
     /**
      * Creates a registration request. Validates the password format and required fields.
@@ -156,6 +157,24 @@ public class RegistrationRequest implements Serializable {
      */
     public String getRejectionReason() {
         return rejectionReason;
+    }
+
+    /**
+     * Tells whether the welcome notification has already been shown to this
+     * applicant after their first successful login.
+     *
+     * @return {@code true} if the welcome was already shown
+     */
+    public boolean isWelcomeShown() {
+        return welcomeShown;
+    }
+
+    /**
+     * Marks the welcome notification as already shown, so it is displayed only
+     * on the applicant's first login.
+     */
+    public void markWelcomeShown() {
+        this.welcomeShown = true;
     }
 
     /**

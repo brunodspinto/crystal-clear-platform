@@ -6,36 +6,24 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="pt.ipp.isep.dei.ui.gui.EthicsCommitteeMenuController"
-            fitToWidth="true" styleClass="root-pane" stylesheets="@../css/app.css">
-    <VBox spacing="8" alignment="CENTER" styleClass="root-pane">
-        <padding>
-            <Insets top="20" right="40" bottom="20" left="40"/>
-        </padding>
-
-        <Label text="Ethics Committee Menu" styleClass="scene-title"/>
-
-        <Label text="Network &amp; validation" styleClass="field-label"/>
-        <Button text="Validate Declaration" onAction="#handleValidateDeclaration" styleClass="primary-button" maxWidth="300"/>
-        <Button text="Integrated Situation" onAction="#handleIntegratedSituation" styleClass="primary-button" maxWidth="300"/>
-        <Button text="Assess Complaint" onAction="#handleAssessComplaint" styleClass="primary-button" maxWidth="300"/>
-        <Button text="Detect Nepotism" onAction="#handleDetectNepotism" styleClass="primary-button" maxWidth="300"/>
-        <Button text="Detect Conflicts of Interest" onAction="#handleDetectConflicts" styleClass="primary-button" maxWidth="300"/>
-        <Button text="Find Pathway" onAction="#handleFindPath" styleClass="primary-button" maxWidth="300"/>
-        <Button text="Influence Subnetwork" onAction="#handleSubnetwork" styleClass="primary-button" maxWidth="300"/>
-
-        <!-- Statistical analyses are presented in the Jupyter notebook, not in the GUI -->
-        <!--
-        <Label text="Statistical analyses" styleClass="field-label"/>
-        <Button text="US14 — Declaration Statistics" onAction="#handleUs14" styleClass="primary-button" maxWidth="300"/>
-        <Button text="US17 — Top Companies by Stock Value" onAction="#handleUs17" styleClass="primary-button" maxWidth="300"/>
-        <Button text="US18 — Largest Stock Increases" onAction="#handleUs18" styleClass="primary-button" maxWidth="300"/>
-        <Button text="US28 — Role vs Asset Correlation" onAction="#handleUs28" styleClass="primary-button" maxWidth="300"/>
-        <Button text="US30 — Residual Analysis" onAction="#handleUs30" styleClass="primary-button" maxWidth="300"/>
-        <Button text="US31 — Shareholding Non-linearity" onAction="#handleUs31" styleClass="primary-button" maxWidth="300"/>
-        -->
-
-        <Button text="Logout" onAction="#handleLogout" styleClass="secondary-button" maxWidth="300"/>
-    </VBox>
+<ScrollPane fitToWidth="true" prefHeight="480.0" prefWidth="720.0" styleClass="root-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.ui.gui.EthicsCommitteeMenuController">
+   <content>
+      <VBox alignment="CENTER" spacing="8.0" styleClass="root-pane">
+         <children>
+            <Label styleClass="scene-title" text="Ethics Committee Menu" />
+            <Label styleClass="field-label" text="Network &amp; validation" />
+            <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleValidateDeclaration" styleClass="primary-button" text="Validate Declaration" />
+            <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleIntegratedSituation" styleClass="primary-button" text="Integrated Situation" />
+            <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleAssessComplaint" styleClass="primary-button" text="Assess Complaint" />
+            <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleDetectNepotism" styleClass="primary-button" text="Detect Nepotism" />
+            <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleDetectConflicts" styleClass="primary-button" text="Detect Conflicts of Interest" />
+            <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleFindPath" styleClass="primary-button" text="Find Pathway" />
+            <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleSubnetwork" styleClass="primary-button" text="Influence Subnetwork" />
+            <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleLogout" styleClass="secondary-button" text="Logout" />
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="40.0" right="40.0" top="20.0" />
+         </padding>
+      </VBox>
+   </content>
 </ScrollPane>

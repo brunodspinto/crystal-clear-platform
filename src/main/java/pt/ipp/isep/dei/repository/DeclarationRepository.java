@@ -73,6 +73,64 @@ public class DeclarationRepository implements Serializable {
     }
 
     /**
+     * Returns all declarations submitted by a given agent, in any status (US06 AC2/AC3).
+     *
+     * @param agent the political agent who owns the declarations.
+     * @return list of the agent's declarations, possibly empty.
+     */
+    public List<Declaration> getDeclarationsByAgent(PoliticalAgent agent) {
+        List<Declaration> result = new ArrayList<>();
+        if (agent == null) {
+            return result;
+        }
+        for (Declaration d : declarations) {
+            if (agent.equals(d.getAgent())) {
+                result.add(d);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Returns the declaration with the given id, or {@code null} if none exists.
+     *
+     * @param declarationId the declaration id (format {@code DECL-<n>}).
+     * @return the matching declaration, or {@code null}.
+     */
+    public Declaration getById(String declarationId) {
+        if (declarationId == null) {
+            return null;
+        }
+        for (Declaration d : declarations) {
+            if (declarationId.equals(d.getId())) {
+                return d;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns all declarations of a given agent with a given status.
+     *
+     * @param agent  the political agent who owns the declarations.
+     * @param status the status to filter by.
+     * @return list of the agent's declarations matching the status.
+     */
+    public List<Declaration> getDeclarationsForAgentByStatus(PoliticalAgent agent,
+                                                             DeclarationStatus status) {
+        List<Declaration> result = new ArrayList<>();
+        if (agent == null) {
+            return result;
+        }
+        for (Declaration d : declarations) {
+            if (d.getStatus() == status && agent.equals(d.getAgent())) {
+                result.add(d);
+            }
+        }
+        return result;
+    }
+
+    /**
      * Returns an unmodifiable list of all declarations.
      *
      * @return list of all declarations.

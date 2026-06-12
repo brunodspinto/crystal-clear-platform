@@ -1,6 +1,8 @@
 package pt.ipp.isep.dei.controller;
 
 import pt.ipp.isep.dei.domain.*;
+import pt.ipp.isep.dei.dto.DeclarationDTO;
+import pt.ipp.isep.dei.mapper.DeclarationMapper;
 import pt.ipp.isep.dei.repository.*;
 import pt.isep.lei.esoft.auth.domain.model.Email;
 
@@ -48,21 +50,27 @@ public class ValidateDeclarationController {
     }
 
     /**
-     * Returns all declarations with PENDING status.
+     * Returns all declarations with PENDING status, converted to DTOs so the
+     * UI does not depend on the domain layer (ESOFT — DTO pattern).
      *
-     * @return list of pending {@link Declaration} instances.
+     * @return list of pending declarations as {@link DeclarationDTO}.
      */
-    public List<Declaration> getPendingDeclarations() {
-        return declarationRepository.getDeclarationsByStatus(DeclarationStatus.PENDING);
+    public List<DeclarationDTO> getPendingDeclarations() {
+        DeclarationMapper mapper = new DeclarationMapper();
+        return mapper.toDTO(declarationRepository.getDeclarationsByStatus(DeclarationStatus.PENDING));
     }
 
     /**
      * Returns the full details of the selected declaration as a formatted string.
      *
-     * @param declaration the declaration to inspect.
-     * @return the details string.
+     * @param declarationId the id of the declaration to inspect.
+     * @return the details string, or an empty string if the id is unknown.
      */
-    public String getDeclarationDetails(Declaration declaration) {
+    public String getDeclarationDetails(String declarationId) {
+        Declaration declaration = declarationRepository.getById(declarationId);
+        if (declaration == null) {
+            return "";
+        }
         return declaration.getDetails();
     }
 
@@ -81,14 +89,15 @@ public class ValidateDeclarationController {
      * The declaration status is updated and a ValidationRecord is created and persisted.
      * If the outcome is RETURNED_FOR_CORRECTION, all provided comments are added to the record.
      *
-     * @param declaration the declaration to validate.
-     * @param outcome     the validation outcome.
-     * @param comments    list of comment arrays [String section, String comment];                    only used when outcome is RETURNED_FOR_CORRECTION.
-     * @return {@code true} if successful; {@code false} if the declaration is not PENDING         or the authenticated member was not found.
+     * @param declarationId the id of the declaration to validate.
+     * @param outcome       the validation outcome.
+     * @param comments      list of comment arrays [String section, String comment];                    only used when outcome is RETURNED_FOR_CORRECTION.
+     * @return {@code true} if successful; {@code false} if the id is unknown, the declaration         is not PENDING or the authenticated member was not found.
      */
-    public boolean processValidation(Declaration declaration, ValidationOutcome outcome,
+    public boolean processValidation(String declarationId, ValidationOutcome outcome,
                                       List<Object[]> comments) {
-        if (declaration.getStatus() != DeclarationStatus.PENDING) {
+        Declaration declaration = declarationRepository.getById(declarationId);
+        if (declaration == null || declaration.getStatus() != DeclarationStatus.PENDING) {
             return false;
         }
 
