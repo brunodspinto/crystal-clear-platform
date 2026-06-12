@@ -7,6 +7,7 @@ autonumber
 actor "Ethics Committee\nMember" as Member
 participant ":ValidateDeclarationUI" as UI
 participant ":ValidateDeclarationController" as CTRL
+participant ":DeclarationMapper" as MAPPER
 participant ":Repositories" as REPOS
 participant ":DeclarationRepository" as DR
 participant ":ValidationRecordRepository" as VRR
@@ -56,17 +57,25 @@ activate Member
             activate DR
                 DR --> CTRL : declarations
             deactivate DR
-            CTRL --> UI : declarations
+            CTRL -> MAPPER : toDTO(declarations)
+            activate MAPPER
+                MAPPER --> CTRL : pendingDtos
+            deactivate MAPPER
+            CTRL --> UI : pendingDtos
         deactivate CTRL
 
-        UI --> Member : shows list of pending declarations
+        UI --> Member : shows list of pending declarations (DTOs)
     deactivate UI
 
     Member -> UI : selects a declaration to review
     activate UI
 
-        UI -> CTRL : getDeclarationDetails(declaration)
+        UI -> CTRL : getDeclarationDetails(dto.getId())
         activate CTRL
+            CTRL -> DR : getById(declarationId)
+            activate DR
+                DR --> CTRL : d
+            deactivate DR
             CTRL -> DEC : getDetails()
             activate DEC
                 DEC --> CTRL : detailsString
@@ -85,12 +94,18 @@ activate Member
     Member -> UI : selects outcome;\nprovides comments if rejecting
     activate UI
 
-        UI -> CTRL : processValidation(declaration, outcome, comments)
+        UI -> CTRL : processValidation(dto.getId(), outcome, comments)
         activate CTRL
 
+            CTRL -> DR : getById(declarationId)
+            activate DR
+                DR --> CTRL : d
+            deactivate DR
+
             note right of CTRL
-                AC3: guard — if declaration.status
-                != PENDING, return false immediately
+                AC3: guard — if the id is unknown or
+                declaration.status != PENDING,
+                return false immediately
             end note
 
             CTRL -> AUTHR : getCurrentUserSession()

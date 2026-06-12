@@ -9,11 +9,25 @@ class ValidateDeclarationUI {
 
 class ValidateDeclarationController {
     + ValidateDeclarationController()
-    + getPendingDeclarations() : List<Declaration>
-    + getDeclarationDetails(declaration : Declaration) : String
+    + getPendingDeclarations() : List<DeclarationDTO>
+    + getDeclarationDetails(declarationId : String) : String
     + getValidationOutcomes() : List<ValidationOutcome>
-    + processValidation(declaration : Declaration,\noutcome : ValidationOutcome,\ncomments : List<Object[]>) : boolean
+    + processValidation(declarationId : String,\noutcome : ValidationOutcome,\ncomments : List<Object[]>) : boolean
     - getCurrentEthicsCommitteeMember() : EthicsCommitteeMember
+}
+
+class DeclarationDTO {
+    - id : String
+    - type : String
+    - submissionDate : Date
+    - status : String
+    - agentName : String
+    + getId() : String
+}
+
+class DeclarationMapper {
+    + toDTO(declaration : Declaration) : DeclarationDTO
+    + toDTO(declarations : List<Declaration>) : List<DeclarationDTO>
 }
 
 class Repositories <<Singleton>> {
@@ -28,6 +42,7 @@ class Repositories <<Singleton>> {
 
 class DeclarationRepository {
     + getDeclarationsByStatus(status : DeclarationStatus) : List<Declaration>
+    + getById(declarationId : String) : Declaration
     + save(declaration : Declaration) : boolean
 }
 
@@ -85,6 +100,11 @@ end note
 
 ' ── UI → Controller ───────────────────────────────────────────────────────────
 ValidateDeclarationUI .> ValidateDeclarationController
+ValidateDeclarationUI ..> DeclarationDTO : uses
+
+' DTO pattern (the domain never reaches the UI)
+ValidateDeclarationController ..> DeclarationMapper : uses
+DeclarationMapper ..> DeclarationDTO : creates
 
 ' ── Controller → Repositories (singleton) ────────────────────────────────────
 ValidateDeclarationController ..> Repositories : uses
