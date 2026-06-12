@@ -65,7 +65,12 @@ public class StatisticsAnalysisFXController {
         logArea.clear();
         logArea.appendText("Running " + screen.getScriptPath() + " ...\n\n");
 
-        Thread worker = new Thread(this::runScript, "stats-" + screen.name());
+        Thread worker = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                runScript();
+            }
+        }, "stats-" + screen.name());
         worker.setDaemon(true);
         worker.start();
     }
@@ -83,21 +88,36 @@ public class StatisticsAnalysisFXController {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     final String text = line;
-                    Platform.runLater(() -> logArea.appendText(text + "\n"));
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            logArea.appendText(text + "\n");
+                        }
+                    });
                 }
             }
             exitCode = process.waitFor();
         } catch (IOException ex) {
             final String message = ex.getMessage();
-            Platform.runLater(() -> logArea.appendText(
-                    "\nCould not start Python. Make sure 'python' is on the PATH.\n"
-                            + message + "\n"));
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    logArea.appendText(
+                            "\nCould not start Python. Make sure 'python' is on the PATH.\n"
+                                    + message + "\n");
+                }
+            });
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
 
         final int code = exitCode;
-        Platform.runLater(() -> onScriptFinished(code));
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                onScriptFinished(code);
+            }
+        });
     }
 
     private void onScriptFinished(int exitCode) {

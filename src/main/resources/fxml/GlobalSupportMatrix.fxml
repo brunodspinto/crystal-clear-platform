@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="pt.ipp.isep.dei.ui.gui.GlobalSupportMatrixFXController"
-      styleClass="root-pane"
-      stylesheets="@../css/app.css"
-      spacing="10">
-    <padding><Insets top="24" right="32" bottom="24" left="32"/></padding>
-
-    <Label text="Global Support Adjacency Matrix" styleClass="scene-title"/>
-    <Label text="Shows the adjacency matrix of the support graph (undirected, unweighted) for a temporal snapshot."/>
-
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <Label text="Snapshot date:" styleClass="field-label" minWidth="120"/>
-        <DatePicker fx:id="datePicker" promptText="yyyy-MM-dd"/>
-        <Button text="Show Matrix" onAction="#handleShow" defaultButton="true" styleClass="primary-button"/>
-    </HBox>
-
-    <Label fx:id="messageLabel" maxWidth="Infinity" wrapText="true"/>
-
-    <TextArea fx:id="matrixArea" editable="false" wrapText="false" VBox.vgrow="ALWAYS"
-              style="-fx-font-family: 'Courier New', monospace;"/>
-
-    <HBox spacing="12" alignment="CENTER_LEFT">
-        <Button text="Back" onAction="#handleBack" styleClass="secondary-button"/>
-    </HBox>
+<VBox prefHeight="480.0" prefWidth="720.0" spacing="10.0" styleClass="root-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.ui.gui.GlobalSupportMatrixFXController">
+   <children>
+      <Label styleClass="scene-title" text="Global Support Adjacency Matrix" />
+      <Label text="Shows the adjacency matrix of the support graph (undirected, unweighted) for a temporal snapshot." />
+      <HBox alignment="CENTER_LEFT" spacing="10.0">
+         <children>
+            <Label minWidth="120.0" styleClass="field-label" text="Snapshot date:" />
+            <DatePicker fx:id="datePicker" promptText="yyyy-MM-dd" />
+            <Button defaultButton="true" mnemonicParsing="false" onAction="#handleShow" styleClass="primary-button" text="Show Matrix" />
+         </children>
+      </HBox>
+      <Label fx:id="messageLabel" maxWidth="Infinity" wrapText="true" />
+      <TextArea fx:id="matrixArea" editable="false" style="-fx-font-family: 'Courier New', monospace;" wrapText="false" VBox.vgrow="ALWAYS" />
+      <HBox alignment="CENTER_LEFT" spacing="12.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="24.0" left="32.0" right="32.0" top="24.0" />
+   </padding>
 </VBox>

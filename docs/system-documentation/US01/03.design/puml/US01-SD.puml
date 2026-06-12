@@ -64,11 +64,31 @@ activate User
 
             CTRL -> RR ** : new RegistrationRequest(fullName, email, password, role, identificationDocument)
             activate RR
+
+                note right of RR
+                    local validation (Information Expert):
+                    the constructor checks required fields,
+                    password format and identification
+                    document for Journalist/Citizen
+                end note
+
                 RR --> CTRL : rr
             deactivate RR
 
             CTRL -> REPO : save(rr)
             activate REPO
+
+                REPO -> REPO : existsByEmailAndRole(email, role)
+                activate REPO
+                    REPO --> REPO : false
+                deactivate REPO
+
+                note right of REPO
+                    global validation (Information Expert):
+                    AC5, no duplicate request for the
+                    same email and role
+                end note
+
                 REPO --> CTRL : success
             deactivate REPO
 

@@ -4,6 +4,8 @@ import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -66,7 +68,12 @@ public final class Toast {
         popup.setAutoFix(true);
         popup.getContent().add(card);
 
-        close.setOnAction(e -> popup.hide());
+        close.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                popup.hide();
+            }
+        });
 
         popup.show(owner);
         repositionBottomRight(popup, owner);
@@ -91,7 +98,12 @@ public final class Toast {
 
         slideIn.play();
         SequentialTransition timeline = new SequentialTransition(fadeIn, hold, fadeOut);
-        timeline.setOnFinished(e -> popup.hide());
+        timeline.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                popup.hide();
+            }
+        });
         timeline.play();
     }
 

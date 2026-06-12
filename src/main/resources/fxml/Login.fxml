@@ -9,32 +9,28 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="pt.ipp.isep.dei.ui.gui.LoginController"
-      styleClass="root-pane"
-      stylesheets="@../css/app.css"
-      spacing="10" alignment="CENTER">
-    <padding>
-        <Insets top="40" right="40" bottom="40" left="40"/>
-    </padding>
-
-    <Label text="Sign in" style="-fx-font-size: 20px;"/>
-
-    <Label text="Email"/>
-    <TextField fx:id="emailField" promptText="email@example.com" maxWidth="280"/>
-
-    <Label text="Password"/>
-    <PasswordField fx:id="passwordField" promptText="7 chars, 3 upper, 2 digits" maxWidth="280"/>
-
-    <HBox spacing="10" alignment="CENTER">
-        <Button text="Login" onAction="#handleLogin"/>
-        <Button text="Clear" onAction="#handleClear"/>
-    </HBox>
-
-    <Label fx:id="messageLabel" style="-fx-text-fill: #b00020;" wrapText="true" maxWidth="320"/>
-
-    <HBox alignment="CENTER" spacing="4">
-        <Label text="Don't have an account?"/>
-        <Hyperlink text="Register here" onAction="#handleRegister" styleClass="link-button"/>
-    </HBox>
+<VBox alignment="CENTER" prefHeight="480.0" prefWidth="720.0" spacing="10.0" styleClass="root-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.ui.gui.LoginController">
+   <children>
+      <Label style="-fx-font-size: 20px;" text="Sign in" />
+      <Label text="Email" />
+      <TextField fx:id="emailField" maxWidth="280.0" promptText="email@example.com" />
+      <Label text="Password" />
+      <PasswordField fx:id="passwordField" maxWidth="280.0" promptText="7 chars, 3 upper, 2 digits" />
+      <HBox alignment="CENTER" spacing="10.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#handleLogin" text="Login" />
+            <Button mnemonicParsing="false" onAction="#handleClear" text="Clear" />
+         </children>
+      </HBox>
+      <Label fx:id="messageLabel" maxWidth="320.0" style="-fx-text-fill: #b00020;" wrapText="true" />
+      <HBox alignment="CENTER" spacing="4.0">
+         <children>
+            <Label text="Don't have an account?" />
+            <Hyperlink mnemonicParsing="false" onAction="#handleRegister" styleClass="link-button" text="Register here" />
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+   </padding>
 </VBox>

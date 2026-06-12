@@ -33,6 +33,7 @@ class RegistrationRequest {
 
 class RegistrationRequestRepository {
     + save(request : RegistrationRequest) : boolean
+    + existsByEmailAndRole(email : String, role : UserRole) : boolean
     + getPendingRequests() : List<RegistrationRequest>
 }
 
