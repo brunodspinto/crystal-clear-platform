@@ -10,11 +10,48 @@ class SubmitDeclarationUI {
 class SubmitDeclarationController {
     + SubmitDeclarationController()
     + getDeclarationTypes() : List<DeclarationType>
-    + getOrganizations() : List<Organization>
+    + getOrganizations() : List<OrganizationDTO>
     + getPositionNatures() : List<PositionNature>
     + getAssetTypes() : List<AssetType>
-    + submitDeclaration(type, positionEntries, subsidyEntries,\nassetEntries, businessParticipations, attachments) : boolean
+    + getHouseholdRelations() : List<HouseholdRelation>
+    + getPreviousDeclarations() : List<DeclarationDTO>
+    + importFromDeclaration(declarationId : String) : ImportedData
+    + submitDeclaration(type, householdMembers, positionEntries,\nsubsidyEntries, assetEntries,\nbusinessParticipations, attachments) : boolean
+    - findOrganization(name : String) : Organization
     - getCurrentPoliticalAgent() : PoliticalAgent
+}
+
+class ImportedData {
+    + getHouseholdMembers() : List<Object[]>
+    + getPositionEntries() : List<Object[]>
+    + getSubsidyEntries() : List<Object[]>
+    + getAssetEntries() : List<Object[]>
+    + getBusinessParticipations() : List<Object[]>
+}
+
+class OrganizationDTO {
+    - name : String
+    - typeDesignation : String
+    - natureDesignation : String
+    + getName() : String
+}
+
+class DeclarationDTO {
+    - id : String
+    - type : String
+    - submissionDate : Date
+    - status : String
+    + getId() : String
+}
+
+class OrganizationMapper {
+    + toDTO(organization : Organization) : OrganizationDTO
+    + toDTO(organizations : List<Organization>) : List<OrganizationDTO>
+}
+
+class DeclarationMapper {
+    + toDTO(declaration : Declaration) : DeclarationDTO
+    + toDTO(declarations : List<Declaration>) : List<DeclarationDTO>
 }
 
 class Repositories <<Singleton>> {
@@ -57,12 +94,17 @@ class Declaration {
     - submissionDate : Date
     - status : DeclarationStatus
     + Declaration(type : DeclarationType, agent : PoliticalAgent, submissionDate : Date)
+    + addHouseholdMember(name : String, relation : HouseholdRelation)
     + addPositionEntry(organization, functionDesignation, nature,\ngrossSalary, sideIncomeConsulting, sideIncomeBoardMemberships,\nstartDate, endDate)
     + addIncome(organization, amount, source, date)
     + addSubsidyEntry(organization, amount, description, date)
     + addAssetEntry(assetType, assetValue, detail)
     + addBusinessParticipation(organization, companyNIF,\ntotalValueInStocks, companyPercentage)
     + addAttachment(fileName, uploadDate)
+}
+
+class HouseholdMember {
+    - name : String
 }
 
 class PositionEntry {
@@ -137,6 +179,12 @@ enum AssetType {
     STOCKS
 }
 
+enum HouseholdRelation {
+    SPOUSE
+    DESCENDANT
+    OTHER
+}
+
 enum PositionNature {
     PUBLIC
     PRIVATE
@@ -145,6 +193,8 @@ enum PositionNature {
 
 ' ── UI → Controller ───────────────────────────────────────────────────────────
 SubmitDeclarationUI .> SubmitDeclarationController
+SubmitDeclarationUI ..> OrganizationDTO : uses
+SubmitDeclarationUI ..> DeclarationDTO : uses
 
 ' ── Controller → Repositories (GRASP: accesses singleton to obtain repos) ─────
 SubmitDeclarationController ..> Repositories : uses
@@ -156,6 +206,13 @@ SubmitDeclarationController ..> PoliticalAgentRepository : uses
 SubmitDeclarationController ..> AuthenticationRepository : uses
 SubmitDeclarationController ..> Declaration : creates
 SubmitDeclarationController ..> PoliticalAgent : uses
+SubmitDeclarationController ..> ImportedData : creates
+
+' ── DTO pattern (the domain never reaches the UI) ─────────────────────────────
+SubmitDeclarationController ..> OrganizationMapper : uses
+SubmitDeclarationController ..> DeclarationMapper : uses
+OrganizationMapper ..> OrganizationDTO : creates
+DeclarationMapper ..> DeclarationDTO : creates
 
 ' ── Repositories singleton owns all repositories ──────────────────────────────
 Repositories *-- OrganizationRepository
@@ -172,6 +229,7 @@ PoliticalAgentRepository --> "*" PoliticalAgent : stores
 Declaration --> "1" PoliticalAgent : agent
 Declaration --> "1" DeclarationType : type
 Declaration --> "1" DeclarationStatus : status
+Declaration *-- "*" HouseholdMember : householdMembers
 Declaration *-- "*" PositionEntry : positionEntries
 Declaration *-- "*" Income : incomes
 Declaration *-- "*" SubsidyEntry : subsidyEntries
@@ -180,6 +238,8 @@ Declaration *-- "*" BusinessParticipation : businessParticipations
 Declaration *-- "*" Attachment : attachments
 
 ' ── Entries → shared domain ───────────────────────────────────────────────────
+HouseholdMember --> "1" HouseholdRelation : relation
+
 PositionEntry --> "1" Organization : organization
 PositionEntry --> "1" PositionNature : nature
 

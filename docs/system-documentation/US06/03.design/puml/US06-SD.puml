@@ -7,6 +7,8 @@ autonumber
 actor "Political\nAgent" as Agent
 participant ":SubmitDeclarationUI" as UI
 participant ":SubmitDeclarationController" as CTRL
+participant ":OrganizationMapper" as OMAPPER
+participant ":DeclarationMapper" as DMAPPER
 participant ":Repositories" as REPOS
 participant ":OrganizationRepository" as ORGR
 participant ":DeclarationRepository" as DR
@@ -60,7 +62,11 @@ activate Agent
             activate ORGR
                 ORGR --> CTRL : organizations
             deactivate ORGR
-            CTRL --> UI : organizations
+            CTRL -> OMAPPER : toDTO(organizations)
+            activate OMAPPER
+                OMAPPER --> CTRL : organizationDtos
+            deactivate OMAPPER
+            CTRL --> UI : organizationDtos
         deactivate CTRL
 
         UI -> CTRL : getPositionNatures()
@@ -73,6 +79,44 @@ activate Agent
             CTRL --> UI : assetTypes
         deactivate CTRL
 
+        UI -> CTRL : getHouseholdRelations()
+        activate CTRL
+            CTRL --> UI : householdRelations
+        deactivate CTRL
+
+        UI -> CTRL : getPreviousDeclarations()
+        activate CTRL
+            CTRL -> PAGR : getByEmail(email)
+            activate PAGR
+                PAGR --> CTRL : agent
+            deactivate PAGR
+            CTRL -> DR : getDeclarationsByAgent(agent)
+            activate DR
+                DR --> CTRL : declarations
+            deactivate DR
+            CTRL -> DMAPPER : toDTO(declarations)
+            activate DMAPPER
+                DMAPPER --> CTRL : previousDtos
+            deactivate DMAPPER
+            CTRL --> UI : previousDtos
+        deactivate CTRL
+
+        opt agent imports from a previous declaration (AC2)
+            UI -> CTRL : importFromDeclaration(dto.getId())
+            activate CTRL
+                CTRL -> DR : getById(declarationId)
+                activate DR
+                    DR --> CTRL : source
+                deactivate DR
+                CTRL --> UI : importedData
+            deactivate CTRL
+            note right of UI
+                importedData carries the entries as
+                Object[] lists (organization by name);
+                the UI pre-fills the form with them
+            end note
+        end
+
         UI --> Agent : shows available options;\nrequests declaration data section by section
     deactivate UI
 
@@ -84,7 +128,7 @@ activate Agent
     Agent -> UI : confirms submission
     activate UI
 
-        UI -> CTRL : submitDeclaration(type, positionEntries,\nsubsidyEntries, assetEntries,\nbusinessParticipations, attachments)
+        UI -> CTRL : submitDeclaration(type, householdMembers,\npositionEntries, subsidyEntries, assetEntries,\nbusinessParticipations, attachments)
         activate CTRL
 
             CTRL -> AUTHR : getCurrentUserSession()
@@ -108,7 +152,18 @@ activate Agent
                 inside the constructor
             end note
 
+            loop for each householdMember (AC1)
+                CTRL -> DEC : addHouseholdMember(name, relation)
+            end
+
             loop for each positionEntry
+                CTRL -> ORGR : getOrganizations()
+                note right of CTRL
+                    the entries carry the organization
+                    name (the UI only sees DTOs);
+                    findOrganization(name) resolves it
+                    back to the domain object
+                end note
                 CTRL -> DEC : addPositionEntry(organization, functionDesignation,\nnature, grossSalary, sideIncomeConsulting,\nsideIncomeBoardMemberships, startDate, endDate)
             end
 
