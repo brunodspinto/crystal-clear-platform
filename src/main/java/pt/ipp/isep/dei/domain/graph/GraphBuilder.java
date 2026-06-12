@@ -35,7 +35,8 @@ public class GraphBuilder {
         for (Edge edge : edges) {
             if (isSymmetricLabel(edge.getLabel()) && !hasReverse(edges, edge)) {
                 graph.addEdge(new Edge(edge.getToId(), edge.getFromId(),
-                        edge.getLabel(), edge.getWeight()));
+                        edge.getLabel(), edge.getWeight(),
+                        edge.getStartDate(), edge.getEndDate()));
             }
         }
         return graph;
