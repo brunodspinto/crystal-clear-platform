@@ -126,6 +126,6 @@ public class OrganizationRepository implements Serializable {
      * @return list of all organizations.
      */
     public List<Organization> getOrganizations() {
-        return List.copyOf(organizations);
+        return new ArrayList<>(organizations);
     }
 }

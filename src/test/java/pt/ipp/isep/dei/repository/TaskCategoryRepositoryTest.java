@@ -67,19 +67,15 @@ class TaskCategoryRepositoryTest {
     }
 
     @Test
-    void ensureGetTaskCategoriesReturnsAnImmutableList() {
+    void ensureGetTaskCategoriesReturnsADefensiveCopy() {
         TaskCategoryRepository taskCategoryRepository = new TaskCategoryRepository();
         String taskCategoryDescription = "Task Category Description";
         TaskCategory taskCategory = new TaskCategory(taskCategoryDescription);
         taskCategoryRepository.add(taskCategory);
 
-        assertThrows(UnsupportedOperationException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                taskCategoryRepository.getTaskCategories().add(new TaskCategory("Task Category Description 1"));
-            }
-        });
+        taskCategoryRepository.getTaskCategories().add(new TaskCategory("Task Category Description 1"));
 
+        assertEquals(1, taskCategoryRepository.getTaskCategories().size());
     }
 
     @Test

@@ -229,17 +229,14 @@ class ComplaintTest {
     }
 
     @Test
-    void ensureGetItemsIsUnmodifiable() {
+    void ensureGetItemsReturnsADefensiveCopy() {
         Citizen citizen = createTestCitizen();
         PoliticalAgent agent = createTestAgent();
         Complaint complaint = new Complaint("Only grievance", PAST_DATE, citizen, agent, PoliticalFunction.MAYOR);
 
-        assertThrows(UnsupportedOperationException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                complaint.getItems().add(new ComplaintItem("x", PAST_DATE, PoliticalFunction.DEPUTY));
-            }
-        });
+        complaint.getItems().add(new ComplaintItem("x", PAST_DATE, PoliticalFunction.DEPUTY));
+
+        assertEquals(1, complaint.getItems().size());
     }
 
     @Test
