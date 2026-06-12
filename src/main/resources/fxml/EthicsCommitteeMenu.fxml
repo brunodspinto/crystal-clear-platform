@@ -19,6 +19,13 @@
             <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleDetectConflicts" styleClass="primary-button" text="Detect Conflicts of Interest" />
             <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleFindPath" styleClass="primary-button" text="Find Pathway" />
             <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleSubnetwork" styleClass="primary-button" text="Influence Subnetwork" />
+            <Label styleClass="field-label" text="Statistical analyses" />
+            <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleUs14" styleClass="primary-button" text="US14 - Declaration Statistics" />
+            <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleUs17" styleClass="primary-button" text="US17 - Top Companies by Stock Value" />
+            <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleUs18" styleClass="primary-button" text="US18 - Largest Stock Increases" />
+            <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleUs28" styleClass="primary-button" text="US28 - Role vs Asset Correlation" />
+            <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleUs30" styleClass="primary-button" text="US30 - Residual Analysis" />
+            <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleUs31" styleClass="primary-button" text="US31 - Shareholding Non-linearity" />
             <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleLogout" styleClass="secondary-button" text="Logout" />
          </children>
          <padding>
