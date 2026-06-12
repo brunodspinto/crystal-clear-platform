@@ -1,39 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="pt.ipp.isep.dei.ui.gui.LoadEntitiesFromCsvFXController"
-      styleClass="root-pane"
-      stylesheets="@../css/app.css"
-      spacing="10">
-    <padding><Insets top="20" right="28" bottom="20" left="28"/></padding>
-
-    <Label text="US19 — Load Entities from CSV" styleClass="scene-title"/>
-    <Label text="Loads the entities of the network from a CSV file. After loading, the entity graph can be rendered to an SVG file using Graphviz."
-           wrapText="true"/>
-
-    <GridPane hgap="12" vgap="8">
-        <columnConstraints>
-            <ColumnConstraints minWidth="100"/>
-            <ColumnConstraints minWidth="300" hgrow="ALWAYS"/>
-            <ColumnConstraints minWidth="90"/>
-        </columnConstraints>
-
-        <Label text="Entities CSV:" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <TextField fx:id="filePathField" promptText="e.g. entities.csv" styleClass="input-field"
-                   GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-        <Button text="Browse..." onAction="#handleBrowse" styleClass="secondary-button"
-                GridPane.rowIndex="0" GridPane.columnIndex="2"/>
-    </GridPane>
-
-    <Label fx:id="messageLabel" maxWidth="Infinity" wrapText="true"/>
-
-    <HBox spacing="12" alignment="CENTER_LEFT">
-        <Button text="Load" onAction="#handleLoad" defaultButton="true" styleClass="primary-button"/>
-        <Button fx:id="renderButton" text="Render SVG" onAction="#handleRender" styleClass="primary-button"/>
-        <Button text="Back" onAction="#handleBack" styleClass="secondary-button"/>
-    </HBox>
+<VBox prefHeight="480.0" prefWidth="720.0" spacing="10.0" styleClass="root-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.ui.gui.LoadEntitiesFromCsvFXController">
+   <children>
+      <Label styleClass="scene-title" text="US19 — Load Entities from CSV" />
+      <Label text="Loads the entities of the network from a CSV file. After loading, the entity graph can be rendered to an SVG file using Graphviz." wrapText="true" />
+      <GridPane hgap="12.0" vgap="8.0">
+         <children>
+            <Label styleClass="field-label" text="Entities CSV:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <TextField fx:id="filePathField" promptText="e.g. entities.csv" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Button mnemonicParsing="false" onAction="#handleBrowse" styleClass="secondary-button" text="Browse..." GridPane.columnIndex="2" GridPane.rowIndex="0" />
+         </children>
+         <columnConstraints>
+            <ColumnConstraints minWidth="100.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="300.0" />
+            <ColumnConstraints minWidth="90.0" />
+         </columnConstraints>
+      </GridPane>
+      <Label fx:id="messageLabel" maxWidth="Infinity" wrapText="true" />
+      <HBox alignment="CENTER_LEFT" spacing="12.0">
+         <children>
+            <Button defaultButton="true" mnemonicParsing="false" onAction="#handleLoad" styleClass="primary-button" text="Load" />
+            <Button fx:id="renderButton" mnemonicParsing="false" onAction="#handleRender" styleClass="primary-button" text="Render SVG" />
+            <Button mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="28.0" right="28.0" top="20.0" />
+   </padding>
 </VBox>

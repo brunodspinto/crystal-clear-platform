@@ -3,11 +3,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane fx:id="root" xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="pt.ipp.isep.dei.ui.gui.MainController"
-            prefWidth="720" prefHeight="480">
-    <top>
-        <Label text="Crystal Clear" style="-fx-font-size: 16px; -fx-padding: 10;"/>
-    </top>
+<BorderPane fx:id="root" prefHeight="480.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.ui.gui.MainController">
+   <top>
+      <Label style="-fx-font-size: 16px; -fx-padding: 10;" text="Crystal Clear" />
+   </top>
 </BorderPane>

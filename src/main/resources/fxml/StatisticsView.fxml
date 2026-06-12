@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="pt.ipp.isep.dei.ui.gui.StatisticsAnalysisFXController"
-      styleClass="root-pane"
-      stylesheets="@../css/app.css"
-      spacing="10">
-    <padding><Insets top="24" right="32" bottom="24" left="32"/></padding>
-
-    <Label fx:id="titleLabel" text="Statistics" styleClass="scene-title"/>
-    <Label fx:id="descriptionLabel" wrapText="true"/>
-
-    <HBox spacing="12" alignment="CENTER_LEFT">
-        <Button fx:id="runButton" text="Run analysis" onAction="#handleRun"
-                defaultButton="true" styleClass="primary-button"/>
-        <Button fx:id="openButton" text="Open graph(s)" onAction="#handleOpenGraphs"
-                styleClass="secondary-button"/>
-        <Button text="Back" onAction="#handleBack" styleClass="secondary-button"/>
-    </HBox>
-
-    <Label fx:id="statusLabel" maxWidth="Infinity"/>
-
-    <Label text="Output:" styleClass="field-label"/>
-    <TextArea fx:id="logArea" editable="false" wrapText="true" VBox.vgrow="ALWAYS"/>
+<VBox prefHeight="480.0" prefWidth="720.0" spacing="10.0" styleClass="root-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.ui.gui.StatisticsAnalysisFXController">
+   <children>
+      <Label fx:id="titleLabel" styleClass="scene-title" text="Statistics" />
+      <Label fx:id="descriptionLabel" wrapText="true" />
+      <HBox alignment="CENTER_LEFT" spacing="12.0">
+         <children>
+            <Button fx:id="runButton" defaultButton="true" mnemonicParsing="false" onAction="#handleRun" styleClass="primary-button" text="Run analysis" />
+            <Button fx:id="openButton" mnemonicParsing="false" onAction="#handleOpenGraphs" styleClass="secondary-button" text="Open graph(s)" />
+            <Button mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
+         </children>
+      </HBox>
+      <Label fx:id="statusLabel" maxWidth="Infinity" />
+      <Label styleClass="field-label" text="Output:" />
+      <TextArea fx:id="logArea" editable="false" wrapText="true" VBox.vgrow="ALWAYS" />
+   </children>
+   <padding>
+      <Insets bottom="24.0" left="32.0" right="32.0" top="24.0" />
+   </padding>
 </VBox>
