@@ -143,6 +143,12 @@ public class MainController {
                 ((ExportDeclarationGraphFXController) child).setMainController(this);
             } else if (child instanceof IntegratedSituationFXController) {
                 ((IntegratedSituationFXController) child).setMainController(this);
+            } else if (child instanceof ListOrganizationsFXController) {
+                ((ListOrganizationsFXController) child).setMainController(this);
+            } else if (child instanceof ExportHoldingsCsvFXController) {
+                ((ExportHoldingsCsvFXController) child).setMainController(this);
+            } else if (child instanceof FindPathFXController) {
+                ((FindPathFXController) child).setMainController(this);
             } else if (child instanceof AssessComplaintFXController) {
                 ((AssessComplaintFXController) child).setMainController(this);
             } else if (child instanceof StatisticsAnalysisFXController) {
