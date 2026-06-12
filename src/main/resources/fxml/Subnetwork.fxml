@@ -10,7 +10,7 @@
 
 <VBox prefHeight="480.0" prefWidth="720.0" spacing="10.0" styleClass="root-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.ui.gui.SubnetworkFXController">
    <children>
-      <Label styleClass="scene-title" text="US36 — Influence Subnetwork Visualisation" />
+      <Label styleClass="scene-title" text="Influence Subnetwork Visualisation" />
       <Label text="Extracts the connected subnetwork that contains a chosen entity. All entities in this subnetwork can participate in influence chains that pass through the chosen entity." wrapText="true" />
       <HBox alignment="CENTER_LEFT" spacing="10.0">
          <children>

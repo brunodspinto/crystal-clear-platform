@@ -87,6 +87,56 @@ class ConsultAssetsControllerTest {
     }
 
     @Test
+    void ensureAgentsWithDataAtDateAreReturned() {
+        PoliticalAgent joao = agentJoao();
+        PoliticalAgent maria = agentMaria();
+        DeclarationRepository declRepo = new DeclarationRepository();
+        declRepo.save(validatedDeclarationWithRealEstate(joao, date(2023, Calendar.MARCH, 1), 100000.0));
+
+        ConsultAssetsController controller =
+                new ConsultAssetsController(repoWith(joao, maria), declRepo, null);
+
+        List<PoliticalAgentDTO> result =
+                controller.getPoliticalAgentsWithDataAt(date(2024, Calendar.JANUARY, 1));
+
+        assertEquals(1, result.size());
+        assertEquals("joao@gov.pt", result.get(0).getEmail());
+    }
+
+    @Test
+    void ensureAgentsWithOnlyLaterDeclarationsAreFilteredOut() {
+        PoliticalAgent joao = agentJoao();
+        DeclarationRepository declRepo = new DeclarationRepository();
+        declRepo.save(validatedDeclarationWithRealEstate(joao, date(2024, Calendar.JUNE, 15), 100000.0));
+
+        ConsultAssetsController controller =
+                new ConsultAssetsController(repoWith(joao), declRepo, null);
+
+        assertTrue(controller.getPoliticalAgentsWithDataAt(date(2023, Calendar.JANUARY, 1)).isEmpty());
+    }
+
+    @Test
+    void ensureAgentWithDeclarationOnTheReferenceDateIsIncluded() {
+        PoliticalAgent joao = agentJoao();
+        DeclarationRepository declRepo = new DeclarationRepository();
+        declRepo.save(validatedDeclarationWithRealEstate(joao, date(2024, Calendar.JUNE, 15), 100000.0));
+
+        ConsultAssetsController controller =
+                new ConsultAssetsController(repoWith(joao), declRepo, null);
+
+        assertEquals(1, controller.getPoliticalAgentsWithDataAt(date(2024, Calendar.JUNE, 15)).size());
+    }
+
+    @Test
+    void ensureAgentsWithDataAtNullDateIsRejected() {
+        ConsultAssetsController controller =
+                new ConsultAssetsController(new PoliticalAgentRepository(), new DeclarationRepository(), null);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> controller.getPoliticalAgentsWithDataAt(null));
+    }
+
+    @Test
     void ensureAssetsFromAllValidatedDeclarationsUpToDateAreReturned() {
         PoliticalAgent joao = agentJoao();
         DeclarationRepository declRepo = new DeclarationRepository();

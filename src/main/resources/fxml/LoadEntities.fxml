@@ -11,7 +11,7 @@
 
 <VBox prefHeight="480.0" prefWidth="720.0" spacing="10.0" styleClass="root-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.ui.gui.LoadEntitiesFromCsvFXController">
    <children>
-      <Label styleClass="scene-title" text="US19 — Load Entities from CSV" />
+      <Label styleClass="scene-title" text="Load Entities from CSV" />
       <Label text="Loads the entities of the network from a CSV file. After loading, the entity graph can be rendered to an SVG file using Graphviz." wrapText="true" />
       <GridPane hgap="12.0" vgap="8.0">
          <children>

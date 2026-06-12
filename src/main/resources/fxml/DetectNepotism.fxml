@@ -10,7 +10,7 @@
 
 <VBox prefHeight="480.0" prefWidth="720.0" spacing="10.0" styleClass="root-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.ui.gui.DetectNepotismFXController">
    <children>
-      <Label styleClass="scene-title" text="US22 — Direct Nepotism Detection" />
+      <Label styleClass="scene-title" text="Direct Nepotism Detection" />
       <Label text="Flags every case where someone was appointed by a person they have a personal tie with (relativeOf, friendOf or associatedWith)." wrapText="true" />
       <Label fx:id="messageLabel" maxWidth="Infinity" wrapText="true" />
       <Label fx:id="resultLabel" maxWidth="Infinity" styleClass="field-label" wrapText="true" />

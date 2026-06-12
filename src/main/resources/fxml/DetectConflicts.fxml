@@ -11,7 +11,7 @@
 
 <VBox prefHeight="480.0" prefWidth="720.0" spacing="10.0" styleClass="root-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.ui.gui.DetectConflictsFXController">
    <children>
-      <Label styleClass="scene-title" text="US23 — Indirect Nepotism &amp; Conflicts of Interest" />
+      <Label styleClass="scene-title" text="Indirect Nepotism &amp; Conflicts of Interest" />
       <Label text="Analyses multi-hop relation chains in the loaded graph. Select the type of situation to investigate." wrapText="true" />
       <HBox alignment="CENTER_LEFT" spacing="10.0">
          <children>

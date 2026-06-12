@@ -68,6 +68,31 @@ public class ConsultAssetsController {
     }
 
     /**
+     * Returns only the political agents that have at least one validated
+     * declaration submitted on or before the reference date. The UI uses
+     * this to hide agents with nothing to consult at the chosen date, so
+     * the dropdown follows the same date rule as the search itself.
+     *
+     * @param referenceDate the date for which the assets will be requested.
+     * @return list of matching {@link PoliticalAgentDTO}; never null.
+     * @throws IllegalArgumentException if the date is null.
+     */
+    public List<PoliticalAgentDTO> getPoliticalAgentsWithDataAt(Date referenceDate) {
+        if (referenceDate == null) {
+            throw new IllegalArgumentException("Reference date cannot be null.");
+        }
+        List<PoliticalAgent> matching = new ArrayList<>();
+        for (PoliticalAgent agent : politicalAgentRepository.getAll()) {
+            List<Declaration> declarations =
+                    declarationRepository.getValidatedDeclarationsForAgentUpTo(agent, referenceDate);
+            if (!declarations.isEmpty()) {
+                matching.add(agent);
+            }
+        }
+        return politicalAgentMapper.toDTO(matching);
+    }
+
+    /**
      * Returns the asset entries declared by the given agent up to the
      * reference date, gathered across every validated declaration (AC2).
      * Empty when no declarations match (AC3).

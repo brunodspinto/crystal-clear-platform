@@ -13,7 +13,7 @@ package pt.ipp.isep.dei.ui.gui;
  */
 public enum StatsScreen {
 
-    US14("US14 — Declaration Statistics",
+    US14("Declaration Statistics",
             "Descriptive statistics (histograms and box plots) of the declared income components.",
             "src/main/python/us14/declaration_stats.py",
             new String[]{
@@ -21,14 +21,14 @@ public enum StatsScreen {
                     "docs/system-documentation/US14/US14_boxplots.svg"
             }),
 
-    US17("US17 — Top Companies by Stock Value",
+    US17("Top Companies by Stock Value",
             "Companies with the highest total value held by political agents.",
             "src/main/python/us17/top_companies.py",
             new String[]{
                     "docs/system-documentation/US17/US17_top_companies.svg"
             }),
 
-    US18("US18 — Largest Stock Increases",
+    US18("Largest Stock Increases",
             "Agents with the largest increase in stock value between declarations.",
             "src/main/python/us18/stock_increases.py",
             new String[]{
@@ -36,14 +36,14 @@ public enum StatsScreen {
                     "docs/system-documentation/US18/US18_evolution.svg"
             }),
 
-    US28("US28 — Role vs Asset Correlation",
+    US28("Role vs Asset Correlation",
             "Pearson correlation between total remuneration and each asset type, by role.",
             "src/main/python/us28/role_asset_correlation.py",
             new String[]{
                     "docs/system-documentation/US28/US28_correlation.svg"
             }),
 
-    US30("US30 — Residual Analysis",
+    US30("Residual Analysis",
             "Residuals of the wealth-vs-income regression, in original and normalized scale.",
             "src/main/python/us30/residual_analysis.py",
             new String[]{
@@ -51,7 +51,7 @@ public enum StatsScreen {
                     "docs/system-documentation/US30/US30_residuals_normalized.svg"
             }),
 
-    US31("US31 — Shareholding Non-linearity",
+    US31("Shareholding Non-linearity",
             "Relationship between ownership percentage and total stock value.",
             "src/main/python/us31/shareholding_nonlinearity.py",
             new String[]{

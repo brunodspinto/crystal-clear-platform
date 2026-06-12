@@ -10,6 +10,7 @@ class ConsultAssetsUI {
 class ConsultAssetsController {
     + ConsultAssetsController()
     + getPoliticalAgents() : List<PoliticalAgentDTO>
+    + getPoliticalAgentsWithDataAt(referenceDate) : List<PoliticalAgentDTO>
     + getAssetsAt(agentDto, referenceDate) : List<AssetEntryDTO>
     + isCurrentUserJournalist() : boolean
 }
