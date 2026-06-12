@@ -26,7 +26,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class StatisticsAnalysisFXController {
 
-    private static final String PYTHON = "python";
+    private static final String PYTHON = "python3";
 
     @FXML private Label titleLabel;
     @FXML private Label descriptionLabel;
@@ -80,6 +80,7 @@ public class StatisticsAnalysisFXController {
         try {
             ProcessBuilder builder = new ProcessBuilder(PYTHON, screen.getScriptPath());
             builder.directory(new File(System.getProperty("user.dir")));
+            builder.environment().put("MPLBACKEND", "Agg");
             builder.redirectErrorStream(true);
             Process process = builder.start();
 
@@ -103,7 +104,7 @@ public class StatisticsAnalysisFXController {
                 @Override
                 public void run() {
                     logArea.appendText(
-                            "\nCould not start Python. Make sure 'python' is on the PATH.\n"
+                            "\nCould not start Python. Make sure 'python3' is on the PATH.\n"
                                     + message + "\n");
                 }
             });
