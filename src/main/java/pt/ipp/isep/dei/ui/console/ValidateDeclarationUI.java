@@ -1,8 +1,8 @@
 package pt.ipp.isep.dei.ui.console;
 
 import pt.ipp.isep.dei.controller.ValidateDeclarationController;
-import pt.ipp.isep.dei.domain.Declaration;
 import pt.ipp.isep.dei.domain.ValidationOutcome;
+import pt.ipp.isep.dei.dto.DeclarationDTO;
 import pt.ipp.isep.dei.ui.console.utils.Utils;
 
 import java.util.ArrayList;
@@ -28,13 +28,13 @@ public class ValidateDeclarationUI implements Runnable {
     public void run() {
         System.out.println("\n\n--- Validate Declaration of Interests -------------------------");
 
-        List<Declaration> pending = controller.getPendingDeclarations();
+        List<DeclarationDTO> pending = controller.getPendingDeclarations();
         if (pending.isEmpty()) {
             System.out.println("\nNo declarations pending validation.");
             return;
         }
 
-        Declaration selected = (Declaration) Utils.showAndSelectOne(pending,
+        DeclarationDTO selected = (DeclarationDTO) Utils.showAndSelectOne(pending,
                 "Select a declaration to review:");
         if (selected == null) {
             System.out.println("\nOperation cancelled.");
@@ -42,7 +42,7 @@ public class ValidateDeclarationUI implements Runnable {
         }
 
         System.out.println("\n--- Declaration Details ---");
-        System.out.println(controller.getDeclarationDetails(selected));
+        System.out.println(controller.getDeclarationDetails(selected.getId()));
 
         ValidationOutcome outcome = (ValidationOutcome) Utils.showAndSelectOne(
                 controller.getValidationOutcomes(), "Select outcome:");
@@ -67,7 +67,7 @@ public class ValidateDeclarationUI implements Runnable {
         }
 
         try {
-            boolean success = controller.processValidation(selected, outcome, comments);
+            boolean success = controller.processValidation(selected.getId(), outcome, comments);
 
             if (success) {
                 if (outcome == ValidationOutcome.VALIDATED) {

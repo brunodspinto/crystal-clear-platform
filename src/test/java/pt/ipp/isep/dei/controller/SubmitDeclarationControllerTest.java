@@ -240,17 +240,17 @@ class SubmitDeclarationControllerTest {
         SubmitDeclarationController controller = loginAndBuildCtrl("agent.submit3@test.com");
 
         java.util.List<Object[]> positions = new java.util.ArrayList<>();
-        positions.add(new Object[]{parliament, "Deputy", PositionNature.PUBLIC,
+        positions.add(new Object[]{"Assembleia", "Deputy", PositionNature.PUBLIC,
                 60000.0, 5000.0, 2000.0, NOW, null});
 
         java.util.List<Object[]> subsidies = new java.util.ArrayList<>();
-        subsidies.add(new Object[]{parliament, 2000.0, "Grant", NOW});
+        subsidies.add(new Object[]{"Assembleia", 2000.0, "Grant", NOW});
 
         java.util.List<Object[]> assets = new java.util.ArrayList<>();
         assets.add(new Object[]{AssetType.REAL_ESTATE, 300000.0, new RealEstate("Villa", "Porto")});
 
         java.util.List<Object[]> participations = new java.util.ArrayList<>();
-        participations.add(new Object[]{parliament, 987654321L, 5000.0, 5.0});
+        participations.add(new Object[]{"Assembleia", 987654321L, 5000.0, 5.0});
 
         java.util.List<Object[]> attachments = new java.util.ArrayList<>();
         attachments.add(new Object[]{"doc.pdf", NOW});

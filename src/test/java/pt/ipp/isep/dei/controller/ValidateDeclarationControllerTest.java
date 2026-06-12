@@ -110,7 +110,8 @@ class ValidateDeclarationControllerTest {
     @Test
     void ensureGetDeclarationDetailsReturnsNonBlankString() {
         Declaration d = pendingDeclaration();
-        String details = ctrl().getDeclarationDetails(d);
+        declRepo.save(d);
+        String details = ctrl().getDeclarationDetails(d.getId());
         assertNotNull(details);
         assertFalse(details.isBlank());
     }
@@ -118,14 +119,21 @@ class ValidateDeclarationControllerTest {
     @Test
     void ensureGetDeclarationDetailsContainsAgentName() {
         Declaration d = pendingDeclaration();
-        assertTrue(ctrl().getDeclarationDetails(d).contains("Ana Costa"));
+        declRepo.save(d);
+        assertTrue(ctrl().getDeclarationDetails(d.getId()).contains("Ana Costa"));
     }
 
     @Test
     void ensureGetDeclarationDetailsContainsDeclarationType() {
         Declaration d = pendingDeclaration();
-        String details = ctrl().getDeclarationDetails(d);
+        declRepo.save(d);
+        String details = ctrl().getDeclarationDetails(d.getId());
         assertTrue(details.contains("INITIAL") || details.contains("Initial"));
+    }
+
+    @Test
+    void ensureGetDeclarationDetailsReturnsEmptyForUnknownId() {
+        assertEquals("", ctrl().getDeclarationDetails("DECL-does-not-exist"));
     }
 
     // -------------------------------------------------------------------------
@@ -273,7 +281,7 @@ class ValidateDeclarationControllerTest {
         ValidateDeclarationController controller = loginAndBuildCtrl("ethics.proc1@test.com");
         Declaration d = pendingDeclaration();
         declRepo.save(d);
-        boolean ok = controller.processValidation(d, ValidationOutcome.VALIDATED, new ArrayList<>());
+        boolean ok = controller.processValidation(d.getId(), ValidationOutcome.VALIDATED, new ArrayList<>());
         assertTrue(ok);
         assertEquals(DeclarationStatus.VALIDATED, d.getStatus());
     }
@@ -285,7 +293,7 @@ class ValidateDeclarationControllerTest {
         declRepo.save(d);
         List<Object[]> comments = new ArrayList<>();
         comments.add(new Object[]{"Income", "missing salary detail"});
-        boolean ok = controller.processValidation(d, ValidationOutcome.RETURNED_FOR_CORRECTION, comments);
+        boolean ok = controller.processValidation(d.getId(), ValidationOutcome.RETURNED_FOR_CORRECTION, comments);
         assertTrue(ok);
         assertEquals(DeclarationStatus.REJECTED, d.getStatus());
         assertEquals(1, recordRepo.getAll().size());
@@ -297,7 +305,7 @@ class ValidateDeclarationControllerTest {
         Declaration d = pendingDeclaration();
         d.setStatus(ValidationOutcome.VALIDATED);
         declRepo.save(d);
-        boolean ok = controller.processValidation(d, ValidationOutcome.VALIDATED, new ArrayList<>());
+        boolean ok = controller.processValidation(d.getId(), ValidationOutcome.VALIDATED, new ArrayList<>());
         assertFalse(ok);
     }
 
@@ -317,7 +325,7 @@ class ValidateDeclarationControllerTest {
 
         Declaration d = pendingDeclaration();
         declRepo.save(d);
-        boolean ok = controller.processValidation(d, ValidationOutcome.VALIDATED, new ArrayList<>());
+        boolean ok = controller.processValidation(d.getId(), ValidationOutcome.VALIDATED, new ArrayList<>());
         assertFalse(ok);
     }
 
@@ -326,7 +334,7 @@ class ValidateDeclarationControllerTest {
         ValidateDeclarationController controller = loginAndBuildCtrl("ethics.proc5@test.com");
         Declaration d = pendingDeclaration();
         declRepo.save(d);
-        boolean ok = controller.processValidation(d, ValidationOutcome.RETURNED_FOR_CORRECTION, null);
+        boolean ok = controller.processValidation(d.getId(), ValidationOutcome.RETURNED_FOR_CORRECTION, null);
         assertTrue(ok);
     }
 }
