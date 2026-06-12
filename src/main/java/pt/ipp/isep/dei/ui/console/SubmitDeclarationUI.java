@@ -2,6 +2,8 @@ package pt.ipp.isep.dei.ui.console;
 
 import pt.ipp.isep.dei.controller.SubmitDeclarationController;
 import pt.ipp.isep.dei.domain.*;
+import pt.ipp.isep.dei.dto.DeclarationDTO;
+import pt.ipp.isep.dei.dto.OrganizationDTO;
 import pt.ipp.isep.dei.ui.console.utils.Utils;
 
 import java.util.ArrayList;
@@ -92,12 +94,12 @@ public class SubmitDeclarationUI implements Runnable {
 
     private void collectAmendmentData() {
         System.out.println("\n--- Amendment Details (EXCEPTIONAL declaration) ---");
-        List<Declaration> previous = controller.getPreviousDeclarations();
+        List<DeclarationDTO> previous = controller.getPreviousDeclarations();
         if (previous.isEmpty()) {
             System.out.println("You have no previous declarations to amend. Operation cancelled.");
             return;
         }
-        Declaration amended = (Declaration) Utils.showAndSelectOne(previous,
+        DeclarationDTO amended = (DeclarationDTO) Utils.showAndSelectOne(previous,
                 "Select the declaration being amended:");
         if (amended == null) return;
         String reason = Utils.readLineFromConsole("Reason for the amendment: ");
@@ -145,12 +147,12 @@ public class SubmitDeclarationUI implements Runnable {
     }
 
     private Object[] collectSinglePositionEntry() {
-        List<Organization> orgs = controller.getOrganizations();
+        List<OrganizationDTO> orgs = controller.getOrganizations();
         if (orgs.isEmpty()) {
             System.out.println("No organizations registered. Cannot add position entry.");
             return null;
         }
-        Organization org = (Organization) Utils.showAndSelectOne(orgs, "Select organization:");
+        OrganizationDTO org = (OrganizationDTO) Utils.showAndSelectOne(orgs, "Select organization:");
         if (org == null) return null;
 
         String function = Utils.readLineFromConsole("Enter function/position designation (e.g., Director, Mayor): ");
@@ -169,7 +171,7 @@ public class SubmitDeclarationUI implements Runnable {
             endDate = Utils.readDateFromConsole("End date (dd-MM-yyyy): ");
         }
 
-        return new Object[]{org, function, nature, grossSalary, sideIncomeConsulting, sideIncomeBoardMemberships, startDate, endDate};
+        return new Object[]{org.getName(), function, nature, grossSalary, sideIncomeConsulting, sideIncomeBoardMemberships, startDate, endDate};
     }
 
     // -------------------------------------------------------------------------
@@ -186,15 +188,15 @@ public class SubmitDeclarationUI implements Runnable {
     }
 
     private Object[] collectSingleSubsidyEntry() {
-        List<Organization> orgs = controller.getOrganizations();
-        Organization org = (Organization) Utils.showAndSelectOne(orgs, "Select source organization:");
+        List<OrganizationDTO> orgs = controller.getOrganizations();
+        OrganizationDTO org = (OrganizationDTO) Utils.showAndSelectOne(orgs, "Select source organization:");
         if (org == null) return null;
 
         double amount = Utils.readDoubleFromConsole("Amount: ");
         String description = Utils.readLineFromConsole("Description: ");
         Date date = Utils.readDateFromConsole("Date received (dd-MM-yyyy): ");
 
-        return new Object[]{org, amount, description, date};
+        return new Object[]{org.getName(), amount, description, date};
     }
 
     // -------------------------------------------------------------------------
@@ -253,15 +255,15 @@ public class SubmitDeclarationUI implements Runnable {
     }
 
     private Object[] collectSingleBusinessParticipation() {
-        List<Organization> orgs = controller.getOrganizations();
-        Organization org = (Organization) Utils.showAndSelectOne(orgs, "Select company:");
+        List<OrganizationDTO> orgs = controller.getOrganizations();
+        OrganizationDTO org = (OrganizationDTO) Utils.showAndSelectOne(orgs, "Select company:");
         if (org == null) return null;
 
         long companyNIF = Utils.readLongFromConsole("Company NIF: ");
         double totalValue = Utils.readDoubleFromConsole("Total value in stocks: ");
         double percentage = Utils.readDoubleFromConsole("Company percentage (%): ");
 
-        return new Object[]{org, companyNIF, totalValue, percentage};
+        return new Object[]{org.getName(), companyNIF, totalValue, percentage};
     }
 
     // -------------------------------------------------------------------------
