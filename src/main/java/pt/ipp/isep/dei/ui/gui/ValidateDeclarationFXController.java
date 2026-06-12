@@ -1,5 +1,7 @@
 package pt.ipp.isep.dei.ui.gui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -93,7 +95,13 @@ public class ValidateDeclarationFXController implements Initializable {
         // Enable Review button only when a row is selected
         reviewButton.setDisable(true);
         pendingTable.getSelectionModel().selectedItemProperty().addListener(
-                (obs, old, now) -> reviewButton.setDisable(now == null));
+                new ChangeListener<DeclarationRow>() {
+                    @Override
+                    public void changed(ObservableValue<? extends DeclarationRow> obs,
+                                        DeclarationRow old, DeclarationRow now) {
+                        reviewButton.setDisable(now == null);
+                    }
+                });
 
         // Comments table columns
         colSection.setCellValueFactory(new PropertyValueFactory<>("section"));
@@ -102,9 +110,13 @@ public class ValidateDeclarationFXController implements Initializable {
         commentsTable.setPlaceholder(new Label("No comments added yet."));
 
         // Show/hide comments section based on outcome selection
-        rbReturned.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-            commentsSection.setVisible(isSelected);
-            commentsSection.setManaged(isSelected);
+        rbReturned.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> obs,
+                                Boolean wasSelected, Boolean isSelected) {
+                commentsSection.setVisible(isSelected);
+                commentsSection.setManaged(isSelected);
+            }
         });
 
         // Start in list state

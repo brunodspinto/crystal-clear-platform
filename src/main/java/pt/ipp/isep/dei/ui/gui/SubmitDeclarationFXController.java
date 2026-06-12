@@ -1,5 +1,7 @@
 package pt.ipp.isep.dei.ui.gui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -117,10 +119,14 @@ public class SubmitDeclarationFXController implements Initializable {
         // Show/hide exceptional fields based on type (AC3)
         exceptionalBox.setVisible(false);
         exceptionalBox.setManaged(false);
-        typeCombo.valueProperty().addListener((obs, old, now) -> {
-            boolean isEx = now == DeclarationType.EXCEPTIONAL;
-            exceptionalBox.setVisible(isEx);
-            exceptionalBox.setManaged(isEx);
+        typeCombo.valueProperty().addListener(new ChangeListener<DeclarationType>() {
+            @Override
+            public void changed(ObservableValue<? extends DeclarationType> obs,
+                                DeclarationType old, DeclarationType now) {
+                boolean isEx = now == DeclarationType.EXCEPTIONAL;
+                exceptionalBox.setVisible(isEx);
+                exceptionalBox.setManaged(isEx);
+            }
         });
 
         // AC2 – import combo
