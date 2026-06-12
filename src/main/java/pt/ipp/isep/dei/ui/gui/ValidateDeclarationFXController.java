@@ -8,8 +8,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import pt.ipp.isep.dei.controller.ValidateDeclarationController;
-import pt.ipp.isep.dei.domain.Declaration;
 import pt.ipp.isep.dei.domain.ValidationOutcome;
+import pt.ipp.isep.dei.dto.DeclarationDTO;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class ValidateDeclarationFXController implements Initializable {
     private final ValidateDeclarationController controller = new ValidateDeclarationController();
     private MainController mainController;
 
-    private Declaration selectedDeclaration;
+    private DeclarationDTO selectedDeclaration;
     private final ObservableList<DeclarationRow> pendingRows  = FXCollections.observableArrayList();
     private final ObservableList<CommentRow>     commentRows  = FXCollections.observableArrayList();
 
@@ -119,7 +119,7 @@ public class ValidateDeclarationFXController implements Initializable {
 
     private void loadPendingDeclarations() {
         pendingRows.clear();
-        for (Declaration d : controller.getPendingDeclarations()) {
+        for (DeclarationDTO d : controller.getPendingDeclarations()) {
             pendingRows.add(new DeclarationRow(d));
         }
     }
@@ -148,17 +148,17 @@ public class ValidateDeclarationFXController implements Initializable {
         reviewButton.setDisable(true);
     }
 
-    private void showDetails(Declaration d) {
-        lblAgent.setText(d.getAgent().getName());
-        lblStatus.setText(d.getStatus().toString());
-        lblType.setText(d.getType().toString());
+    private void showDetails(DeclarationDTO d) {
+        lblAgent.setText(d.getAgentName());
+        lblStatus.setText(d.getStatus());
+        lblType.setText(d.getType());
         lblDate.setText(new java.text.SimpleDateFormat("dd-MM-yyyy").format(d.getSubmissionDate()));
-        lblPositions.setText(String.valueOf(d.getPositionEntries().size()));
+        lblPositions.setText(String.valueOf(d.getPositions().size()));
         lblIncomes.setText(String.valueOf(d.getIncomes().size()));
-        lblSubsidies.setText(String.valueOf(d.getSubsidyEntries().size()));
-        lblAssets.setText(String.valueOf(d.getAssetEntries().size()));
+        lblSubsidies.setText(String.valueOf(d.getSubsidies().size()));
+        lblAssets.setText(String.valueOf(d.getAssets().size()));
         lblBusiness.setText(String.valueOf(d.getBusinessParticipations().size()));
-        lblAttachments.setText(String.valueOf(d.getAttachments().size()));
+        lblAttachments.setText(String.valueOf(d.getAttachmentsCount()));
     }
 
     // ── Review state ──────────────────────────────────────────────────────────
@@ -209,7 +209,7 @@ public class ValidateDeclarationFXController implements Initializable {
             comments.add(new Object[]{r.sectionText, r.commentText});
         }
 
-        boolean saved = controller.processValidation(selectedDeclaration, outcome, comments);
+        boolean saved = controller.processValidation(selectedDeclaration.getId(), outcome, comments);
 
         if (saved) {
             String msg = outcome == ValidationOutcome.VALIDATED
@@ -271,13 +271,13 @@ public class ValidateDeclarationFXController implements Initializable {
     /** Row model for the pending declarations table. */
     public static class DeclarationRow {
         private final String id, agent, type, date;
-        final Declaration declaration;
+        final DeclarationDTO declaration;
 
-        DeclarationRow(Declaration d) {
+        DeclarationRow(DeclarationDTO d) {
             this.declaration = d;
             this.id    = d.getId();
-            this.agent = d.getAgent().getName();
-            this.type  = d.getType().toString();
+            this.agent = d.getAgentName();
+            this.type  = d.getType();
             this.date  = new java.text.SimpleDateFormat("dd-MM-yyyy").format(d.getSubmissionDate());
         }
 

@@ -57,7 +57,9 @@ public class DeclarationMapper {
                 declaration.toString(),
                 declaration.getDetails(),
                 positions, incomes, subsidies, assets, businessParticipations,
-                totalIncome);
+                totalIncome,
+                declaration.getAgent().getName(),
+                declaration.getAttachments().size());
     }
 
     /**

@@ -11,6 +11,8 @@ import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import pt.ipp.isep.dei.controller.SubmitDeclarationController;
 import pt.ipp.isep.dei.domain.*;
+import pt.ipp.isep.dei.dto.DeclarationDTO;
+import pt.ipp.isep.dei.dto.OrganizationDTO;
 
 import java.net.URL;
 import java.text.ParseException;
@@ -30,7 +32,7 @@ public class SubmitDeclarationFXController implements Initializable {
 
     // ── Header ────────────────────────────────────────────────────────────────
     @FXML private ComboBox<DeclarationType> typeCombo;
-    @FXML private ComboBox<Declaration>     importCombo;      // AC2
+    @FXML private ComboBox<DeclarationDTO>  importCombo;      // AC2
     @FXML private Button                    importButton;     // AC2
     @FXML private VBox                      exceptionalBox;   // AC3 — shown only for EXCEPTIONAL
     @FXML private TextField                 amendedIdField;   // AC3
@@ -46,7 +48,7 @@ public class SubmitDeclarationFXController implements Initializable {
     @FXML private TableColumn<HouseholdRow, String> hhColRelation;
 
     // ── Position entries section ──────────────────────────────────────────────
-    @FXML private ComboBox<Organization>   posOrgCombo;
+    @FXML private ComboBox<OrganizationDTO> posOrgCombo;
     @FXML private TextField                posFunctionField;
     @FXML private ComboBox<PositionNature> posNatureCombo;
     @FXML private TextField                posGrossField;
@@ -62,7 +64,7 @@ public class SubmitDeclarationFXController implements Initializable {
     @FXML private TableColumn<PositionRow, String> posColStart;
 
     // ── Subsidy entries section ───────────────────────────────────────────────
-    @FXML private ComboBox<Organization> subOrgCombo;
+    @FXML private ComboBox<OrganizationDTO> subOrgCombo;
     @FXML private TextField              subAmountField;
     @FXML private TextField              subDescField;
     @FXML private TextField              subDateField;
@@ -81,7 +83,7 @@ public class SubmitDeclarationFXController implements Initializable {
     @FXML private TableColumn<AssetRow, String> assetColDetail;
 
     // ── Business participations section ───────────────────────────────────────
-    @FXML private ComboBox<Organization> bizOrgCombo;
+    @FXML private ComboBox<OrganizationDTO> bizOrgCombo;
     @FXML private TextField              bizNifField;
     @FXML private TextField              bizValueField;
     @FXML private TextField              bizPctField;
@@ -122,19 +124,19 @@ public class SubmitDeclarationFXController implements Initializable {
         });
 
         // AC2 – import combo
-        List<Declaration> previous = controller.getPreviousDeclarations();
+        List<DeclarationDTO> previous = controller.getPreviousDeclarations();
         importCombo.setItems(FXCollections.observableArrayList(previous));
         importCombo.setPromptText(previous.isEmpty() ? "No previous declarations" : "Select to import…");
-        importCombo.setConverter(new StringConverter<Declaration>() {
-            @Override public String toString(Declaration d) {
+        importCombo.setConverter(new StringConverter<DeclarationDTO>() {
+            @Override public String toString(DeclarationDTO d) {
                 return d == null ? "" : d.getId() + "  " + d.getType() + "  " + d.getSubmissionDate();
             }
-            @Override public Declaration fromString(String s) { return null; }
+            @Override public DeclarationDTO fromString(String s) { return null; }
         });
         importButton.setDisable(previous.isEmpty());
 
         // Organisation combos
-        ObservableList<Organization> orgs =
+        ObservableList<OrganizationDTO> orgs =
                 FXCollections.observableArrayList(controller.getOrganizations());
         setupOrgCombo(posOrgCombo, orgs);
         setupOrgCombo(subOrgCombo, orgs);
@@ -187,10 +189,11 @@ public class SubmitDeclarationFXController implements Initializable {
 
     @FXML
     private void handleImport() {
-        Declaration sel = importCombo.getValue();
+        DeclarationDTO sel = importCombo.getValue();
         if (sel == null) return;
 
-        Declaration imported = controller.importFromDeclaration(sel.getId());
+        SubmitDeclarationController.ImportedData imported =
+                controller.importFromDeclaration(sel.getId());
         if (imported == null) {
             showError("Could not import the selected declaration.");
             return;
@@ -198,33 +201,32 @@ public class SubmitDeclarationFXController implements Initializable {
 
         // Pre-populate household (AC1)
         hhRows.clear();
-        for (HouseholdMember m : imported.getHouseholdMembers()) {
-            hhRows.add(new HouseholdRow(m.getName(), m.getRelation()));
+        for (Object[] m : imported.getHouseholdMembers()) {
+            hhRows.add(new HouseholdRow((String) m[0], (HouseholdRelation) m[1]));
         }
         // Pre-populate positions
         positionRows.clear();
-        for (PositionEntry pe : imported.getPositionEntries()) {
-            positionRows.add(new PositionRow(pe.getOrganization(), pe.getFunctionDesignation(),
-                    pe.getNature(), pe.getGrossSalary(), pe.getSideIncomeConsulting(),
-                    pe.getSideIncomeBoardMemberships(), pe.getStartDate(), pe.getEndDate()));
+        for (Object[] pe : imported.getPositionEntries()) {
+            positionRows.add(new PositionRow((String) pe[0], (String) pe[1],
+                    (PositionNature) pe[2], (double) pe[3], (double) pe[4],
+                    (double) pe[5], (Date) pe[6], (Date) pe[7]));
         }
         // Pre-populate subsidies
         subsidyRows.clear();
-        for (SubsidyEntry se : imported.getSubsidyEntries()) {
-            subsidyRows.add(new SubsidyRow(se.getOrganization(), se.getAmount(),
-                    se.getDescription(), se.getDate()));
+        for (Object[] se : imported.getSubsidyEntries()) {
+            subsidyRows.add(new SubsidyRow((String) se[0], (double) se[1],
+                    (String) se[2], (Date) se[3]));
         }
         // Pre-populate assets
         assetRows.clear();
-        for (AssetEntry ae : imported.getAssetEntries()) {
-            assetRows.add(new AssetRow(ae.getAssetType(), ae.getAssetValue(),
-                    ae.getDetail() != null ? ae.getDetail().toString() : ""));
+        for (Object[] ae : imported.getAssetEntries()) {
+            assetRows.add(new AssetRow((AssetType) ae[0], (double) ae[1], (String) ae[2]));
         }
         // Pre-populate business participations
         bizRows.clear();
-        for (BusinessParticipation bp : imported.getBusinessParticipations()) {
-            bizRows.add(new BizRow(bp.getOrganization(), bp.getCompanyNIF(),
-                    bp.getTotalValueInStocks(), bp.getCompanyPercentage()));
+        for (Object[] bp : imported.getBusinessParticipations()) {
+            bizRows.add(new BizRow((String) bp[0], (long) bp[1],
+                    (double) bp[2], (double) bp[3]));
         }
 
         showSuccess("Data imported from declaration " + sel.getId() + ". Review and adjust before submitting.");
@@ -256,7 +258,7 @@ public class SubmitDeclarationFXController implements Initializable {
 
     @FXML
     private void handleAddPosition() {
-        Organization org     = posOrgCombo.getValue();
+        OrganizationDTO org  = posOrgCombo.getValue();
         String func          = possFunctionField();
         PositionNature nature = posNatureCombo.getValue();
         Double gross         = parseDouble(posGrossField);
@@ -270,7 +272,7 @@ public class SubmitDeclarationFXController implements Initializable {
                       "Consulting Income, Board Income and Start Date.");
             return;
         }
-        positionRows.add(new PositionRow(org, func, nature, gross, consulting, board,
+        positionRows.add(new PositionRow(org.getName(), func, nature, gross, consulting, board,
                 start, parseDate(posEndField)));
         clearPositionForm();
         clearMessage();
@@ -286,7 +288,7 @@ public class SubmitDeclarationFXController implements Initializable {
 
     @FXML
     private void handleAddSubsidy() {
-        Organization org = subOrgCombo.getValue();
+        OrganizationDTO org = subOrgCombo.getValue();
         Double amount    = parseDouble(subAmountField);
         String desc      = subDescField.getText() == null ? "" : subDescField.getText().trim();
         Date date        = parseDate(subDateField);
@@ -294,7 +296,7 @@ public class SubmitDeclarationFXController implements Initializable {
             showError("Subsidy: fill Organisation, Amount, Description and Date.");
             return;
         }
-        subsidyRows.add(new SubsidyRow(org, amount, desc, date));
+        subsidyRows.add(new SubsidyRow(org.getName(), amount, desc, date));
         clearSubsidyForm();
         clearMessage();
     }
@@ -331,7 +333,7 @@ public class SubmitDeclarationFXController implements Initializable {
 
     @FXML
     private void handleAddBusiness() {
-        Organization org = bizOrgCombo.getValue();
+        OrganizationDTO org = bizOrgCombo.getValue();
         Long nif         = parseLong(bizNifField);
         Double val       = parseDouble(bizValueField);
         Double pct       = parseDouble(bizPctField);
@@ -343,7 +345,7 @@ public class SubmitDeclarationFXController implements Initializable {
             showError("Business Participation: percentage must be between 0 and 100.");
             return;
         }
-        bizRows.add(new BizRow(org, nif, val, pct));
+        bizRows.add(new BizRow(org.getName(), nif, val, pct));
         clearBizForm();
         clearMessage();
     }
@@ -394,13 +396,13 @@ public class SubmitDeclarationFXController implements Initializable {
 
         List<Object[]> positions = new ArrayList<>();
         for (PositionRow r : positionRows) {
-            positions.add(new Object[]{r.orgObj, r.functionText, r.natureEnum,
+            positions.add(new Object[]{r.orgName, r.functionText, r.natureEnum,
                     r.grossVal, r.consultingVal, r.boardVal, r.startDate, r.endDate});
         }
 
         List<Object[]> subsidies = new ArrayList<>();
         for (SubsidyRow r : subsidyRows) {
-            subsidies.add(new Object[]{r.orgObj, r.amountVal, r.descText, r.dateVal});
+            subsidies.add(new Object[]{r.orgName, r.amountVal, r.descText, r.dateVal});
         }
 
         List<Object[]> assets = new ArrayList<>();
@@ -415,7 +417,7 @@ public class SubmitDeclarationFXController implements Initializable {
 
         List<Object[]> business = new ArrayList<>();
         for (BizRow r : bizRows) {
-            business.add(new Object[]{r.orgObj, r.nifVal, r.totalVal, r.pctVal});
+            business.add(new Object[]{r.orgName, r.nifVal, r.totalVal, r.pctVal});
         }
 
         try {
@@ -439,12 +441,12 @@ public class SubmitDeclarationFXController implements Initializable {
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private void setupOrgCombo(ComboBox<Organization> combo, ObservableList<Organization> orgs) {
+    private void setupOrgCombo(ComboBox<OrganizationDTO> combo, ObservableList<OrganizationDTO> orgs) {
         combo.setItems(orgs);
         combo.setPromptText("Select organisation…");
-        combo.setConverter(new StringConverter<Organization>() {
-            @Override public String toString(Organization o)   { return o == null ? "" : o.getName(); }
-            @Override public Organization fromString(String s) { return null; }
+        combo.setConverter(new StringConverter<OrganizationDTO>() {
+            @Override public String toString(OrganizationDTO o)   { return o == null ? "" : o.getName(); }
+            @Override public OrganizationDTO fromString(String s) { return null; }
         });
     }
 
@@ -528,18 +530,18 @@ public class SubmitDeclarationFXController implements Initializable {
 
     public static class PositionRow {
         private final String org, function, nature, grossSalary, startDate;
-        final Organization orgObj;
+        final String orgName;
         final String functionText;
         final PositionNature natureEnum;
         final double grossVal, consultingVal, boardVal;
         final Date startDate2, endDate;
 
-        PositionRow(Organization org, String func, PositionNature nature,
+        PositionRow(String orgName, String func, PositionNature nature,
                     double gross, double consulting, double board, Date start, Date end) {
-            this.orgObj = org; this.functionText = func; this.natureEnum = nature;
+            this.orgName = orgName; this.functionText = func; this.natureEnum = nature;
             this.grossVal = gross; this.consultingVal = consulting; this.boardVal = board;
             this.startDate2 = start; this.endDate = end;
-            this.org = org.getName(); this.function = func; this.nature = nature.toString();
+            this.org = orgName; this.function = func; this.nature = nature.toString();
             this.grossSalary = String.format("%.2f", gross);
             this.startDate = start != null ? new SimpleDateFormat("dd-MM-yyyy").format(start) : "";
         }
@@ -553,11 +555,11 @@ public class SubmitDeclarationFXController implements Initializable {
 
     public static class SubsidyRow {
         private final String org, amount, description;
-        final Organization orgObj; final double amountVal; final String descText; final Date dateVal;
+        final String orgName; final double amountVal; final String descText; final Date dateVal;
 
-        SubsidyRow(Organization org, double amount, String desc, Date date) {
-            this.orgObj = org; this.amountVal = amount; this.descText = desc; this.dateVal = date;
-            this.org = org.getName(); this.amount = String.format("%.2f", amount); this.description = desc;
+        SubsidyRow(String orgName, double amount, String desc, Date date) {
+            this.orgName = orgName; this.amountVal = amount; this.descText = desc; this.dateVal = date;
+            this.org = orgName; this.amount = String.format("%.2f", amount); this.description = desc;
         }
 
         public String getOrg()         { return org; }
@@ -581,11 +583,11 @@ public class SubmitDeclarationFXController implements Initializable {
 
     public static class BizRow {
         private final String org, nif, totalValue, percentage;
-        final Organization orgObj; final long nifVal; final double totalVal, pctVal;
+        final String orgName; final long nifVal; final double totalVal, pctVal;
 
-        BizRow(Organization org, long nif, double total, double pct) {
-            this.orgObj = org; this.nifVal = nif; this.totalVal = total; this.pctVal = pct;
-            this.org = org.getName(); this.nif = String.valueOf(nif);
+        BizRow(String orgName, long nif, double total, double pct) {
+            this.orgName = orgName; this.nifVal = nif; this.totalVal = total; this.pctVal = pct;
+            this.org = orgName; this.nif = String.valueOf(nif);
             this.totalValue = String.format("%.2f", total); this.percentage = String.format("%.2f%%", pct);
         }
 

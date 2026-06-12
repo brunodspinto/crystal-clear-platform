@@ -1,6 +1,10 @@
 package pt.ipp.isep.dei.controller;
 
 import pt.ipp.isep.dei.domain.*;
+import pt.ipp.isep.dei.dto.DeclarationDTO;
+import pt.ipp.isep.dei.dto.OrganizationDTO;
+import pt.ipp.isep.dei.mapper.DeclarationMapper;
+import pt.ipp.isep.dei.mapper.OrganizationMapper;
 import pt.ipp.isep.dei.repository.*;
 
 import java.util.ArrayList;
@@ -63,9 +67,10 @@ public class SubmitDeclarationController {
         return list;
     }
 
-    /** @return all registered organisations */
-    public List<Organization> getOrganizations() {
-        return organizationRepository.getOrganizations();
+    /** @return all registered organisations as DTOs (ESOFT — DTO pattern) */
+    public List<OrganizationDTO> getOrganizations() {
+        OrganizationMapper mapper = new OrganizationMapper();
+        return mapper.toDTO(organizationRepository.getOrganizations());
     }
 
     /** @return all position natures */
@@ -101,57 +106,85 @@ public class SubmitDeclarationController {
 
     /**
      * Returns all previously submitted declarations for the currently
-     * authenticated agent. Used to populate the "import from previous"
-     * dropdown (AC2).
+     * authenticated agent, as DTOs. Used to populate the "import from
+     * previous" dropdown (AC2).
      *
      * @return list of the agent's past declarations, possibly empty
      */
-    public List<Declaration> getPreviousDeclarations() {
+    public List<DeclarationDTO> getPreviousDeclarations() {
         PoliticalAgent agent = getCurrentPoliticalAgent();
         if (agent == null) return new ArrayList<>();
-        return declarationRepository.getDeclarationsByAgent(agent);
+        DeclarationMapper mapper = new DeclarationMapper();
+        return mapper.toDTO(declarationRepository.getDeclarationsByAgent(agent));
     }
 
     /**
-     * Returns a pre-populated Declaration built from the data of a previous
-     * declaration (AC2). The returned declaration has type INITIAL and status
-     * PENDING — it is not yet saved. The caller must still set the correct
-     * type and (for EXCEPTIONAL) the amendment fields before submitting.
+     * Returns the entry data of a previous declaration so the UI can
+     * pre-populate the form (AC2). The data comes in the same Object[]
+     * shapes that {@link #submitDeclaration} accepts, with the organization
+     * passed by name — the domain objects never leave the controller.
      *
      * @param declarationId the id of the declaration to copy from
-     * @return a new unsaved Declaration with the same entries, or null if not found
+     * @return the imported entry lists, or null if the id is unknown or
+     *         does not belong to the authenticated agent
      */
-    public Declaration importFromDeclaration(String declarationId) {
+    public ImportedData importFromDeclaration(String declarationId) {
         PoliticalAgent agent = getCurrentPoliticalAgent();
         if (agent == null) return null;
 
         Declaration source = declarationRepository.getById(declarationId);
         if (source == null || !source.getAgent().equals(agent)) return null;
 
-        // Create a blank declaration (type placeholder — UI will let user change it)
-        Declaration copy = new Declaration(DeclarationType.INITIAL, agent, new Date(),
-                null, null);
-
+        ImportedData data = new ImportedData();
         for (HouseholdMember m : source.getHouseholdMembers()) {
-            copy.addHouseholdMember(m.getName(), m.getRelation());
+            data.householdMembers.add(new Object[]{m.getName(), m.getRelation()});
         }
         for (PositionEntry pe : source.getPositionEntries()) {
-            copy.addPositionEntry(pe.getOrganization(), pe.getFunctionDesignation(),
-                    pe.getNature(), pe.getGrossSalary(), pe.getSideIncomeConsulting(),
-                    pe.getSideIncomeBoardMemberships(), pe.getStartDate(), pe.getEndDate());
+            data.positionEntries.add(new Object[]{pe.getOrganization().getName(),
+                    pe.getFunctionDesignation(), pe.getNature(), pe.getGrossSalary(),
+                    pe.getSideIncomeConsulting(), pe.getSideIncomeBoardMemberships(),
+                    pe.getStartDate(), pe.getEndDate()});
         }
         for (SubsidyEntry se : source.getSubsidyEntries()) {
-            copy.addSubsidyEntry(se.getOrganization(), se.getAmount(),
-                    se.getDescription(), se.getDate());
+            data.subsidyEntries.add(new Object[]{se.getOrganization().getName(),
+                    se.getAmount(), se.getDescription(), se.getDate()});
         }
         for (AssetEntry ae : source.getAssetEntries()) {
-            copy.addAssetEntry(ae.getAssetType(), ae.getAssetValue(), ae.getDetail());
+            data.assetEntries.add(new Object[]{ae.getAssetType(), ae.getAssetValue(),
+                    ae.getDetail() != null ? ae.getDetail().toString() : ""});
         }
         for (BusinessParticipation bp : source.getBusinessParticipations()) {
-            copy.addBusinessParticipation(bp.getOrganization(), bp.getCompanyNIF(),
-                    bp.getTotalValueInStocks(), bp.getCompanyPercentage());
+            data.businessParticipations.add(new Object[]{bp.getOrganization().getName(),
+                    bp.getCompanyNIF(), bp.getTotalValueInStocks(), bp.getCompanyPercentage()});
         }
-        return copy;
+        return data;
+    }
+
+    /**
+     * Entry data imported from a previous declaration (AC2). Each list uses
+     * the same Object[] shape that {@link #submitDeclaration} expects.
+     */
+    public static class ImportedData {
+        private final List<Object[]> householdMembers = new ArrayList<>();
+        private final List<Object[]> positionEntries = new ArrayList<>();
+        private final List<Object[]> subsidyEntries = new ArrayList<>();
+        private final List<Object[]> assetEntries = new ArrayList<>();
+        private final List<Object[]> businessParticipations = new ArrayList<>();
+
+        /** @return the household member entries */
+        public List<Object[]> getHouseholdMembers() { return householdMembers; }
+
+        /** @return the position entries */
+        public List<Object[]> getPositionEntries() { return positionEntries; }
+
+        /** @return the subsidy entries */
+        public List<Object[]> getSubsidyEntries() { return subsidyEntries; }
+
+        /** @return the asset entries */
+        public List<Object[]> getAssetEntries() { return assetEntries; }
+
+        /** @return the business participation entries */
+        public List<Object[]> getBusinessParticipations() { return businessParticipations; }
     }
 
     // -------------------------------------------------------------------------
@@ -266,7 +299,7 @@ public class SubmitDeclarationController {
         if (positionEntries != null) {
             for (Object[] pe : positionEntries) {
                 declaration.addPositionEntry(
-                        (Organization)   pe[0], (String)        pe[1],
+                        findOrganization((String) pe[0]), (String) pe[1],
                         (PositionNature) pe[2], (double)        pe[3],
                         (double)         pe[4], (double)        pe[5],
                         (Date)           pe[6], (Date)          pe[7]);
@@ -275,7 +308,7 @@ public class SubmitDeclarationController {
         if (subsidyEntries != null) {
             for (Object[] se : subsidyEntries) {
                 declaration.addSubsidyEntry(
-                        (Organization) se[0], (double) se[1],
+                        findOrganization((String) se[0]), (double) se[1],
                         (String)       se[2], (Date)   se[3]);
             }
         }
@@ -287,7 +320,7 @@ public class SubmitDeclarationController {
         if (businessParticipations != null) {
             for (Object[] bp : businessParticipations) {
                 declaration.addBusinessParticipation(
-                        (Organization) bp[0], (long) bp[1], (double) bp[2], (double) bp[3]);
+                        findOrganization((String) bp[0]), (long) bp[1], (double) bp[2], (double) bp[3]);
             }
         }
         if (attachments != null) {
@@ -302,6 +335,24 @@ public class SubmitDeclarationController {
     // -------------------------------------------------------------------------
     // Private helpers
     // -------------------------------------------------------------------------
+
+    /**
+     * Resolves an organization by its name. The UI works with DTOs, so the
+     * entries arrive with the organization name and the domain object is
+     * looked up here.
+     *
+     * @param name the organization name
+     * @return the matching organization
+     * @throws IllegalStateException if no organization has that name
+     */
+    private Organization findOrganization(String name) {
+        for (Organization org : organizationRepository.getOrganizations()) {
+            if (org.getName().equals(name)) {
+                return org;
+            }
+        }
+        throw new IllegalStateException("Unknown organization: " + name);
+    }
 
     private PoliticalAgent getCurrentPoliticalAgent() {
         if (authenticationRepository == null) return null;
