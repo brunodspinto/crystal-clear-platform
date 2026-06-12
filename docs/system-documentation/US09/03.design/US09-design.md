@@ -16,6 +16,7 @@
 | Step 3         | ...showing a message when there are no validated declarations? (AC3)                                 | ConsultIntegratedSituationUI       | **Pure Fabrication**: the empty-result feedback is a presentation concern.                                                                                         |
 | Step 4         | ...producing the entries of each declaration (positions, incomes, subsidies, assets, participations)? | Declaration                        | **Information Expert**: a `Declaration` aggregates its `PositionEntry`, `Income`, `SubsidyEntry`, `AssetEntry` and `BusinessParticipation` collections, exposed via their respective getters. |
 | Step 4         | ...presenting the details to the actor?                                                              | ConsultIntegratedSituationUI       | **Pure Fabrication**: presentation responsibility — iterates the declarations and prints each entry collection.                                                    |
+| Step 2/3       | ...transferring the agents and declarations data to the UI without exposing the domain objects?      | PoliticalAgentMapper / DeclarationMapper | **DTO** + **Low Coupling** + **Pure Fabrication**: the mappers convert `PoliticalAgent` and `Declaration` into `PoliticalAgentDTO` / `DeclarationDTO`, so the UI only depends on DTOs with display-ready data. |
 
 ### Systematization
 

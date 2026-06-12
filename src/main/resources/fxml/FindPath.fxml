@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pt.ipp.isep.dei.ui.gui.FindPathFXController"
+      styleClass="root-pane"
+      stylesheets="@../css/app.css"
+      spacing="10">
+    <padding><Insets top="24" right="32" bottom="24" left="32"/></padding>
+
+    <Label text="US34 — Pathway Verification" styleClass="scene-title"/>
+    <Label text="Checks whether two entities are connected in the support graph and returns the shortest distance (number of edges)."
+           wrapText="true"/>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Source entity:" styleClass="field-label" minWidth="120"/>
+        <ComboBox fx:id="sourceCombo" styleClass="combo-box" prefWidth="280"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Target entity:" styleClass="field-label" minWidth="120"/>
+        <ComboBox fx:id="targetCombo" styleClass="combo-box" prefWidth="280"/>
+    </HBox>
+
+    <Label fx:id="messageLabel" maxWidth="Infinity" wrapText="true"/>
+    <Label fx:id="resultLabel" maxWidth="Infinity" wrapText="true" styleClass="field-label"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Button text="Find Path" onAction="#handleFindPath" defaultButton="true" styleClass="primary-button"/>
+        <Button text="Back" onAction="#handleBack" styleClass="secondary-button"/>
+    </HBox>
+</VBox>

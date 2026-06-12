@@ -84,4 +84,36 @@ public class RegistrationRequestRepository implements Serializable {
         }
         return null;
     }
+
+    /**
+     * Finds the rejected registration request submitted with the given email.
+     *
+     * @param email the email
+     * @return the rejected request, or {@code null} if there is none
+     */
+    public RegistrationRequest findRejectedByEmail(String email) {
+        for (RegistrationRequest r : requests) {
+            if (r.getEmail().equalsIgnoreCase(email)
+                    && r.getStatus() == RegistrationStatus.REJECTED) {
+                return r;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Finds the approved registration request submitted with the given email.
+     *
+     * @param email the email
+     * @return the approved request, or {@code null} if there is none
+     */
+    public RegistrationRequest findApprovedByEmail(String email) {
+        for (RegistrationRequest r : requests) {
+            if (r.getEmail().equalsIgnoreCase(email)
+                    && r.getStatus() == RegistrationStatus.APPROVED) {
+                return r;
+            }
+        }
+        return null;
+    }
 }

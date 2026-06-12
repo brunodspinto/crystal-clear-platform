@@ -12,6 +12,11 @@ class ListOrganizationsController {
     + getOrganizationsGroupedByType() : Map<OrganizationType, List<OrganizationDTO>>
 }
 
+class OrganizationMapper {
+    + toDTO(organization : Organization) : OrganizationDTO
+    + toDTO(organizations : List<Organization>) : List<OrganizationDTO>
+}
+
 class OrganizationDTO {
     - name : String
     - typeDesignation : String
@@ -48,7 +53,9 @@ enum OrganizationType {
 
 ListOrganizationsUI .> ListOrganizationsController
 ListOrganizationsUI ..> OrganizationDTO
-ListOrganizationsController ..> OrganizationDTO : creates
+ListOrganizationsController --> "1" OrganizationMapper : organizationMapper
+OrganizationMapper ..> OrganizationDTO : creates
+OrganizationMapper ..> Organization
 ListOrganizationsController .> Repositories
 ListOrganizationsController ..> OrganizationRepository
 Repositories -> "1" Repositories : instance

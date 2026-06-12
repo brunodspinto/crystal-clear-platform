@@ -39,7 +39,7 @@ activate Journalist
         end ref
 
         activate CTRL
-            CTRL --> UI : agents
+            CTRL --> UI : agentsDto
         deactivate CTRL
 
         UI --> Journalist : shows agent list, requests selection
@@ -53,10 +53,10 @@ activate Journalist
     Journalist -> UI : enters start date and end date
     activate UI
 
-        UI -> CTRL : getIncomeEvolution(agent, startDate, endDate)
+        UI -> CTRL : getIncomeEvolution(agentDto, startDate, endDate)
         activate CTRL
 
-            alt agent == null
+            alt agentDto == null
                 CTRL --> UI : throw IllegalArgumentException("Agent cannot be null.")
             else startDate == null or endDate == null
                 CTRL --> UI : throw IllegalArgumentException("Dates cannot be null.")
@@ -67,11 +67,11 @@ activate Journalist
                     Get Validated Declarations For Agent Between
                 end ref
 
-                CTRL --> UI : declarations
+                CTRL --> UI : declarationsDto
             end
         deactivate CTRL
 
-        alt declarations is empty (AC5)
+        alt declarationsDto is empty (AC5)
             UI --> Journalist : shows "no validated declarations in period"
         else
             ref over UI

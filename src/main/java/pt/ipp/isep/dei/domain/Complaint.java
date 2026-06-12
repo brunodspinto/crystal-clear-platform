@@ -24,7 +24,7 @@ public class Complaint implements Serializable {
 
     /**
      * Creates an empty complaint about a political agent. Grievances must be added
-     * afterwards with {@link #addItem(String, Date, PoliticalFunction)} before the
+     * afterward with {@link #addItem(String, Date, PoliticalFunction)} before the
      * complaint is saved.
      *
      * @param citizen        the citizen submitting the complaint.
@@ -48,11 +48,11 @@ public class Complaint implements Serializable {
      * Creates a complaint with a single grievance. Kept for backward compatibility
      * with callers that submit one grievance at a time.
      *
-     * @param description       a description of the reported behaviour.
-     * @param complaintDate     the date when the behaviour occurred (cannot be in the future).
+     * @param description       a description of the reported behavior.
+     * @param complaintDate     the date when the behavior occurred (cannot be in the future).
      * @param citizen           the citizen submitting the complaint.
      * @param politicalAgent    the political agent being complained about.
-     * @param politicalFunction the function the agent held at the time of the behaviour.
+     * @param politicalFunction the function the agent held at the time of the behavior.
      * @throws IllegalArgumentException if any argument is invalid.
      */
     public Complaint(String description, Date complaintDate, Citizen citizen,
@@ -65,9 +65,9 @@ public class Complaint implements Serializable {
      * Adds a grievance to this complaint. All grievances refer to the same
      * political agent as the complaint.
      *
-     * @param description       a description of the reported behaviour.
-     * @param complaintDate     the date when the behaviour occurred (cannot be in the future).
-     * @param politicalFunction the function the agent held at the time of the behaviour.
+     * @param description       a description of the reported behavior.
+     * @param complaintDate     the date when the behavior occurred (cannot be in the future).
+     * @param politicalFunction the function the agent held at the time of the behavior.
      * @throws IllegalArgumentException if any argument is invalid.
      */
     public void addItem(String description, Date complaintDate, PoliticalFunction politicalFunction) {

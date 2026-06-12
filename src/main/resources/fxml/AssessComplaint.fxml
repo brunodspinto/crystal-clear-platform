@@ -11,7 +11,7 @@
       spacing="10">
     <padding><Insets top="20" right="28" bottom="20" left="28"/></padding>
 
-    <Label text="US27 — Assess Complaint" styleClass="scene-title"/>
+    <Label text="Assess Complaint" styleClass="scene-title"/>
 
     <HBox spacing="12" alignment="CENTER_LEFT">
         <Label text="Complaint:" styleClass="field-label"/>

@@ -11,7 +11,7 @@
       spacing="10">
     <padding><Insets top="24" right="32" bottom="24" left="32"/></padding>
 
-    <Label text="US24 — Export Declarations Dataset (CSV)" styleClass="scene-title"/>
+    <Label text="Export Declarations Dataset (CSV)" styleClass="scene-title"/>
     <Label text="Exports all validated declarations to a CSV file."/>
 
     <HBox spacing="10" alignment="CENTER_LEFT">

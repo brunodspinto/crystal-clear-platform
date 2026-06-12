@@ -9,8 +9,35 @@ class AnalyseIncomeEvolutionUI {
 
 class AnalyseIncomeEvolutionController {
     + AnalyseIncomeEvolutionController()
-    + getPoliticalAgents() : List<PoliticalAgent>
-    + getIncomeEvolution(agent, startDate, endDate) : List<Declaration>
+    + getPoliticalAgents() : List<PoliticalAgentDTO>
+    + getIncomeEvolution(agentDto, startDate, endDate) : List<DeclarationDTO>
+}
+
+class PoliticalAgentDTO {
+    - name : String
+    - email : String
+}
+
+class DeclarationDTO {
+    - id : String
+    - type : String
+    - submissionDate : Date
+    - status : String
+    - summary : String
+    - positions : List<String>
+    - incomes : List<String>
+    - subsidies : List<String>
+    - totalIncome : double
+}
+
+class PoliticalAgentMapper {
+    + toDTO(agent) : PoliticalAgentDTO
+    + toDTO(agents) : List<PoliticalAgentDTO>
+}
+
+class DeclarationMapper {
+    + toDTO(declaration) : DeclarationDTO
+    + toDTO(declarations) : List<DeclarationDTO>
 }
 
 class Repositories <<Singleton>> {
@@ -23,6 +50,7 @@ class Repositories <<Singleton>> {
 
 class PoliticalAgentRepository {
     + getAll() : List<PoliticalAgent>
+    + getByEmail(email) : PoliticalAgent
 }
 
 class DeclarationRepository {
@@ -81,9 +109,15 @@ AnalyseIncomeEvolutionController ..> DeclarationRepository
 AnalyseIncomeEvolutionController ..> PoliticalAgent
 AnalyseIncomeEvolutionController ..> Declaration
 
-AnalyseIncomeEvolutionUI ..> Declaration
-AnalyseIncomeEvolutionUI ..> Income
-AnalyseIncomeEvolutionUI ..> SubsidyEntry
+AnalyseIncomeEvolutionUI ..> PoliticalAgentDTO
+AnalyseIncomeEvolutionUI ..> DeclarationDTO
+
+AnalyseIncomeEvolutionController ..> PoliticalAgentMapper
+AnalyseIncomeEvolutionController ..> DeclarationMapper
+PoliticalAgentMapper ..> PoliticalAgent
+PoliticalAgentMapper ..> PoliticalAgentDTO
+DeclarationMapper ..> Declaration
+DeclarationMapper ..> DeclarationDTO
 
 PoliticalAgentRepository --> "*" PoliticalAgent : agents
 DeclarationRepository --> "*" Declaration : declarations
@@ -95,10 +129,12 @@ Declaration "1" *-- "*" Income : includes >
 Declaration "1" *-- "*" SubsidyEntry : includes >
 
 note right of AnalyseIncomeEvolutionController
-    getIncomeEvolution validates inputs:
-    throws IllegalArgumentException if agent or
-    either date is null, or if startDate.after(endDate)
-    (AC2), before calling the repository.
+    getIncomeEvolution validates inputs (throws
+    IllegalArgumentException if agentDto or either date
+    is null, or if startDate.after(endDate) — AC2),
+    resolves the agent by email via getByEmail, and
+    returns DTOs built by the DeclarationMapper
+    (DTO pattern), so the UI never touches domain objects.
 end note
 
 note bottom of DeclarationRepository

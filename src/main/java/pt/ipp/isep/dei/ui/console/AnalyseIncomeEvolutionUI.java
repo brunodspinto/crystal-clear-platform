@@ -1,11 +1,8 @@
 package pt.ipp.isep.dei.ui.console;
 
 import pt.ipp.isep.dei.controller.AnalyseIncomeEvolutionController;
-import pt.ipp.isep.dei.domain.Declaration;
-import pt.ipp.isep.dei.domain.Income;
-import pt.ipp.isep.dei.domain.PoliticalAgent;
-import pt.ipp.isep.dei.domain.PositionEntry;
-import pt.ipp.isep.dei.domain.SubsidyEntry;
+import pt.ipp.isep.dei.dto.DeclarationDTO;
+import pt.ipp.isep.dei.dto.PoliticalAgentDTO;
 import pt.ipp.isep.dei.ui.console.utils.Utils;
 
 import java.util.Date;
@@ -34,7 +31,7 @@ public class AnalyseIncomeEvolutionUI implements Runnable {
     public void run() {
         System.out.println("\n\n--- Analyse Income Evolution -------------------");
 
-        PoliticalAgent agent = displayAndSelectPoliticalAgent();
+        PoliticalAgentDTO agent = displayAndSelectPoliticalAgent();
         if (agent == null) {
             System.out.println("\nOperation cancelled.");
             return;
@@ -43,7 +40,7 @@ public class AnalyseIncomeEvolutionUI implements Runnable {
         Date startDate = Utils.readDateFromConsole("Start date (dd-MM-yyyy): ");
         Date endDate = Utils.readDateFromConsole("End date (dd-MM-yyyy): ");
 
-        List<Declaration> declarations;
+        List<DeclarationDTO> declarations;
         try {
             declarations = controller.getIncomeEvolution(agent, startDate, endDate);
         } catch (IllegalArgumentException ex) {
@@ -58,61 +55,41 @@ public class AnalyseIncomeEvolutionUI implements Runnable {
         }
 
         showHeader(agent, startDate, endDate, declarations.size());
-        for (Declaration d : declarations) {
+        for (DeclarationDTO d : declarations) {
             showDeclaration(d);
         }
     }
 
-    private PoliticalAgent displayAndSelectPoliticalAgent() {
-        List<PoliticalAgent> agents = controller.getPoliticalAgents();
+    private PoliticalAgentDTO displayAndSelectPoliticalAgent() {
+        List<PoliticalAgentDTO> agents = controller.getPoliticalAgents();
         if (agents.isEmpty()) {
             System.out.println("No political agents registered in the system.");
             return null;
         }
-        return (PoliticalAgent) Utils.showAndSelectOne(agents, "Select a political agent:");
+        return (PoliticalAgentDTO) Utils.showAndSelectOne(agents, "Select a political agent:");
     }
 
-    private void showHeader(PoliticalAgent agent, Date start, Date end, int count) {
+    private void showHeader(PoliticalAgentDTO agent, Date start, Date end, int count) {
         System.out.println("\n--- Income Evolution ---");
         System.out.printf("Political Agent : %s%n", agent.getName());
         System.out.printf("Period          : %s to %s%n", start, end);
         System.out.printf("Validated decls.: %d%n", count);
     }
 
-    private void showDeclaration(Declaration d) {
-        System.out.println("\n>>> " + d);
-        showPositions(d.getPositionEntries());
-        showIncomes(d.getIncomes());
-        showSubsidies(d.getSubsidyEntries());
+    private void showDeclaration(DeclarationDTO d) {
+        System.out.println("\n>>> " + d.getSummary());
+        showSection("Positions", d.getPositions());
+        showSection("Incomes", d.getIncomes());
+        showSection("Subsidies", d.getSubsidies());
     }
 
-    private void showIncomes(List<Income> entries) {
-        if (entries.isEmpty()) {
+    private void showSection(String title, List<String> lines) {
+        if (lines.isEmpty()) {
             return;
         }
-        System.out.println("  Incomes:");
-        for (Income e : entries) {
-            System.out.println("    - " + e);
-        }
-    }
-
-    private void showPositions(List<PositionEntry> entries) {
-        if (entries.isEmpty()) {
-            return;
-        }
-        System.out.println("  Positions:");
-        for (PositionEntry e : entries) {
-            System.out.println("    - " + e);
-        }
-    }
-
-    private void showSubsidies(List<SubsidyEntry> entries) {
-        if (entries.isEmpty()) {
-            return;
-        }
-        System.out.println("  Subsidies:");
-        for (SubsidyEntry e : entries) {
-            System.out.println("    - " + e);
+        System.out.println("  " + title + ":");
+        for (String line : lines) {
+            System.out.println("    - " + line);
         }
     }
 }

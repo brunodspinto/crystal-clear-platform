@@ -36,8 +36,8 @@ class RepositoriesFileTest {
         Repositories repos = Repositories.getInstance();
 
         String orgName = "PersistOrg_" + System.nanoTime();
-        repos.getOrganizationRepository().save(
-                new Organization(orgName, OrganizationNature.PRIVATE, OrganizationType.COMPANY));
+        repos.getOrganizationRepository().registerOrganization(
+                orgName, OrganizationNature.PRIVATE, OrganizationType.COMPANY);
 
         Citizen citizen = new Citizen("persist_" + System.nanoTime() + "@test.com",
                 "Persist Citizen", "CC999999999");

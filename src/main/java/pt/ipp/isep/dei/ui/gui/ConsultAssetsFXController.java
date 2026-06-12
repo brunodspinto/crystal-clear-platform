@@ -10,9 +10,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import pt.ipp.isep.dei.controller.ConsultAssetsController;
-import pt.ipp.isep.dei.domain.AssetEntry;
-import pt.ipp.isep.dei.domain.AssetType;
-import pt.ipp.isep.dei.domain.PoliticalAgent;
+import pt.ipp.isep.dei.dto.AssetEntryDTO;
+import pt.ipp.isep.dei.dto.PoliticalAgentDTO;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -28,7 +27,7 @@ import java.util.ResourceBundle;
  */
 public class ConsultAssetsFXController implements Initializable {
 
-    @FXML private ComboBox<PoliticalAgent> agentCombo;
+    @FXML private ComboBox<PoliticalAgentDTO> agentCombo;
     @FXML private DatePicker datePicker;
     @FXML private Label messageLabel;
     @FXML private Label maskNotice;
@@ -63,7 +62,7 @@ public class ConsultAssetsFXController implements Initializable {
         assetsTable.getItems().clear();
         maskNotice.setVisible(false);
 
-        PoliticalAgent agent = agentCombo.getValue();
+        PoliticalAgentDTO agent = agentCombo.getValue();
         LocalDate date = datePicker.getValue();
 
         if (agent == null || date == null) {
@@ -73,7 +72,7 @@ public class ConsultAssetsFXController implements Initializable {
 
         Date referenceDate = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-        List<AssetEntry> assets;
+        List<AssetEntryDTO> assets;
         try {
             assets = controller.getAssetsAt(agent, referenceDate);
         } catch (IllegalArgumentException ex) {
@@ -92,7 +91,7 @@ public class ConsultAssetsFXController implements Initializable {
         }
 
         List<AssetRow> rows = new ArrayList<>();
-        for (AssetEntry a : assets) {
+        for (AssetEntryDTO a : assets) {
             rows.add(toRow(a, journalist));
         }
         assetsTable.setItems(FXCollections.observableArrayList(rows));
@@ -108,18 +107,13 @@ public class ConsultAssetsFXController implements Initializable {
         }
     }
 
-    private AssetRow toRow(AssetEntry a, boolean fullDetails) {
-        String type = a.getAssetType().toString();
-        String value = fullDetails ? String.format("%.2f €", a.getAssetValue()) : "***";
-        String detail = "";
-        if (a.getAssetType() == AssetType.REAL_ESTATE && a.getRealEstate() != null) {
-            detail = a.getRealEstate().getDescription() + " (" + a.getRealEstate().getMunicipality() + ")";
-        } else if (a.getAssetType() == AssetType.VEHICLES && a.getVehicleAsset() != null) {
-            detail = fullDetails ? a.getVehicleAsset().toString() : "***";
-        } else if (a.getAssetType() == AssetType.STOCKS && a.getStockAsset() != null) {
-            detail = fullDetails ? a.getStockAsset().toString() : "***";
+    private AssetRow toRow(AssetEntryDTO a, boolean fullDetails) {
+        String value = fullDetails ? String.format("%.2f €", a.getValue()) : "***";
+        String detail = a.getDetail();
+        if (a.isSensitiveDetail() && !fullDetails) {
+            detail = "***";
         }
-        return new AssetRow(type, value, detail);
+        return new AssetRow(a.getType(), value, detail);
     }
 
     private void showError(String msg) {

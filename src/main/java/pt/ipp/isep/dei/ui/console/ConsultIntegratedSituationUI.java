@@ -1,13 +1,8 @@
 package pt.ipp.isep.dei.ui.console;
 
 import pt.ipp.isep.dei.controller.ConsultIntegratedSituationController;
-import pt.ipp.isep.dei.domain.AssetEntry;
-import pt.ipp.isep.dei.domain.BusinessParticipation;
-import pt.ipp.isep.dei.domain.Declaration;
-import pt.ipp.isep.dei.domain.Income;
-import pt.ipp.isep.dei.domain.PoliticalAgent;
-import pt.ipp.isep.dei.domain.PositionEntry;
-import pt.ipp.isep.dei.domain.SubsidyEntry;
+import pt.ipp.isep.dei.dto.DeclarationDTO;
+import pt.ipp.isep.dei.dto.PoliticalAgentDTO;
 import pt.ipp.isep.dei.ui.console.utils.Utils;
 
 import java.util.Date;
@@ -35,7 +30,7 @@ public class ConsultIntegratedSituationUI implements Runnable {
     public void run() {
         System.out.println("\n\n--- Consult Integrated Situation ---------------");
 
-        PoliticalAgent selectedAgent = displayAndSelectPoliticalAgent();
+        PoliticalAgentDTO selectedAgent = displayAndSelectPoliticalAgent();
         if (selectedAgent == null) {
             System.out.println("\nOperation cancelled.");
             return;
@@ -43,7 +38,7 @@ public class ConsultIntegratedSituationUI implements Runnable {
 
         Date referenceDate = Utils.readDateFromConsole("Reference date (dd-MM-yyyy): ");
 
-        List<Declaration> declarations = controller.getIntegratedSituation(selectedAgent, referenceDate);
+        List<DeclarationDTO> declarations = controller.getIntegratedSituation(selectedAgent, referenceDate);
         if (declarations.isEmpty()) {
             System.out.println("\nNo validated declarations were submitted by " + selectedAgent.getName()
                     + " on or before " + referenceDate + ".");
@@ -51,83 +46,43 @@ public class ConsultIntegratedSituationUI implements Runnable {
         }
 
         showHeader(selectedAgent, referenceDate, declarations.size());
-        for (Declaration d : declarations) {
+        for (DeclarationDTO d : declarations) {
             showDeclaration(d);
         }
     }
 
-    private PoliticalAgent displayAndSelectPoliticalAgent() {
-        List<PoliticalAgent> agents = controller.getPoliticalAgents();
+    private PoliticalAgentDTO displayAndSelectPoliticalAgent() {
+        List<PoliticalAgentDTO> agents = controller.getPoliticalAgents();
         if (agents.isEmpty()) {
             System.out.println("No political agents registered in the system.");
             return null;
         }
-        return (PoliticalAgent) Utils.showAndSelectOne(agents, "Select a political agent:");
+        return (PoliticalAgentDTO) Utils.showAndSelectOne(agents, "Select a political agent:");
     }
 
-    private void showHeader(PoliticalAgent agent, Date referenceDate, int count) {
+    private void showHeader(PoliticalAgentDTO agent, Date referenceDate, int count) {
         System.out.println("\n--- Integrated Situation ---");
         System.out.printf("Political Agent : %s%n", agent.getName());
         System.out.printf("Reference Date  : %s%n", referenceDate);
         System.out.printf("Validated decls.: %d%n", count);
     }
 
-    private void showDeclaration(Declaration d) {
-        System.out.println("\n>>> " + d);
-        showPositions(d.getPositionEntries());
-        showIncomes(d.getIncomes());
-        showSubsidies(d.getSubsidyEntries());
-        showAssets(d.getAssetEntries());
-        showBusinessParticipations(d.getBusinessParticipations());
+    private void showDeclaration(DeclarationDTO d) {
+        System.out.println("\n>>> " + d.getSummary());
+        showSection("Positions", d.getPositions());
+        showSection("Incomes", d.getIncomes());
+        showSection("Subsidies", d.getSubsidies());
+        showSection("Assets", d.getAssets());
+        showSection("Business participations", d.getBusinessParticipations());
     }
 
-    private void showIncomes(List<Income> entries) {
-        if (entries.isEmpty()) {
+    private void showSection(String title, List<String> lines) {
+        if (lines.isEmpty()) {
             return;
         }
-        System.out.println("  Incomes:");
-        for (Income e : entries) {
-            System.out.println("    - " + e);
-        }
-    }
-
-    private void showPositions(List<PositionEntry> entries) {
-        if (entries.isEmpty()) {
-            return;
-        }
-        System.out.println("  Positions:");
-        for (PositionEntry e : entries) {
-            System.out.println("    - " + e);
-        }
-    }
-
-    private void showSubsidies(List<SubsidyEntry> entries) {
-        if (entries.isEmpty()) {
-            return;
-        }
-        System.out.println("  Subsidies:");
-        for (SubsidyEntry e : entries) {
-            System.out.println("    - " + e);
-        }
-    }
-
-    private void showAssets(List<AssetEntry> entries) {
-        if (entries.isEmpty()) {
-            return;
-        }
-        System.out.println("  Assets:");
-        for (AssetEntry e : entries) {
-            System.out.println("    - " + e);
-        }
-    }
-
-    private void showBusinessParticipations(List<BusinessParticipation> entries) {
-        if (entries.isEmpty()) {
-            return;
-        }
-        System.out.println("  Business participations:");
-        for (BusinessParticipation e : entries) {
-            System.out.println("    - " + e);
+        System.out.println("  " + title + ":");
+        for (String line : lines) {
+            System.out.println("    - " + line);
         }
     }
 }

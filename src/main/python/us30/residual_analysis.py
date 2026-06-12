@@ -171,8 +171,6 @@ if __name__ == '__main__':
     print_description('RESIDUALS - ORIGINAL DATA', res_original)
     print_description('RESIDUALS - NORMALIZED DATA (z-score)', res_normalized)
 
-    # Validity of the "number of agents with greatest deviation" (US29):
-    # compare the observed counts beyond +/- k sigma with the Normal expectation.
     n = len(res_original)
     print('AGENTS WITH GREATEST DEVIATION (validity check vs Normal)')
     for k in (2.0, 3.0):

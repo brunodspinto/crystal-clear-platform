@@ -5,8 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Represents a single grievance (a reported behaviour) within a {@link Complaint}.
- * Each grievance has its own description, the date when the behaviour occurred and
+ * Represents a single grievance (a reported behavior) within a {@link Complaint}.
+ * Each grievance has its own description, the date when the behavior occurred and
  * the political function the agent held at that time. All grievances of the same
  * complaint refer to the same political agent. Immutable after creation.
  */
@@ -21,9 +21,9 @@ public class ComplaintItem implements Serializable {
     /**
      * Creates a new grievance.
      *
-     * @param description       a description of the reported behaviour.
-     * @param complaintDate     the date when the behaviour occurred (cannot be in the future).
-     * @param politicalFunction the function the agent held at the time of the behaviour.
+     * @param description       a description of the reported behavior.
+     * @param complaintDate     the date when the behavior occurred (cannot be in the future).
+     * @param politicalFunction the function the agent held at the time of the behavior.
      * @throws IllegalArgumentException if any argument is invalid.
      */
     public ComplaintItem(String description, Date complaintDate, PoliticalFunction politicalFunction) {
@@ -45,14 +45,14 @@ public class ComplaintItem implements Serializable {
     }
 
     /**
-     * @return the description of the reported behaviour.
+     * @return the description of the reported behavior.
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     * @return the date when the behaviour occurred.
+     * @return the date when the behavior occurred.
      */
     public Date getComplaintDate() {
         return complaintDate;

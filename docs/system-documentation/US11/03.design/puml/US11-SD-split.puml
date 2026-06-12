@@ -44,7 +44,7 @@ activate Actor
         end ref
 
         activate CTRL
-            CTRL --> UI : agents
+            CTRL --> UI : agentsDto
         deactivate CTRL
 
         UI --> Actor : shows agent list, requests selection
@@ -58,10 +58,10 @@ activate Actor
     Actor -> UI : enters reference date
     activate UI
 
-        UI -> CTRL : getAssetsAt(agent, referenceDate)
+        UI -> CTRL : getAssetsAt(agentDto, referenceDate)
         activate CTRL
 
-            alt agent == null
+            alt agentDto == null
                 CTRL --> UI : throw IllegalArgumentException("Agent cannot be null.")
             else referenceDate == null
                 CTRL --> UI : throw IllegalArgumentException("Reference date cannot be null.")
@@ -74,11 +74,11 @@ activate Actor
                     Collect Assets
                 end ref
 
-                CTRL --> UI : assets
+                CTRL --> UI : assetsDto
             end
         deactivate CTRL
 
-        alt assets is empty (AC3)
+        alt assetsDto is empty (AC3)
             UI --> Actor : shows "no validated declarations up to that date"
         else
             UI -> CTRL : isCurrentUserJournalist()

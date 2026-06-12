@@ -13,13 +13,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import pt.ipp.isep.dei.controller.ConsultIntegratedSituationController;
-import pt.ipp.isep.dei.domain.AssetEntry;
-import pt.ipp.isep.dei.domain.BusinessParticipation;
-import pt.ipp.isep.dei.domain.Declaration;
-import pt.ipp.isep.dei.domain.Income;
-import pt.ipp.isep.dei.domain.PoliticalAgent;
-import pt.ipp.isep.dei.domain.PositionEntry;
-import pt.ipp.isep.dei.domain.SubsidyEntry;
+import pt.ipp.isep.dei.dto.DeclarationDTO;
+import pt.ipp.isep.dei.dto.PoliticalAgentDTO;
 
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -38,7 +33,7 @@ import java.util.ResourceBundle;
  */
 public class IntegratedSituationFXController implements Initializable {
 
-    @FXML private ComboBox<PoliticalAgent> agentCombo;
+    @FXML private ComboBox<PoliticalAgentDTO> agentCombo;
     @FXML private DatePicker datePicker;
     @FXML private Label messageLabel;
 
@@ -83,7 +78,7 @@ public class IntegratedSituationFXController implements Initializable {
         declarationsTable.getItems().clear();
         detailsArea.clear();
 
-        PoliticalAgent agent = agentCombo.getValue();
+        PoliticalAgentDTO agent = agentCombo.getValue();
         LocalDate date = datePicker.getValue();
 
         if (agent == null || date == null) {
@@ -93,7 +88,7 @@ public class IntegratedSituationFXController implements Initializable {
 
         Date referenceDate = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-        List<Declaration> declarations;
+        List<DeclarationDTO> declarations;
         try {
             declarations = controller.getIntegratedSituation(agent, referenceDate);
         } catch (IllegalArgumentException ex) {
@@ -108,7 +103,7 @@ public class IntegratedSituationFXController implements Initializable {
         }
 
         List<DeclarationRow> rows = new ArrayList<>();
-        for (Declaration d : declarations) {
+        for (DeclarationDTO d : declarations) {
             rows.add(new DeclarationRow(d));
         }
         declarationsTable.setItems(FXCollections.observableArrayList(rows));
@@ -127,54 +122,22 @@ public class IntegratedSituationFXController implements Initializable {
             detailsArea.clear();
             return;
         }
-        Declaration d = row.getDeclaration();
+        DeclarationDTO d = row.getDeclaration();
         StringBuilder sb = new StringBuilder();
         sb.append(d.getDetails()).append("\n");
-        appendPositions(sb, d.getPositionEntries());
-        appendIncomes(sb, d.getIncomes());
-        appendSubsidies(sb, d.getSubsidyEntries());
-        appendAssets(sb, d.getAssetEntries());
-        appendBusinessParticipations(sb, d.getBusinessParticipations());
+        appendSection(sb, "Positions", d.getPositions());
+        appendSection(sb, "Incomes", d.getIncomes());
+        appendSection(sb, "Subsidies", d.getSubsidies());
+        appendSection(sb, "Assets", d.getAssets());
+        appendSection(sb, "Business participations", d.getBusinessParticipations());
         detailsArea.setText(sb.toString());
     }
 
-    private void appendPositions(StringBuilder sb, List<PositionEntry> entries) {
-        if (entries.isEmpty()) return;
-        sb.append("Positions:\n");
-        for (PositionEntry e : entries) {
-            sb.append("  - ").append(e).append("\n");
-        }
-    }
-
-    private void appendIncomes(StringBuilder sb, List<Income> entries) {
-        if (entries.isEmpty()) return;
-        sb.append("Incomes:\n");
-        for (Income e : entries) {
-            sb.append("  - ").append(e).append("\n");
-        }
-    }
-
-    private void appendSubsidies(StringBuilder sb, List<SubsidyEntry> entries) {
-        if (entries.isEmpty()) return;
-        sb.append("Subsidies:\n");
-        for (SubsidyEntry e : entries) {
-            sb.append("  - ").append(e).append("\n");
-        }
-    }
-
-    private void appendAssets(StringBuilder sb, List<AssetEntry> entries) {
-        if (entries.isEmpty()) return;
-        sb.append("Assets:\n");
-        for (AssetEntry e : entries) {
-            sb.append("  - ").append(e).append("\n");
-        }
-    }
-
-    private void appendBusinessParticipations(StringBuilder sb, List<BusinessParticipation> entries) {
-        if (entries.isEmpty()) return;
-        sb.append("Business participations:\n");
-        for (BusinessParticipation e : entries) {
-            sb.append("  - ").append(e).append("\n");
+    private void appendSection(StringBuilder sb, String title, List<String> lines) {
+        if (lines.isEmpty()) return;
+        sb.append(title).append(":\n");
+        for (String line : lines) {
+            sb.append("  - ").append(line).append("\n");
         }
     }
 
@@ -195,19 +158,19 @@ public class IntegratedSituationFXController implements Initializable {
 
     /** Row model for the declarations TableView. */
     public static class DeclarationRow {
-        private final Declaration declaration;
+        private final DeclarationDTO declaration;
         private final String type;
         private final String date;
         private final String status;
 
-        public DeclarationRow(Declaration declaration) {
+        public DeclarationRow(DeclarationDTO declaration) {
             this.declaration = declaration;
-            this.type = declaration.getType().toString();
+            this.type = declaration.getType();
             this.date = DATE_FMT.format(declaration.getSubmissionDate());
-            this.status = declaration.getStatus().toString();
+            this.status = declaration.getStatus();
         }
 
-        public Declaration getDeclaration() { return declaration; }
+        public DeclarationDTO getDeclaration() { return declaration; }
         public String getType()   { return type; }
         public String getDate()   { return date; }
         public String getStatus() { return status; }

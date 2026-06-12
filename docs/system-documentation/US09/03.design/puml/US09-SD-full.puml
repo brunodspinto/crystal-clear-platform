@@ -11,7 +11,8 @@ participant ":ConsultIntegratedSituationController" as CTRL
 participant ":Repositories" as REPOS
 participant ":PoliticalAgentRepository" as PAR
 participant ":DeclarationRepository" as DR
-participant "d:Declaration" as DEC
+participant ":PoliticalAgentMapper" as PAM
+participant ":DeclarationMapper" as DM
 
 activate ECM
 
@@ -44,7 +45,12 @@ activate ECM
                 PAR --> CTRL : agents
             deactivate PAR
 
-            CTRL --> UI : agents
+            CTRL -> PAM : toDTO(agents)
+            activate PAM
+                PAM --> CTRL : agentsDto
+            deactivate PAM
+
+            CTRL --> UI : agentsDto
         deactivate CTRL
 
         UI --> ECM : shows agent list, requests selection
@@ -59,14 +65,19 @@ activate ECM
     ECM -> UI : enters reference date
     activate UI
 
-        UI -> CTRL : getIntegratedSituation(agent, referenceDate)
+        UI -> CTRL : getIntegratedSituation(agentDto, referenceDate)
         activate CTRL
 
-            alt agent == null
+            alt agentDto == null
                 CTRL --> UI : throw IllegalArgumentException("Agent cannot be null.")
             else referenceDate == null
                 CTRL --> UI : throw IllegalArgumentException("Reference date cannot be null.")
             else valid input
+                CTRL -> PAR : getByEmail(agentDto.getEmail())
+                activate PAR
+                    PAR --> CTRL : agent
+                deactivate PAR
+
                 CTRL -> DR : getValidatedDeclarationsForAgentUpTo(agent, referenceDate)
                 activate DR
 
@@ -79,39 +90,24 @@ activate ECM
                     DR --> CTRL : declarations
                 deactivate DR
 
-                CTRL --> UI : declarations
+                CTRL -> DM : toDTO(declarations)
+                activate DM
+                    DM --> CTRL : declarationsDto
+                deactivate DM
+
+                CTRL --> UI : declarationsDto
             end
         deactivate CTRL
 
-        alt declarations is empty (AC3)
+        alt declarationsDto is empty (AC3)
             UI --> ECM : shows "no validated declarations up to that date"
         else
-            loop for each d in declarations
-                UI -> DEC : getPositionEntries()
-                activate DEC
-                    DEC --> UI : positionEntries
-                deactivate DEC
-
-                UI -> DEC : getIncomes()
-                activate DEC
-                    DEC --> UI : incomes
-                deactivate DEC
-
-                UI -> DEC : getSubsidyEntries()
-                activate DEC
-                    DEC --> UI : subsidyEntries
-                deactivate DEC
-
-                UI -> DEC : getAssetEntries()
-                activate DEC
-                    DEC --> UI : assetEntries
-                deactivate DEC
-
-                UI -> DEC : getBusinessParticipations()
-                activate DEC
-                    DEC --> UI : participations
-                deactivate DEC
-            end
+            note right of UI
+                each DeclarationDTO already carries the
+                entry lines (positions, incomes, subsidies,
+                assets, participations) as display-ready
+                strings, so the UI does not touch the domain
+            end note
 
             UI --> ECM : shows integrated situation\n(positions, incomes, subsidies, assets, participations)
         end

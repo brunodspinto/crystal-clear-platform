@@ -130,10 +130,12 @@ public class SubnetworkExtractor {
 
         boolean[][] subAdj = new boolean[count][count];
         for (int i = 0; i < n; i++) {
-            if (!visited[i]) continue;
-            for (int j = 0; j < n; j++) {
-                if (!visited[j]) continue;
-                subAdj[subIndex[i]][subIndex[j]] = adj[i][j];
+            if (visited[i]) {
+                for (int j = 0; j < n; j++) {
+                    if (visited[j]) {
+                        subAdj[subIndex[i]][subIndex[j]] = adj[i][j];
+                    }
+                }
             }
         }
 

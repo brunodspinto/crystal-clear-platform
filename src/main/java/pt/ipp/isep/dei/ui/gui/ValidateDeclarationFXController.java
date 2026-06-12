@@ -40,7 +40,16 @@ public class ValidateDeclarationFXController implements Initializable {
 
     // ── Review panel (hidden until a declaration is selected) ─────────────────
     @FXML private VBox                  reviewPanel;
-    @FXML private TextArea              detailsArea;
+    @FXML private Label                 lblAgent;
+    @FXML private Label                 lblStatus;
+    @FXML private Label                 lblType;
+    @FXML private Label                 lblDate;
+    @FXML private Label                 lblPositions;
+    @FXML private Label                 lblIncomes;
+    @FXML private Label                 lblSubsidies;
+    @FXML private Label                 lblAssets;
+    @FXML private Label                 lblBusiness;
+    @FXML private Label                 lblAttachments;
     @FXML private ToggleGroup           outcomeGroup;
     @FXML private RadioButton           rbValidated;
     @FXML private RadioButton           rbReturned;
@@ -121,7 +130,7 @@ public class ValidateDeclarationFXController implements Initializable {
         if (row == null) return;
 
         selectedDeclaration = row.declaration;
-        detailsArea.setText(controller.getDeclarationDetails(selectedDeclaration));
+        showDetails(selectedDeclaration);
 
         // Reset outcome and comments
         rbValidated.setSelected(true);
@@ -137,6 +146,19 @@ public class ValidateDeclarationFXController implements Initializable {
         reviewPanel.setManaged(true);
         pendingTable.setDisable(true);
         reviewButton.setDisable(true);
+    }
+
+    private void showDetails(Declaration d) {
+        lblAgent.setText(d.getAgent().getName());
+        lblStatus.setText(d.getStatus().toString());
+        lblType.setText(d.getType().toString());
+        lblDate.setText(new java.text.SimpleDateFormat("dd-MM-yyyy").format(d.getSubmissionDate()));
+        lblPositions.setText(String.valueOf(d.getPositionEntries().size()));
+        lblIncomes.setText(String.valueOf(d.getIncomes().size()));
+        lblSubsidies.setText(String.valueOf(d.getSubsidyEntries().size()));
+        lblAssets.setText(String.valueOf(d.getAssetEntries().size()));
+        lblBusiness.setText(String.valueOf(d.getBusinessParticipations().size()));
+        lblAttachments.setText(String.valueOf(d.getAttachments().size()));
     }
 
     // ── Review state ──────────────────────────────────────────────────────────

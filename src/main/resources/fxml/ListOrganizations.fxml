@@ -11,7 +11,7 @@
       spacing="10">
     <padding><Insets top="20" right="28" bottom="20" left="28"/></padding>
 
-    <Label text="US03 — List Institutions" styleClass="scene-title"/>
+    <Label text="List Institutions" styleClass="scene-title"/>
 
     <TableView fx:id="orgTable" VBox.vgrow="ALWAYS">
         <columns>
