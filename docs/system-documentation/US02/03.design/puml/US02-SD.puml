@@ -50,6 +50,17 @@ activate Admin
 
         UI -> CTRL : getPendingRequestsAsDTO()
         activate CTRL
+            CTRL -> AUTH : getCurrentUserSession()
+            activate AUTH
+                AUTH --> CTRL : session
+            deactivate AUTH
+
+            note right of CTRL
+                verifies the session belongs to an Administrator;
+                the same check is done in approveRequestByEmail
+                and rejectRequestByEmail
+            end note
+
             CTRL -> REPO : getPendingRequests()
             activate REPO
                 REPO --> CTRL : pendingRequests
