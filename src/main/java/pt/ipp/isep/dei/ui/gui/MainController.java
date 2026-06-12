@@ -170,6 +170,12 @@ public class MainController {
                 ((NetworkDynamicsFXController) child).setMainController(this);
             } else if (child instanceof  FindPathFXController) {
                 ((FindPathFXController) child).setMainController(this);
+            } else if (child instanceof DetectNepotismFXController) {
+                ((DetectNepotismFXController) child).setMainController(this);
+            } else if (child instanceof DetectConflictsFXController) {
+                ((DetectConflictsFXController) child).setMainController(this);
+            } else if (child instanceof SubnetworkFXController) {
+                ((SubnetworkFXController) child).setMainController(this);
             }
 
             root.setCenter(view);
