@@ -12,6 +12,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 import pt.ipp.isep.dei.controller.AuthenticationController;
+import pt.ipp.isep.dei.controller.DeclarationNotificationController;
 import pt.ipp.isep.dei.repository.AuthenticationRepository;
 import pt.ipp.isep.dei.repository.Repositories;
 import pt.isep.lei.esoft.auth.UserSession;
@@ -40,6 +41,7 @@ public class LoginController implements Initializable {
 
     private MainController mainController;
     private AuthenticationController authController;
+    private DeclarationNotificationController declarationNotificationController;
     private AuthenticationRepository authRepository;
 
     public void setMainController(MainController mainController) {
@@ -49,6 +51,7 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         authController = new AuthenticationController();
+        declarationNotificationController = new DeclarationNotificationController();
         authRepository = Repositories.getInstance().getAuthenticationRepository();
         messageLabel.setText("");
     }
@@ -87,7 +90,23 @@ public class LoginController implements Initializable {
                     "Welcome, " + welcomeName + "! Your account is active.");
         }
 
+        notifyReturnedDeclarations(email);
+
         dispatchByRole();
+    }
+
+    private void notifyReturnedDeclarations(String email) {
+        int returned = declarationNotificationController.countReturnedForCorrection(email);
+        if (returned == 0) {
+            return;
+        }
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Declarations Returned for Correction");
+        alert.setHeaderText("You have " + returned + " declaration(s) returned for correction.");
+        alert.setContentText("The Ethics Committee returned " + returned
+                + " of your declaration(s) of interest for correction. "
+                + "Please review the committee's comments and submit a corrected declaration.");
+        alert.showAndWait();
     }
 
     private void showRejectionPopup(String reason) {
