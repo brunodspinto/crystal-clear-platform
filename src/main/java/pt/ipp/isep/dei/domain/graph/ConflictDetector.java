@@ -357,10 +357,5 @@ public class ConflictDetector {
             Chain other = (Chain) o;
             return entityIds.equals(other.entityIds);
         }
-
-        @Override
-        public int hashCode() {
-            return entityIds.hashCode();
-        }
     }
 }

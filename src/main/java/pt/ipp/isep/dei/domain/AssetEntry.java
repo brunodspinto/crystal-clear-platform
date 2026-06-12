@@ -47,7 +47,7 @@ public class AssetEntry implements Serializable {
 
         switch (assetType) {
             case REAL_ESTATE:
-                if (!(detail instanceof RealEstate)) {
+                if (detail.getClass() != RealEstate.class) {
                     throw new IllegalArgumentException("Detail must be a RealEstate for REAL_ESTATE type.");
                 }
                 this.realEstate = (RealEstate) detail;
@@ -55,7 +55,7 @@ public class AssetEntry implements Serializable {
                 this.stockAsset = null;
                 break;
             case VEHICLES:
-                if (!(detail instanceof VehicleAsset)) {
+                if (detail.getClass() != VehicleAsset.class) {
                     throw new IllegalArgumentException("Detail must be a VehicleAsset for VEHICLES type.");
                 }
                 this.realEstate = null;
@@ -63,7 +63,7 @@ public class AssetEntry implements Serializable {
                 this.stockAsset = null;
                 break;
             case STOCKS:
-                if (!(detail instanceof StockAsset)) {
+                if (detail.getClass() != StockAsset.class) {
                     throw new IllegalArgumentException("Detail must be a StockAsset for STOCKS type.");
                 }
                 this.realEstate = null;
@@ -109,6 +109,23 @@ public class AssetEntry implements Serializable {
      * @return the stock detail, or {@code null} if the type is not STOCKS.
      */
     public StockAsset getStockAsset() { return stockAsset; }
+
+    /**
+     * Returns the detail object for this asset, whatever its type: a
+     * {@link RealEstate}, {@link VehicleAsset} or {@link StockAsset}. Useful
+     * when copying an asset entry without needing to know its concrete type.
+     *
+     * @return the non-null detail object matching the asset type.
+     */
+    public Object getDetail() {
+        if (realEstate != null) {
+            return realEstate;
+        }
+        if (vehicleAsset != null) {
+            return vehicleAsset;
+        }
+        return stockAsset;
+    }
 
     @Override
     public String toString() {

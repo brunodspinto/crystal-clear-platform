@@ -18,7 +18,7 @@ public class EthicsCommitteeMember extends User {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof EthicsCommitteeMember)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         EthicsCommitteeMember that = (EthicsCommitteeMember) o;
         return email.equalsIgnoreCase(that.email);
     }
