@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class DetectConflictsControllerTest {
 
     // -----------------------------------------------------------------------
@@ -43,8 +44,12 @@ class DetectConflictsControllerTest {
         GraphRepository repo = new GraphRepository();
         DetectConflictsController controller = new DetectConflictsController(repo);
 
-        assertThrows(IllegalStateException.class,
-                () -> controller.runQuery(DetectConflictsController.QUERY_RELATIVES_IN_POSITIONS, null));
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.runQuery(DetectConflictsController.QUERY_RELATIVES_IN_POSITIONS, null);
+            }
+        });
     }
 
     // -----------------------------------------------------------------------
@@ -57,8 +62,12 @@ class DetectConflictsControllerTest {
         repo.setRelationGraph(new RelationGraph());
         DetectConflictsController controller = new DetectConflictsController(repo);
 
-        assertThrows(IllegalArgumentException.class,
-                () -> controller.runQuery(999, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.runQuery(999, null);
+            }
+        });
     }
 
     // -----------------------------------------------------------------------

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class PathFinderTest {
 
     // -------------------------------------------------------------------------
@@ -25,22 +26,34 @@ class PathFinderTest {
 
     @Test
     void ensureNullGraphThrows() {
-        assertThrows(IllegalArgumentException.class,
-                () -> PathFinder.shortestDistance(null, "A", "B"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                PathFinder.shortestDistance(null, "A", "B");
+            }
+        });
     }
 
     @Test
     void ensureUnknownSourceThrows() {
         SupportGraph g = sg(new String[]{"A", "B"});
-        assertThrows(IllegalArgumentException.class,
-                () -> PathFinder.shortestDistance(g, "Z", "B"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                PathFinder.shortestDistance(g, "Z", "B");
+            }
+        });
     }
 
     @Test
     void ensureUnknownTargetThrows() {
         SupportGraph g = sg(new String[]{"A", "B"});
-        assertThrows(IllegalArgumentException.class,
-                () -> PathFinder.shortestDistance(g, "A", "Z"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                PathFinder.shortestDistance(g, "A", "Z");
+            }
+        });
     }
 
     // -------------------------------------------------------------------------

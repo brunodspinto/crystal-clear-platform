@@ -7,6 +7,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class ConflictDetectorTest {
 
     private ConflictDetector detector;
@@ -39,9 +40,24 @@ class ConflictDetectorTest {
 
     @Test
     void ensureChainOfRejectsTooFewIds() {
-        assertThrows(IllegalArgumentException.class, () -> ConflictDetector.Chain.of("A"));
-        assertThrows(IllegalArgumentException.class, () -> ConflictDetector.Chain.of());
-        assertThrows(IllegalArgumentException.class, () -> ConflictDetector.Chain.of((String[]) null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                ConflictDetector.Chain.of("A");
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                ConflictDetector.Chain.of();
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                ConflictDetector.Chain.of((String[]) null);
+            }
+        });
     }
 
     @Test
@@ -86,8 +102,12 @@ class ConflictDetectorTest {
 
     @Test
     void ensureQ1RejectsNullGraph() {
-        assertThrows(IllegalArgumentException.class,
-                () -> detector.findPersonsWithRelativesInPositions(null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                detector.findPersonsWithRelativesInPositions(null);
+            }
+        });
     }
 
     // -----------------------------------------------------------------------

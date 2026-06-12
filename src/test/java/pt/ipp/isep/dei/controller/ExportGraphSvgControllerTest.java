@@ -9,6 +9,7 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class ExportGraphSvgControllerTest {
 
     @TempDir
@@ -53,7 +54,11 @@ class ExportGraphSvgControllerTest {
 
     @Test
     void ensureExportThrowsOnMissingFile() {
-        assertThrows(IOException.class, () ->
-                controller.exportToSvg("/nonexistent/path.csv", "/nonexistent/rel.csv", "/tmp/out.svg"));
+        assertThrows(IOException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.exportToSvg("/nonexistent/path.csv", "/nonexistent/rel.csv", "/tmp/out.svg");
+            }
+        });
     }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class AssetEvolutionControllerTest {
 
     private static final Organization ORG =
@@ -76,7 +77,12 @@ class AssetEvolutionControllerTest {
     void ensureNullAgentThrows() {
         AssetEvolutionController ctrl = new AssetEvolutionController(
                 new PoliticalAgentRepository(), new DeclarationRepository());
-        assertThrows(IllegalArgumentException.class, () -> ctrl.getAllDeclarationsForAgent(null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                ctrl.getAllDeclarationsForAgent(null);
+            }
+        });
     }
 
     @Test

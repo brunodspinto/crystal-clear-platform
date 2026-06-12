@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class RegistrationRequestTest {
 
     // --- password validation ---
@@ -69,38 +70,62 @@ class RegistrationRequestTest {
 
     @Test
     void ensureJournalistWithoutDocumentThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new RegistrationRequest("Jane Press", "jane@news.pt", "AAA11bb", UserRole.JOURNALIST, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new RegistrationRequest("Jane Press", "jane@news.pt", "AAA11bb", UserRole.JOURNALIST, null);
+            }
+        });
     }
 
     @Test
     void ensureCitizenWithoutDocumentThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new RegistrationRequest("Joe Citizen", "joe@mail.pt", "AAA11bb", UserRole.CITIZEN, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new RegistrationRequest("Joe Citizen", "joe@mail.pt", "AAA11bb", UserRole.CITIZEN, null);
+            }
+        });
     }
 
     @Test
     void ensureBlankFullNameThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new RegistrationRequest("  ", "a@b.com", "AAA11bb", UserRole.ADMINISTRATOR, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new RegistrationRequest("  ", "a@b.com", "AAA11bb", UserRole.ADMINISTRATOR, null);
+            }
+        });
     }
 
     @Test
     void ensureBlankEmailThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new RegistrationRequest("Name", "", "AAA11bb", UserRole.ADMINISTRATOR, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new RegistrationRequest("Name", "", "AAA11bb", UserRole.ADMINISTRATOR, null);
+            }
+        });
     }
 
     @Test
     void ensureInvalidPasswordThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new RegistrationRequest("Name", "a@b.com", "short", UserRole.ADMINISTRATOR, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new RegistrationRequest("Name", "a@b.com", "short", UserRole.ADMINISTRATOR, null);
+            }
+        });
     }
 
     @Test
     void ensureNullRoleThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new RegistrationRequest("Name", "a@b.com", "AAA11bb", null, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new RegistrationRequest("Name", "a@b.com", "AAA11bb", null, null);
+            }
+        });
     }
 
     // --- approve / reject ---
@@ -127,7 +152,12 @@ class RegistrationRequestTest {
         RegistrationRequest req = new RegistrationRequest(
                 "Name", "a@b.com", "AAA11bb", UserRole.ADMINISTRATOR, null);
         req.approve();
-        assertThrows(IllegalStateException.class, req::approve);
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                req.approve();
+            }
+        });
     }
 
     @Test
@@ -135,14 +165,24 @@ class RegistrationRequestTest {
         RegistrationRequest req = new RegistrationRequest(
                 "Name", "a@b.com", "AAA11bb", UserRole.ADMINISTRATOR, null);
         req.reject("Reason");
-        assertThrows(IllegalStateException.class, () -> req.reject("Another reason"));
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                req.reject("Another reason");
+            }
+        });
     }
 
     @Test
     void ensureRejectWithBlankReasonThrows() {
         RegistrationRequest req = new RegistrationRequest(
                 "Name", "a@b.com", "AAA11bb", UserRole.ADMINISTRATOR, null);
-        assertThrows(IllegalArgumentException.class, () -> req.reject("  "));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                req.reject("  ");
+            }
+        });
     }
 
     // --- equals ---

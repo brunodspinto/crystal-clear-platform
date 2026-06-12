@@ -12,6 +12,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class NetworkDynamicsControllerTest {
 
     private GraphRepository repoWithPerson(String id, String start, String end) {
@@ -67,13 +68,23 @@ class NetworkDynamicsControllerTest {
     @Test
     void ensureBuildSnapshotsWithNullThrows() {
         NetworkDynamicsController controller = new NetworkDynamicsController(new GraphRepository());
-        assertThrows(IllegalArgumentException.class, () -> controller.buildSnapshots(null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.buildSnapshots(null);
+            }
+        });
     }
 
     @Test
     void ensureBuildSnapshotsWithEmptyListThrows() {
         NetworkDynamicsController controller = new NetworkDynamicsController(new GraphRepository());
-        assertThrows(IllegalArgumentException.class, () -> controller.buildSnapshots(Collections.emptyList()));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.buildSnapshots(Collections.emptyList());
+            }
+        });
     }
 
     @Test

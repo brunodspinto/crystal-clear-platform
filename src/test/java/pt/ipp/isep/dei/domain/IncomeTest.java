@@ -6,6 +6,7 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class IncomeTest {
 
     private Organization createOrg() {
@@ -20,32 +21,52 @@ class IncomeTest {
 
     @Test
     void ensureCreationFailsWithNullOrganization() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Income(null, 5000.0, "Consulting", new Date()));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Income(null, 5000.0, "Consulting", new Date());
+            }
+        });
     }
 
     @Test
     void ensureCreationFailsWithNullSource() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Income(createOrg(), 5000.0, null, new Date()));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Income(createOrg(), 5000.0, null, new Date());
+            }
+        });
     }
 
     @Test
     void ensureCreationFailsWithBlankSource() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Income(createOrg(), 5000.0, "   ", new Date()));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Income(createOrg(), 5000.0, "   ", new Date());
+            }
+        });
     }
 
     @Test
     void ensureCreationFailsWithNullDate() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Income(createOrg(), 5000.0, "Consulting", null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Income(createOrg(), 5000.0, "Consulting", null);
+            }
+        });
     }
 
     @Test
     void ensureCreationFailsWithNegativeAmount() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Income(createOrg(), -1.0, "Consulting", new Date()));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Income(createOrg(), -1.0, "Consulting", new Date());
+            }
+        });
     }
 
     @Test

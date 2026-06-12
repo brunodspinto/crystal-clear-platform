@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 // Tests for US04 constructor (name, nature, type) are at the bottom of this file.
 
 class OrganizationTest {
@@ -168,26 +169,42 @@ class OrganizationTest {
 
     @Test
     void ensureOrganizationUS04CreationFailsWithNullName() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Organization(null, OrganizationNature.PUBLIC, OrganizationType.COMPANY));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Organization(null, OrganizationNature.PUBLIC, OrganizationType.COMPANY);
+            }
+        });
     }
 
     @Test
     void ensureOrganizationUS04CreationFailsWithBlankName() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Organization("   ", OrganizationNature.PUBLIC, OrganizationType.COMPANY));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Organization("   ", OrganizationNature.PUBLIC, OrganizationType.COMPANY);
+            }
+        });
     }
 
     @Test
     void ensureOrganizationUS04CreationFailsWithNullType() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Organization("Test Org", OrganizationNature.PUBLIC, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Organization("Test Org", OrganizationNature.PUBLIC, null);
+            }
+        });
     }
 
     @Test
     void ensureOrganizationUS04CreationFailsWithNullNature() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Organization("Test Org", null, OrganizationType.FOUNDATION));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Organization("Test Org", null, OrganizationType.FOUNDATION);
+            }
+        });
     }
 
     @Test

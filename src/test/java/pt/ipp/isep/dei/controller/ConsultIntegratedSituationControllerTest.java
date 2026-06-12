@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.function.Executable;
 class ConsultIntegratedSituationControllerTest {
 
     private PoliticalAgent agentJoao() {
@@ -144,8 +145,12 @@ class ConsultIntegratedSituationControllerTest {
         ConsultIntegratedSituationController controller =
                 new ConsultIntegratedSituationController(new PoliticalAgentRepository(), new DeclarationRepository());
 
-        assertThrows(IllegalArgumentException.class,
-                () -> controller.getIntegratedSituation(null, new Date()));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.getIntegratedSituation(null, new Date());
+            }
+        });
     }
 
     @Test
@@ -153,8 +158,12 @@ class ConsultIntegratedSituationControllerTest {
         ConsultIntegratedSituationController controller =
                 new ConsultIntegratedSituationController(new PoliticalAgentRepository(), new DeclarationRepository());
 
-        assertThrows(IllegalArgumentException.class,
-                () -> controller.getIntegratedSituation(dto(agentJoao()), null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.getIntegratedSituation(dto(agentJoao()), null);
+            }
+        });
     }
 
     @Test

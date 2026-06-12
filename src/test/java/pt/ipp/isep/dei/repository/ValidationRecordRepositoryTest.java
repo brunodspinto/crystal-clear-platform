@@ -7,6 +7,7 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class ValidationRecordRepositoryTest {
 
     private static final Date NOW = new Date();
@@ -32,7 +33,12 @@ class ValidationRecordRepositoryTest {
     @Test
     void ensureSaveNullFails() {
         ValidationRecordRepository repo = new ValidationRecordRepository();
-        assertThrows(IllegalArgumentException.class, () -> repo.save(null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                repo.save(null);
+            }
+        });
     }
 
     @Test

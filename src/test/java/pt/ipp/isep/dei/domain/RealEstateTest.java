@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class RealEstateTest {
 
     @Test
@@ -14,26 +15,42 @@ class RealEstateTest {
 
     @Test
     void ensureRealEstateFailsWithNullDescription() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new RealEstate(null, "Lisbon"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new RealEstate(null, "Lisbon");
+            }
+        });
     }
 
     @Test
     void ensureRealEstateFailsWithBlankDescription() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new RealEstate("   ", "Lisbon"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new RealEstate("   ", "Lisbon");
+            }
+        });
     }
 
     @Test
     void ensureRealEstateFailsWithNullMunicipality() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new RealEstate("Apartment", null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new RealEstate("Apartment", null);
+            }
+        });
     }
 
     @Test
     void ensureRealEstateFailsWithBlankMunicipality() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new RealEstate("Apartment", "   "));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new RealEstate("Apartment", "   ");
+            }
+        });
     }
 
     @Test

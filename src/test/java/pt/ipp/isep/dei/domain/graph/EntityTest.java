@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class EntityTest {
 
     @Test
@@ -18,12 +19,24 @@ class EntityTest {
 
     @Test
     void ensureBlankIdsAreRejected() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new Person("", "politician", "", "", "Alice", "", ""));
-        assertThrows(IllegalArgumentException.class,
-                () -> new Person("   ", "politician", "", "", "Alice", "", ""));
-        assertThrows(IllegalArgumentException.class,
-                () -> new Person(null, "politician", "", "", "Alice", "", ""));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Person("", "politician", "", "", "Alice", "", "");
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Person("   ", "politician", "", "", "Alice", "", "");
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Person(null, "politician", "", "", "Alice", "", "");
+            }
+        });
     }
 
     @Test

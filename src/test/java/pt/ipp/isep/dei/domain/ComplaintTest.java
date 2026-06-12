@@ -6,6 +6,7 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class ComplaintTest {
 
     private static final Date PAST_DATE = new Date(0); // 1 Jan 1970 — always in the past
@@ -32,24 +33,36 @@ class ComplaintTest {
     void ensureComplaintFailsWithNullDescription() {
         Citizen citizen = createTestCitizen();
         PoliticalAgent agent = createTestAgent();
-        assertThrows(IllegalArgumentException.class, () ->
-                new Complaint(null, PAST_DATE, citizen, agent, PoliticalFunction.MAYOR));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Complaint(null, PAST_DATE, citizen, agent, PoliticalFunction.MAYOR);
+            }
+        });
     }
 
     @Test
     void ensureComplaintFailsWithBlankDescription() {
         Citizen citizen = createTestCitizen();
         PoliticalAgent agent = createTestAgent();
-        assertThrows(IllegalArgumentException.class, () ->
-                new Complaint("   ", PAST_DATE, citizen, agent, PoliticalFunction.MAYOR));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Complaint("   ", PAST_DATE, citizen, agent, PoliticalFunction.MAYOR);
+            }
+        });
     }
 
     @Test
     void ensureComplaintFailsWithNullDate() {
         Citizen citizen = createTestCitizen();
         PoliticalAgent agent = createTestAgent();
-        assertThrows(IllegalArgumentException.class, () ->
-                new Complaint("Description", null, citizen, agent, PoliticalFunction.MAYOR));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Complaint("Description", null, citizen, agent, PoliticalFunction.MAYOR);
+            }
+        });
     }
 
     @Test
@@ -57,8 +70,12 @@ class ComplaintTest {
         Citizen citizen = createTestCitizen();
         PoliticalAgent agent = createTestAgent();
         Date futureDate = new Date(Long.MAX_VALUE);
-        assertThrows(IllegalArgumentException.class, () ->
-                new Complaint("Description", futureDate, citizen, agent, PoliticalFunction.MAYOR));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Complaint("Description", futureDate, citizen, agent, PoliticalFunction.MAYOR);
+            }
+        });
     }
 
     @Test
@@ -72,23 +89,35 @@ class ComplaintTest {
     @Test
     void ensureComplaintFailsWithNullCitizen() {
         PoliticalAgent agent = createTestAgent();
-        assertThrows(IllegalArgumentException.class, () ->
-                new Complaint("Description", PAST_DATE, null, agent, PoliticalFunction.MAYOR));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Complaint("Description", PAST_DATE, null, agent, PoliticalFunction.MAYOR);
+            }
+        });
     }
 
     @Test
     void ensureComplaintFailsWithNullPoliticalAgent() {
         Citizen citizen = createTestCitizen();
-        assertThrows(IllegalArgumentException.class, () ->
-                new Complaint("Description", PAST_DATE, citizen, null, PoliticalFunction.MAYOR));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Complaint("Description", PAST_DATE, citizen, null, PoliticalFunction.MAYOR);
+            }
+        });
     }
 
     @Test
     void ensureComplaintFailsWithNullPoliticalFunction() {
         Citizen citizen = createTestCitizen();
         PoliticalAgent agent = createTestAgent();
-        assertThrows(IllegalArgumentException.class, () ->
-                new Complaint("Description", PAST_DATE, citizen, agent, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Complaint("Description", PAST_DATE, citizen, agent, null);
+            }
+        });
     }
 
     @Test
@@ -141,13 +170,23 @@ class ComplaintTest {
     @Test
     void ensureEmptyComplaintConstructorFailsWithNullCitizen() {
         PoliticalAgent agent = createTestAgent();
-        assertThrows(IllegalArgumentException.class, () -> new Complaint(null, agent));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Complaint(null, agent);
+            }
+        });
     }
 
     @Test
     void ensureEmptyComplaintConstructorFailsWithNullAgent() {
         Citizen citizen = createTestCitizen();
-        assertThrows(IllegalArgumentException.class, () -> new Complaint(citizen, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Complaint(citizen, null);
+            }
+        });
     }
 
     @Test
@@ -195,8 +234,12 @@ class ComplaintTest {
         PoliticalAgent agent = createTestAgent();
         Complaint complaint = new Complaint("Only grievance", PAST_DATE, citizen, agent, PoliticalFunction.MAYOR);
 
-        assertThrows(UnsupportedOperationException.class, () ->
-                complaint.getItems().add(new ComplaintItem("x", PAST_DATE, PoliticalFunction.DEPUTY)));
+        assertThrows(UnsupportedOperationException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                complaint.getItems().add(new ComplaintItem("x", PAST_DATE, PoliticalFunction.DEPUTY));
+            }
+        });
     }
 
     @Test
@@ -205,7 +248,11 @@ class ComplaintTest {
         PoliticalAgent agent = createTestAgent();
         Complaint complaint = new Complaint(citizen, agent);
 
-        assertThrows(IllegalArgumentException.class, () ->
-                complaint.addItem(null, PAST_DATE, PoliticalFunction.MAYOR));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                complaint.addItem(null, PAST_DATE, PoliticalFunction.MAYOR);
+            }
+        });
     }
 }

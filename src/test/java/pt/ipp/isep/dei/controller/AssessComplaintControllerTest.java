@@ -9,6 +9,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class AssessComplaintControllerTest {
 
     private static final Date PAST_DATE = new Date(0);
@@ -122,7 +123,11 @@ class AssessComplaintControllerTest {
         AssessComplaintController controller = createController("ec@test.com",
                 complaintRepo, new ComplaintAssessmentRepository());
 
-        assertThrows(IllegalArgumentException.class, () ->
-                controller.assessComplaint(complaint, ComplaintOutcome.INVALID, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.assessComplaint(complaint, ComplaintOutcome.INVALID, null);
+            }
+        });
     }
 }

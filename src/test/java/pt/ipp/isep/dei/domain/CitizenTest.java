@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class CitizenTest {
 
     @Test
@@ -14,38 +15,62 @@ class CitizenTest {
 
     @Test
     void ensureCreationFailsWithNullEmail() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Citizen(null, "João Silva", "CC123456789"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Citizen(null, "João Silva", "CC123456789");
+            }
+        });
     }
 
     @Test
     void ensureCreationFailsWithBlankEmail() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Citizen("   ", "João Silva", "CC123456789"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Citizen("   ", "João Silva", "CC123456789");
+            }
+        });
     }
 
     @Test
     void ensureCreationFailsWithNullName() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Citizen("citizen@test.pt", null, "CC123456789"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Citizen("citizen@test.pt", null, "CC123456789");
+            }
+        });
     }
 
     @Test
     void ensureCreationFailsWithBlankName() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Citizen("citizen@test.pt", "   ", "CC123456789"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Citizen("citizen@test.pt", "   ", "CC123456789");
+            }
+        });
     }
 
     @Test
     void ensureCreationFailsWithNullNationalIdCardNumber() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Citizen("citizen@test.pt", "João Silva", null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Citizen("citizen@test.pt", "João Silva", null);
+            }
+        });
     }
 
     @Test
     void ensureCreationFailsWithBlankNationalIdCardNumber() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Citizen("citizen@test.pt", "João Silva", "   "));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Citizen("citizen@test.pt", "João Silva", "   ");
+            }
+        });
     }
 
     @Test

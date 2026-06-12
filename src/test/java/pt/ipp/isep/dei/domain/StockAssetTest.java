@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class StockAssetTest {
 
     @Test
@@ -14,14 +15,22 @@ class StockAssetTest {
 
     @Test
     void ensureStockAssetFailsWithNullDescription() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new StockAsset(null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new StockAsset(null);
+            }
+        });
     }
 
     @Test
     void ensureStockAssetFailsWithBlankDescription() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new StockAsset("   "));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new StockAsset("   ");
+            }
+        });
     }
 
     @Test

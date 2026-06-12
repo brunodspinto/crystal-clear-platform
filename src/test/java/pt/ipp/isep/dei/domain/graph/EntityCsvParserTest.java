@@ -22,6 +22,16 @@ class EntityCsvParserTest {
         }
     }
 
+    private Entity findById(List<Entity> entities, String id) {
+        for (Entity e : entities) {
+            if (e.getId().equals(id)) {
+                return e;
+            }
+        }
+        fail("Entity not found: " + id);
+        return null;
+    }
+
     @Test
     void ensureSampleFileLoadsAllEntities() throws IOException {
         List<Entity> entities = EntityCsvParser.parse(resourcePath("graph/entities_sample.csv"));
@@ -31,10 +41,7 @@ class EntityCsvParserTest {
     @Test
     void ensurePersonsAreParsedCorrectly() throws IOException {
         List<Entity> entities = EntityCsvParser.parse(resourcePath("graph/entities_sample.csv"));
-        Person person = (Person) entities.stream()
-                .filter(e -> e.getId().equals("P-001"))
-                .findFirst()
-                .orElseThrow();
+        Person person = (Person) findById(entities, "P-001");
         assertEquals("politician", person.getType());
         assertEquals("2018-10-26", person.getStartDate());
         assertEquals("2024-03-10", person.getEndDate());
@@ -46,10 +53,7 @@ class EntityCsvParserTest {
     @Test
     void ensureOrganizationsAreParsedCorrectly() throws IOException {
         List<Entity> entities = EntityCsvParser.parse(resourcePath("graph/entities_sample.csv"));
-        Organization org = (Organization) entities.stream()
-                .filter(e -> e.getId().equals("O-001"))
-                .findFirst()
-                .orElseThrow();
+        Organization org = (Organization) findById(entities, "O-001");
         assertEquals("public", org.getType());
         assertEquals("Ministério da Economia", org.getName());
         assertEquals("public", org.getOrganizationType());
@@ -59,10 +63,7 @@ class EntityCsvParserTest {
     @Test
     void ensurePositionsAreParsedCorrectly() throws IOException {
         List<Entity> entities = EntityCsvParser.parse(resourcePath("graph/entities_sample.csv"));
-        Position pos = (Position) entities.stream()
-                .filter(e -> e.getId().equals("J-001"))
-                .findFirst()
-                .orElseThrow();
+        Position pos = (Position) findById(entities, "J-001");
         assertEquals("public", pos.getType());
         assertEquals("Secretário de Estado", pos.getPositionTitle());
         assertEquals("government", pos.getPositionType());
@@ -72,10 +73,7 @@ class EntityCsvParserTest {
     @Test
     void ensureAssetsAreParsedCorrectly() throws IOException {
         List<Entity> entities = EntityCsvParser.parse(resourcePath("graph/entities_sample.csv"));
-        Asset asset = (Asset) entities.stream()
-                .filter(e -> e.getId().equals("A-001"))
-                .findFirst()
-                .orElseThrow();
+        Asset asset = (Asset) findById(entities, "A-001");
         assertEquals("property", asset.getType());
         assertEquals("real_estate", asset.getAssetType());
         assertEquals("Lisboa", asset.getCountry());
@@ -85,7 +83,9 @@ class EntityCsvParserTest {
     @Test
     void ensureCommentsAndBlankLinesAreIgnored() throws IOException {
         List<Entity> entities = EntityCsvParser.parse(resourcePath("graph/entities_sample.csv"));
-        assertTrue(entities.stream().noneMatch(e -> e.getId().startsWith("#")));
+        for (Entity e : entities) {
+            assertFalse(e.getId().startsWith("#"));
+        }
     }
 
     @Test

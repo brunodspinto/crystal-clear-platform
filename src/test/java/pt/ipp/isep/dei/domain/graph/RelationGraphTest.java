@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class RelationGraphTest {
 
     @Test
@@ -34,7 +35,12 @@ class RelationGraphTest {
     @Test
     void ensureNullEdgeIsRejected() {
         RelationGraph g = new RelationGraph();
-        assertThrows(IllegalArgumentException.class, () -> g.addEdge(null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                g.addEdge(null);
+            }
+        });
     }
 
     @Test
@@ -71,15 +77,30 @@ class RelationGraphTest {
     @Test
     void ensureToAdjacencyMatrixRejectsNullRegistry() {
         RelationGraph g = new RelationGraph();
-        assertThrows(IllegalArgumentException.class, () -> g.toAdjacencyMatrix(null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                g.toAdjacencyMatrix(null);
+            }
+        });
     }
 
     @Test
     void ensureToAdjacencyMatrixWithLabelRejectsBlankLabel() {
         RelationGraph g = new RelationGraph();
         IndexRegistry r = new IndexRegistry();
-        assertThrows(IllegalArgumentException.class, () -> g.toAdjacencyMatrix("", r));
-        assertThrows(IllegalArgumentException.class, () -> g.toAdjacencyMatrix(null, r));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                g.toAdjacencyMatrix("", r);
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                g.toAdjacencyMatrix(null, r);
+            }
+        });
     }
 
     @Test
@@ -102,8 +123,23 @@ class RelationGraphTest {
     @Test
     void ensureAddNodeRejectsBlankId() {
         RelationGraph g = new RelationGraph();
-        assertThrows(IllegalArgumentException.class, () -> g.addNode(null));
-        assertThrows(IllegalArgumentException.class, () -> g.addNode(""));
-        assertThrows(IllegalArgumentException.class, () -> g.addNode("   "));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                g.addNode(null);
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                g.addNode("");
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                g.addNode("   ");
+            }
+        });
     }
 }

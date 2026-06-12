@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class LoadEntitiesFromCsvControllerTest {
 
     private GraphRepository repo;
@@ -46,8 +47,12 @@ class LoadEntitiesFromCsvControllerTest {
 
     @Test
     void ensureLoadEntitiesOnInvalidPathThrowsIOException() {
-        assertThrows(IOException.class, () ->
-                controller.loadEntities("nonexistent/path/file.csv"));
+        assertThrows(IOException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.loadEntities("nonexistent/path/file.csv");
+            }
+        });
     }
 
     @Test

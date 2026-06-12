@@ -6,6 +6,7 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class AttachmentTest {
 
     private static final Date NOW = new Date();
@@ -18,20 +19,32 @@ class AttachmentTest {
 
     @Test
     void ensureAttachmentFailsWithNullFileName() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Attachment(null, NOW));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Attachment(null, NOW);
+            }
+        });
     }
 
     @Test
     void ensureAttachmentFailsWithBlankFileName() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Attachment("   ", NOW));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Attachment("   ", NOW);
+            }
+        });
     }
 
     @Test
     void ensureAttachmentFailsWithNullUploadDate() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Attachment("document.pdf", null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Attachment("document.pdf", null);
+            }
+        });
     }
 
     @Test

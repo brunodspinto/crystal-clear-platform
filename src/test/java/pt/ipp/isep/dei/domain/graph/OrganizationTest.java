@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class OrganizationTest {
 
     @Test
@@ -21,12 +22,24 @@ class OrganizationTest {
 
     @Test
     void ensureBlankIdsAreRejected() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new Organization("", "company", "", "", "Acme", "private", "PT"));
-        assertThrows(IllegalArgumentException.class,
-                () -> new Organization("   ", "company", "", "", "Acme", "private", "PT"));
-        assertThrows(IllegalArgumentException.class,
-                () -> new Organization(null, "company", "", "", "Acme", "private", "PT"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Organization("", "company", "", "", "Acme", "private", "PT");
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Organization("   ", "company", "", "", "Acme", "private", "PT");
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Organization(null, "company", "", "", "Acme", "private", "PT");
+            }
+        });
     }
 
     @Test

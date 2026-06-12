@@ -6,6 +6,7 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class SubsidyEntryTest {
 
     private static final Date DATE = new Date();
@@ -20,12 +21,22 @@ class SubsidyEntryTest {
 
     @Test
     void ensureCreationWorks() {
-        assertDoesNotThrow(() -> new SubsidyEntry(org(), 1500.0, "Research grant", DATE));
+        assertDoesNotThrow(new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new SubsidyEntry(org(), 1500.0, "Research grant", DATE);
+            }
+        });
     }
 
     @Test
     void ensureCreationWithZeroAmountWorks() {
-        assertDoesNotThrow(() -> new SubsidyEntry(org(), 0.0, "No-cost grant", DATE));
+        assertDoesNotThrow(new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new SubsidyEntry(org(), 0.0, "No-cost grant", DATE);
+            }
+        });
     }
 
     // -------------------------------------------------------------------------
@@ -34,32 +45,52 @@ class SubsidyEntryTest {
 
     @Test
     void ensureNullOrganizationThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new SubsidyEntry(null, 1500.0, "Grant", DATE));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new SubsidyEntry(null, 1500.0, "Grant", DATE);
+            }
+        });
     }
 
     @Test
     void ensureNegativeAmountThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new SubsidyEntry(org(), -0.01, "Grant", DATE));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new SubsidyEntry(org(), -0.01, "Grant", DATE);
+            }
+        });
     }
 
     @Test
     void ensureNullDescriptionThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new SubsidyEntry(org(), 1000.0, null, DATE));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new SubsidyEntry(org(), 1000.0, null, DATE);
+            }
+        });
     }
 
     @Test
     void ensureBlankDescriptionThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new SubsidyEntry(org(), 1000.0, "   ", DATE));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new SubsidyEntry(org(), 1000.0, "   ", DATE);
+            }
+        });
     }
 
     @Test
     void ensureNullDateThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new SubsidyEntry(org(), 1000.0, "Grant", null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new SubsidyEntry(org(), 1000.0, "Grant", null);
+            }
+        });
     }
 
     // -------------------------------------------------------------------------
