@@ -158,7 +158,8 @@ class SubmitDeclarationControllerTest {
     @Test
     void ensureNewDeclarationHasCorrectType() {
         assertEquals(DeclarationType.EXCEPTIONAL,
-                new Declaration(DeclarationType.EXCEPTIONAL, agent, NOW).getType());
+                new Declaration(DeclarationType.EXCEPTIONAL, agent, NOW,
+                        "DECL-1", "Correcting an omission").getType());
     }
 
     @Test
@@ -188,7 +189,8 @@ class SubmitDeclarationControllerTest {
     void ensureMultipleDeclarationsFromSameAgentCanBeSaved() {
         declRepo.save(new Declaration(DeclarationType.INITIAL, agent, NOW));
         declRepo.save(new Declaration(DeclarationType.REGULAR, agent, NOW));
-        declRepo.save(new Declaration(DeclarationType.EXCEPTIONAL, agent, NOW));
+        declRepo.save(new Declaration(DeclarationType.EXCEPTIONAL, agent, NOW,
+                "DECL-1", "Correcting an omission"));
         assertEquals(3, declRepo.getAll().size());
     }
 
@@ -215,10 +217,10 @@ class SubmitDeclarationControllerTest {
     @Test
     void ensureSubmitDeclarationReturnsTrueWhenAgentLoggedIn() {
         SubmitDeclarationController controller = loginAndBuildCtrl("agent.submit1@test.com");
-        boolean ok = controller.submitDeclaration(DeclarationType.INITIAL,
+        boolean ok = controller.submitDeclaration(DeclarationType.INITIAL, null, null,
                 new java.util.ArrayList<>(), new java.util.ArrayList<>(),
                 new java.util.ArrayList<>(), new java.util.ArrayList<>(),
-                new java.util.ArrayList<>());
+                new java.util.ArrayList<>(), new java.util.ArrayList<>());
         assertTrue(ok);
     }
 
@@ -226,10 +228,10 @@ class SubmitDeclarationControllerTest {
     void ensureSubmitDeclarationPersistsDeclarationInRepository() {
         SubmitDeclarationController controller = loginAndBuildCtrl("agent.submit2@test.com");
         int before = declRepo.getAll().size();
-        controller.submitDeclaration(DeclarationType.REGULAR,
+        controller.submitDeclaration(DeclarationType.REGULAR, null, null,
                 new java.util.ArrayList<>(), new java.util.ArrayList<>(),
                 new java.util.ArrayList<>(), new java.util.ArrayList<>(),
-                new java.util.ArrayList<>());
+                new java.util.ArrayList<>(), new java.util.ArrayList<>());
         assertEquals(before + 1, declRepo.getAll().size());
     }
 
@@ -253,11 +255,15 @@ class SubmitDeclarationControllerTest {
         java.util.List<Object[]> attachments = new java.util.ArrayList<>();
         attachments.add(new Object[]{"doc.pdf", NOW});
 
-        boolean ok = controller.submitDeclaration(DeclarationType.EXCEPTIONAL,
-                positions, subsidies, assets, participations, attachments);
+        java.util.List<Object[]> household = new java.util.ArrayList<>();
+        household.add(new Object[]{"Maria Silva", HouseholdRelation.SPOUSE});
+
+        boolean ok = controller.submitDeclaration(DeclarationType.INITIAL, null, null,
+                household, positions, subsidies, assets, participations, attachments);
         assertTrue(ok);
 
         Declaration saved = declRepo.getAll().get(declRepo.getAll().size() - 1);
+        assertEquals(1, saved.getHouseholdMembers().size());
         assertEquals(1, saved.getPositionEntries().size());
         assertEquals(1, saved.getSubsidyEntries().size());
         assertEquals(1, saved.getAssetEntries().size());
@@ -279,10 +285,10 @@ class SubmitDeclarationControllerTest {
         SubmitDeclarationController controller =
                 new SubmitDeclarationController(orgRepo, declRepo, agentRepo, authRepo);
 
-        boolean ok = controller.submitDeclaration(DeclarationType.INITIAL,
+        boolean ok = controller.submitDeclaration(DeclarationType.INITIAL, null, null,
                 new java.util.ArrayList<>(), new java.util.ArrayList<>(),
                 new java.util.ArrayList<>(), new java.util.ArrayList<>(),
-                new java.util.ArrayList<>());
+                new java.util.ArrayList<>(), new java.util.ArrayList<>());
         assertEquals(false, ok);
     }
 }

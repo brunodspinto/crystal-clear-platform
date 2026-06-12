@@ -31,7 +31,9 @@ class AssetEvolutionControllerTest {
     private Declaration createDeclaration(PoliticalAgent agent, Date date, DeclarationType type,
                                            double grossSalary, double consulting, double board,
                                            double realEstate, double vehicles, double stocks) {
-        Declaration d = new Declaration(type, agent, date);
+        Declaration d = (type == DeclarationType.EXCEPTIONAL)
+                ? new Declaration(type, agent, date, "DECL-1", "Correcting an omission")
+                : new Declaration(type, agent, date);
         d.addPositionEntry(ORG, "Deputy", PositionNature.PUBLIC,
                 grossSalary, consulting, board, dateOf(2020, Calendar.JANUARY, 1), null);
         if (realEstate > 0) {

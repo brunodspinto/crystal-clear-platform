@@ -242,14 +242,16 @@ public class SubmitDeclarationController {
                                      List<Object[]> businessParticipations,
                                      List<Object[]> attachments) {
 
-        // AC3 – validate type rules before doing anything
+        // The agent must be authenticated before anything else (contract: return
+        // false when there is no political agent in session).
+        PoliticalAgent agent = getCurrentPoliticalAgent();
+        if (agent == null) return false;
+
+        // AC3 – validate type rules before persisting.
         String typeError = validateDeclarationType(type, amendedDeclarationId, amendmentReason);
         if (typeError != null) {
             throw new IllegalStateException(typeError);
         }
-
-        PoliticalAgent agent = getCurrentPoliticalAgent();
-        if (agent == null) return false;
 
         Declaration declaration = new Declaration(type, agent, new Date(),
                 amendedDeclarationId, amendmentReason);

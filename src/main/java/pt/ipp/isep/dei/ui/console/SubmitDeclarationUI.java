@@ -19,6 +19,9 @@ public class SubmitDeclarationUI implements Runnable {
     private final SubmitDeclarationController controller;
 
     private DeclarationType selectedType;
+    private String amendedDeclarationId;
+    private String amendmentReason;
+    private final List<Object[]> householdMembers = new ArrayList<>();
     private final List<Object[]> positionEntries = new ArrayList<>();
     private final List<Object[]> subsidyEntries = new ArrayList<>();
     private final List<Object[]> assetEntries = new ArrayList<>();
@@ -45,6 +48,15 @@ public class SubmitDeclarationUI implements Runnable {
             return;
         }
 
+        if (selectedType == DeclarationType.EXCEPTIONAL) {
+            collectAmendmentData();
+            if (amendedDeclarationId == null) {
+                System.out.println("\nOperation cancelled.");
+                return;
+            }
+        }
+
+        collectHouseholdMembers();
         collectPositionEntries();
         if (positionEntries.isEmpty()) {
             System.out.println("\nAt least one position entry is required. Operation cancelled.");
@@ -72,6 +84,50 @@ public class SubmitDeclarationUI implements Runnable {
     private DeclarationType selectDeclarationType() {
         List<DeclarationType> types = controller.getDeclarationTypes();
         return (DeclarationType) Utils.showAndSelectOne(types, "Select declaration type:");
+    }
+
+    // -------------------------------------------------------------------------
+    // Amendment data (EXCEPTIONAL only) — AC3
+    // -------------------------------------------------------------------------
+
+    private void collectAmendmentData() {
+        System.out.println("\n--- Amendment Details (EXCEPTIONAL declaration) ---");
+        List<Declaration> previous = controller.getPreviousDeclarations();
+        if (previous.isEmpty()) {
+            System.out.println("You have no previous declarations to amend. Operation cancelled.");
+            return;
+        }
+        Declaration amended = (Declaration) Utils.showAndSelectOne(previous,
+                "Select the declaration being amended:");
+        if (amended == null) return;
+        String reason = Utils.readLineFromConsole("Reason for the amendment: ");
+        if (reason == null || reason.trim().isEmpty()) {
+            System.out.println("An amendment reason is required.");
+            return;
+        }
+        amendedDeclarationId = amended.getId();
+        amendmentReason = reason.trim();
+    }
+
+    // -------------------------------------------------------------------------
+    // Household members (optional) — AC1
+    // -------------------------------------------------------------------------
+
+    private void collectHouseholdMembers() {
+        System.out.println("\n--- Household Members (optional) ---");
+        if (!Utils.confirm("Add household members? (y/n)")) return;
+        do {
+            String name = Utils.readLineFromConsole("Member full name: ");
+            if (name == null || name.trim().isEmpty()) {
+                System.out.println("Name is required; skipping this member.");
+            } else {
+                HouseholdRelation relation = (HouseholdRelation) Utils.showAndSelectOne(
+                        controller.getHouseholdRelations(), "Select relation:");
+                if (relation != null) {
+                    householdMembers.add(new Object[]{name.trim(), relation});
+                }
+            }
+        } while (Utils.confirm("Add another household member? (y/n)"));
     }
 
     // -------------------------------------------------------------------------
@@ -229,6 +285,11 @@ public class SubmitDeclarationUI implements Runnable {
     private void printSummary() {
         System.out.println("\n--- Declaration Summary ---");
         System.out.printf("Type                    : %s%n", selectedType);
+        if (selectedType == DeclarationType.EXCEPTIONAL) {
+            System.out.printf("Amends declaration      : %s%n", amendedDeclarationId);
+            System.out.printf("Amendment reason        : %s%n", amendmentReason);
+        }
+        System.out.printf("Household members       : %d%n", householdMembers.size());
         System.out.printf("Position entries        : %d%n", positionEntries.size());
         System.out.printf("Subsidy entries         : %d%n", subsidyEntries.size());
         System.out.printf("Asset entries           : %d%n", assetEntries.size());
@@ -239,13 +300,17 @@ public class SubmitDeclarationUI implements Runnable {
     private void submitData() {
         try {
             boolean success = controller.submitDeclaration(
-                    selectedType, positionEntries, subsidyEntries,
+                    selectedType, amendedDeclarationId, amendmentReason,
+                    householdMembers, positionEntries, subsidyEntries,
                     assetEntries, businessParticipations, attachments);
             if (success) {
                 System.out.println("\nDeclaration successfully submitted! Status: PENDING.");
             } else {
                 System.out.println("\nDeclaration not submitted. Political agent not found in session.");
             }
+        } catch (IllegalStateException e) {
+            System.out.println("\nCannot submit: " + e.getMessage());
+            System.out.println("Operation cancelled.");
         } catch (IllegalArgumentException | NullPointerException e) {
             System.out.println("\nInvalid declaration data: " + e.getMessage());
             System.out.println("Operation cancelled.");

@@ -110,6 +110,23 @@ public class AssetEntry implements Serializable {
      */
     public StockAsset getStockAsset() { return stockAsset; }
 
+    /**
+     * Returns the detail object for this asset, whatever its type: a
+     * {@link RealEstate}, {@link VehicleAsset} or {@link StockAsset}. Useful
+     * when copying an asset entry without needing to know its concrete type.
+     *
+     * @return the non-null detail object matching the asset type.
+     */
+    public Object getDetail() {
+        if (realEstate != null) {
+            return realEstate;
+        }
+        if (vehicleAsset != null) {
+            return vehicleAsset;
+        }
+        return stockAsset;
+    }
+
     @Override
     public String toString() {
         return String.format("AssetEntry{type=%s, value=%.2f}", assetType, assetValue);
