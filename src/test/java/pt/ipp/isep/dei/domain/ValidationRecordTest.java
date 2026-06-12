@@ -7,6 +7,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class ValidationRecordTest {
 
     private static final Date NOW = new Date();
@@ -35,26 +36,42 @@ class ValidationRecordTest {
 
     @Test
     void ensureCreationFailsWithNullMember() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new ValidationRecord(null, createDeclaration(), NOW, ValidationOutcome.VALIDATED));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new ValidationRecord(null, createDeclaration(), NOW, ValidationOutcome.VALIDATED);
+            }
+        });
     }
 
     @Test
     void ensureCreationFailsWithNullDeclaration() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new ValidationRecord(createMember(), null, NOW, ValidationOutcome.VALIDATED));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new ValidationRecord(createMember(), null, NOW, ValidationOutcome.VALIDATED);
+            }
+        });
     }
 
     @Test
     void ensureCreationFailsWithNullDate() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new ValidationRecord(createMember(), createDeclaration(), null, ValidationOutcome.VALIDATED));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new ValidationRecord(createMember(), createDeclaration(), null, ValidationOutcome.VALIDATED);
+            }
+        });
     }
 
     @Test
     void ensureCreationFailsWithNullOutcome() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new ValidationRecord(createMember(), createDeclaration(), NOW, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new ValidationRecord(createMember(), createDeclaration(), NOW, null);
+            }
+        });
     }
 
     @Test
@@ -86,16 +103,24 @@ class ValidationRecordTest {
     void ensureAddCommentFailsWithNullSection() {
         ValidationRecord vr = new ValidationRecord(createMember(), createDeclaration(),
                 NOW, ValidationOutcome.RETURNED_FOR_CORRECTION);
-        assertThrows(IllegalArgumentException.class, () ->
-                vr.addComment(null, "Some comment."));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                vr.addComment(null, "Some comment.");
+            }
+        });
     }
 
     @Test
     void ensureAddCommentFailsWithBlankComment() {
         ValidationRecord vr = new ValidationRecord(createMember(), createDeclaration(),
                 NOW, ValidationOutcome.RETURNED_FOR_CORRECTION);
-        assertThrows(IllegalArgumentException.class, () ->
-                vr.addComment("Assets", "   "));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                vr.addComment("Assets", "   ");
+            }
+        });
     }
 
     @Test

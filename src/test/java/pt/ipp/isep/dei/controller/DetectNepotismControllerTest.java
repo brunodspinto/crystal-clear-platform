@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class DetectNepotismControllerTest {
 
     // -----------------------------------------------------------------------
@@ -21,7 +22,12 @@ class DetectNepotismControllerTest {
         GraphRepository repo = new GraphRepository();
         DetectNepotismController controller = new DetectNepotismController(repo);
 
-        assertThrows(IllegalStateException.class, controller::detect);
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.detect();
+            }
+        });
     }
 
     // -----------------------------------------------------------------------

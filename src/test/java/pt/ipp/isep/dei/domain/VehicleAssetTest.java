@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class VehicleAssetTest {
 
     @Test
@@ -14,14 +15,22 @@ class VehicleAssetTest {
 
     @Test
     void ensureVehicleAssetFailsWithNullDescription() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new VehicleAsset(null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new VehicleAsset(null);
+            }
+        });
     }
 
     @Test
     void ensureVehicleAssetFailsWithBlankDescription() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new VehicleAsset("   "));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new VehicleAsset("   ");
+            }
+        });
     }
 
     @Test

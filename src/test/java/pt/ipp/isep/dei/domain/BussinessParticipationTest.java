@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class BusinessParticipationTest {
 
     private Organization org() {
@@ -16,17 +17,32 @@ class BusinessParticipationTest {
 
     @Test
     void ensureCreationWorks() {
-        assertDoesNotThrow(() -> new BusinessParticipation(org(), 123456789L, 15000.0, 10.0));
+        assertDoesNotThrow(new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new BusinessParticipation(org(), 123456789L, 15000.0, 10.0);
+            }
+        });
     }
 
     @Test
     void ensureCreationWithZeroValueWorks() {
-        assertDoesNotThrow(() -> new BusinessParticipation(org(), 123456789L, 0.0, 0.0));
+        assertDoesNotThrow(new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new BusinessParticipation(org(), 123456789L, 0.0, 0.0);
+            }
+        });
     }
 
     @Test
     void ensureCreationWithHundredPercentWorks() {
-        assertDoesNotThrow(() -> new BusinessParticipation(org(), 123456789L, 50000.0, 100.0));
+        assertDoesNotThrow(new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new BusinessParticipation(org(), 123456789L, 50000.0, 100.0);
+            }
+        });
     }
 
     // -------------------------------------------------------------------------
@@ -35,26 +51,42 @@ class BusinessParticipationTest {
 
     @Test
     void ensureNullOrganizationThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new BusinessParticipation(null, 123456789L, 1000.0, 5.0));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new BusinessParticipation(null, 123456789L, 1000.0, 5.0);
+            }
+        });
     }
 
     @Test
     void ensureNegativeTotalValueThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new BusinessParticipation(org(), 123456789L, -0.01, 5.0));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new BusinessParticipation(org(), 123456789L, -0.01, 5.0);
+            }
+        });
     }
 
     @Test
     void ensureNegativePercentageThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new BusinessParticipation(org(), 123456789L, 1000.0, -0.01));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new BusinessParticipation(org(), 123456789L, 1000.0, -0.01);
+            }
+        });
     }
 
     @Test
     void ensurePercentageAbove100Throws() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new BusinessParticipation(org(), 123456789L, 1000.0, 100.01));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new BusinessParticipation(org(), 123456789L, 1000.0, 100.01);
+            }
+        });
     }
 
     // -------------------------------------------------------------------------

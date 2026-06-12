@@ -6,6 +6,7 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class DeclarationTest {
 
     private static final Date NOW = new Date();
@@ -34,20 +35,32 @@ class DeclarationTest {
 
     @Test
     void ensureDeclarationFailsWithNullType() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Declaration(null, createAgent(), NOW));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Declaration(null, createAgent(), NOW);
+            }
+        });
     }
 
     @Test
     void ensureDeclarationFailsWithNullAgent() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Declaration(DeclarationType.INITIAL, null, NOW));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Declaration(DeclarationType.INITIAL, null, NOW);
+            }
+        });
     }
 
     @Test
     void ensureDeclarationFailsWithNullSubmissionDate() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new Declaration(DeclarationType.INITIAL, createAgent(), null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Declaration(DeclarationType.INITIAL, createAgent(), null);
+            }
+        });
     }
 
     // -------------------------------------------------------------------------
@@ -189,7 +202,12 @@ class DeclarationTest {
     @Test
     void ensureSetStatusFailsWithNull() {
         Declaration d = new Declaration(DeclarationType.INITIAL, createAgent(), NOW);
-        assertThrows(IllegalArgumentException.class, () -> d.setStatus((DeclarationStatus) null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                d.setStatus((DeclarationStatus) null);
+            }
+        });
     }
 
     // -------------------------------------------------------------------------
@@ -237,7 +255,12 @@ class DeclarationTest {
     @Test
     void ensureSetStatusWithNullOutcomeFails() {
         Declaration d = new Declaration(DeclarationType.INITIAL, createAgent(), NOW);
-        assertThrows(IllegalArgumentException.class, () -> d.setStatus((ValidationOutcome) null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                d.setStatus((ValidationOutcome) null);
+            }
+        });
     }
 
     // -------------------------------------------------------------------------

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class EthicsCommitteeTest {
 
     @Test
@@ -14,14 +15,22 @@ class EthicsCommitteeTest {
 
     @Test
     void ensureCreationFailsWithNullName() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new EthicsCommittee(null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new EthicsCommittee(null);
+            }
+        });
     }
 
     @Test
     void ensureCreationFailsWithBlankName() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new EthicsCommittee("   "));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new EthicsCommittee("   ");
+            }
+        });
     }
 
     @Test
@@ -48,7 +57,12 @@ class EthicsCommitteeTest {
     @Test
     void ensureAddMemberFailsWithNull() {
         EthicsCommittee committee = new EthicsCommittee("National Ethics Committee");
-        assertThrows(IllegalArgumentException.class, () -> committee.addMember(null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                committee.addMember(null);
+            }
+        });
     }
 
     @Test

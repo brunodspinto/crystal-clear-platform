@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class EdgeTest {
 
     @Test
@@ -17,10 +18,30 @@ class EdgeTest {
 
     @Test
     void ensureBlankIdsAreRejected() {
-        assertThrows(IllegalArgumentException.class, () -> new Edge("", "b", "kinship", 1));
-        assertThrows(IllegalArgumentException.class, () -> new Edge("a", " ", "kinship", 1));
-        assertThrows(IllegalArgumentException.class, () -> new Edge("a", "b", "", 1));
-        assertThrows(IllegalArgumentException.class, () -> new Edge(null, "b", "kinship", 1));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Edge("", "b", "kinship", 1);
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Edge("a", " ", "kinship", 1);
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Edge("a", "b", "", 1);
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Edge(null, "b", "kinship", 1);
+            }
+        });
     }
 
     @Test

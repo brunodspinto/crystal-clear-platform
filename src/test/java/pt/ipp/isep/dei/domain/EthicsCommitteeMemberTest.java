@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class EthicsCommitteeMemberTest {
 
     @Test
@@ -14,26 +15,42 @@ class EthicsCommitteeMemberTest {
 
     @Test
     void ensureCreationFailsWithNullName() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new EthicsCommitteeMember(null, "maria@ethics.pt"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new EthicsCommitteeMember(null, "maria@ethics.pt");
+            }
+        });
     }
 
     @Test
     void ensureCreationFailsWithBlankName() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new EthicsCommitteeMember("   ", "maria@ethics.pt"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new EthicsCommitteeMember("   ", "maria@ethics.pt");
+            }
+        });
     }
 
     @Test
     void ensureCreationFailsWithNullEmail() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new EthicsCommitteeMember("Maria Sousa", null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new EthicsCommitteeMember("Maria Sousa", null);
+            }
+        });
     }
 
     @Test
     void ensureCreationFailsWithBlankEmail() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new EthicsCommitteeMember("Maria Sousa", "   "));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new EthicsCommitteeMember("Maria Sousa", "   ");
+            }
+        });
     }
 
     @Test

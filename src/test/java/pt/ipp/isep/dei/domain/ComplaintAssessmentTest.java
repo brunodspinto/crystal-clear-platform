@@ -6,6 +6,7 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class ComplaintAssessmentTest {
 
     private static final Date PAST_DATE = new Date(0);
@@ -38,16 +39,24 @@ class ComplaintAssessmentTest {
 
     @Test
     void ensureInvalidOutcomeWithoutReasonThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
                 new ComplaintAssessment(createMember(), createComplaint(), new Date(),
-                        ComplaintOutcome.INVALID, null));
+                            ComplaintOutcome.INVALID, null);
+            }
+        });
     }
 
     @Test
     void ensureInvalidOutcomeWithBlankReasonThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
                 new ComplaintAssessment(createMember(), createComplaint(), new Date(),
-                        ComplaintOutcome.INVALID, "   "));
+                            ComplaintOutcome.INVALID, "   ");
+            }
+        });
     }
 
     @Test
@@ -59,26 +68,42 @@ class ComplaintAssessmentTest {
 
     @Test
     void ensureNullMemberThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new ComplaintAssessment(null, createComplaint(), new Date(), ComplaintOutcome.VALID, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new ComplaintAssessment(null, createComplaint(), new Date(), ComplaintOutcome.VALID, null);
+            }
+        });
     }
 
     @Test
     void ensureNullComplaintThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new ComplaintAssessment(createMember(), null, new Date(), ComplaintOutcome.VALID, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new ComplaintAssessment(createMember(), null, new Date(), ComplaintOutcome.VALID, null);
+            }
+        });
     }
 
     @Test
     void ensureNullDateThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new ComplaintAssessment(createMember(), createComplaint(), null, ComplaintOutcome.VALID, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new ComplaintAssessment(createMember(), createComplaint(), null, ComplaintOutcome.VALID, null);
+            }
+        });
     }
 
     @Test
     void ensureNullOutcomeThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new ComplaintAssessment(createMember(), createComplaint(), new Date(), null, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new ComplaintAssessment(createMember(), createComplaint(), new Date(), null, null);
+            }
+        });
     }
 
     @Test

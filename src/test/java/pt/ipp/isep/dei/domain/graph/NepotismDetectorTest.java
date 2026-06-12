@@ -7,6 +7,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class NepotismDetectorTest {
 
     private NepotismDetector detector;
@@ -31,26 +32,50 @@ class NepotismDetectorTest {
 
     @Test
     void ensureNepotismPairRejectsBlankAppointer() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new NepotismDetector.NepotismPair("", "B", NepotismDetector.REL_RELATIVE_OF));
-        assertThrows(IllegalArgumentException.class,
-                () -> new NepotismDetector.NepotismPair(null, "B", NepotismDetector.REL_RELATIVE_OF));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new NepotismDetector.NepotismPair("", "B", NepotismDetector.REL_RELATIVE_OF);
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new NepotismDetector.NepotismPair(null, "B", NepotismDetector.REL_RELATIVE_OF);
+            }
+        });
     }
 
     @Test
     void ensureNepotismPairRejectsBlankAppointed() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new NepotismDetector.NepotismPair("A", "", NepotismDetector.REL_RELATIVE_OF));
-        assertThrows(IllegalArgumentException.class,
-                () -> new NepotismDetector.NepotismPair("A", null, NepotismDetector.REL_RELATIVE_OF));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new NepotismDetector.NepotismPair("A", "", NepotismDetector.REL_RELATIVE_OF);
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new NepotismDetector.NepotismPair("A", null, NepotismDetector.REL_RELATIVE_OF);
+            }
+        });
     }
 
     @Test
     void ensureNepotismPairRejectsBlankLabel() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new NepotismDetector.NepotismPair("A", "B", ""));
-        assertThrows(IllegalArgumentException.class,
-                () -> new NepotismDetector.NepotismPair("A", "B", null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new NepotismDetector.NepotismPair("A", "B", "");
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new NepotismDetector.NepotismPair("A", "B", null);
+            }
+        });
     }
 
     @Test
@@ -81,7 +106,12 @@ class NepotismDetectorTest {
 
     @Test
     void ensureDetectRejectsNullGraph() {
-        assertThrows(IllegalArgumentException.class, () -> detector.detect(null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                detector.detect(null);
+            }
+        });
     }
 
     // -----------------------------------------------------------------------

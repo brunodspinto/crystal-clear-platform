@@ -8,6 +8,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class NetworkSnapshotTest {
 
     private Person makePerson(String id, String start, String end) {
@@ -80,14 +81,22 @@ class NetworkSnapshotTest {
 
     @Test
     void ensureNullDateThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                NetworkSnapshot.of(null, new ArrayList<>(), new ArrayList<>()));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                NetworkSnapshot.of(null, new ArrayList<>(), new ArrayList<>());
+            }
+        });
     }
 
     @Test
     void ensureBlankDateThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                NetworkSnapshot.of("  ", new ArrayList<>(), new ArrayList<>()));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                NetworkSnapshot.of("  ", new ArrayList<>(), new ArrayList<>());
+            }
+        });
     }
 
     @Test

@@ -14,6 +14,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class ReviewRegistrationControllerTest {
 
     private RegistrationRequestRepository repository;
@@ -88,7 +89,12 @@ class ReviewRegistrationControllerTest {
     void ensureRejectRequestWithBlankReasonThrows() {
         RegistrationRequest r = makeRequest("g@gov.pt", UserRole.POLITICAL_AGENT);
         repository.save(r);
-        assertThrows(IllegalArgumentException.class, () -> controller.rejectRequest(r, ""));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.rejectRequest(r, "");
+            }
+        });
     }
 
     @Test
@@ -96,7 +102,12 @@ class ReviewRegistrationControllerTest {
         RegistrationRequest r = makeRequest("h@gov.pt", UserRole.POLITICAL_AGENT);
         repository.save(r);
         controller.approveRequest(r);
-        assertThrows(IllegalStateException.class, () -> controller.approveRequest(r));
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.approveRequest(r);
+            }
+        });
     }
 
     @Test
@@ -104,7 +115,12 @@ class ReviewRegistrationControllerTest {
         RegistrationRequest r = makeRequest("i@gov.pt", UserRole.POLITICAL_AGENT);
         repository.save(r);
         controller.rejectRequest(r, "reason");
-        assertThrows(IllegalStateException.class, () -> controller.rejectRequest(r, "again"));
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.rejectRequest(r, "again");
+            }
+        });
     }
 
     @Test

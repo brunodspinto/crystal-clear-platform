@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.function.Executable;
 class RelationCsvParserTest {
 
     @Test
@@ -97,7 +98,12 @@ class RelationCsvParserTest {
 
     @Test
     void ensureMissingFileThrows() {
-        assertThrows(IOException.class, () -> RelationCsvParser.parse("src/test/resources/graph/does-not-exist.csv"));
+        assertThrows(IOException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                RelationCsvParser.parse("src/test/resources/graph/does-not-exist.csv");
+            }
+        });
     }
 
     @Test

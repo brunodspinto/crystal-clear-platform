@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class TaskTest {
 
     @Test
@@ -21,9 +22,13 @@ class TaskTest {
         TaskCategory taskCategory = new TaskCategory("Task Category Description");
 
         //Act and Assert
-        assertThrows(IllegalArgumentException.class,
-                () -> new Task(null, "description", "informal description", "technical description", 1, 1d,
-                        taskCategory, employee));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Task(null, "description", "informal description", "technical description", 1, 1d,
+                            taskCategory, employee);
+            }
+        });
     }
 
     @Test

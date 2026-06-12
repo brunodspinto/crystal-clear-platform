@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class ValidationCommentTest {
 
     @Test
@@ -14,26 +15,42 @@ class ValidationCommentTest {
 
     @Test
     void ensureCreationFailsWithNullSection() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new ValidationComment(null, "Some comment."));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new ValidationComment(null, "Some comment.");
+            }
+        });
     }
 
     @Test
     void ensureCreationFailsWithBlankSection() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new ValidationComment("   ", "Some comment."));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new ValidationComment("   ", "Some comment.");
+            }
+        });
     }
 
     @Test
     void ensureCreationFailsWithNullComment() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new ValidationComment("Assets", null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new ValidationComment("Assets", null);
+            }
+        });
     }
 
     @Test
     void ensureCreationFailsWithBlankComment() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new ValidationComment("Assets", "   "));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new ValidationComment("Assets", "   ");
+            }
+        });
     }
 
     @Test

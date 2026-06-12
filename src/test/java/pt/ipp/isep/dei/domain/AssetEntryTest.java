@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class AssetEntryTest {
 
     // -------------------------------------------------------------------------
@@ -12,8 +13,13 @@ class AssetEntryTest {
 
     @Test
     void ensureRealEstateCreationWorks() {
-        assertDoesNotThrow(() -> new AssetEntry(AssetType.REAL_ESTATE, 250000.0,
-                new RealEstate("House", "Lisbon")));
+        assertDoesNotThrow(new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new AssetEntry(AssetType.REAL_ESTATE, 250000.0,
+                    new RealEstate("House", "Lisbon"));
+            }
+        });
     }
 
     @Test
@@ -37,8 +43,13 @@ class AssetEntryTest {
 
     @Test
     void ensureVehicleCreationWorks() {
-        assertDoesNotThrow(() -> new AssetEntry(AssetType.VEHICLES, 30000.0,
-                new VehicleAsset("BMW 3 Series")));
+        assertDoesNotThrow(new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new AssetEntry(AssetType.VEHICLES, 30000.0,
+                    new VehicleAsset("BMW 3 Series"));
+            }
+        });
     }
 
     @Test
@@ -61,8 +72,13 @@ class AssetEntryTest {
 
     @Test
     void ensureStockCreationWorks() {
-        assertDoesNotThrow(() -> new AssetEntry(AssetType.STOCKS, 8000.0,
-                new StockAsset("EDP shares")));
+        assertDoesNotThrow(new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new AssetEntry(AssetType.STOCKS, 8000.0,
+                    new StockAsset("EDP shares"));
+            }
+        });
     }
 
     @Test
@@ -85,20 +101,32 @@ class AssetEntryTest {
 
     @Test
     void ensureVehicleDetailForRealEstateTypeThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new AssetEntry(AssetType.REAL_ESTATE, 250000.0, new VehicleAsset("BMW")));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new AssetEntry(AssetType.REAL_ESTATE, 250000.0, new VehicleAsset("BMW"));
+            }
+        });
     }
 
     @Test
     void ensureStockDetailForVehiclesTypeThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new AssetEntry(AssetType.VEHICLES, 30000.0, new StockAsset("EDP")));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new AssetEntry(AssetType.VEHICLES, 30000.0, new StockAsset("EDP"));
+            }
+        });
     }
 
     @Test
     void ensureRealEstateDetailForStocksTypeThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new AssetEntry(AssetType.STOCKS, 5000.0, new RealEstate("House", "Lisbon")));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new AssetEntry(AssetType.STOCKS, 5000.0, new RealEstate("House", "Lisbon"));
+            }
+        });
     }
 
     // -------------------------------------------------------------------------
@@ -107,26 +135,43 @@ class AssetEntryTest {
 
     @Test
     void ensureNullTypeThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new AssetEntry(null, 100.0, new RealEstate("House", "Lisbon")));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new AssetEntry(null, 100.0, new RealEstate("House", "Lisbon"));
+            }
+        });
     }
 
     @Test
     void ensureNegativeValueThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new AssetEntry(AssetType.REAL_ESTATE, -1.0, new RealEstate("House", "Lisbon")));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new AssetEntry(AssetType.REAL_ESTATE, -1.0, new RealEstate("House", "Lisbon"));
+            }
+        });
     }
 
     @Test
     void ensureZeroValueWorks() {
-        assertDoesNotThrow(() -> new AssetEntry(AssetType.REAL_ESTATE, 0.0,
-                new RealEstate("Land", "Alentejo")));
+        assertDoesNotThrow(new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new AssetEntry(AssetType.REAL_ESTATE, 0.0,
+                    new RealEstate("Land", "Alentejo"));
+            }
+        });
     }
 
     @Test
     void ensureNullDetailThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new AssetEntry(AssetType.REAL_ESTATE, 100.0, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new AssetEntry(AssetType.REAL_ESTATE, 100.0, null);
+            }
+        });
     }
 
     // -------------------------------------------------------------------------

@@ -9,6 +9,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class RegisterControllerTest {
 
     private RegistrationRequestRepository repo;
@@ -93,8 +94,12 @@ class RegisterControllerTest {
 
     @Test
     void ensureInvalidPasswordThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                controller.submitRequest("Name", "a@b.com", "weak", UserRole.ADMINISTRATOR, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.submitRequest("Name", "a@b.com", "weak", UserRole.ADMINISTRATOR, null);
+            }
+        });
     }
 
     @Test
@@ -106,9 +111,13 @@ class RegisterControllerTest {
 
     @Test
     void ensureJournalistWithoutDocumentThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
                 controller.submitRequest("Jane Press", "jane@news.pt", "AAA11bb",
-                        UserRole.JOURNALIST, null));
+                            UserRole.JOURNALIST, null);
+            }
+        });
     }
 
     @Test

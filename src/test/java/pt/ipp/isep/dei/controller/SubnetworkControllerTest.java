@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class SubnetworkControllerTest {
 
     // -------------------------------------------------------------------------
@@ -20,7 +21,12 @@ class SubnetworkControllerTest {
     void ensureGetEntityIdsThrowsWhenNoGraphBuilt() {
         GraphRepository repo = new GraphRepository();
         SubnetworkController ctrl = new SubnetworkController(repo);
-        assertThrows(IllegalStateException.class, ctrl::getEntityIds);
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                ctrl.getEntityIds();
+            }
+        });
     }
 
     @Test
@@ -47,7 +53,12 @@ class SubnetworkControllerTest {
     void ensureExtractThrowsWhenNoGraphBuilt() {
         GraphRepository repo = new GraphRepository();
         SubnetworkController ctrl = new SubnetworkController(repo);
-        assertThrows(IllegalStateException.class, () -> ctrl.extractSubnetwork("A"));
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                ctrl.extractSubnetwork("A");
+            }
+        });
     }
 
     @Test
@@ -57,7 +68,12 @@ class SubnetworkControllerTest {
         GraphRepository repo = new GraphRepository();
         repo.setRelationGraph(rg);
         SubnetworkController ctrl = new SubnetworkController(repo);
-        assertThrows(IllegalArgumentException.class, () -> ctrl.extractSubnetwork("Z"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                ctrl.extractSubnetwork("Z");
+            }
+        });
     }
 
     // -------------------------------------------------------------------------

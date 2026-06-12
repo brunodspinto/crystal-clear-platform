@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class AssetTest {
 
     @Test
@@ -21,12 +22,24 @@ class AssetTest {
 
     @Test
     void ensureBlankIdsAreRejected() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new Asset("", "asset", "", "", "real_estate", "Portugal", 0.0));
-        assertThrows(IllegalArgumentException.class,
-                () -> new Asset("   ", "asset", "", "", "real_estate", "Portugal", 0.0));
-        assertThrows(IllegalArgumentException.class,
-                () -> new Asset(null, "asset", "", "", "real_estate", "Portugal", 0.0));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Asset("", "asset", "", "", "real_estate", "Portugal", 0.0);
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Asset("   ", "asset", "", "", "real_estate", "Portugal", 0.0);
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Asset(null, "asset", "", "", "real_estate", "Portugal", 0.0);
+            }
+        });
     }
 
     @Test

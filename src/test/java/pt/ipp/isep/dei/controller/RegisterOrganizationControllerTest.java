@@ -9,6 +9,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class RegisterOrganizationControllerTest {
 
     @Test
@@ -91,8 +92,12 @@ class RegisterOrganizationControllerTest {
         RegisterOrganizationController controller =
                 new RegisterOrganizationController(new OrganizationRepository());
 
-        assertThrows(IllegalArgumentException.class, () ->
-                controller.registerOrganization(null, OrganizationNature.PRIVATE, OrganizationType.COMPANY));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.registerOrganization(null, OrganizationNature.PRIVATE, OrganizationType.COMPANY);
+            }
+        });
     }
 
     @Test
@@ -100,7 +105,11 @@ class RegisterOrganizationControllerTest {
         RegisterOrganizationController controller =
                 new RegisterOrganizationController(new OrganizationRepository());
 
-        assertThrows(IllegalArgumentException.class, () ->
-                controller.registerOrganization("ACME Corp", OrganizationNature.PRIVATE, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.registerOrganization("ACME Corp", OrganizationNature.PRIVATE, null);
+            }
+        });
     }
 }

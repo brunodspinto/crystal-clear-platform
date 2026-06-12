@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class FindPathControllerTest {
 
     // -------------------------------------------------------------------------
@@ -20,7 +21,12 @@ class FindPathControllerTest {
     void ensureGetEntityIdsThrowsWhenNoGraphBuilt() {
         GraphRepository repo = new GraphRepository();
         FindPathController ctrl = new FindPathController(repo);
-        assertThrows(IllegalStateException.class, ctrl::getEntityIds);
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                ctrl.getEntityIds();
+            }
+        });
     }
 
     @Test
@@ -47,7 +53,12 @@ class FindPathControllerTest {
     void ensureFindPathThrowsWhenNoGraphBuilt() {
         GraphRepository repo = new GraphRepository();
         FindPathController ctrl = new FindPathController(repo);
-        assertThrows(IllegalStateException.class, () -> ctrl.findPath("A", "B"));
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                ctrl.findPath("A", "B");
+            }
+        });
     }
 
     @Test
@@ -57,7 +68,12 @@ class FindPathControllerTest {
         GraphRepository repo = new GraphRepository();
         repo.setRelationGraph(rg);
         FindPathController ctrl = new FindPathController(repo);
-        assertThrows(IllegalArgumentException.class, () -> ctrl.findPath("Z", "B"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                ctrl.findPath("Z", "B");
+            }
+        });
     }
 
     @Test
@@ -67,7 +83,12 @@ class FindPathControllerTest {
         GraphRepository repo = new GraphRepository();
         repo.setRelationGraph(rg);
         FindPathController ctrl = new FindPathController(repo);
-        assertThrows(IllegalArgumentException.class, () -> ctrl.findPath("A", "Z"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                ctrl.findPath("A", "Z");
+            }
+        });
     }
 
     // -------------------------------------------------------------------------

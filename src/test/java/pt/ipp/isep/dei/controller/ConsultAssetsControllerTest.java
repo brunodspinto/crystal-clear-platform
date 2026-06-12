@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.function.Executable;
 class ConsultAssetsControllerTest {
 
     private PoliticalAgent agentJoao() {
@@ -152,8 +153,12 @@ class ConsultAssetsControllerTest {
         ConsultAssetsController controller =
                 new ConsultAssetsController(new PoliticalAgentRepository(), new DeclarationRepository(), null);
 
-        assertThrows(IllegalArgumentException.class,
-                () -> controller.getAssetsAt(null, new Date()));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.getAssetsAt(null, new Date());
+            }
+        });
     }
 
     @Test
@@ -161,8 +166,12 @@ class ConsultAssetsControllerTest {
         ConsultAssetsController controller =
                 new ConsultAssetsController(new PoliticalAgentRepository(), new DeclarationRepository(), null);
 
-        assertThrows(IllegalArgumentException.class,
-                () -> controller.getAssetsAt(dto(agentJoao()), null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.getAssetsAt(dto(agentJoao()), null);
+            }
+        });
     }
 
     @Test

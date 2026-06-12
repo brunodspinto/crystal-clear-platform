@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class GenerateAdjacencyMatricesControllerTest {
 
     @Test
@@ -17,7 +18,12 @@ class GenerateAdjacencyMatricesControllerTest {
         GraphRepository repo = new GraphRepository();
         GenerateAdjacencyMatricesController controller = new GenerateAdjacencyMatricesController(repo);
 
-        assertThrows(IllegalStateException.class, controller::generate);
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.generate();
+            }
+        });
     }
 
     @Test

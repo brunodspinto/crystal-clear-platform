@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class SubnetworkExtractorTest {
 
     // -------------------------------------------------------------------------
@@ -31,15 +32,23 @@ class SubnetworkExtractorTest {
 
     @Test
     void ensureNullGraphThrows() {
-        assertThrows(IllegalArgumentException.class,
-                () -> SubnetworkExtractor.extract(null, "A"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                SubnetworkExtractor.extract(null, "A");
+            }
+        });
     }
 
     @Test
     void ensureUnknownOriginThrows() {
         SupportGraph g = sg(new String[]{"A", "B"});
-        assertThrows(IllegalArgumentException.class,
-                () -> SubnetworkExtractor.extract(g, "Z"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                SubnetworkExtractor.extract(g, "Z");
+            }
+        });
     }
 
     // -------------------------------------------------------------------------
@@ -235,22 +244,34 @@ class SubnetworkExtractorTest {
 
     @Test
     void ensureSubnetworkResultRejectsNullOrigin() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new SubnetworkExtractor.SubnetworkResult(
-                        null, new String[]{"A"}, new boolean[][]{{false}}));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new SubnetworkExtractor.SubnetworkResult(
+                            null, new String[]{"A"}, new boolean[][]{{false}});
+            }
+        });
     }
 
     @Test
     void ensureSubnetworkResultRejectsEmptyNodeIds() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new SubnetworkExtractor.SubnetworkResult(
-                        "A", new String[]{}, new boolean[][]{}));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new SubnetworkExtractor.SubnetworkResult(
+                            "A", new String[]{}, new boolean[][]{});
+            }
+        });
     }
 
     @Test
     void ensureSubnetworkResultRejectsNullMatrix() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new SubnetworkExtractor.SubnetworkResult(
-                        "A", new String[]{"A"}, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new SubnetworkExtractor.SubnetworkResult(
+                            "A", new String[]{"A"}, null);
+            }
+        });
     }
 }

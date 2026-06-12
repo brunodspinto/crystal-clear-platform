@@ -6,6 +6,7 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class PositionEntryTest {
 
     private static final Date START = new Date(1000000L);
@@ -21,20 +22,35 @@ class PositionEntryTest {
 
     @Test
     void ensureCreationWithAllFieldsWorks() {
-        assertDoesNotThrow(() -> new PositionEntry(org(), "Deputy", PositionNature.PUBLIC,
-                60000, 5000, 2000, START, END));
+        assertDoesNotThrow(new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new PositionEntry(org(), "Deputy", PositionNature.PUBLIC,
+                    60000, 5000, 2000, START, END);
+            }
+        });
     }
 
     @Test
     void ensureCreationWithNullEndDateWorks() {
-        assertDoesNotThrow(() -> new PositionEntry(org(), "Deputy", PositionNature.PUBLIC,
-                60000, 0, 0, START, null));
+        assertDoesNotThrow(new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new PositionEntry(org(), "Deputy", PositionNature.PUBLIC,
+                    60000, 0, 0, START, null);
+            }
+        });
     }
 
     @Test
     void ensureCreationWithZeroSalariesWorks() {
-        assertDoesNotThrow(() -> new PositionEntry(org(), "Volunteer", PositionNature.SOCIAL,
-                0, 0, 0, START, null));
+        assertDoesNotThrow(new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new PositionEntry(org(), "Volunteer", PositionNature.SOCIAL,
+                    0, 0, 0, START, null);
+            }
+        });
     }
 
     // -------------------------------------------------------------------------
@@ -43,58 +59,90 @@ class PositionEntryTest {
 
     @Test
     void ensureNullOrganizationThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
                 new PositionEntry(null, "Deputy", PositionNature.PUBLIC,
-                        60000, 0, 0, START, null));
+                            60000, 0, 0, START, null);
+            }
+        });
     }
 
     @Test
     void ensureNullFunctionDesignationThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
                 new PositionEntry(org(), null, PositionNature.PUBLIC,
-                        60000, 0, 0, START, null));
+                            60000, 0, 0, START, null);
+            }
+        });
     }
 
     @Test
     void ensureBlankFunctionDesignationThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
                 new PositionEntry(org(), "   ", PositionNature.PUBLIC,
-                        60000, 0, 0, START, null));
+                            60000, 0, 0, START, null);
+            }
+        });
     }
 
     @Test
     void ensureNullNatureThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
                 new PositionEntry(org(), "Deputy", null,
-                        60000, 0, 0, START, null));
+                            60000, 0, 0, START, null);
+            }
+        });
     }
 
     @Test
     void ensureNegativeGrossSalaryThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
                 new PositionEntry(org(), "Deputy", PositionNature.PUBLIC,
-                        -1, 0, 0, START, null));
+                            -1, 0, 0, START, null);
+            }
+        });
     }
 
     @Test
     void ensureNegativeSideIncomeConsultingThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
                 new PositionEntry(org(), "Deputy", PositionNature.PUBLIC,
-                        0, -0.01, 0, START, null));
+                            0, -0.01, 0, START, null);
+            }
+        });
     }
 
     @Test
     void ensureNegativeSideIncomeBoardMembershipsThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
                 new PositionEntry(org(), "Deputy", PositionNature.PUBLIC,
-                        0, 0, -500, START, null));
+                            0, 0, -500, START, null);
+            }
+        });
     }
 
     @Test
     void ensureNullStartDateThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
                 new PositionEntry(org(), "Deputy", PositionNature.PUBLIC,
-                        60000, 0, 0, null, null));
+                            60000, 0, 0, null, null);
+            }
+        });
     }
 
     // -------------------------------------------------------------------------

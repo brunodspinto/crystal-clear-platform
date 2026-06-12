@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.function.Executable;
 class GraphBuilderTest {
 
     private Person person(String id) {
@@ -109,14 +110,22 @@ class GraphBuilderTest {
 
     @Test
     void ensureNullEntitiesIsRejected() {
-        assertThrows(IllegalArgumentException.class,
-                () -> GraphBuilder.build(null, new ArrayList<>()));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                GraphBuilder.build(null, new ArrayList<>());
+            }
+        });
     }
 
     @Test
     void ensureNullEdgesIsRejected() {
-        assertThrows(IllegalArgumentException.class,
-                () -> GraphBuilder.build(new ArrayList<>(), null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                GraphBuilder.build(new ArrayList<>(), null);
+            }
+        });
     }
 
     @Test

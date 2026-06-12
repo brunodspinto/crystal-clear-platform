@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class PositionTest {
 
     @Test
@@ -21,12 +22,24 @@ class PositionTest {
 
     @Test
     void ensureBlankIdsAreRejected() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new Position("", "public", "", "", "Minister", "government", "O-001"));
-        assertThrows(IllegalArgumentException.class,
-                () -> new Position("   ", "public", "", "", "Minister", "government", "O-001"));
-        assertThrows(IllegalArgumentException.class,
-                () -> new Position(null, "public", "", "", "Minister", "government", "O-001"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Position("", "public", "", "", "Minister", "government", "O-001");
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Position("   ", "public", "", "", "Minister", "government", "O-001");
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new Position(null, "public", "", "", "Minister", "government", "O-001");
+            }
+        });
     }
 
     @Test

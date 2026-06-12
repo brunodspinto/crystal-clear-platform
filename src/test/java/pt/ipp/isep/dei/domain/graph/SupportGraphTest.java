@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class SupportGraphTest {
 
     // -------------------------------------------------------------------------
@@ -12,7 +13,12 @@ class SupportGraphTest {
 
     @Test
     void ensureNullRelationGraphThrows() {
-        assertThrows(IllegalArgumentException.class, () -> new SupportGraph(null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new SupportGraph(null);
+            }
+        });
     }
 
     @Test
@@ -115,7 +121,12 @@ class SupportGraphTest {
         RelationGraph rg = new RelationGraph();
         rg.addEdge(new Edge("A", "B", "relativeOf", 1.0));
         SupportGraph sg = new SupportGraph(rg);
-        assertThrows(IllegalArgumentException.class, () -> sg.isAdjacent("Z", "B"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                sg.isAdjacent("Z", "B");
+            }
+        });
     }
 
     @Test
@@ -123,7 +134,12 @@ class SupportGraphTest {
         RelationGraph rg = new RelationGraph();
         rg.addEdge(new Edge("A", "B", "relativeOf", 1.0));
         SupportGraph sg = new SupportGraph(rg);
-        assertThrows(IllegalArgumentException.class, () -> sg.isAdjacent("A", "Z"));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                sg.isAdjacent("A", "Z");
+            }
+        });
     }
 
     // -------------------------------------------------------------------------

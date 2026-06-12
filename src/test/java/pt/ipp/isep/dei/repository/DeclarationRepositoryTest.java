@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class DeclarationRepositoryTest {
 
     private Declaration createTestDeclaration(DeclarationType type) {
@@ -38,7 +39,12 @@ class DeclarationRepositoryTest {
     @Test
     void ensureSaveNullDeclarationFails() {
         DeclarationRepository repo = new DeclarationRepository();
-        assertThrows(IllegalArgumentException.class, () -> repo.save(null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                repo.save(null);
+            }
+        });
     }
 
     // -------------------------------------------------------------------------
@@ -209,14 +215,22 @@ class DeclarationRepositoryTest {
 
     @Test
     void ensureUpToNullAgentThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                repo.getValidatedDeclarationsForAgentUpTo(null, MAR));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                repo.getValidatedDeclarationsForAgentUpTo(null, MAR);
+            }
+        });
     }
 
     @Test
     void ensureUpToNullDateThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                repo.getValidatedDeclarationsForAgentUpTo(agentA, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                repo.getValidatedDeclarationsForAgentUpTo(agentA, null);
+            }
+        });
     }
 
     // =========================================================================
@@ -286,26 +300,42 @@ class DeclarationRepositoryTest {
 
     @Test
     void ensureBetweenNullAgentThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                repo.getValidatedDeclarationsForAgentBetween(null, JAN, DEC));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                repo.getValidatedDeclarationsForAgentBetween(null, JAN, DEC);
+            }
+        });
     }
 
     @Test
     void ensureBetweenNullStartDateThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                repo.getValidatedDeclarationsForAgentBetween(agentA, null, DEC));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                repo.getValidatedDeclarationsForAgentBetween(agentA, null, DEC);
+            }
+        });
     }
 
     @Test
     void ensureBetweenNullEndDateThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                repo.getValidatedDeclarationsForAgentBetween(agentA, JAN, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                repo.getValidatedDeclarationsForAgentBetween(agentA, JAN, null);
+            }
+        });
     }
 
     @Test
     void ensureBetweenStartAfterEndThrows() {
-        assertThrows(IllegalArgumentException.class, () ->
-                repo.getValidatedDeclarationsForAgentBetween(agentA, DEC, JAN));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                repo.getValidatedDeclarationsForAgentBetween(agentA, DEC, JAN);
+            }
+        });
     }
 
     // -------------------------------------------------------------------------

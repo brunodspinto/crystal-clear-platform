@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.function.Executable;
 class IndexRegistryTest {
 
     @Test
@@ -56,8 +57,18 @@ class IndexRegistryTest {
     void ensureIdAtRejectsOutOfRange() {
         IndexRegistry r = new IndexRegistry();
         r.indexFor("A");
-        assertThrows(IndexOutOfBoundsException.class, () -> r.idAt(-1));
-        assertThrows(IndexOutOfBoundsException.class, () -> r.idAt(1));
+        assertThrows(IndexOutOfBoundsException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                r.idAt(-1);
+            }
+        });
+        assertThrows(IndexOutOfBoundsException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                r.idAt(1);
+            }
+        });
     }
 
     @Test
@@ -72,8 +83,23 @@ class IndexRegistryTest {
     @Test
     void ensureBlankIdIsRejected() {
         IndexRegistry r = new IndexRegistry();
-        assertThrows(IllegalArgumentException.class, () -> r.indexFor(null));
-        assertThrows(IllegalArgumentException.class, () -> r.indexFor(""));
-        assertThrows(IllegalArgumentException.class, () -> r.indexFor("  "));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                r.indexFor(null);
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                r.indexFor("");
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                r.indexFor("  ");
+            }
+        });
     }
 }

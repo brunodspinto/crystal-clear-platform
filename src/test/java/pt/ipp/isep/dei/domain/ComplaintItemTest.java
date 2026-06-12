@@ -6,6 +6,7 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class ComplaintItemTest {
 
     private static final Date PAST_DATE = new Date(0); // 1 Jan 1970 — always in the past
@@ -26,33 +27,53 @@ class ComplaintItemTest {
 
     @Test
     void ensureGrievanceFailsWithNullDescription() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new ComplaintItem(null, PAST_DATE, PoliticalFunction.MAYOR));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new ComplaintItem(null, PAST_DATE, PoliticalFunction.MAYOR);
+            }
+        });
     }
 
     @Test
     void ensureGrievanceFailsWithBlankDescription() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new ComplaintItem("   ", PAST_DATE, PoliticalFunction.MAYOR));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new ComplaintItem("   ", PAST_DATE, PoliticalFunction.MAYOR);
+            }
+        });
     }
 
     @Test
     void ensureGrievanceFailsWithNullDate() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new ComplaintItem("Description", null, PoliticalFunction.MAYOR));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new ComplaintItem("Description", null, PoliticalFunction.MAYOR);
+            }
+        });
     }
 
     @Test
     void ensureGrievanceFailsWithFutureDate() {
         Date futureDate = new Date(Long.MAX_VALUE);
-        assertThrows(IllegalArgumentException.class, () ->
-                new ComplaintItem("Description", futureDate, PoliticalFunction.MAYOR));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new ComplaintItem("Description", futureDate, PoliticalFunction.MAYOR);
+            }
+        });
     }
 
     @Test
     void ensureGrievanceFailsWithNullFunction() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new ComplaintItem("Description", PAST_DATE, null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new ComplaintItem("Description", PAST_DATE, null);
+            }
+        });
     }
 
     @Test

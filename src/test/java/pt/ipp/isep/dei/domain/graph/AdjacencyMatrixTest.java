@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class AdjacencyMatrixTest {
 
     @Test
@@ -14,8 +15,18 @@ class AdjacencyMatrixTest {
 
     @Test
     void ensureNonPositiveSizeIsRejected() {
-        assertThrows(IllegalArgumentException.class, () -> new AdjacencyMatrix(0));
-        assertThrows(IllegalArgumentException.class, () -> new AdjacencyMatrix(-1));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new AdjacencyMatrix(0);
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                new AdjacencyMatrix(-1);
+            }
+        });
     }
 
     @Test
@@ -50,14 +61,24 @@ class AdjacencyMatrixTest {
     @Test
     void ensureMultiplyRejectsNull() {
         AdjacencyMatrix m = new AdjacencyMatrix(2);
-        assertThrows(IllegalArgumentException.class, () -> m.multiply(null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                m.multiply(null);
+            }
+        });
     }
 
     @Test
     void ensureMultiplyRejectsDifferentSize() {
         AdjacencyMatrix small = new AdjacencyMatrix(2);
         AdjacencyMatrix big = new AdjacencyMatrix(3);
-        assertThrows(IllegalArgumentException.class, () -> small.multiply(big));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                small.multiply(big);
+            }
+        });
     }
 
     @Test

@@ -11,6 +11,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class SubmitComplaintControllerTest {
 
     private static final Date PAST_DATE = new Date(0);
@@ -137,8 +138,12 @@ class SubmitComplaintControllerTest {
         PoliticalAgent agent = createTestAgent();
         SubmitComplaintController controller = controllerLoggedInWithCitizen(agent, new ComplaintRepository());
 
-        assertThrows(IllegalStateException.class, () ->
-                controller.addGrievance("First", PAST_DATE, PoliticalFunction.MAYOR));
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.addGrievance("First", PAST_DATE, PoliticalFunction.MAYOR);
+            }
+        });
     }
 
     // --- submit ---------------------------------------------------------------

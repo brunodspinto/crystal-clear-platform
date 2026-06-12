@@ -5,22 +5,31 @@ import pt.ipp.isep.dei.domain.TaskCategory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class TaskCategoryRepositoryTest {
 
     @Test
     void getTaskCategoryByDescriptionEmptyList() {
         TaskCategoryRepository taskCategoryRepository = new TaskCategoryRepository();
         String taskCategoryDescription = "Task Category Description";
-        assertThrows(IllegalArgumentException.class,
-                () -> taskCategoryRepository.getTaskCategoryByDescription(taskCategoryDescription));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                taskCategoryRepository.getTaskCategoryByDescription(taskCategoryDescription);
+            }
+        });
     }
 
     @Test
     void getTaskCategoryByDescriptionNullList() {
         TaskCategoryRepository taskCategoryRepository = new TaskCategoryRepository();
         String taskCategoryDescription = "Task Category Description";
-        assertThrows(IllegalArgumentException.class,
-                () -> taskCategoryRepository.getTaskCategoryByDescription(taskCategoryDescription));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                taskCategoryRepository.getTaskCategoryByDescription(taskCategoryDescription);
+            }
+        });
     }
 
     @Test
@@ -48,8 +57,12 @@ class TaskCategoryRepositoryTest {
         TaskCategory taskCategory = new TaskCategory(taskCategoryDescription);
         taskCategoryRepository.add(taskCategory);
         String taskCategoryDescription1 = "Task Category Description 1";
-        assertThrows(IllegalArgumentException.class,
-                () -> taskCategoryRepository.getTaskCategoryByDescription(taskCategoryDescription1));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                taskCategoryRepository.getTaskCategoryByDescription(taskCategoryDescription1);
+            }
+        });
 
     }
 
@@ -60,8 +73,12 @@ class TaskCategoryRepositoryTest {
         TaskCategory taskCategory = new TaskCategory(taskCategoryDescription);
         taskCategoryRepository.add(taskCategory);
 
-        assertThrows(UnsupportedOperationException.class,
-                () -> taskCategoryRepository.getTaskCategories().add(new TaskCategory("Task Category Description 1")));
+        assertThrows(UnsupportedOperationException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                taskCategoryRepository.getTaskCategories().add(new TaskCategory("Task Category Description 1"));
+            }
+        });
 
     }
 

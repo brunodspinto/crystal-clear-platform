@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.function.Executable;
 class AnalyseIncomeEvolutionControllerTest {
 
     private PoliticalAgent agentJoao() {
@@ -173,9 +174,13 @@ class AnalyseIncomeEvolutionControllerTest {
         AnalyseIncomeEvolutionController controller =
                 new AnalyseIncomeEvolutionController(new PoliticalAgentRepository(), new DeclarationRepository());
 
-        assertThrows(IllegalArgumentException.class,
-                () -> controller.getIncomeEvolution(dto(agentJoao()),
-                        date(2024, Calendar.JUNE, 30), date(2024, Calendar.JANUARY, 1)));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.getIncomeEvolution(dto(agentJoao()),
+                            date(2024, Calendar.JUNE, 30), date(2024, Calendar.JANUARY, 1));
+            }
+        });
     }
 
     @Test
@@ -183,8 +188,12 @@ class AnalyseIncomeEvolutionControllerTest {
         AnalyseIncomeEvolutionController controller =
                 new AnalyseIncomeEvolutionController(new PoliticalAgentRepository(), new DeclarationRepository());
 
-        assertThrows(IllegalArgumentException.class,
-                () -> controller.getIncomeEvolution(null, new Date(), new Date()));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.getIncomeEvolution(null, new Date(), new Date());
+            }
+        });
     }
 
     @Test
@@ -192,10 +201,18 @@ class AnalyseIncomeEvolutionControllerTest {
         AnalyseIncomeEvolutionController controller =
                 new AnalyseIncomeEvolutionController(new PoliticalAgentRepository(), new DeclarationRepository());
 
-        assertThrows(IllegalArgumentException.class,
-                () -> controller.getIncomeEvolution(dto(agentJoao()), null, new Date()));
-        assertThrows(IllegalArgumentException.class,
-                () -> controller.getIncomeEvolution(dto(agentJoao()), new Date(), null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.getIncomeEvolution(dto(agentJoao()), null, new Date());
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.getIncomeEvolution(dto(agentJoao()), new Date(), null);
+            }
+        });
     }
 
     @Test

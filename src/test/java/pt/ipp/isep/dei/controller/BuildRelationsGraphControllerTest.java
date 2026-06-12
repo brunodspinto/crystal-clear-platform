@@ -10,6 +10,7 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.function.Executable;
 class BuildRelationsGraphControllerTest {
 
     @TempDir
@@ -82,7 +83,12 @@ class BuildRelationsGraphControllerTest {
         GraphRepository repo = new GraphRepository();
         BuildRelationsGraphController controller = new BuildRelationsGraphController(repo);
         Path svg = tempDir.resolve("graph.svg");
-        assertThrows(IllegalStateException.class, () -> controller.renderGraphToSvg(svg.toString()));
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.renderGraphToSvg(svg.toString());
+            }
+        });
     }
 
     @Test
