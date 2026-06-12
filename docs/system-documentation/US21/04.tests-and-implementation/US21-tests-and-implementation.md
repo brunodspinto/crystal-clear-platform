@@ -88,5 +88,5 @@ Demo plan (sprint review):
 
 ## 7. Observations
 
-- The bridge currently treats edges as directed, in line with `RelationGraph#addEdge` only registering `from -> to`. The directed-vs-undirected decision is still pending on the US20 side and may force a tweak here later.
+- The bridge reads edges as directed, but since US20's `GraphBuilder` already mirrors the symmetric relation types (`relativeOf`, `friendOf`, `associatedWith`), the matrices for those labels come out symmetric without any extra work here. Directional labels (`appointedBy`, `ownerOf`, ...) keep their single direction.
 - `IndexRegistry` uses a single `ArrayList` and linear search for lookups (`indexOf`). For the demo dataset this is fine; if the registry ever grows large, replacing it with a `Map<String, Integer>` is a one-liner change.
