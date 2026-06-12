@@ -6,8 +6,8 @@
 
 <!--
   SubmitDeclaration.fxml — US06: Submit a Declaration of Interests.
+  AC1: household section, AC2: import from previous, AC3: type rules + exceptional fields.
   Controller: pt.ipp.isep.dei.ui.gui.SubmitDeclarationFXController
-  Loaded by: MainController.showSubmitDeclaration()
 -->
 <VBox xmlns="http://javafx.com/javafx/11"
       xmlns:fx="http://javafx.com/fxml/1"
@@ -16,12 +16,41 @@
       spacing="0">
 
     <!-- ── Header ──────────────────────────────────────────────────────────── -->
-    <VBox styleClass="root-pane" spacing="6">
-        <padding><Insets top="16" right="20" bottom="12" left="20"/></padding>
+    <VBox styleClass="root-pane" spacing="8">
+        <padding><Insets top="14" right="20" bottom="12" left="20"/></padding>
         <Label text="Submit Declaration of Interests" styleClass="scene-title"/>
+
+        <!-- Declaration type (AC3) -->
         <HBox spacing="12" alignment="CENTER_LEFT">
-            <Label text="Declaration Type:" styleClass="field-label"/>
+            <Label text="Declaration Type:" minWidth="130" styleClass="field-label"/>
             <ComboBox fx:id="typeCombo" prefWidth="180" styleClass="input-field"/>
+        </HBox>
+
+        <!-- AC3 – EXCEPTIONAL extra fields (hidden unless EXCEPTIONAL selected) -->
+        <VBox fx:id="exceptionalBox" spacing="6"
+              style="-fx-border-color:#e8c2bf; -fx-border-radius:4;
+                     -fx-background-color:#fdf0ef; -fx-background-radius:4;
+                     -fx-padding:10;">
+            <Label text="Exceptional Declaration — additional information required"
+                   style="-fx-font-weight:bold; -fx-font-size:11px; -fx-text-fill:#c0392b;"/>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="Amended Declaration ID:" minWidth="160"/>
+                <TextField fx:id="amendedIdField" promptText="e.g. DECL-3"
+                           prefWidth="160" styleClass="input-field"/>
+                <Label text="Amendment Reason:"/>
+                <TextField fx:id="amendReasonField"
+                           promptText="Reason for correction or amendment"
+                           prefWidth="300" styleClass="input-field" HBox.hgrow="ALWAYS"/>
+            </HBox>
+        </VBox>
+
+        <!-- AC2 – Import from previous declaration -->
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="Import from previous:" minWidth="130"
+                   style="-fx-font-size:11px; -fx-text-fill:#555;"/>
+            <ComboBox fx:id="importCombo" prefWidth="340" styleClass="input-field"/>
+            <Button fx:id="importButton" text="Import data"
+                    onAction="#handleImport" styleClass="secondary-button"/>
         </HBox>
     </VBox>
 
@@ -32,13 +61,41 @@
         <content>
             <Accordion>
 
+                <!-- ── 0. Household (AC1) ────────────────────────────────────── -->
+                <TitledPane text="0. Household (Spouse, Descendants and Others)">
+                    <content>
+                    <VBox spacing="8">
+                        <padding><Insets top="10" right="14" bottom="10" left="14"/></padding>
+                        <Label text="Declare your partner, descendants and any other family members you wish to include."
+                               style="-fx-font-size:11px; -fx-text-fill:#666;"/>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Full Name:" minWidth="80"/>
+                            <TextField fx:id="hhNameField" promptText="Full name"
+                                       prefWidth="240" styleClass="input-field"/>
+                            <Label text="Relation:"/>
+                            <ComboBox fx:id="hhRelationCombo" prefWidth="140"
+                                      styleClass="input-field"/>
+                            <Button text="Add" onAction="#handleAddHousehold"
+                                    styleClass="primary-button" prefWidth="70"/>
+                            <Button text="Remove" onAction="#handleRemoveHousehold"
+                                    styleClass="secondary-button"/>
+                        </HBox>
+                        <TableView fx:id="hhTable" prefHeight="120">
+                            <columns>
+                                <TableColumn fx:id="hhColName"     text="Full Name"  prefWidth="280"/>
+                                <TableColumn fx:id="hhColRelation" text="Relation"   prefWidth="160"/>
+                            </columns>
+                            <placeholder><Label text="No household members declared."/></placeholder>
+                        </TableView>
+                    </VBox>
+                    </content>
+                </TitledPane>
+
                 <!-- ── 1. Position Entries ───────────────────────────────────── -->
                 <TitledPane text="1. Position / Job Entries (required)" expanded="true">
                     <content>
                     <VBox spacing="8">
                         <padding><Insets top="10" right="14" bottom="10" left="14"/></padding>
-
-                        <!-- Form row 1 -->
                         <HBox spacing="10" alignment="CENTER_LEFT">
                             <Label text="Organisation:" minWidth="90"/>
                             <ComboBox fx:id="posOrgCombo" prefWidth="200" styleClass="input-field"/>
@@ -48,8 +105,6 @@
                             <Label text="Nature:"/>
                             <ComboBox fx:id="posNatureCombo" prefWidth="110" styleClass="input-field"/>
                         </HBox>
-
-                        <!-- Form row 2 -->
                         <HBox spacing="10" alignment="CENTER_LEFT">
                             <Label text="Gross Salary:" minWidth="90"/>
                             <TextField fx:id="posGrossField" promptText="Annual €"
@@ -61,8 +116,6 @@
                             <TextField fx:id="posBoardField" promptText="Board fees €"
                                        prefWidth="110" styleClass="input-field"/>
                         </HBox>
-
-                        <!-- Form row 3 -->
                         <HBox spacing="10" alignment="CENTER_LEFT">
                             <Label text="Start Date:" minWidth="90"/>
                             <TextField fx:id="posStartField" promptText="dd-MM-yyyy"
@@ -75,8 +128,6 @@
                             <Button text="Remove selected" onAction="#handleRemovePosition"
                                     styleClass="secondary-button"/>
                         </HBox>
-
-                        <!-- Position table -->
                         <TableView fx:id="posTable" prefHeight="130">
                             <columns>
                                 <TableColumn fx:id="posColOrg"    text="Organisation" prefWidth="170"/>
@@ -104,7 +155,7 @@
                                        prefWidth="110" styleClass="input-field"/>
                             <Label text="Description:"/>
                             <TextField fx:id="subDescField" promptText="e.g. Research grant"
-                                       prefWidth="200" styleClass="input-field"/>
+                                       prefWidth="180" styleClass="input-field"/>
                             <Label text="Date:"/>
                             <TextField fx:id="subDateField" promptText="dd-MM-yyyy"
                                        prefWidth="110" styleClass="input-field"/>
@@ -145,7 +196,7 @@
                             <Button text="Remove" onAction="#handleRemoveAsset"
                                     styleClass="secondary-button"/>
                         </HBox>
-                        <Label text="Detail field: for Real Estate enter description, for Vehicles enter model, for Stocks enter share name."
+                        <Label text="Detail: Real Estate = description, Vehicles = model, Stocks = share name."
                                style="-fx-font-size:11px; -fx-text-fill:#888888;"/>
                         <TableView fx:id="assetTable" prefHeight="120">
                             <columns>
@@ -183,10 +234,10 @@
                         </HBox>
                         <TableView fx:id="bizTable" prefHeight="120">
                             <columns>
-                                <TableColumn fx:id="bizColOrg"   text="Organisation"  prefWidth="180"/>
-                                <TableColumn fx:id="bizColNif"   text="NIF"           prefWidth="110"/>
-                                <TableColumn fx:id="bizColValue" text="Total Value (€)" prefWidth="130"/>
-                                <TableColumn fx:id="bizColPct"   text="Percentage"    prefWidth="100"/>
+                                <TableColumn fx:id="bizColOrg"   text="Organisation"    prefWidth="180"/>
+                                <TableColumn fx:id="bizColNif"   text="NIF"             prefWidth="110"/>
+                                <TableColumn fx:id="bizColValue" text="Total Value (€)"  prefWidth="130"/>
+                                <TableColumn fx:id="bizColPct"   text="Percentage"       prefWidth="100"/>
                             </columns>
                             <placeholder><Label text="No business participations added yet."/></placeholder>
                         </TableView>

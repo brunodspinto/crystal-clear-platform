@@ -10,6 +10,10 @@ import java.util.List;
  * This is the central aggregate for US06. It owns all entry sections
  * (positions, subsidies, assets, business participations, attachments).
  * Upon creation, the status is always set to {@link DeclarationStatus#PENDING}.
+ *
+ * <p>AC1: may include a household section (partner, descendants, others).</p>
+ * <p>AC3: EXCEPTIONAL declarations carry the id of the amended declaration
+ * and the reason for the amendment.</p>
  */
 public class Declaration implements Serializable {
 
@@ -23,160 +27,159 @@ public class Declaration implements Serializable {
     private final Date submissionDate;
     private DeclarationStatus status;
 
-    private final List<PositionEntry> positionEntries;
-    private final List<Income> incomes;
-    private final List<SubsidyEntry> subsidyEntries;
-    private final List<AssetEntry> assetEntries;
+    // AC3 – only set for EXCEPTIONAL declarations
+    private final String amendedDeclarationId;
+    private final String amendmentReason;
+
+    private final List<HouseholdMember>      householdMembers;     // AC1
+    private final List<PositionEntry>         positionEntries;
+    private final List<Income>                incomes;
+    private final List<SubsidyEntry>          subsidyEntries;
+    private final List<AssetEntry>            assetEntries;
     private final List<BusinessParticipation> businessParticipations;
-    private final List<Attachment> attachments;
+    private final List<Attachment>            attachments;
+
+    // -------------------------------------------------------------------------
+    // Constructors
+    // -------------------------------------------------------------------------
 
     /**
-     * Creates a new Declaration. The status is automatically set to PENDING.
-     * Called by the controller after collecting all data from the agent.
+     * Creates a new INITIAL or REGULAR declaration.
+     * The status is automatically set to PENDING.
      *
-     * @param type           the type of declaration (initial, regular, or exceptional).
-     * @param agent          the political agent submitting the declaration.
-     * @param submissionDate the date of submission (set to now by the controller).
-     * @throws IllegalArgumentException if any required argument is null.
+     * @param type           INITIAL or REGULAR (not EXCEPTIONAL — use the other constructor)
+     * @param agent          the political agent submitting the declaration
+     * @param submissionDate the date of submission
+     * @throws IllegalArgumentException if any argument is null, or if type is EXCEPTIONAL
      */
     public Declaration(DeclarationType type, PoliticalAgent agent, Date submissionDate) {
-        if (type == null) {
-            throw new IllegalArgumentException("Declaration type cannot be null.");
+        this(type, agent, submissionDate, null, null);
+        if (type == DeclarationType.EXCEPTIONAL) {
+            throw new IllegalArgumentException(
+                "EXCEPTIONAL declarations require an amended declaration id and amendment reason. " +
+                "Use Declaration(type, agent, date, amendedDeclarationId, amendmentReason).");
         }
-        if (agent == null) {
-            throw new IllegalArgumentException("Political agent cannot be null.");
-        }
-        if (submissionDate == null) {
-            throw new IllegalArgumentException("Submission date cannot be null.");
-        }
-        this.id = "DECL-" + nextId;
-        nextId = nextId + 1;
-        this.type = type;
-        this.agent = agent;
-        this.submissionDate = submissionDate;
-        this.status = DeclarationStatus.PENDING;
-        this.positionEntries = new ArrayList<>();
-        this.incomes = new ArrayList<>();
-        this.subsidyEntries = new ArrayList<>();
-        this.assetEntries = new ArrayList<>();
-        this.businessParticipations = new ArrayList<>();
-        this.attachments = new ArrayList<>();
     }
 
     /**
-     * Adds a position entry to the declaration.
+     * Creates a new declaration of any type, including EXCEPTIONAL.
+     * For INITIAL and REGULAR declarations, pass {@code null} for both
+     * {@code amendedDeclarationId} and {@code amendmentReason}.
      *
-     * @param organization               the organization where the position is held.
-     * @param functionDesignation        the function performed.
-     * @param nature                     the nature of the position.
-     * @param grossSalary                the annual gross salary.
-     * @param sideIncomeConsulting       consulting side income.
-     * @param sideIncomeBoardMemberships board membership side income.
-     * @param startDate                  the start date.
-     * @param endDate                    the end date, or {@code null} if still active.
+     * @param type                  the declaration type
+     * @param agent                 the political agent submitting the declaration
+     * @param submissionDate        the date of submission
+     * @param amendedDeclarationId  id of the declaration being amended (required for EXCEPTIONAL)
+     * @param amendmentReason       reason for the amendment (required for EXCEPTIONAL)
+     * @throws IllegalArgumentException if required fields are missing or blank
      */
-    public void addPositionEntry(Organization organization, String functionDesignation, PositionNature nature,
-                                  double grossSalary, double sideIncomeConsulting,
-                                  double sideIncomeBoardMemberships, Date startDate, Date endDate) {
+    public Declaration(DeclarationType type, PoliticalAgent agent, Date submissionDate,
+                       String amendedDeclarationId, String amendmentReason) {
+        if (type == null)           throw new IllegalArgumentException("Declaration type cannot be null.");
+        if (agent == null)          throw new IllegalArgumentException("Political agent cannot be null.");
+        if (submissionDate == null) throw new IllegalArgumentException("Submission date cannot be null.");
+
+        if (type == DeclarationType.EXCEPTIONAL) {
+            if (amendedDeclarationId == null || amendedDeclarationId.isBlank()) {
+                throw new IllegalArgumentException(
+                    "EXCEPTIONAL declaration requires the id of the declaration being amended.");
+            }
+            if (amendmentReason == null || amendmentReason.isBlank()) {
+                throw new IllegalArgumentException(
+                    "EXCEPTIONAL declaration requires an amendment reason.");
+            }
+        }
+
+        this.id                   = "DECL-" + nextId++;
+        this.type                 = type;
+        this.agent                = agent;
+        this.submissionDate       = submissionDate;
+        this.status               = DeclarationStatus.PENDING;
+        this.amendedDeclarationId = amendedDeclarationId;
+        this.amendmentReason      = amendmentReason;
+
+        this.householdMembers      = new ArrayList<>();
+        this.positionEntries       = new ArrayList<>();
+        this.incomes               = new ArrayList<>();
+        this.subsidyEntries        = new ArrayList<>();
+        this.assetEntries          = new ArrayList<>();
+        this.businessParticipations = new ArrayList<>();
+        this.attachments           = new ArrayList<>();
+    }
+
+    // -------------------------------------------------------------------------
+    // AC1 – Household
+    // -------------------------------------------------------------------------
+
+    /**
+     * Adds a household member to the declaration (AC1).
+     *
+     * @param name     the full name of the household member
+     * @param relation the relationship to the agent (SPOUSE, DESCENDANT, OTHER)
+     */
+    public void addHouseholdMember(String name, HouseholdRelation relation) {
+        householdMembers.add(new HouseholdMember(name, relation));
+    }
+
+    /** @return a defensive copy of the household members list */
+    public List<HouseholdMember> getHouseholdMembers() {
+        return new ArrayList<>(householdMembers);
+    }
+
+    // -------------------------------------------------------------------------
+    // Existing section adders (unchanged)
+    // -------------------------------------------------------------------------
+
+    /** Adds a position entry to the declaration. */
+    public void addPositionEntry(Organization organization, String functionDesignation,
+                                  PositionNature nature, double grossSalary,
+                                  double sideIncomeConsulting, double sideIncomeBoardMemberships,
+                                  Date startDate, Date endDate) {
         positionEntries.add(new PositionEntry(organization, functionDesignation, nature,
                 grossSalary, sideIncomeConsulting, sideIncomeBoardMemberships, startDate, endDate));
     }
 
-    /**
-     * Adds an income entry to the declaration.
-     * <p>
-     * An {@link Income} represents an earning received from an organization (e.g. salary
-     * complements, fees, royalties), characterized by its {@code source}. It is a distinct
-     * concept from a {@link SubsidyEntry}, which represents a non-reciprocal support or
-     * subsidy granted to the agent and is characterized by its {@code description}.
-     *
-     * @param organization the organization that paid the income.
-     * @param amount       the income amount.
-     * @param source       the source of the income (e.g. consulting, royalties).
-     * @param date         the date received.
-     */
+    /** Adds an income entry to the declaration. */
     public void addIncome(Organization organization, double amount, String source, Date date) {
         incomes.add(new Income(organization, amount, source, date));
     }
 
-    /**
-     * Adds a subsidy entry to the declaration.
-     * <p>
-     * A {@link SubsidyEntry} represents a non-reciprocal support or subsidy received from
-     * an organization. It is a distinct concept from {@link Income} (see {@link #addIncome}).
-     *
-     * @param organization the organization from which the subsidy was received.
-     * @param amount       the subsidy amount.
-     * @param description  a description of the subsidy.
-     * @param date         the date received.
-     */
-    public void addSubsidyEntry(Organization organization, double amount, String description, Date date) {
+    /** Adds a subsidy entry to the declaration. */
+    public void addSubsidyEntry(Organization organization, double amount,
+                                 String description, Date date) {
         subsidyEntries.add(new SubsidyEntry(organization, amount, description, date));
     }
 
-    /**
-     * Adds an asset entry to the declaration.
-     * The {@code detail} must match the {@code assetType}
-     * ({@link RealEstate}, {@link VehicleAsset}, or {@link StockAsset}).
-     *
-     * @param assetType  the category of the asset.
-     * @param assetValue the declared value.
-     * @param detail     the detail object matching the asset type.
-     */
+    /** Adds an asset entry to the declaration. */
     public void addAssetEntry(AssetType assetType, double assetValue, Object detail) {
         assetEntries.add(new AssetEntry(assetType, assetValue, detail));
     }
 
-    /**
-     * Adds a business participation entry to the declaration.
-     *
-     * @param organization       the company.
-     * @param companyNIF         the NIF of the company.
-     * @param totalValueInStocks the total declared stock value.
-     * @param companyPercentage  the ownership percentage.
-     */
+    /** Adds a business participation entry to the declaration. */
     public void addBusinessParticipation(Organization organization, long companyNIF,
                                           double totalValueInStocks, double companyPercentage) {
         businessParticipations.add(new BusinessParticipation(organization, companyNIF,
                 totalValueInStocks, companyPercentage));
     }
 
-    /**
-     * Adds an attachment to the declaration.
-     *
-     * @param fileName   the name of the file.
-     * @param uploadDate the date of upload.
-     */
+    /** Adds an attachment to the declaration. */
     public void addAttachment(String fileName, Date uploadDate) {
         attachments.add(new Attachment(fileName, uploadDate));
     }
 
-    /**
-     * Updates the status of this declaration.
-     * Used by the Ethics Committee validation process (US08).
-     *
-     * @param status the new status; cannot be null.
-     * @throws IllegalArgumentException if status is null.
-     */
+    // -------------------------------------------------------------------------
+    // Status management (unchanged)
+    // -------------------------------------------------------------------------
+
+    /** Updates the status of this declaration. */
     public void setStatus(DeclarationStatus status) {
-        if (status == null) {
-            throw new IllegalArgumentException("Status cannot be null.");
-        }
+        if (status == null) throw new IllegalArgumentException("Status cannot be null.");
         this.status = status;
     }
 
-    /**
-     * Updates the status of this declaration based on a validation outcome (US08).
-     * VALIDATED → DeclarationStatus.VALIDATED
-     * RETURNED_FOR_CORRECTION → DeclarationStatus.REJECTED
-     *
-     * @param outcome the validation outcome; cannot be null.
-     * @throws IllegalArgumentException if outcome is null.
-     */
+    /** Updates the status based on a validation outcome (US08). */
     public void setStatus(ValidationOutcome outcome) {
-        if (outcome == null) {
-            throw new IllegalArgumentException("Outcome cannot be null.");
-        }
+        if (outcome == null) throw new IllegalArgumentException("Outcome cannot be null.");
         switch (outcome) {
             case VALIDATED:
                 this.status = DeclarationStatus.VALIDATED;
@@ -189,118 +192,51 @@ public class Declaration implements Serializable {
         }
     }
 
-    /**
-     * Returns a summary of the declaration's content for display purposes (used by US08).
-     *
-     * @return a formatted string with the declaration details.
-     */
+    // -------------------------------------------------------------------------
+    // Display
+    // -------------------------------------------------------------------------
+
+    /** Returns a summary for display purposes (US08). */
     public String getDetails() {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("Declaration [%s | %s | %s]%n", type, submissionDate, status));
-        sb.append(String.format("  Agent                 : %s%n", agent.getName()));
-        sb.append(String.format("  Position entries      : %d%n", positionEntries.size()));
-        sb.append(String.format("  Income entries        : %d%n", incomes.size()));
-        sb.append(String.format("  Subsidy entries       : %d%n", subsidyEntries.size()));
-        sb.append(String.format("  Asset entries         : %d%n", assetEntries.size()));
+        sb.append(String.format("  Agent                  : %s%n", agent.getName()));
+        if (type == DeclarationType.EXCEPTIONAL) {
+            sb.append(String.format("  Amends declaration     : %s%n", amendedDeclarationId));
+            sb.append(String.format("  Amendment reason       : %s%n", amendmentReason));
+        }
+        sb.append(String.format("  Household members      : %d%n", householdMembers.size()));
+        sb.append(String.format("  Position entries       : %d%n", positionEntries.size()));
+        sb.append(String.format("  Income entries         : %d%n", incomes.size()));
+        sb.append(String.format("  Subsidy entries        : %d%n", subsidyEntries.size()));
+        sb.append(String.format("  Asset entries          : %d%n", assetEntries.size()));
         sb.append(String.format("  Business participations: %d%n", businessParticipations.size()));
-        sb.append(String.format("  Attachments           : %d%n", attachments.size()));
+        sb.append(String.format("  Attachments            : %d%n", attachments.size()));
         return sb.toString();
     }
 
-    /**
-     * Advances the shared id counter so that it stays above the numeric part of
-     * an id restored from disk. Called by the repository after deserialization to
-     * avoid colliding with declarations created in a previous run.
-     *
-     * @param loadedId an id previously assigned (format {@code DECL-<n>}).
-     */
-    public static void registerLoadedId(String loadedId) {
-        try {
-            int n = Integer.parseInt(loadedId.substring(loadedId.indexOf('-') + 1));
-            if (n >= nextId) {
-                nextId = n + 1;
-            }
-        } catch (NumberFormatException | IndexOutOfBoundsException ignored) {
-            // id not in the expected format; leave the counter unchanged.
-        }
-    }
+    // -------------------------------------------------------------------------
+    // Getters
+    // -------------------------------------------------------------------------
 
-    /**
-     * Gets id.
-     *
-     * @return the unique identifier of this declaration.
-     */
-    public String getId() { return id; }
+    public String getId()                  { return id; }
+    public PoliticalAgent getAgent()       { return agent; }
+    public DeclarationType getType()       { return type; }
+    public Date getSubmissionDate()        { return submissionDate; }
+    public DeclarationStatus getStatus()   { return status; }
 
-    /**
-     * Gets agent.
-     *
-     * @return the political agent who submitted the declaration.
-     */
-    public PoliticalAgent getAgent() { return agent; }
+    /** @return the id of the declaration being amended, or null for non-EXCEPTIONAL */
+    public String getAmendedDeclarationId() { return amendedDeclarationId; }
 
-    /**
-     * Gets type.
-     *
-     * @return the type of this declaration.
-     */
-    public DeclarationType getType() { return type; }
+    /** @return the reason for the amendment, or null for non-EXCEPTIONAL */
+    public String getAmendmentReason()      { return amendmentReason; }
 
-    /**
-     * Gets submission date.
-     *
-     * @return the submission date.
-     */
-    public Date getSubmissionDate() { return submissionDate; }
-
-    /**
-     * Gets status.
-     *
-     * @return the current status of the declaration.
-     */
-    public DeclarationStatus getStatus() { return status; }
-
-    /**
-     * Gets position entries.
-     *
-     * @return an unmodifiable copy of the position entries.
-     */
-    public List<PositionEntry> getPositionEntries() { return new ArrayList<>(positionEntries); }
-
-    /**
-     * Gets incomes.
-     *
-     * @return an unmodifiable copy of the income entries.
-     */
-    public List<Income> getIncomes() { return new ArrayList<>(incomes); }
-
-    /**
-     * Gets subsidy entries.
-     *
-     * @return an unmodifiable copy of the subsidy entries.
-     */
-    public List<SubsidyEntry> getSubsidyEntries() { return new ArrayList<>(subsidyEntries); }
-
-    /**
-     * Gets asset entries.
-     *
-     * @return an unmodifiable copy of the asset entries.
-     */
-    public List<AssetEntry> getAssetEntries() { return new ArrayList<>(assetEntries); }
-
-    /**
-     * Gets business participations.
-     *
-     * @return an unmodifiable copy of the business participations.
-     */
+    public List<PositionEntry>         getPositionEntries()        { return new ArrayList<>(positionEntries); }
+    public List<Income>                getIncomes()                { return new ArrayList<>(incomes); }
+    public List<SubsidyEntry>          getSubsidyEntries()         { return new ArrayList<>(subsidyEntries); }
+    public List<AssetEntry>            getAssetEntries()           { return new ArrayList<>(assetEntries); }
     public List<BusinessParticipation> getBusinessParticipations() { return new ArrayList<>(businessParticipations); }
-
-    /**
-     * Gets attachments.
-     *
-     * @return an unmodifiable copy of the attachments.
-     */
-    public List<Attachment> getAttachments() { return new ArrayList<>(attachments); }
+    public List<Attachment>            getAttachments()            { return new ArrayList<>(attachments); }
 
     @Override
     public String toString() {
