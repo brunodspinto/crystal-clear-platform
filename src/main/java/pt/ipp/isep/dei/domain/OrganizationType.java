@@ -1,7 +1,7 @@
 package pt.ipp.isep.dei.domain;
 
 /**
- * Represents the type of an organization that can be registered in the system.
+ * Represents the type of organization that can be registered in the system.
  */
 public enum OrganizationType {
     /**

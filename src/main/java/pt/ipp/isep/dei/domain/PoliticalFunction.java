@@ -1,7 +1,7 @@
 package pt.ipp.isep.dei.domain;
 
 /**
- * Represents the political function held by an agent at the time of a reported behaviour.
+ * Represents the political function held by an agent at the time of a reported behavior.
  */
 public enum PoliticalFunction {
     /**

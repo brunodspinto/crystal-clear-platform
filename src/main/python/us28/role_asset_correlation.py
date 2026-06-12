@@ -15,7 +15,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import stats
 
-# Human-readable asset label -> dataset column name.
 ASSET_COLUMNS = {
     'real estate': 'assets_in_real_estate',
     'vehicles':    'assets_in_vehicles',
