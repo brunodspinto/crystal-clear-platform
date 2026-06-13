@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -73,11 +74,12 @@ def plot_regression(df, df_top, slope, intercept, output_path):
              label=f'y = {slope:.4f}x + {intercept:.2f}')
     plt.scatter(df_top['total_income'], df_top['total_assets'],
                 color='red', label='Top 10 deviation')
-    plt.title('US29 — Income vs Assets Regression')
+    plt.title('US29 - Income vs Assets Regression')
     plt.xlabel('Total income')
     plt.ylabel('Total assets')
     plt.legend()
     plt.tight_layout()
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
     plt.savefig(output_path)
     plt.show()
 
