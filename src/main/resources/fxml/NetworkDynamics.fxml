@@ -12,13 +12,14 @@
 <VBox prefHeight="480.0" prefWidth="720.0" spacing="10.0" styleClass="root-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.ui.gui.NetworkDynamicsFXController">
    <children>
       <Label styleClass="scene-title" text="Network Dynamics Over Time" />
-      <Label text="Add one or more snapshot dates; for each date a snapshot of the active entities and relations of the network is shown." wrapText="true" />
+      <Label text="Add one or more snapshot dates, typed below or loaded from a CSV file (header SnapshotDate, one date per line); for each date a snapshot of the active entities and relations of the network is shown." wrapText="true" />
       <HBox alignment="CENTER_LEFT" spacing="10.0">
          <children>
             <Label styleClass="field-label" text="Date:" />
             <TextField fx:id="dateField" prefWidth="160.0" promptText="yyyy-MM-dd" styleClass="input-field" />
             <Button mnemonicParsing="false" onAction="#handleAddDate" styleClass="primary-button" text="Add" />
             <Button mnemonicParsing="false" onAction="#handleRemoveDate" styleClass="secondary-button" text="Remove Selected" />
+            <Button mnemonicParsing="false" onAction="#handleLoadCsv" styleClass="secondary-button" text="Load from CSV..." />
          </children>
       </HBox>
       <ListView fx:id="datesList" prefHeight="90.0" />

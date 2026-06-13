@@ -203,7 +203,7 @@ public class Organization implements Serializable {
      * @return list of employees.
      */
     public List<Employee> getEmployees() {
-        return List.copyOf(employees);
+        return new ArrayList<>(employees);
     }
 
     /**
@@ -212,7 +212,7 @@ public class Organization implements Serializable {
      * @return list of tasks.
      */
     public List<Task> getTasks() {
-        return List.copyOf(tasks);
+        return new ArrayList<>(tasks);
     }
 
     @Override

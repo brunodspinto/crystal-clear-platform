@@ -78,7 +78,7 @@ public class Complaint implements Serializable {
      * @return an unmodifiable copy of the grievances of this complaint.
      */
     public List<ComplaintItem> getItems() {
-        return List.copyOf(items);
+        return new ArrayList<>(items);
     }
 
     /**

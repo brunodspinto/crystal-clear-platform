@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import pt.ipp.isep.dei.domain.RegistrationRequest;
 import pt.ipp.isep.dei.domain.RegistrationStatus;
 import pt.ipp.isep.dei.domain.UserRole;
+import pt.ipp.isep.dei.dto.RegistrationRequestDTO;
 import pt.ipp.isep.dei.repository.AuthenticationRepository;
 import pt.ipp.isep.dei.repository.RegistrationRequestRepository;
 import pt.ipp.isep.dei.service.EmailService;
@@ -201,6 +202,114 @@ class ReviewRegistrationControllerTest {
         repository.save(r);
         controller.rejectRequest(r, "Wrong role");
         assertTrue(emailService.getLastBody().contains("Wrong role"));
+    }
+
+    // ----- DTO methods (admin session required) -----
+
+    private AuthenticationRepository makeAdminSession() {
+        AuthenticationRepository authRepo = new AuthenticationRepository();
+        authRepo.addUserRole(AuthenticationController.ROLE_ADMIN, AuthenticationController.ROLE_ADMIN);
+        authRepo.addUserWithRole("Admin", "admin@this.app", "ADM12ab", AuthenticationController.ROLE_ADMIN);
+        authRepo.doLogin("admin@this.app", "ADM12ab");
+        return authRepo;
+    }
+
+    private AuthenticationRepository makeNonAdminSession() {
+        AuthenticationRepository authRepo = new AuthenticationRepository();
+        authRepo.addUserRole("JOURNALIST", "Journalist");
+        authRepo.addUserWithRole("Journalist", "journalist@this.app", "JRN12ab", "JOURNALIST");
+        authRepo.doLogin("journalist@this.app", "JRN12ab");
+        return authRepo;
+    }
+
+    private ReviewRegistrationController makeAdminController() {
+        return new ReviewRegistrationController(repository, makeAdminSession(), emailService);
+    }
+
+    @Test
+    void ensureGetPendingRequestsAsDTOReturnsAllPending() {
+        repository.save(makeRequest("dto1@gov.pt", UserRole.POLITICAL_AGENT));
+        repository.save(makeRequest("dto2@gov.pt", UserRole.JOURNALIST));
+        ReviewRegistrationController adminController = makeAdminController();
+        assertEquals(2, adminController.getPendingRequestsAsDTO().size());
+    }
+
+    @Test
+    void ensureDTOCarriesTheRequestData() {
+        repository.save(makeRequest("dto3@gov.pt", UserRole.JOURNALIST));
+        ReviewRegistrationController adminController = makeAdminController();
+        RegistrationRequestDTO dto = adminController.getPendingRequestsAsDTO().get(0);
+        assertEquals("Test User", dto.getFullName());
+        assertEquals("dto3@gov.pt", dto.getEmail());
+        assertEquals(UserRole.JOURNALIST, dto.getRole());
+        assertEquals("DOC123", dto.getIdentificationDocument());
+        assertNotNull(dto.getSubmissionDate());
+    }
+
+    @Test
+    void ensureGetPendingRequestsAsDTOWithoutSessionThrows() {
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.getPendingRequestsAsDTO();
+            }
+        });
+    }
+
+    @Test
+    void ensureGetPendingRequestsAsDTOForNonAdminThrows() {
+        final ReviewRegistrationController nonAdminController =
+                new ReviewRegistrationController(repository, makeNonAdminSession(), emailService);
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                nonAdminController.getPendingRequestsAsDTO();
+            }
+        });
+    }
+
+    @Test
+    void ensureApproveRequestByEmailApprovesAndNotifies() {
+        RegistrationRequest r = makeRequest("byemail.ok@gov.pt", UserRole.POLITICAL_AGENT);
+        repository.save(r);
+        ReviewRegistrationController adminController = makeAdminController();
+        adminController.approveRequestByEmail("byemail.ok@gov.pt");
+        assertEquals(RegistrationStatus.APPROVED, r.getStatus());
+        assertEquals("byemail.ok@gov.pt", emailService.getSentEmails().get(0));
+        assertTrue(adminController.getPendingRequestsAsDTO().isEmpty());
+    }
+
+    @Test
+    void ensureApproveRequestByEmailUnknownEmailThrows() {
+        final ReviewRegistrationController adminController = makeAdminController();
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                adminController.approveRequestByEmail("missing@gov.pt");
+            }
+        });
+    }
+
+    @Test
+    void ensureRejectRequestByEmailRejectsAndStoresReason() {
+        RegistrationRequest r = makeRequest("byemail.no@gov.pt", UserRole.POLITICAL_AGENT);
+        repository.save(r);
+        ReviewRegistrationController adminController = makeAdminController();
+        adminController.rejectRequestByEmail("byemail.no@gov.pt", "Invalid document");
+        assertEquals(RegistrationStatus.REJECTED, r.getStatus());
+        assertEquals("Invalid document", r.getRejectionReason());
+        assertTrue(adminController.getPendingRequestsAsDTO().isEmpty());
+    }
+
+    @Test
+    void ensureRejectRequestByEmailUnknownEmailThrows() {
+        final ReviewRegistrationController adminController = makeAdminController();
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                adminController.rejectRequestByEmail("missing@gov.pt", "reason");
+            }
+        });
     }
 
     /**

@@ -38,6 +38,6 @@ public class ComplaintAssessmentRepository implements Serializable {
      * @return list of all complaint assessments.
      */
     public List<ComplaintAssessment> getAssessments() {
-        return List.copyOf(assessments);
+        return new ArrayList<>(assessments);
     }
 }

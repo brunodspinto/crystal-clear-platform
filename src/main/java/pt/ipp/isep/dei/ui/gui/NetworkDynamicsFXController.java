@@ -6,11 +6,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 import pt.ipp.isep.dei.controller.NetworkDynamicsController;
 import pt.ipp.isep.dei.domain.graph.Edge;
 import pt.ipp.isep.dei.domain.graph.Entity;
 import pt.ipp.isep.dei.domain.graph.NetworkSnapshot;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,8 +22,9 @@ import java.util.ResourceBundle;
 
 /**
  * GUI controller for US32 - Network dynamics over time. The administrator
- * adds a list of snapshot dates; for each date a snapshot of the active
- * entities and relations is shown in the results area.
+ * adds a list of snapshot dates, typed one by one or loaded from a CSV file;
+ * for each date a snapshot of the active entities and relations is shown in
+ * the results area.
  * Reuses the same {@link NetworkDynamicsController} as the console UI.
  */
 public class NetworkDynamicsFXController implements Initializable {
@@ -77,6 +81,36 @@ public class NetworkDynamicsFXController implements Initializable {
             return;
         }
         datesList.getItems().remove(selected);
+    }
+
+    @FXML
+    private void handleLoadCsv() {
+        clearMessage();
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Select Snapshot Dates CSV");
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV files", "*.csv"));
+        File file = chooser.showOpenDialog(
+                mainController != null ? mainController.getStage() : null);
+        if (file == null) {
+            return;
+        }
+        try {
+            List<String> dates = controller.loadDatesFromCsv(file.getAbsolutePath());
+            if (dates.isEmpty()) {
+                showError("No valid dates were found in the file.");
+                return;
+            }
+            int added = 0;
+            for (String date : dates) {
+                if (!datesList.getItems().contains(date)) {
+                    datesList.getItems().add(date);
+                    added++;
+                }
+            }
+            showSuccess(added + " date(s) loaded from " + file.getName() + ".");
+        } catch (IOException e) {
+            showError("Failed to read the file: " + e.getMessage());
+        }
     }
 
     @FXML

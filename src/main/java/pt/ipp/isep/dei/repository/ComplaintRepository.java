@@ -57,6 +57,6 @@ public class ComplaintRepository implements Serializable {
      * @return list of all complaints.
      */
     public List<Complaint> getComplaints() {
-        return List.copyOf(complaints);
+        return new ArrayList<>(complaints);
     }
 }
