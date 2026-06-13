@@ -90,7 +90,12 @@ public class ReviewRegistrationFXController implements Initializable {
         detailRole.setText(r.getRole().toString());
         detailDate.setText(DATE_FMT.format(r.getSubmissionDate()));
         String docLabel = r.getRole().getDocumentLabel();
-        if (docLabel != null && r.getIdentificationDocument() != null) {
+        if (r.getRole().requiresPoliticalData()) {
+            String mandate = r.getMandateStart() != null ? DATE_FMT.format(r.getMandateStart()) : "";
+            detailDoc.setText("CC: " + r.getNationalIdentityCard()
+                    + "  ·  NIF: " + r.getTaxIdentificationNumber()
+                    + "  ·  Mandate: " + mandate);
+        } else if (docLabel != null && r.getIdentificationDocument() != null) {
             detailDoc.setText(docLabel.replace(": ", ": ") + r.getIdentificationDocument());
         } else {
             detailDoc.setText("");

@@ -1,9 +1,12 @@
 package pt.ipp.isep.dei.controller;
 
+import pt.ipp.isep.dei.domain.PoliticalAgent;
 import pt.ipp.isep.dei.domain.RegistrationRequest;
+import pt.ipp.isep.dei.domain.UserRole;
 import pt.ipp.isep.dei.dto.RegistrationRequestDTO;
 import pt.ipp.isep.dei.mapper.RegistrationRequestMapper;
 import pt.ipp.isep.dei.repository.AuthenticationRepository;
+import pt.ipp.isep.dei.repository.PoliticalAgentRepository;
 import pt.ipp.isep.dei.repository.RegistrationRequestRepository;
 import pt.ipp.isep.dei.repository.Repositories;
 import pt.ipp.isep.dei.service.EmailService;
@@ -20,6 +23,7 @@ public class ReviewRegistrationController {
 
     private final RegistrationRequestRepository repository;
     private final AuthenticationRepository authRepository;
+    private final PoliticalAgentRepository politicalAgentRepository;
     private final EmailService emailService;
     private final RegistrationRequestMapper registrationRequestMapper = new RegistrationRequestMapper();
 
@@ -29,6 +33,7 @@ public class ReviewRegistrationController {
     public ReviewRegistrationController() {
         this.repository = Repositories.getInstance().getRegistrationRequestRepository();
         this.authRepository = Repositories.getInstance().getAuthenticationRepository();
+        this.politicalAgentRepository = Repositories.getInstance().getPoliticalAgentRepository();
         this.emailService = EmailServiceFactory.create();
     }
 
@@ -42,8 +47,24 @@ public class ReviewRegistrationController {
     public ReviewRegistrationController(RegistrationRequestRepository repository,
                                         AuthenticationRepository authRepository,
                                         EmailService emailService) {
+        this(repository, authRepository, new PoliticalAgentRepository(), emailService);
+    }
+
+    /**
+     * Instantiates a new Review registration controller.
+     *
+     * @param repository               the repository
+     * @param authRepository           the auth repository
+     * @param politicalAgentRepository the political agent repository
+     * @param emailService             the email service
+     */
+    public ReviewRegistrationController(RegistrationRequestRepository repository,
+                                        AuthenticationRepository authRepository,
+                                        PoliticalAgentRepository politicalAgentRepository,
+                                        EmailService emailService) {
         this.repository = repository;
         this.authRepository = authRepository;
+        this.politicalAgentRepository = politicalAgentRepository;
         this.emailService = emailService;
     }
 
@@ -67,11 +88,37 @@ public class ReviewRegistrationController {
         String roleId = roleIdFor(request);
         authRepository.addUserWithRole(request.getFullName(), request.getEmail(),
                 request.getPassword(), roleId);
+        registerPoliticalAgentIfNeeded(request);
         emailService.sendNotification(
                 request.getEmail(),
                 "Registration Approved",
                 "Dear " + request.getFullName() + ",\n\nYour registration request has been approved. You may now log in."
         );
+    }
+
+    /**
+     * Creates the {@link PoliticalAgent} domain object when an approved request
+     * is for the Political Agent role and carries the required data (national
+     * identity card, tax number and mandate start). Without this step the agent
+     * could log in but would not show up in the agent lists nor be able to
+     * submit a declaration. Requests that do not carry this data are left
+     * untouched, so the other roles keep working exactly as before.
+     *
+     * @param request the approved registration request
+     */
+    private void registerPoliticalAgentIfNeeded(RegistrationRequest request) {
+        if (request.getRole() != UserRole.POLITICAL_AGENT) {
+            return;
+        }
+        if (request.getTaxIdentificationNumber() == null
+                || request.getNationalIdentityCard() == null
+                || request.getMandateStart() == null) {
+            return;
+        }
+        PoliticalAgent agent = new PoliticalAgent(request.getFullName(), request.getEmail(),
+                request.getNationalIdentityCard(), request.getTaxIdentificationNumber(),
+                request.getMandateStart(), null);
+        politicalAgentRepository.save(agent);
     }
 
     /**

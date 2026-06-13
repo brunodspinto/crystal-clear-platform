@@ -4,6 +4,7 @@ import pt.ipp.isep.dei.controller.RegisterController;
 import pt.ipp.isep.dei.domain.UserRole;
 import pt.ipp.isep.dei.ui.console.utils.Utils;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,12 +45,26 @@ public class RegisterUI implements Runnable {
             identificationDocument = Utils.readLineFromConsole(controller.getDocumentLabel(role));
         }
 
+        String nationalIdentityCard = null;
+        String taxIdentificationNumber = null;
+        Date mandateStart = null;
+        if (controller.requiresPoliticalData(role)) {
+            nationalIdentityCard = Utils.readLineFromConsole("National identity card number (Cartão de Cidadão): ");
+            taxIdentificationNumber = Utils.readLineFromConsole("Tax number (NIF): ");
+            mandateStart = Utils.readDateFromConsole("Mandate start date (dd-MM-yyyy): ");
+        }
+
         System.out.println("\n--- Confirm Registration ---");
         System.out.printf("Full name : %s%n", fullName);
         System.out.printf("Email     : %s%n", email);
         System.out.printf("Role      : %s%n", role);
         if (identificationDocument != null) {
             System.out.printf("Document  : %s%n", identificationDocument);
+        }
+        if (controller.requiresPoliticalData(role)) {
+            System.out.printf("CC        : %s%n", nationalIdentityCard);
+            System.out.printf("NIF       : %s%n", taxIdentificationNumber);
+            System.out.printf("Mandate   : %s%n", mandateStart);
         }
 
         if (!Utils.confirm("Submit registration request? (y/n)")) {
@@ -58,7 +73,13 @@ public class RegisterUI implements Runnable {
         }
 
         try {
-            boolean success = controller.submitRequest(fullName, email, password, role, identificationDocument);
+            boolean success;
+            if (controller.requiresPoliticalData(role)) {
+                success = controller.submitPoliticalAgentRequest(fullName, email, password,
+                        nationalIdentityCard, taxIdentificationNumber, mandateStart);
+            } else {
+                success = controller.submitRequest(fullName, email, password, role, identificationDocument);
+            }
             if (success) {
                 System.out.println("\nRegistration request submitted successfully!");
                 System.out.println("Your request is PENDING review by an Administrator.");

@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -34,6 +35,16 @@
             <TextField fx:id="documentField" promptText="Document number" styleClass="input-field" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
+      <VBox fx:id="politicalRow" spacing="0.0">
+         <children>
+            <Label styleClass="field-label" text="National Identity Card (Cartão de Cidadão)" />
+            <TextField fx:id="ccField" promptText="CC number" styleClass="input-field" />
+            <Label styleClass="field-label" text="Tax Number (NIF)" />
+            <TextField fx:id="nifField" promptText="NIF number" styleClass="input-field" />
+            <Label styleClass="field-label" text="Mandate Start Date" />
+            <DatePicker fx:id="mandateStartPicker" maxWidth="Infinity" styleClass="input-field" />
+         </children>
+      </VBox>
       <Label fx:id="messageLabel" maxWidth="Infinity" styleClass="message-error" wrapText="true" />
       <Region prefHeight="8.0" VBox.vgrow="NEVER" />
       <Button fx:id="submitButton" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleSubmit" styleClass="primary-button" text="Request Registration" />

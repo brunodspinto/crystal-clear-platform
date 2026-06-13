@@ -16,6 +16,9 @@ public class RegistrationRequest implements Serializable {
     private final String password;
     private final UserRole role;
     private final String identificationDocument;
+    private final String nationalIdentityCard;
+    private final String taxIdentificationNumber;
+    private final Date mandateStart;
     private final Date submissionDate;
     private RegistrationStatus status;
     private String rejectionReason;
@@ -33,6 +36,29 @@ public class RegistrationRequest implements Serializable {
      */
     public RegistrationRequest(String fullName, String email, String password,
                                 UserRole role, String identificationDocument) {
+        this(fullName, email, password, role, identificationDocument, null, null, null);
+    }
+
+    /**
+     * Creates a registration request that also carries the extra data needed to
+     * register a Political Agent: national identity card, tax number and the
+     * mandate start date. These three values are stored only for the Political
+     * Agent role; for the other roles they stay null.
+     *
+     * @param fullName                applicant's full name
+     * @param email                   applicant's email address
+     * @param password                password (7 alphanumeric chars, ≥3 uppercase, ≥2 digits)
+     * @param role                    selected role
+     * @param identificationDocument  press card (Journalist) or national ID (Citizen); null otherwise
+     * @param nationalIdentityCard    Political Agent national identity card (CC); null otherwise
+     * @param taxIdentificationNumber Political Agent tax number (NIF); null otherwise
+     * @param mandateStart            Political Agent mandate start date; null otherwise
+     * @throws IllegalArgumentException if any required field is blank or the password is invalid
+     */
+    public RegistrationRequest(String fullName, String email, String password,
+                                UserRole role, String identificationDocument,
+                                String nationalIdentityCard, String taxIdentificationNumber,
+                                Date mandateStart) {
         if (fullName == null || fullName.isBlank()) {
             throw new IllegalArgumentException("Full name is required.");
         }
@@ -56,6 +82,9 @@ public class RegistrationRequest implements Serializable {
         this.password = password;
         this.role = role;
         this.identificationDocument = (identificationDocument != null) ? identificationDocument.trim() : null;
+        this.nationalIdentityCard = (nationalIdentityCard != null) ? nationalIdentityCard.trim() : null;
+        this.taxIdentificationNumber = (taxIdentificationNumber != null) ? taxIdentificationNumber.trim() : null;
+        this.mandateStart = (mandateStart != null) ? new Date(mandateStart.getTime()) : null;
         this.submissionDate = new Date();
         this.status = RegistrationStatus.PENDING;
     }
@@ -130,6 +159,34 @@ public class RegistrationRequest implements Serializable {
      */
     public String getIdentificationDocument() {
         return identificationDocument;
+    }
+
+    /**
+     * Gets the Political Agent national identity card (CC), or null for the
+     * other roles.
+     *
+     * @return the national identity card
+     */
+    public String getNationalIdentityCard() {
+        return nationalIdentityCard;
+    }
+
+    /**
+     * Gets the Political Agent tax number (NIF), or null for the other roles.
+     *
+     * @return the tax identification number
+     */
+    public String getTaxIdentificationNumber() {
+        return taxIdentificationNumber;
+    }
+
+    /**
+     * Gets the Political Agent mandate start date, or null for the other roles.
+     *
+     * @return the mandate start date
+     */
+    public Date getMandateStart() {
+        return (mandateStart != null) ? new Date(mandateStart.getTime()) : null;
     }
 
     /**

@@ -7,6 +7,7 @@ import pt.ipp.isep.dei.repository.Repositories;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -54,6 +55,17 @@ public class RegisterController {
     }
 
     /**
+     * Returns whether the given role needs the extra Political Agent data
+     * (national identity card, tax number and mandate start).
+     *
+     * @param role the role
+     * @return the boolean
+     */
+    public boolean requiresPoliticalData(UserRole role) {
+        return role.requiresPoliticalData();
+    }
+
+    /**
      * Returns the label describing what document is required for the given role.
      *
      * @param role the role
@@ -87,6 +99,36 @@ public class RegisterController {
     public boolean submitRequest(String fullName, String email, String password,
                                   UserRole role, String identificationDocument) {
         RegistrationRequest request = new RegistrationRequest(fullName, email, password, role, identificationDocument);
+        return registrationRequestRepository.save(request);
+    }
+
+    /**
+     * Submits a Political Agent registration request, collecting the extra data
+     * required to create the agent once the request is approved (US01/US02).
+     *
+     * @param fullName                applicant's full name
+     * @param email                   applicant's email
+     * @param password                password (must pass validation)
+     * @param nationalIdentityCard    national identity card (CC)
+     * @param taxIdentificationNumber tax number (NIF)
+     * @param mandateStart            mandate start date
+     * @return {@code true} if the request was saved, {@code false} if a duplicate exists
+     * @throws IllegalArgumentException if any field is invalid or missing
+     */
+    public boolean submitPoliticalAgentRequest(String fullName, String email, String password,
+                                               String nationalIdentityCard, String taxIdentificationNumber,
+                                               Date mandateStart) {
+        if (nationalIdentityCard == null || nationalIdentityCard.isBlank()) {
+            throw new IllegalArgumentException("National identity card is required for a Political Agent.");
+        }
+        if (taxIdentificationNumber == null || taxIdentificationNumber.isBlank()) {
+            throw new IllegalArgumentException("Tax number is required for a Political Agent.");
+        }
+        if (mandateStart == null) {
+            throw new IllegalArgumentException("Mandate start date is required for a Political Agent.");
+        }
+        RegistrationRequest request = new RegistrationRequest(fullName, email, password,
+                UserRole.POLITICAL_AGENT, null, nationalIdentityCard, taxIdentificationNumber, mandateStart);
         return registrationRequestRepository.save(request);
     }
 }

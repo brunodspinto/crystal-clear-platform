@@ -22,7 +22,9 @@ public class RegistrationRequestMapper {
     public RegistrationRequestDTO toDTO(RegistrationRequest request) {
         return new RegistrationRequestDTO(
                 request.getFullName(), request.getEmail(), request.getRole(),
-                request.getSubmissionDate(), request.getIdentificationDocument());
+                request.getSubmissionDate(), request.getIdentificationDocument(),
+                request.getNationalIdentityCard(), request.getTaxIdentificationNumber(),
+                request.getMandateStart());
     }
 
     /**

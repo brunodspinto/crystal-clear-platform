@@ -72,5 +72,10 @@ public class ReviewRegistrationUI implements Runnable {
         if (docLabel != null) {
             System.out.printf("%s%s%n", docLabel, r.getIdentificationDocument());
         }
+        if (r.getRole().requiresPoliticalData()) {
+            System.out.printf("CC      : %s%n", r.getNationalIdentityCard());
+            System.out.printf("NIF     : %s%n", r.getTaxIdentificationNumber());
+            System.out.printf("Mandate : %s%n", r.getMandateStart());
+        }
     }
 }

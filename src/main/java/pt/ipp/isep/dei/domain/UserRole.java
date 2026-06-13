@@ -52,6 +52,16 @@ public enum UserRole implements Serializable{
     }
 
     /**
+     * Returns whether this role needs the extra Political Agent data on
+     * registration (national identity card, tax number and mandate start).
+     *
+     * @return true if this is the Political Agent role
+     */
+    public boolean requiresPoliticalData() {
+        return this == POLITICAL_AGENT;
+    }
+
+    /**
      * Returns the label describing what document is required, or null if none.
      *
      * @return the document label
