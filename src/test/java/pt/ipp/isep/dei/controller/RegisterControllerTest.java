@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import pt.ipp.isep.dei.domain.UserRole;
 import pt.ipp.isep.dei.repository.RegistrationRequestRepository;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -124,5 +125,42 @@ class RegisterControllerTest {
     void ensureIsValidPasswordDelegatesToDomain() {
         assertTrue(controller.isValidPassword("AAA11bb"));
         assertFalse(controller.isValidPassword("weak"));
+    }
+
+    @Test
+    void ensurePoliticalAgentRequiresPoliticalData() {
+        assertTrue(controller.requiresPoliticalData(UserRole.POLITICAL_AGENT));
+        assertFalse(controller.requiresPoliticalData(UserRole.CITIZEN));
+        assertFalse(controller.requiresPoliticalData(UserRole.JOURNALIST));
+    }
+
+    @Test
+    void ensurePoliticalAgentRequestWithDataIsSubmitted() {
+        boolean result = controller.submitPoliticalAgentRequest("Deputy One", "deputy@gov.pt",
+                "AAA11bb", "12345678", "123456789", new Date());
+        assertTrue(result);
+        assertEquals(1, repo.getAll().size());
+    }
+
+    @Test
+    void ensurePoliticalAgentRequestWithoutNifThrows() {
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.submitPoliticalAgentRequest("Deputy Two", "deputy2@gov.pt",
+                        "AAA11bb", "12345678", "  ", new Date());
+            }
+        });
+    }
+
+    @Test
+    void ensurePoliticalAgentRequestWithoutMandateStartThrows() {
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.submitPoliticalAgentRequest("Deputy Three", "deputy3@gov.pt",
+                        "AAA11bb", "12345678", "123456789", null);
+            }
+        });
     }
 }

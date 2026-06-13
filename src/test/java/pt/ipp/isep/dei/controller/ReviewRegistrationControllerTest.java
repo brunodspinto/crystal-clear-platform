@@ -7,10 +7,12 @@ import pt.ipp.isep.dei.domain.RegistrationStatus;
 import pt.ipp.isep.dei.domain.UserRole;
 import pt.ipp.isep.dei.dto.RegistrationRequestDTO;
 import pt.ipp.isep.dei.repository.AuthenticationRepository;
+import pt.ipp.isep.dei.repository.PoliticalAgentRepository;
 import pt.ipp.isep.dei.repository.RegistrationRequestRepository;
 import pt.ipp.isep.dei.service.EmailService;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -310,6 +312,53 @@ class ReviewRegistrationControllerTest {
                 adminController.rejectRequestByEmail("missing@gov.pt", "reason");
             }
         });
+    }
+
+    // ----- US01/US02 option 1: approving a Political Agent creates the agent -----
+
+    @Test
+    void ensureApprovePoliticalAgentWithDataCreatesAgentInRepository() {
+        PoliticalAgentRepository agentRepo = new PoliticalAgentRepository();
+        ReviewRegistrationController agentController = new ReviewRegistrationController(
+                repository, new AuthenticationRepository(), agentRepo, emailService);
+
+        RegistrationRequest r = new RegistrationRequest("Deputy Real", "deputy.real@gov.pt",
+                "ABCde12", UserRole.POLITICAL_AGENT, null, "12345678", "123456789", new Date());
+        repository.save(r);
+
+        agentController.approveRequest(r);
+
+        assertEquals(1, agentRepo.getAll().size());
+        assertNotNull(agentRepo.getByEmail("deputy.real@gov.pt"));
+        assertEquals("123456789", agentRepo.getByEmail("deputy.real@gov.pt").getTaxIdentificationNumber());
+    }
+
+    @Test
+    void ensureApprovePoliticalAgentWithoutDataDoesNotCreateAgent() {
+        PoliticalAgentRepository agentRepo = new PoliticalAgentRepository();
+        ReviewRegistrationController agentController = new ReviewRegistrationController(
+                repository, new AuthenticationRepository(), agentRepo, emailService);
+
+        RegistrationRequest r = makeRequest("legacy.agent@gov.pt", UserRole.POLITICAL_AGENT);
+        repository.save(r);
+
+        agentController.approveRequest(r);
+
+        assertTrue(agentRepo.getAll().isEmpty());
+    }
+
+    @Test
+    void ensureApproveCitizenDoesNotCreatePoliticalAgent() {
+        PoliticalAgentRepository agentRepo = new PoliticalAgentRepository();
+        ReviewRegistrationController agentController = new ReviewRegistrationController(
+                repository, new AuthenticationRepository(), agentRepo, emailService);
+
+        RegistrationRequest r = makeRequest("citizen.noagent@gov.pt", UserRole.CITIZEN);
+        repository.save(r);
+
+        agentController.approveRequest(r);
+
+        assertTrue(agentRepo.getAll().isEmpty());
     }
 
     /**
