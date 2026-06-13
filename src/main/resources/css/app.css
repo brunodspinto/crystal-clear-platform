@@ -20,10 +20,12 @@
     -fx-font-size: 22px;
     -fx-font-family: "Helvetica Neue", sans-serif;
     -fx-font-weight: bold;
-    -fx-text-fill: #1a1a2e;
-    -fx-padding: 0 0 6 0;
+    -fx-text-fill: #0f3460;
+    -fx-padding: 4 0 10 0;
     -fx-alignment: CENTER;
     -fx-max-width: Infinity;
+    -fx-border-color: transparent transparent #2d6cdf transparent;
+    -fx-border-width: 0 0 2 0;
 }
 
 .title-separator {
@@ -61,16 +63,18 @@
 .primary-button {
     -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-background-color: #0f3460;
+    -fx-background-color: linear-gradient(to bottom, #1a4a8a, #0f3460);
     -fx-text-fill: white;
-    -fx-background-radius: 5;
+    -fx-background-radius: 6;
     -fx-padding: 10 0 10 0;
     -fx-cursor: hand;
     -fx-margin: 14 0 6 0;
+    -fx-effect: dropshadow(gaussian, rgba(15,52,96,0.25), 5, 0, 0, 2);
 }
 
 .primary-button:hover {
-    -fx-background-color: #16213e;
+    -fx-background-color: linear-gradient(to bottom, #2456a0, #16213e);
+    -fx-effect: dropshadow(gaussian, rgba(15,52,96,0.40), 8, 0, 0, 3);
 }
 
 .primary-button:disabled {
@@ -143,4 +147,55 @@
     -fx-padding: 8 10 8 10;
     -fx-max-width: Infinity;
     -fx-wrap-text: true;
+}
+
+/* ── Tables (zebra striping + styled header + selection) ─────────────────── */
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d8dee9;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-effect: dropshadow(gaussian, rgba(15,52,96,0.08), 6, 0, 0, 2);
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #0f3460;
+    -fx-background-radius: 6 6 0 0;
+}
+
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: transparent;
+    -fx-size: 34px;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.table-row-cell {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #f0f4fa;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #eef3fc;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #d6e4fb;
+    -fx-text-fill: #0f3460;
+}
+
+.table-view .table-cell {
+    -fx-padding: 7 10 7 10;
+    -fx-font-size: 12px;
+    -fx-text-fill: #2b2b2b;
 }
