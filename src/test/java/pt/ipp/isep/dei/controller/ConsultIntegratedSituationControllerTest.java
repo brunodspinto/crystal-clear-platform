@@ -239,7 +239,9 @@ class ConsultIntegratedSituationControllerTest {
 
         assertEquals(1, result.size());
         assertEquals(1, result.get(0).getPositions().size());
-        assertEquals(1, result.get(0).getIncomes().size());
+        // incomes now include the position salary as income plus the standalone
+        // Income entry, so a declaration with 1 position + 1 income exposes 2
+        assertEquals(2, result.get(0).getIncomes().size());
         assertEquals(1, result.get(0).getSubsidies().size());
     }
 }

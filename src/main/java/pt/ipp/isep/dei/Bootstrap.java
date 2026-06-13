@@ -142,9 +142,9 @@ public class Bootstrap implements Runnable {
                 "12345678", "123456789", new Date(), null);
         Organization parliament = new Organization("Parliament", OrganizationNature.PUBLIC, OrganizationType.POLITICAL_PARTY);
 
-        Declaration d = new Declaration(DeclarationType.INITIAL, agent, new Date());
+        Declaration d = new Declaration(DeclarationType.INITIAL, agent, dateOf(2024, Calendar.MARCH, 20));
         d.addPositionEntry(parliament, "Deputy", PositionNature.PUBLIC,
-                60000.0, 5000.0, 2000.0, new Date(), null);
+                60000.0, 5000.0, 2000.0, dateOf(2022, Calendar.JANUARY, 1), null);
         d.addAssetEntry(AssetType.REAL_ESTATE, 250000.0, new RealEstate("Apartment", "Lisbon"));
         d.addAssetEntry(AssetType.VEHICLES, 25000.0, new VehicleAsset("Toyota Corolla"));
         Organization techCorp = new Organization("TechCorp", OrganizationNature.PRIVATE, OrganizationType.COMPANY);

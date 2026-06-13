@@ -8,7 +8,7 @@
 <VBox alignment="CENTER" prefHeight="480.0" prefWidth="720.0" spacing="10.0" styleClass="root-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.ui.gui.AdminMenuController">
    <children>
       <Label styleClass="scene-title" text="Administrator Menu" />
-      <Button maxWidth="260.0" mnemonicParsing="false" onAction="#handleReviewRegistration" styleClass="primary-button" text="Review Registration Requests" />
+      <Button fx:id="reviewButton" maxWidth="260.0" mnemonicParsing="false" onAction="#handleReviewRegistration" styleClass="primary-button" text="Review Registration Requests" />
       <Button maxWidth="260.0" mnemonicParsing="false" onAction="#handleRegisterOrganization" styleClass="primary-button" text="Register Organization" />
       <Button maxWidth="260.0" mnemonicParsing="false" onAction="#handleLoadEntities" styleClass="primary-button" text="Load Entities from CSV" />
       <Button maxWidth="260.0" mnemonicParsing="false" onAction="#handleBuildRelationsGraph" styleClass="primary-button" text="Build Relations Graph" />

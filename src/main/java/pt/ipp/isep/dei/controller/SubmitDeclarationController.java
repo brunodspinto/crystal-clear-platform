@@ -34,6 +34,7 @@ public class SubmitDeclarationController {
     private final DeclarationRepository     declarationRepository;
     private final PoliticalAgentRepository  politicalAgentRepository;
     private final AuthenticationRepository  authenticationRepository;
+    private String lastSubmittedDeclarationId;
 
     public SubmitDeclarationController() {
         Repositories repos = Repositories.getInstance();
@@ -150,8 +151,14 @@ public class SubmitDeclarationController {
                     se.getAmount(), se.getDescription(), se.getDate()});
         }
         for (AssetEntry ae : source.getAssetEntries()) {
+            String assetDescription = ae.getDetail() != null ? ae.getDetail().toString() : "";
+            String assetMunicipality = "";
+            if (ae.getAssetType() == AssetType.REAL_ESTATE && ae.getRealEstate() != null) {
+                assetDescription = ae.getRealEstate().getDescription();
+                assetMunicipality = ae.getRealEstate().getMunicipality();
+            }
             data.assetEntries.add(new Object[]{ae.getAssetType(), ae.getAssetValue(),
-                    ae.getDetail() != null ? ae.getDetail().toString() : ""});
+                    assetDescription, assetMunicipality});
         }
         for (BusinessParticipation bp : source.getBusinessParticipations()) {
             data.businessParticipations.add(new Object[]{bp.getOrganization().getName(),
@@ -329,7 +336,21 @@ public class SubmitDeclarationController {
             }
         }
 
-        return declarationRepository.save(declaration);
+        boolean saved = declarationRepository.save(declaration);
+        if (saved) {
+            lastSubmittedDeclarationId = declaration.getId();
+        }
+        return saved;
+    }
+
+    /**
+     * Returns the id of the declaration created by the last successful
+     * {@link #submitDeclaration} call, so the UI can show it to the agent.
+     *
+     * @return the declaration id, or null if nothing was submitted yet
+     */
+    public String getLastSubmittedDeclarationId() {
+        return lastSubmittedDeclarationId;
     }
 
     // -------------------------------------------------------------------------

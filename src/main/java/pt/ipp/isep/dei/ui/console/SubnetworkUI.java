@@ -37,16 +37,22 @@ public class SubnetworkUI implements Runnable {
         System.out.println("that pass through the chosen entity.");
         System.out.println("----------------------------------------------------------");
 
+        String date = Utils.readLineFromConsole(
+                "\nSnapshot date (yyyy-MM-dd), or leave blank for the full network: ");
+        boolean useDate = date != null && !date.trim().isEmpty();
+
         List<String> entityIds;
         try {
-            entityIds = controller.getEntityIds();
+            entityIds = useDate ? controller.getEntityIds(date.trim())
+                    : controller.getEntityIds();
         } catch (IllegalStateException e) {
             System.out.println("\n" + e.getMessage());
             return;
         }
 
         if (entityIds.isEmpty()) {
-            System.out.println("\nNo entities available in the current graph.");
+            System.out.println("\nNo entities available"
+                    + (useDate ? " on " + date.trim() + "." : " in the current graph."));
             return;
         }
 
@@ -67,7 +73,8 @@ public class SubnetworkUI implements Runnable {
 
         SubnetworkResult result;
         try {
-            result = controller.extractSubnetwork(originId);
+            result = useDate ? controller.extractSubnetwork(date.trim(), originId)
+                    : controller.extractSubnetwork(originId);
         } catch (IllegalArgumentException e) {
             System.out.println("\n" + e.getMessage());
             return;

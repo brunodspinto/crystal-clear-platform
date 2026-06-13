@@ -21,6 +21,13 @@ public enum StatsScreen {
                     "docs/system-documentation/US14/US14_boxplots.svg"
             }),
 
+    US16("Income Boxplots by Role",
+            "Distribution of the total declared income, grouped by political role.",
+            "src/main/python/us16/income_boxplot.py",
+            new String[]{
+                    "docs/system-documentation/US16/us16_boxplot.svg"
+            }),
+
     US17("Top Companies by Stock Value",
             "Companies with the highest total value held by political agents.",
             "src/main/python/us17/top_companies.py",

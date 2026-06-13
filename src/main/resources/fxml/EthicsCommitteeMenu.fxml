@@ -12,7 +12,7 @@
          <children>
             <Label styleClass="scene-title" text="Ethics Committee Menu" />
             <Label styleClass="field-label" text="Network &amp; validation" />
-            <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleValidateDeclaration" styleClass="primary-button" text="Validate Declaration" />
+            <Button fx:id="validateButton" maxWidth="300.0" mnemonicParsing="false" onAction="#handleValidateDeclaration" styleClass="primary-button" text="Validate Declaration" />
             <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleIntegratedSituation" styleClass="primary-button" text="Integrated Situation" />
             <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleAssessComplaint" styleClass="primary-button" text="Assess Complaint" />
             <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleDetectNepotism" styleClass="primary-button" text="Detect Nepotism" />
@@ -21,6 +21,7 @@
             <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleSubnetwork" styleClass="primary-button" text="Influence Subnetwork" />
             <Label styleClass="field-label" text="Statistical analyses" />
             <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleUs14" styleClass="primary-button" text="Declaration Statistics" />
+            <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleUs16" styleClass="primary-button" text="Income Boxplots by Role" />
             <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleUs17" styleClass="primary-button" text="Top Companies by Stock Value" />
             <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleUs18" styleClass="primary-button" text="Largest Stock Increases" />
             <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleUs28" styleClass="primary-button" text="Role vs Asset Correlation" />

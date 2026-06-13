@@ -35,16 +35,22 @@ public class FindPathUI implements Runnable {
         System.out.println("and returns the shortest distance (number of edges) if they are.");
         System.out.println("-----------------------------------------------------------------");
 
+        String date = Utils.readLineFromConsole(
+                "\nSnapshot date (yyyy-MM-dd), or leave blank for the full network: ");
+        boolean useDate = date != null && !date.trim().isEmpty();
+
         List<String> entityIds;
         try {
-            entityIds = controller.getEntityIds();
+            entityIds = useDate ? controller.getEntityIds(date.trim())
+                    : controller.getEntityIds();
         } catch (IllegalStateException e) {
             System.out.println("\n" + e.getMessage());
             return;
         }
 
         if (entityIds.size() < 2) {
-            System.out.println("\nThe graph must contain at least two entities.");
+            System.out.println("\nThe graph must contain at least two entities"
+                    + (useDate ? " active on " + date.trim() + "." : "."));
             return;
         }
 
@@ -69,7 +75,8 @@ public class FindPathUI implements Runnable {
 
         FindPathController.PathResult result;
         try {
-            result = controller.findPath(sourceId, targetId);
+            result = useDate ? controller.findPath(date.trim(), sourceId, targetId)
+                    : controller.findPath(sourceId, targetId);
         } catch (IllegalArgumentException e) {
             System.out.println("\n" + e.getMessage());
             return;

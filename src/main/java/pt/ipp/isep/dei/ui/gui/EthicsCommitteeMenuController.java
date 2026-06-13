@@ -1,23 +1,45 @@
 package pt.ipp.isep.dei.ui.gui;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 
 import pt.ipp.isep.dei.controller.AuthenticationController;
+import pt.ipp.isep.dei.controller.ValidateDeclarationController;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Menu shown to a logged in member of the Ethics Committee. The first group of
  * buttons opens the network and validation functionalities (those screens are
  * built by their owners); the second group runs the statistical analyses
- * (US14, US17, US18, US28, US30, US31), each of which runs its Python script
- * and opens the resulting graph(s).
+ * (US14, US16, US17, US18, US28, US30, US31), each of which runs its Python
+ * script and opens the resulting graph(s).
  */
-public class EthicsCommitteeMenuController {
+public class EthicsCommitteeMenuController implements Initializable {
+
+    @FXML private Button validateButton;
 
     private MainController mainController;
     private final AuthenticationController authController = new AuthenticationController();
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // badge with the number of declarations waiting for validation; a badge
+        // failing must never stop the menu from opening
+        try {
+            int pending = new ValidateDeclarationController().getPendingDeclarations().size();
+            if (pending > 0) {
+                validateButton.setText("Validate Declaration (" + pending + " pending)");
+            }
+        } catch (RuntimeException e) {
+            // keep the plain button label
+        }
     }
 
     @FXML
@@ -58,6 +80,11 @@ public class EthicsCommitteeMenuController {
     @FXML
     private void handleUs14() {
         showStatistics(StatsScreen.US14);
+    }
+
+    @FXML
+    private void handleUs16() {
+        showStatistics(StatsScreen.US16);
     }
 
     @FXML

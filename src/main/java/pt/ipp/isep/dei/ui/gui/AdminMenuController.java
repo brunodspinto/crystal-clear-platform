@@ -1,8 +1,14 @@
 package pt.ipp.isep.dei.ui.gui;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 
 import pt.ipp.isep.dei.controller.AuthenticationController;
+import pt.ipp.isep.dei.controller.ReviewRegistrationController;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Menu shown to a logged in administrator. Each button navigates to the
@@ -10,13 +16,29 @@ import pt.ipp.isep.dei.controller.AuthenticationController;
  * Register Organization (US04) and Export Declaration CSV (US24) are provided
  * here.
  */
-public class AdminMenuController {
+public class AdminMenuController implements Initializable {
+
+    @FXML private Button reviewButton;
 
     private MainController mainController;
     private final AuthenticationController authController = new AuthenticationController();
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // badge with the number of registration requests waiting for review; a
+        // badge failing must never stop the menu from opening
+        try {
+            int pending = new ReviewRegistrationController().getPendingRequestsAsDTO().size();
+            if (pending > 0) {
+                reviewButton.setText("Review Registration Requests (" + pending + " pending)");
+            }
+        } catch (RuntimeException e) {
+            // keep the plain button label
+        }
     }
 
     @FXML

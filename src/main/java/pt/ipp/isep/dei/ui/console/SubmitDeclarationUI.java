@@ -306,7 +306,8 @@ public class SubmitDeclarationUI implements Runnable {
                     householdMembers, positionEntries, subsidyEntries,
                     assetEntries, businessParticipations, attachments);
             if (success) {
-                System.out.println("\nDeclaration successfully submitted! Status: PENDING.");
+                System.out.println("\nDeclaration " + controller.getLastSubmittedDeclarationId()
+                        + " successfully submitted! Status: PENDING.");
             } else {
                 System.out.println("\nDeclaration not submitted. Political agent not found in session.");
             }

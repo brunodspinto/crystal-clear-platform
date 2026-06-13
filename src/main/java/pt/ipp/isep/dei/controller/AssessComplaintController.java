@@ -12,6 +12,7 @@ import pt.ipp.isep.dei.repository.Repositories;
 import pt.isep.lei.esoft.auth.domain.model.Email;
 
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,12 +55,24 @@ public class AssessComplaintController {
     }
 
     /**
-     * Returns all submitted complaints available for assessment.
+     * Returns the complaints that are still waiting to be assessed, i.e. every
+     * submitted complaint that does not yet have a {@link ComplaintAssessment}.
+     * Once a complaint is assessed it no longer appears here.
      *
-     * @return list of all complaints.
+     * @return list of complaints pending assessment.
      */
     public List<Complaint> getComplaints() {
-        return complaintRepository.getComplaints();
+        List<Complaint> assessed = new ArrayList<>();
+        for (ComplaintAssessment a : complaintAssessmentRepository.getAssessments()) {
+            assessed.add(a.getComplaint());
+        }
+        List<Complaint> pending = new ArrayList<>();
+        for (Complaint complaint : complaintRepository.getComplaints()) {
+            if (!assessed.contains(complaint)) {
+                pending.add(complaint);
+            }
+        }
+        return pending;
     }
 
     /**

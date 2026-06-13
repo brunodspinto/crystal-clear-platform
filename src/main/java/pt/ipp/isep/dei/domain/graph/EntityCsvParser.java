@@ -179,6 +179,7 @@ public class EntityCsvParser {
             case 'P': return "person";
             case 'O': return "organization";
             case 'J': return "position";
+            case 'C': return "position";
             case 'A': return "asset";
             default:  return null;
         }

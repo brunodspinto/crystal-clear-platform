@@ -16,6 +16,7 @@ import pt.ipp.isep.dei.dto.DeclarationDTO;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -213,6 +214,17 @@ public class ValidateDeclarationFXController implements Initializable {
 
         if (outcome == ValidationOutcome.RETURNED_FOR_CORRECTION && commentRows.isEmpty()) {
             showError("At least one comment is required when returning for correction (AC2).");
+            return;
+        }
+
+        // the decision is irreversible, so ask for confirmation (same as the console UI)
+        String question = outcome == ValidationOutcome.VALIDATED
+                ? "Confirm the validation of declaration " + selectedDeclaration.getId() + "?"
+                : "Confirm returning declaration " + selectedDeclaration.getId() + " for correction?";
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, question, ButtonType.OK, ButtonType.CANCEL);
+        confirm.setHeaderText(null);
+        Optional<ButtonType> choice = confirm.showAndWait();
+        if (!choice.isPresent() || choice.get() != ButtonType.OK) {
             return;
         }
 

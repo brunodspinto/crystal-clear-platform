@@ -35,6 +35,6 @@ public class StockAsset implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("StockAsset{description='%s'}", description);
+        return description;
     }
 }

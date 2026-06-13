@@ -125,7 +125,7 @@ public class PositionEntry implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("PositionEntry{org='%s', function='%s', nature=%s, grossSalary=%.2f, sideIncomeConsulting=%.2f, sideIncomeBoardMemberships=%.2f}",
-                organization.getName(), functionDesignation, nature, grossSalary, sideIncomeConsulting, sideIncomeBoardMemberships);
+        return String.format("%s at %s (%s), gross salary %.2f, consulting %.2f, board memberships %.2f",
+                functionDesignation, organization.getName(), nature, grossSalary, sideIncomeConsulting, sideIncomeBoardMemberships);
     }
 }

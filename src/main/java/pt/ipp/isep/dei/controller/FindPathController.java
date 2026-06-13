@@ -1,5 +1,6 @@
 package pt.ipp.isep.dei.controller;
 
+import pt.ipp.isep.dei.domain.graph.NetworkSnapshot;
 import pt.ipp.isep.dei.domain.graph.PathFinder;
 import pt.ipp.isep.dei.domain.graph.RelationGraph;
 import pt.ipp.isep.dei.domain.graph.SupportGraph;
@@ -51,7 +52,24 @@ public class FindPathController {
      * @throws IllegalStateException if no relations graph has been built yet
      */
     public List<String> getEntityIds() {
-        SupportGraph graph = getSupportGraph();
+        return entityIdsOf(getSupportGraph());
+    }
+
+    /**
+     * Returns the entity ids active in the support graph at the given snapshot
+     * date (US32 temporal view). Used by the UI to list only the entities that
+     * exist on that date.
+     *
+     * @param date the snapshot date in yyyy-MM-dd format
+     * @return list of entity ids active at that date; never null
+     * @throws IllegalStateException    if no relations graph has been built yet
+     * @throws IllegalArgumentException if the date is null or blank
+     */
+    public List<String> getEntityIds(String date) {
+        return entityIdsOf(buildSupportGraphFor(date));
+    }
+
+    private List<String> entityIdsOf(SupportGraph graph) {
         List<String> ids = new ArrayList<>();
         for (int i = 0; i < graph.size(); i++) {
             ids.add(graph.getRegistry().idAt(i));
@@ -75,11 +93,30 @@ public class FindPathController {
         return new PathResult(sourceId, targetId, distance);
     }
 
+    /**
+     * Verifies the pathway between two entities in the support graph as it
+     * stood on the given snapshot date (US32 temporal view). Two entities may
+     * be connected on one date and not on another, depending on which edges
+     * are active.
+     *
+     * @param date     the snapshot date in yyyy-MM-dd format
+     * @param sourceId the id of the source entity
+     * @param targetId the id of the target entity
+     * @return a {@link PathResult} containing reachability and distance
+     * @throws IllegalStateException    if no relations graph has been built yet
+     * @throws IllegalArgumentException if the date is blank or either id is unknown
+     */
+    public PathResult findPath(String date, String sourceId, String targetId) {
+        SupportGraph graph = buildSupportGraphFor(date);
+        int distance = PathFinder.shortestDistance(graph, sourceId, targetId);
+        return new PathResult(sourceId, targetId, distance);
+    }
+
     // -------------------------------------------------------------------------
     // Internal helpers
     // -------------------------------------------------------------------------
 
-    /** Lazily builds and caches the support graph. */
+    /** Lazily builds and caches the support graph (full, date-independent). */
     private SupportGraph getSupportGraph() {
         if (supportGraph == null) {
             RelationGraph relationGraph = graphRepository.getRelationGraph();
@@ -90,6 +127,24 @@ public class FindPathController {
             supportGraph = new SupportGraph(relationGraph);
         }
         return supportGraph;
+    }
+
+    /**
+     * Builds the support graph for the network state active at the given date,
+     * using a {@link NetworkSnapshot} (same approach as US33). Not cached
+     * because it depends on the requested date.
+     */
+    private SupportGraph buildSupportGraphFor(String date) {
+        if (date == null || date.isBlank()) {
+            throw new IllegalArgumentException("date must not be blank");
+        }
+        if (graphRepository.getRelationGraph() == null) {
+            throw new IllegalStateException(
+                    "No relations graph available. Build the graph first (US20).");
+        }
+        NetworkSnapshot snapshot = NetworkSnapshot.of(
+                date, graphRepository.getAll(), graphRepository.getEdges());
+        return new SupportGraph(snapshot.getGraph());
     }
 
     // -------------------------------------------------------------------------

@@ -15,7 +15,7 @@
          <children>
             <Button fx:id="runButton" defaultButton="true" mnemonicParsing="false" onAction="#handleRun" styleClass="primary-button" text="Run analysis" />
             <Button fx:id="openButton" mnemonicParsing="false" onAction="#handleOpenGraphs" styleClass="secondary-button" text="Open graph(s)" />
-            <Button mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
+            <Button cancelButton="true" mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
          </children>
       </HBox>
       <Label fx:id="statusLabel" maxWidth="Infinity" />

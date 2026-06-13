@@ -73,7 +73,6 @@ public class SubsidyEntry implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("SubsidyEntry{org='%s', amount=%.2f, description='%s'}",
-                organization.getName(), amount, description);
+        return String.format("%s: %.2f (from %s)", description, amount, organization.getName());
     }
 }

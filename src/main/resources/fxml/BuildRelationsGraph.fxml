@@ -23,7 +23,7 @@
          <children>
             <Button defaultButton="true" mnemonicParsing="false" onAction="#handleBuild" styleClass="primary-button" text="Build Graph" />
             <Button fx:id="renderButton" mnemonicParsing="false" onAction="#handleRenderSvg" styleClass="secondary-button" text="Render SVG..." />
-            <Button mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
+            <Button cancelButton="true" mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
          </children>
       </HBox>
    </children>

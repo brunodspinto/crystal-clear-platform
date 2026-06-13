@@ -78,49 +78,44 @@ public class ConsultAssetsFXController implements Initializable {
 
         maskNotice.setVisible(false);
         clearMessage();
-
-        // The table starts with every validated asset; the filters above
-        // make rows disappear as they are applied
-        refreshTable();
+        assetsTable.setPlaceholder(new Label("Select a political agent to see their assets."));
     }
 
     /**
-     * Rebuilds the table using the current filters. With no agent selected,
-     * every agent's validated assets are shown (up to the chosen date, or
-     * today when no date is set); selecting an agent or a date narrows the
-     * rows down.
+     * Rebuilds the table for the agent currently selected. Nothing is shown
+     * until an agent is chosen; once one is, its validated assets up to the
+     * reference date (or today when no date is set) are listed.
      */
     private void refreshTable() {
         assetsTable.getItems().clear();
         maskNotice.setVisible(false);
 
+        PoliticalAgentDTO selected = agentCombo.getValue();
+        if (selected == null) {
+            // no agent picked yet -> show nothing
+            return;
+        }
+
         LocalDate date = datePicker.getValue();
         Date referenceDate = date != null ? toDate(date) : new Date();
 
-        PoliticalAgentDTO selected = agentCombo.getValue();
-        List<PoliticalAgentDTO> agents;
-        if (selected != null) {
-            agents = new ArrayList<>();
-            agents.add(selected);
-        } else {
-            agents = controller.getPoliticalAgents();
-        }
-
         boolean journalist = controller.isCurrentUserJournalist();
         List<AssetRow> rows = new ArrayList<>();
-        for (PoliticalAgentDTO agent : agents) {
-            List<AssetEntryDTO> assets;
-            try {
-                assets = controller.getAssetsAt(agent, referenceDate);
-            } catch (IllegalArgumentException ex) {
-                continue;
-            }
-            for (AssetEntryDTO a : assets) {
-                rows.add(toRow(agent.getName(), a, journalist));
-            }
+        List<AssetEntryDTO> assets;
+        try {
+            assets = controller.getAssetsAt(selected, referenceDate);
+        } catch (IllegalArgumentException ex) {
+            return;
+        }
+        for (AssetEntryDTO a : assets) {
+            rows.add(toRow(selected.getName(), a, journalist));
         }
 
-        if (!rows.isEmpty() && !journalist) {
+        if (rows.isEmpty()) {
+            assetsTable.setPlaceholder(new Label(
+                    "No validated assets for " + selected.getName()
+                            + (date != null ? " on or before " + date + "." : ".")));
+        } else if (!journalist) {
             maskNotice.setVisible(true);
         }
         assetsTable.setItems(FXCollections.observableArrayList(rows));

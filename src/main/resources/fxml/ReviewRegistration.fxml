@@ -49,7 +49,7 @@
                      <children>
                         <Button fx:id="acceptButton" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#handleAccept" styleClass="primary-button" text="Accept" />
                         <Button fx:id="rejectButton" disable="true" mnemonicParsing="false" onAction="#handleReject" styleClass="secondary-button" text="Reject" />
-                        <Button mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
+                        <Button cancelButton="true" mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
                      </children>
                   </HBox>
                </children>

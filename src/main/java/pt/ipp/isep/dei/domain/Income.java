@@ -68,6 +68,6 @@ public class Income implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Income{org='%s', amount=%.2f, source='%s'}", organization.getName(), amount, source);
+        return String.format("%.2f from %s (source: %s)", amount, organization.getName(), source);
     }
 }

@@ -30,7 +30,7 @@
          <children>
             <Button defaultButton="true" mnemonicParsing="false" onAction="#handleLoad" styleClass="primary-button" text="Load" />
             <Button fx:id="renderButton" mnemonicParsing="false" onAction="#handleRender" styleClass="primary-button" text="Render SVG" />
-            <Button mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
+            <Button cancelButton="true" mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
          </children>
       </HBox>
    </children>

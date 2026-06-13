@@ -27,7 +27,7 @@
             <Label text="To:" />
             <DatePicker fx:id="endPicker" />
             <Button mnemonicParsing="false" onAction="#handleSearch" text="Search" />
-            <Button mnemonicParsing="false" onAction="#handleBack" text="Back" />
+            <Button cancelButton="true" mnemonicParsing="false" onAction="#handleBack" text="Back" />
          </children>
       </HBox>
       <Label fx:id="messageLabel" style="-fx-text-fill: red;" />

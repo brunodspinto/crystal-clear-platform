@@ -1,0 +1,31 @@
+digraph RelationsGraph {
+  rankdir=LR;
+  node [shape=box, style=rounded, fontname="Helvetica"];
+  edge [fontname="Helvetica", fontsize=10];
+  "P-001";
+  "P-002";
+  "P-003";
+  "P-004";
+  "P-005";
+  "O-001";
+  "O-002";
+  "O-003";
+  "J-001";
+  "J-002";
+  "A-001";
+  "A-002";
+  "P-001" -> "P-002" [label="relativeOf (1.0)"];
+  "P-001" -> "P-005" [label="associatedWith (1.0)"];
+  "P-002" -> "P-001" [label="appointedBy (1.0)"];
+  "P-002" -> "J-001" [label="holdsPosition (1.0)"];
+  "P-002" -> "A-002" [label="ownerOf (0.8)"];
+  "P-003" -> "P-004" [label="friendOf (1.0)"];
+  "P-003" -> "J-002" [label="holdsPosition (1.0)"];
+  "P-003" -> "O-002" [label="influences (1.0)"];
+  "P-003" -> "O-003" [label="memberOf (1.0)"];
+  "P-004" -> "P-003" [label="appointedBy (1.0)"];
+  "P-005" -> "P-001" [label="appointedBy (1.0)"];
+  "P-005" -> "A-001" [label="ownerOf (1.0)"];
+  "J-001" -> "O-001" [label="inOrganization (1.0)"];
+  "J-002" -> "O-001" [label="inOrganization (1.0)"];
+}

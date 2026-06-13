@@ -50,6 +50,6 @@ public class RealEstate implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("RealEstate{description='%s', municipality='%s'}", description, municipality);
+        return String.format("%s, %s", description, municipality);
     }
 }

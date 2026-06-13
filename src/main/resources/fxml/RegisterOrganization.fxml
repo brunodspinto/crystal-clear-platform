@@ -32,7 +32,7 @@
          <children>
             <Button defaultButton="true" mnemonicParsing="false" onAction="#handleRegister" styleClass="primary-button" text="Register" />
             <Button mnemonicParsing="false" onAction="#handleClear" styleClass="secondary-button" text="Clear" />
-            <Button mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
+            <Button cancelButton="true" mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
          </children>
       </HBox>
    </children>

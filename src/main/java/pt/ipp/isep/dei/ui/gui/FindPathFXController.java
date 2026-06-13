@@ -1,12 +1,16 @@
 package pt.ipp.isep.dei.ui.gui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import pt.ipp.isep.dei.controller.FindPathController;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -19,6 +23,7 @@ import java.util.ResourceBundle;
  */
 public class FindPathFXController implements Initializable {
 
+    @FXML private DatePicker datePicker;
     @FXML private ComboBox<String> sourceCombo;
     @FXML private ComboBox<String> targetCombo;
     @FXML private Label resultLabel;
@@ -36,9 +41,29 @@ public class FindPathFXController implements Initializable {
         clearMessage();
         resultLabel.setText("");
 
+        loadEntities(null);
+
+        // changing the snapshot date re-lists the entities active on that date
+        datePicker.valueProperty().addListener(new ChangeListener<LocalDate>() {
+            @Override
+            public void changed(ObservableValue<? extends LocalDate> obs,
+                                LocalDate old, LocalDate now) {
+                loadEntities(now);
+            }
+        });
+    }
+
+    private void loadEntities(LocalDate date) {
+        clearMessage();
+        resultLabel.setText("");
+        sourceCombo.getItems().clear();
+        targetCombo.getItems().clear();
+
         List<String> entityIds;
         try {
-            entityIds = controller.getEntityIds();
+            entityIds = date == null
+                    ? controller.getEntityIds()
+                    : controller.getEntityIds(date.toString());
         } catch (IllegalStateException e) {
             showError(e.getMessage());
             sourceCombo.setDisable(true);
@@ -47,12 +72,15 @@ public class FindPathFXController implements Initializable {
         }
 
         if (entityIds.size() < 2) {
-            showError("The graph must contain at least two entities.");
+            showError("The graph must contain at least two entities"
+                    + (date != null ? " active on " + date + "." : "."));
             sourceCombo.setDisable(true);
             targetCombo.setDisable(true);
             return;
         }
 
+        sourceCombo.setDisable(false);
+        targetCombo.setDisable(false);
         sourceCombo.getItems().addAll(entityIds);
         targetCombo.getItems().addAll(entityIds);
     }
@@ -69,9 +97,12 @@ public class FindPathFXController implements Initializable {
             return;
         }
 
+        LocalDate date = datePicker.getValue();
         FindPathController.PathResult result;
         try {
-            result = controller.findPath(sourceId, targetId);
+            result = date == null
+                    ? controller.findPath(sourceId, targetId)
+                    : controller.findPath(date.toString(), sourceId, targetId);
         } catch (IllegalArgumentException e) {
             showError(e.getMessage());
             return;

@@ -48,7 +48,7 @@
       <HBox alignment="CENTER_LEFT" spacing="12.0">
          <children>
             <Button defaultButton="true" mnemonicParsing="false" onAction="#handleAssess" styleClass="primary-button" text="Assess" />
-            <Button mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
+            <Button cancelButton="true" mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
          </children>
       </HBox>
    </children>

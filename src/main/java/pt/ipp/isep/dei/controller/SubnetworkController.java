@@ -4,6 +4,7 @@ import pt.ipp.isep.dei.domain.graph.Edge;
 import pt.ipp.isep.dei.domain.graph.GraphDotExporter;
 import pt.ipp.isep.dei.domain.graph.Entity;
 import pt.ipp.isep.dei.domain.graph.EntityCsvParser;
+import pt.ipp.isep.dei.domain.graph.NetworkSnapshot;
 import pt.ipp.isep.dei.domain.graph.RelationCsvParser;
 import pt.ipp.isep.dei.domain.graph.RelationGraph;
 import pt.ipp.isep.dei.domain.graph.SubnetworkExtractor;
@@ -70,6 +71,24 @@ public class SubnetworkController {
     }
 
     /**
+     * Returns the entity ids active at the given snapshot date (US32 temporal
+     * view), so the UI lists only the entities that exist on that date.
+     *
+     * @param date the snapshot date in yyyy-MM-dd format
+     * @return list of entity ids active at that date; never null
+     * @throws IllegalStateException    if no relations graph has been built yet
+     * @throws IllegalArgumentException if the date is null or blank
+     */
+    public List<String> getEntityIds(String date) {
+        SupportGraph graph = buildSupportGraphFor(date);
+        List<String> ids = new ArrayList<>();
+        for (int i = 0; i < graph.size(); i++) {
+            ids.add(graph.getRegistry().idAt(i));
+        }
+        return ids;
+    }
+
+    /**
      * Extracts the subnetwork for the given origin entity using only primitive
      * operations (AC2).
      *
@@ -81,6 +100,21 @@ public class SubnetworkController {
     public SubnetworkResult extractSubnetwork(String originId) {
         SupportGraph graph = getSupportGraph();
         return SubnetworkExtractor.extract(graph, originId);
+    }
+
+    /**
+     * Extracts the subnetwork of the given origin entity in the network state
+     * active at the given snapshot date (US32 temporal view). The same entity
+     * can integrate a different subnetwork depending on which edges are active.
+     *
+     * @param date     the snapshot date in yyyy-MM-dd format
+     * @param originId the chosen entity id
+     * @return the {@link SubnetworkResult} for that date
+     * @throws IllegalStateException    if no relations graph has been built yet
+     * @throws IllegalArgumentException if the date is blank or {@code originId} is unknown
+     */
+    public SubnetworkResult extractSubnetwork(String date, String originId) {
+        return SubnetworkExtractor.extract(buildSupportGraphFor(date), originId);
     }
 
     /**
@@ -158,6 +192,21 @@ public class SubnetworkController {
             cachedSupportGraph = new SupportGraph(requireRelationGraph());
         }
         return cachedSupportGraph;
+    }
+
+    /**
+     * Builds the support graph for the network state active at the given date,
+     * via a {@link NetworkSnapshot} (same approach as US33). Not cached because
+     * it depends on the requested date.
+     */
+    private SupportGraph buildSupportGraphFor(String date) {
+        if (date == null || date.isBlank()) {
+            throw new IllegalArgumentException("date must not be blank");
+        }
+        requireRelationGraph();
+        NetworkSnapshot snapshot = NetworkSnapshot.of(
+                date, graphRepository.getAll(), graphRepository.getEdges());
+        return new SupportGraph(snapshot.getGraph());
     }
 
     /**

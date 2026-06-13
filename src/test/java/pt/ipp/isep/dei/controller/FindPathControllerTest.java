@@ -175,4 +175,60 @@ class FindPathControllerTest {
         assertEquals("A", result.getSourceId());
         assertEquals("B", result.getTargetId());
     }
+
+    // -------------------------------------------------------------------------
+    // findPath(date, ...) — temporal snapshot (US32 integration)
+    // -------------------------------------------------------------------------
+
+    /** Repo with A and B connected only by an edge active from 2015 onwards. */
+    private GraphRepository temporalRepo() {
+        GraphRepository repo = new GraphRepository();
+        repo.setRelationGraph(new RelationGraph()); // marks the graph as built
+        repo.addAll(java.util.Arrays.asList(
+                new pt.ipp.isep.dei.domain.graph.Person("A", "person", "2009-01-01", "2027-01-01", "A", "", ""),
+                new pt.ipp.isep.dei.domain.graph.Person("B", "person", "2009-01-01", "2027-01-01", "B", "", "")));
+        repo.setEdges(java.util.Arrays.asList(
+                new Edge("A", "B", "friendOf", 1.0, "2015-01-01", "2027-01-01")));
+        return repo;
+    }
+
+    @Test
+    void ensureNoPathBeforeTheEdgeIsActive() {
+        FindPathController ctrl = new FindPathController(temporalRepo());
+        FindPathController.PathResult result = ctrl.findPath("2010-01-01", "A", "B");
+        assertFalse(result.hasPath());
+    }
+
+    @Test
+    void ensurePathExistsOnceTheEdgeIsActive() {
+        FindPathController ctrl = new FindPathController(temporalRepo());
+        FindPathController.PathResult result = ctrl.findPath("2020-01-01", "A", "B");
+        assertTrue(result.hasPath());
+        assertEquals(1, result.getDistance());
+    }
+
+    @Test
+    void ensureGetEntityIdsByDateExcludesInactiveEntities() {
+        GraphRepository repo = new GraphRepository();
+        repo.setRelationGraph(new RelationGraph());
+        repo.addAll(java.util.Arrays.asList(
+                new pt.ipp.isep.dei.domain.graph.Person("A", "person", "2009-01-01", "2027-01-01", "A", "", ""),
+                new pt.ipp.isep.dei.domain.graph.Person("B", "person", "2020-01-01", "2027-01-01", "B", "", "")));
+        repo.setEdges(new java.util.ArrayList<Edge>());
+        FindPathController ctrl = new FindPathController(repo);
+
+        assertEquals(1, ctrl.getEntityIds("2015-01-01").size()); // só A activo
+        assertEquals(2, ctrl.getEntityIds("2021-01-01").size()); // A e B activos
+    }
+
+    @Test
+    void ensureFindPathRejectsBlankDate() {
+        FindPathController ctrl = new FindPathController(temporalRepo());
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() {
+                ctrl.findPath("  ", "A", "B");
+            }
+        });
+    }
 }

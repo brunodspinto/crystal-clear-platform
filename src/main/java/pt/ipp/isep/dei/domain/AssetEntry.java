@@ -129,6 +129,6 @@ public class AssetEntry implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("AssetEntry{type=%s, value=%.2f}", assetType, assetValue);
+        return String.format("%s (%s), value %.2f", assetType, getDetail(), assetValue);
     }
 }

@@ -27,11 +27,19 @@ public class DeclarationMapper {
      */
     public DeclarationDTO toDTO(Declaration declaration) {
         List<String> positions = new ArrayList<>();
-        for (PositionEntry e : declaration.getPositionEntries()) {
-            positions.add(e.toString());
-        }
         List<String> incomes = new ArrayList<>();
         double totalIncome = 0;
+        // a position salary is income too (gross + side incomes); the income
+        // evolution (US10) must count it, not only the standalone Income entries
+        for (PositionEntry e : declaration.getPositionEntries()) {
+            positions.add(e.toString());
+            double positionIncome = e.getGrossSalary()
+                    + e.getSideIncomeConsulting()
+                    + e.getSideIncomeBoardMemberships();
+            totalIncome = totalIncome + positionIncome;
+            incomes.add(String.format("%s at %s: %.2f",
+                    e.getFunctionDesignation(), e.getOrganization().getName(), positionIncome));
+        }
         for (Income e : declaration.getIncomes()) {
             incomes.add(e.toString());
             totalIncome = totalIncome + e.getAmount();

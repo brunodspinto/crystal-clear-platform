@@ -20,7 +20,7 @@
             <Label styleClass="field-label" text="Reference date:" />
             <DatePicker fx:id="datePicker" />
             <Button mnemonicParsing="false" onAction="#handleSearch" styleClass="primary-button" text="Search" />
-            <Button mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
+            <Button cancelButton="true" mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
          </children>
       </HBox>
       <Label fx:id="maskNotice" style="-fx-text-fill: #888888; -fx-font-style: italic;" text="Sensitive values are masked. Log in as a journalist to see full details." />

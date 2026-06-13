@@ -1,16 +1,20 @@
 package pt.ipp.isep.dei.ui.gui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import pt.ipp.isep.dei.controller.SubnetworkController;
 import pt.ipp.isep.dei.domain.graph.SubnetworkExtractor.SubnetworkResult;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -22,6 +26,7 @@ import java.util.ResourceBundle;
  */
 public class SubnetworkFXController implements Initializable {
 
+    @FXML private DatePicker datePicker;
     @FXML private ComboBox<String> originCombo;
     @FXML private ListView<String> nodesList;
     @FXML private Label resultLabel;
@@ -42,9 +47,29 @@ public class SubnetworkFXController implements Initializable {
         clearMessage();
         resultLabel.setText("");
 
+        loadEntities(null);
+
+        // changing the snapshot date re-lists the entities active on that date
+        datePicker.valueProperty().addListener(new ChangeListener<LocalDate>() {
+            @Override
+            public void changed(ObservableValue<? extends LocalDate> obs,
+                                LocalDate old, LocalDate now) {
+                loadEntities(now);
+            }
+        });
+    }
+
+    private void loadEntities(LocalDate date) {
+        clearMessage();
+        resultLabel.setText("");
+        nodeItems.clear();
+        originCombo.getItems().clear();
+
         List<String> entityIds;
         try {
-            entityIds = controller.getEntityIds();
+            entityIds = date == null
+                    ? controller.getEntityIds()
+                    : controller.getEntityIds(date.toString());
         } catch (IllegalStateException e) {
             showError(e.getMessage());
             originCombo.setDisable(true);
@@ -52,11 +77,13 @@ public class SubnetworkFXController implements Initializable {
         }
 
         if (entityIds.isEmpty()) {
-            showError("No entities available in the current graph.");
+            showError("No entities available"
+                    + (date != null ? " on " + date + "." : " in the current graph."));
             originCombo.setDisable(true);
             return;
         }
 
+        originCombo.setDisable(false);
         originCombo.getItems().addAll(entityIds);
         originCombo.setPromptText("Select entity…");
     }
@@ -73,9 +100,12 @@ public class SubnetworkFXController implements Initializable {
             return;
         }
 
+        LocalDate date = datePicker.getValue();
         SubnetworkResult result;
         try {
-            result = controller.extractSubnetwork(originId);
+            result = date == null
+                    ? controller.extractSubnetwork(originId)
+                    : controller.extractSubnetwork(date.toString(), originId);
         } catch (IllegalArgumentException e) {
             showError(e.getMessage());
             return;

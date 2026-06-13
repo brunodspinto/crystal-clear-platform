@@ -61,6 +61,25 @@ class AssessComplaintControllerTest {
     }
 
     @Test
+    void ensureAssessedComplaintNoLongerListedForAssessment() {
+        ComplaintRepository complaintRepo = new ComplaintRepository();
+        Complaint complaint = createComplaint();
+        complaintRepo.save(complaint);
+        complaintRepo.save(createComplaint());
+
+        ComplaintAssessmentRepository assessmentRepo = new ComplaintAssessmentRepository();
+        AssessComplaintController controller = createController("ec@test.com",
+                complaintRepo, assessmentRepo);
+
+        assertEquals(2, controller.getComplaints().size());
+        controller.assessComplaint(complaint, ComplaintOutcome.VALID, null);
+        // the assessed complaint drops out of the pending list
+        List<Complaint> pending = controller.getComplaints();
+        assertEquals(1, pending.size());
+        assertFalse(pending.contains(complaint));
+    }
+
+    @Test
     void ensureAssessComplaintValidWorks() {
         ComplaintRepository complaintRepo = new ComplaintRepository();
         Complaint complaint = createComplaint();

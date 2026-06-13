@@ -19,6 +19,8 @@ import pt.ipp.isep.dei.dto.OrganizationDTO;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,8 +58,8 @@ public class SubmitDeclarationFXController implements Initializable {
     @FXML private TextField                posGrossField;
     @FXML private TextField                posConsultingField;
     @FXML private TextField                posBoardField;
-    @FXML private TextField                posStartField;
-    @FXML private TextField                posEndField;
+    @FXML private DatePicker               posStartField;
+    @FXML private DatePicker               posEndField;
     @FXML private TableView<PositionRow>   posTable;
     @FXML private TableColumn<PositionRow, String> posColOrg;
     @FXML private TableColumn<PositionRow, String> posColFunc;
@@ -69,7 +71,7 @@ public class SubmitDeclarationFXController implements Initializable {
     @FXML private ComboBox<OrganizationDTO> subOrgCombo;
     @FXML private TextField              subAmountField;
     @FXML private TextField              subDescField;
-    @FXML private TextField              subDateField;
+    @FXML private DatePicker             subDateField;
     @FXML private TableView<SubsidyRow>  subTable;
     @FXML private TableColumn<SubsidyRow, String> subColOrg;
     @FXML private TableColumn<SubsidyRow, String> subColAmount;
@@ -79,6 +81,7 @@ public class SubmitDeclarationFXController implements Initializable {
     @FXML private ComboBox<AssetType>  assetTypeCombo;
     @FXML private TextField            assetValueField;
     @FXML private TextField            assetDetailField;
+    @FXML private TextField            assetMunicipalityField;
     @FXML private TableView<AssetRow>  assetTable;
     @FXML private TableColumn<AssetRow, String> assetColType;
     @FXML private TableColumn<AssetRow, String> assetColValue;
@@ -226,7 +229,8 @@ public class SubmitDeclarationFXController implements Initializable {
         // Pre-populate assets
         assetRows.clear();
         for (Object[] ae : imported.getAssetEntries()) {
-            assetRows.add(new AssetRow((AssetType) ae[0], (double) ae[1], (String) ae[2]));
+            String muni = ae.length > 3 ? (String) ae[3] : "";
+            assetRows.add(new AssetRow((AssetType) ae[0], (double) ae[1], (String) ae[2], muni));
         }
         // Pre-populate business participations
         bizRows.clear();
@@ -270,7 +274,7 @@ public class SubmitDeclarationFXController implements Initializable {
         Double gross         = parseDouble(posGrossField);
         Double consulting    = parseDouble(posConsultingField);
         Double board         = parseDouble(posBoardField);
-        Date start           = parseDate(posStartField);
+        Date start           = fromPicker(posStartField);
 
         if (org == null || func == null || nature == null
                 || gross == null || consulting == null || board == null || start == null) {
@@ -279,7 +283,7 @@ public class SubmitDeclarationFXController implements Initializable {
             return;
         }
         positionRows.add(new PositionRow(org.getName(), func, nature, gross, consulting, board,
-                start, parseDate(posEndField)));
+                start, fromPicker(posEndField)));
         clearPositionForm();
         clearMessage();
     }
@@ -297,7 +301,7 @@ public class SubmitDeclarationFXController implements Initializable {
         OrganizationDTO org = subOrgCombo.getValue();
         Double amount    = parseDouble(subAmountField);
         String desc      = subDescField.getText() == null ? "" : subDescField.getText().trim();
-        Date date        = parseDate(subDateField);
+        Date date        = fromPicker(subDateField);
         if (org == null || amount == null || desc.isEmpty() || date == null) {
             showError("Subsidy: fill Organisation, Amount, Description and Date.");
             return;
@@ -320,11 +324,18 @@ public class SubmitDeclarationFXController implements Initializable {
         AssetType type  = assetTypeCombo.getValue();
         Double value    = parseDouble(assetValueField);
         String detail   = assetDetailField.getText() == null ? "" : assetDetailField.getText().trim();
+        String municipality = assetMunicipalityField.getText() == null
+                ? "" : assetMunicipalityField.getText().trim();
         if (type == null || value == null || detail.isEmpty()) {
             showError("Asset: fill Type, Value and Detail.");
             return;
         }
-        assetRows.add(new AssetRow(type, value, detail));
+        // real estate also needs a municipality (the domain requires it)
+        if (type == AssetType.REAL_ESTATE && municipality.isEmpty()) {
+            showError("Real estate: fill the Municipality field too.");
+            return;
+        }
+        assetRows.add(new AssetRow(type, value, detail, municipality));
         clearAssetForm();
         clearMessage();
     }
@@ -413,7 +424,7 @@ public class SubmitDeclarationFXController implements Initializable {
 
         List<Object[]> assets = new ArrayList<>();
         for (AssetRow r : assetRows) {
-            Object detail = buildAssetDetail(r.typeEnum, r.detailText);
+            Object detail = buildAssetDetail(r.typeEnum, r.detailText, r.municipalityText);
             if (detail == null) {
                 showError("Asset detail could not be built for type " + r.typeEnum);
                 return;
@@ -430,13 +441,15 @@ public class SubmitDeclarationFXController implements Initializable {
             boolean saved = controller.submitDeclaration(type, amendedId, reason,
                     household, positions, subsidies, assets, business, new ArrayList<>());
             if (saved) {
-                showSuccess("Declaration submitted successfully (status: PENDING).");
+                showSuccess("Declaration " + controller.getLastSubmittedDeclarationId()
+                        + " submitted successfully (status: PENDING).");
                 submitButton.setDisable(true);
             } else {
                 showError("Submission failed. You may not be registered as a Political Agent.");
             }
-        } catch (IllegalStateException e) {
-            showError(e.getMessage());
+        } catch (RuntimeException e) {
+            // never let the submit button fail silently — surface the reason
+            showError("Submission failed: " + e.getMessage());
         }
     }
 
@@ -469,14 +482,14 @@ public class SubmitDeclarationFXController implements Initializable {
         try { return Long.parseLong(f.getText().trim()); } catch (Exception e) { return null; }
     }
 
-    private Date parseDate(TextField field) {
-        String text = field == null ? null : field.getText();
-        if (text == null || text.isBlank()) return null;
-        try { return DATE_FMT.parse(text.trim()); } catch (ParseException e) { return null; }
+    private Date fromPicker(DatePicker picker) {
+        LocalDate value = picker == null ? null : picker.getValue();
+        if (value == null) return null;
+        return Date.from(value.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    private Object buildAssetDetail(AssetType type, String detail) {
-        if (type == AssetType.REAL_ESTATE) return new RealEstate(detail, "");
+    private Object buildAssetDetail(AssetType type, String detail, String municipality) {
+        if (type == AssetType.REAL_ESTATE) return new RealEstate(detail, municipality);
         if (type == AssetType.VEHICLES)    return new VehicleAsset(detail);
         if (type == AssetType.STOCKS)      return new StockAsset(detail);
         return null;
@@ -499,15 +512,15 @@ public class SubmitDeclarationFXController implements Initializable {
     private void clearPositionForm() {
         posOrgCombo.setValue(null); posFunctionField.clear(); posNatureCombo.setValue(null);
         posGrossField.clear(); posConsultingField.clear(); posBoardField.clear();
-        posStartField.clear(); posEndField.clear();
+        posStartField.setValue(null); posEndField.setValue(null);
     }
 
     private void clearSubsidyForm() {
-        subOrgCombo.setValue(null); subAmountField.clear(); subDescField.clear(); subDateField.clear();
+        subOrgCombo.setValue(null); subAmountField.clear(); subDescField.clear(); subDateField.setValue(null);
     }
 
     private void clearAssetForm() {
-        assetTypeCombo.setValue(null); assetValueField.clear(); assetDetailField.clear();
+        assetTypeCombo.setValue(null); assetValueField.clear(); assetDetailField.clear(); assetMunicipalityField.clear();
     }
 
     private void clearBizForm() {
@@ -575,11 +588,14 @@ public class SubmitDeclarationFXController implements Initializable {
 
     public static class AssetRow {
         private final String type, value, detail;
-        final AssetType typeEnum; final double valueVal; final String detailText;
+        final AssetType typeEnum; final double valueVal; final String detailText; final String municipalityText;
 
-        AssetRow(AssetType type, double value, String detail) {
+        AssetRow(AssetType type, double value, String detail, String municipality) {
             this.typeEnum = type; this.valueVal = value; this.detailText = detail;
-            this.type = type.toString(); this.value = String.format("%.2f", value); this.detail = detail;
+            this.municipalityText = municipality;
+            this.type = type.toString(); this.value = String.format("%.2f", value);
+            this.detail = (type == AssetType.REAL_ESTATE && municipality != null && !municipality.isEmpty())
+                    ? detail + " (" + municipality + ")" : detail;
         }
 
         public String getType()   { return type; }

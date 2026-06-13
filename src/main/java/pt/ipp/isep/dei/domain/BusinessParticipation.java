@@ -71,7 +71,7 @@ public class BusinessParticipation implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("BusinessParticipation{org='%s', NIF=%d, value=%.2f, percentage=%.2f%%}",
+        return String.format("%s (NIF %d), value %.2f, %.2f%%",
                 organization.getName(), companyNIF, totalValueInStocks, companyPercentage);
     }
 }
