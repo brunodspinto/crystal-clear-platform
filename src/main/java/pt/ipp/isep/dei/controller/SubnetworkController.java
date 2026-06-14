@@ -132,10 +132,27 @@ public class SubnetworkController {
     public void exportToSvg(SubnetworkResult result,
                             String entitiesCsv,
                             String outputSvgPath) throws IOException {
-
         // Load typed entities from CSV so the exporter can apply shapes/colours
-        List<Entity> allEntities = EntityCsvParser.parse(entitiesCsv);
-        RelationGraph relationGraph         = requireRelationGraph();
+        writeSvg(result, EntityCsvParser.parse(entitiesCsv), outputSvgPath);
+    }
+
+    /**
+     * Exports the subnetwork to SVG using the entities already loaded in the
+     * graph (US19), so the GUI does not have to ask for the entities CSV again.
+     *
+     * @param result        the subnetwork result from {@link #extractSubnetwork}
+     * @param outputSvgPath path for the output SVG file
+     * @throws IOException if any file operation fails
+     */
+    public void exportToSvg(SubnetworkResult result,
+                            String outputSvgPath) throws IOException {
+        writeSvg(result, graphRepository.getAll(), outputSvgPath);
+    }
+
+    private void writeSvg(SubnetworkResult result,
+                          List<Entity> allEntities,
+                          String outputSvgPath) throws IOException {
+        RelationGraph relationGraph = requireRelationGraph();
 
         // Filter entities and edges to those present in the subnetwork
         boolean[] inSubnet = buildMembershipSet(result);

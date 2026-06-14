@@ -31,6 +31,7 @@
       <HBox alignment="CENTER_LEFT" spacing="12.0">
          <children>
             <Button defaultButton="true" mnemonicParsing="false" onAction="#handleExtract" styleClass="primary-button" text="Extract Subnetwork" />
+            <Button fx:id="exportButton" mnemonicParsing="false" onAction="#handleExportSvg" styleClass="primary-button" text="Export to SVG" />
             <Button cancelButton="true" mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
          </children>
       </HBox>
