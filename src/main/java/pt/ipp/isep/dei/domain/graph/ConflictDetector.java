@@ -162,13 +162,13 @@ public class ConflictDetector {
                 }
             }
 
-            if (publicOrgs.isEmpty()) continue;
-
-            for (Edge infEdge : edgesWithLabel(graph, personA, REL_INFLUENCES)) {
-                String company = infEdge.getToId();
-                for (int i = 0; i < publicOrgs.size(); i++) {
-                    String ctx = "holds " + positions.get(i) + " in " + publicOrgs.get(i);
-                    results.add(Chain.ofWithContext(ctx, personA, company));
+            if (!publicOrgs.isEmpty()) {
+                for (Edge infEdge : edgesWithLabel(graph, personA, REL_INFLUENCES)) {
+                    String company = infEdge.getToId();
+                    for (int i = 0; i < publicOrgs.size(); i++) {
+                        String ctx = "holds " + positions.get(i) + " in " + publicOrgs.get(i);
+                        results.add(Chain.ofWithContext(ctx, personA, company));
+                    }
                 }
             }
         }

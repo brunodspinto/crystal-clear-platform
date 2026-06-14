@@ -7,55 +7,68 @@
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" maxWidth="460.0" prefHeight="480.0" prefWidth="720.0" spacing="0.0" styleClass="root-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.ui.gui.RegisterSceneController">
+<VBox prefHeight="480.0" prefWidth="720.0" styleClass="root-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.ui.gui.RegisterSceneController">
    <children>
-      <Label styleClass="app-title" text="Crystal Clear" />
-      <Label styleClass="scene-title" text="Create Account" />
-      <Separator styleClass="title-separator" />
-      <Label styleClass="field-label" text="Full Name" />
-      <TextField fx:id="fullNameField" promptText="Enter your full name" styleClass="input-field" />
-      <Label styleClass="field-label" text="Email Address" />
-      <TextField fx:id="emailField" promptText="name@example.com" styleClass="input-field" />
-      <Label styleClass="field-label" text="Password" />
-      <PasswordField fx:id="passwordField" promptText="7 chars · ≥3 uppercase · ≥2 digits" styleClass="input-field" />
-      <Label fx:id="passwordHintLabel" styleClass="hint-neutral" text="7 chars · ≥3 uppercase · ≥2 digits · alphanumeric only" />
-      <Label styleClass="field-label" text="Confirm Password" />
-      <PasswordField fx:id="confirmPasswordField" promptText="Repeat your password" styleClass="input-field" />
-      <Label styleClass="field-label" text="Role" />
-      <ComboBox fx:id="roleComboBox" maxWidth="Infinity" styleClass="input-field" />
-      <HBox fx:id="documentRow" alignment="CENTER_LEFT" spacing="8.0">
-         <children>
-            <Label fx:id="documentLabel" styleClass="field-label" wrapText="true" />
-            <TextField fx:id="documentField" promptText="Document number" styleClass="input-field" HBox.hgrow="ALWAYS" />
-         </children>
-      </HBox>
-      <VBox fx:id="politicalRow" spacing="0.0">
-         <children>
-            <Label styleClass="field-label" text="National Identity Card (Cartão de Cidadão)" />
-            <TextField fx:id="ccField" promptText="CC number" styleClass="input-field" />
-            <Label styleClass="field-label" text="Tax Number (NIF)" />
-            <TextField fx:id="nifField" promptText="NIF number" styleClass="input-field" />
-            <Label styleClass="field-label" text="Mandate Start Date" />
-            <DatePicker fx:id="mandateStartPicker" maxWidth="Infinity" styleClass="input-field" />
-         </children>
-      </VBox>
-      <Label fx:id="messageLabel" maxWidth="Infinity" styleClass="message-error" wrapText="true" />
-      <Region prefHeight="8.0" VBox.vgrow="NEVER" />
-      <Button fx:id="submitButton" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleSubmit" styleClass="primary-button" text="Request Registration" />
-      <HBox alignment="CENTER" spacing="4.0">
-         <children>
-            <Label text="Already have an account?" />
-            <Hyperlink mnemonicParsing="false" onAction="#handleBackToLogin" styleClass="link-button" text="Back to Login" />
-         </children>
-      </HBox>
+      <ScrollPane fitToWidth="true" styleClass="root-pane" VBox.vgrow="ALWAYS">
+         <content>
+            <VBox alignment="TOP_CENTER" styleClass="root-pane">
+               <children>
+                  <VBox alignment="TOP_CENTER" maxWidth="460.0" spacing="0.0">
+                     <children>
+                        <Label styleClass="app-title" text="Crystal Clear" />
+                        <Label styleClass="scene-title" text="Create Account" />
+                        <Separator styleClass="title-separator" />
+                        <Label styleClass="field-label" text="Full Name" />
+                        <TextField fx:id="fullNameField" promptText="Enter your full name" styleClass="input-field" />
+                        <Label styleClass="field-label" text="Email Address" />
+                        <TextField fx:id="emailField" promptText="name@example.com" styleClass="input-field" />
+                        <Label styleClass="field-label" text="Password" />
+                        <PasswordField fx:id="passwordField" promptText="7 chars · ≥3 uppercase · ≥2 digits" styleClass="input-field" />
+                        <Label fx:id="passwordHintLabel" styleClass="hint-neutral" text="7 chars · ≥3 uppercase · ≥2 digits · alphanumeric only" wrapText="true" />
+                        <Label styleClass="field-label" text="Confirm Password" />
+                        <PasswordField fx:id="confirmPasswordField" promptText="Repeat your password" styleClass="input-field" />
+                        <Label styleClass="field-label" text="Role" />
+                        <ComboBox fx:id="roleComboBox" maxWidth="Infinity" styleClass="input-field" />
+                        <HBox fx:id="documentRow" alignment="CENTER_LEFT" spacing="8.0">
+                           <children>
+                              <Label fx:id="documentLabel" styleClass="field-label" wrapText="true" />
+                              <TextField fx:id="documentField" promptText="Document number" styleClass="input-field" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <VBox fx:id="politicalRow" spacing="0.0">
+                           <children>
+                              <Label styleClass="field-label" text="National Identity Card (Cartão de Cidadão)" />
+                              <TextField fx:id="ccField" promptText="CC number" styleClass="input-field" />
+                              <Label styleClass="field-label" text="Tax Number (NIF)" />
+                              <TextField fx:id="nifField" promptText="NIF number" styleClass="input-field" />
+                              <Label styleClass="field-label" text="Mandate Start Date" />
+                              <DatePicker fx:id="mandateStartPicker" maxWidth="Infinity" styleClass="input-field" />
+                           </children>
+                        </VBox>
+                        <Label fx:id="messageLabel" maxWidth="Infinity" styleClass="message-error" wrapText="true" />
+                        <Region prefHeight="8.0" VBox.vgrow="NEVER" />
+                        <Button fx:id="submitButton" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleSubmit" styleClass="primary-button" text="Request Registration" />
+                        <HBox alignment="CENTER" spacing="4.0">
+                           <children>
+                              <Label text="Already have an account?" />
+                              <Hyperlink mnemonicParsing="false" onAction="#handleBackToLogin" styleClass="link-button" text="Back to Login" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="24.0" left="40.0" right="40.0" top="24.0" />
+               </padding>
+            </VBox>
+         </content>
+      </ScrollPane>
    </children>
-   <padding>
-      <Insets bottom="32.0" left="40.0" right="40.0" top="32.0" />
-   </padding>
 </VBox>
