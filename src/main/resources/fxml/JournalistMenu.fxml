@@ -8,10 +8,10 @@
 <VBox alignment="CENTER" prefHeight="480.0" prefWidth="720.0" spacing="12.0" styleClass="root-pane" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.ui.gui.JournalistMenuController">
    <children>
       <Label style="-fx-font-size: 20px;" text="Journalist Menu" />
-      <Button maxWidth="240.0" mnemonicParsing="false" onAction="#handleConsultAssets" text="Consult Assets" />
-      <Button maxWidth="240.0" mnemonicParsing="false" onAction="#handleIncomeEvolution" text="Analyse Income Evolution" />
-      <Button maxWidth="240.0" mnemonicParsing="false" onAction="#handleNetworkDynamics" text="Network Dynamics Over Time" />
-      <Button maxWidth="240.0" mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
+      <Button maxWidth="260.0" mnemonicParsing="false" onAction="#handleConsultAssets" styleClass="primary-button" text="Consult Assets" />
+      <Button maxWidth="260.0" mnemonicParsing="false" onAction="#handleIncomeEvolution" styleClass="primary-button" text="Analyse Income Evolution" />
+      <Button maxWidth="260.0" mnemonicParsing="false" onAction="#handleNetworkDynamics" styleClass="primary-button" text="Network Dynamics Over Time" />
+      <Button maxWidth="260.0" mnemonicParsing="false" onAction="#handleLogout" styleClass="secondary-button" text="Logout" />
    </children>
    <padding>
       <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
