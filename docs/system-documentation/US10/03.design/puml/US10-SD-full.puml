@@ -19,7 +19,7 @@ activate Journalist
     Journalist -> UI : asks to analyse income evolution
     activate UI
 
-        UI --> CTRL** : create()
+        UI -> CTRL** : create()
         activate CTRL
             CTRL -> REPOS : getInstance()
             activate REPOS

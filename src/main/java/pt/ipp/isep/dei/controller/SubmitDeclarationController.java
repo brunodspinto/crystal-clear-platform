@@ -26,7 +26,6 @@ import java.util.List;
  *   <li>EXCEPTIONAL – requires a non-blank amended declaration id and
  *       amendment reason.</li>
  * </ul>
- * </p>
  */
 public class SubmitDeclarationController {
 

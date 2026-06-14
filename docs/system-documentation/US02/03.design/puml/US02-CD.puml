@@ -115,6 +115,15 @@ ReviewRegistrationController ..> EmailServiceFactory
 GmailEmailService ..|> EmailService
 DeiEmailService ..|> EmailService
 EmailServiceFactory ..> EmailService : creates
+EmailServiceFactory ..> GmailEmailService : «instantiate» (default)
+
+note right of EmailServiceFactory
+    reads email.properties (email.provider.class) and
+    instantiates the EmailService by name via Java
+    reflection (Class.forName / newInstance) — Protected
+    Variations: a new provider is added by config, no code change
+end note
+
 RegistrationRequest "1" --> "1" UserRole : role
 RegistrationRequest "1" --> "1" RegistrationStatus : status
 

@@ -23,7 +23,7 @@ activate Admin
     Admin -> UI : asks to review registration requests
     activate UI
 
-        UI --> CTRL** : create()
+        UI -> CTRL** : create()
         activate CTRL
             CTRL -> REPOS : getInstance()
             activate REPOS
@@ -42,10 +42,17 @@ activate Admin
 
             CTRL -> FACTORY : create()
             activate FACTORY
+                FACTORY -> FACTORY : read email.properties (email.provider.class)
+                FACTORY -> FACTORY : Class.forName(className).newInstance()
+                note right of FACTORY
+                    Protected Variations + reflection (TP12):
+                    the concrete EmailService is chosen at
+                    runtime from the properties file
+                end note
                 FACTORY --> CTRL : emailService
             deactivate FACTORY
 
-            CTRL --> MAPPER** : create()
+            CTRL -> MAPPER** : create()
         deactivate CTRL
 
         UI -> CTRL : getPendingRequestsAsDTO()
@@ -69,7 +76,7 @@ activate Admin
             CTRL -> MAPPER : toDTO(pendingRequests)
             activate MAPPER
                 loop for each request in pendingRequests
-                    MAPPER --> DTO** : new RegistrationRequestDTO(fullName, email, role,\nsubmissionDate, identificationDocument)
+                    MAPPER -> DTO** : new RegistrationRequestDTO(fullName, email, role,\nsubmissionDate, identificationDocument)
                 end
                 MAPPER --> CTRL : pendingRequestDTOs
             deactivate MAPPER

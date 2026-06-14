@@ -15,7 +15,7 @@ activate ECM
     ECM -> UI : asks to consult integrated situation
     activate UI
 
-        UI --> CTRL** : create()
+        UI -> CTRL** : create()
         activate CTRL
             CTRL -> REPOS : getInstance()
             activate REPOS

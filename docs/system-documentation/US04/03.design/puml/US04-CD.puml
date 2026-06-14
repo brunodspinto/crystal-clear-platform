@@ -1,5 +1,5 @@
 @startuml US04-CD
-'skinparam monochrome true
+skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
 skinparam linetype polyline

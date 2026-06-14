@@ -69,6 +69,7 @@ class Email {
 
 class PoliticalAgentRepository {
     + getAll() : List<PoliticalAgent>
+    + getByEmail(email : String) : PoliticalAgent
     + save(agent : PoliticalAgent) : boolean
 }
 

@@ -72,12 +72,19 @@ package "pt.ipp.isep.dei.domain" {
 
     ' -- complaint ---------------------------------------------------------
     class Complaint {
-        - description
-        - complaintDate
         - submissionDate
-        + getDescription()
+        + addItem(description, date, function)
+        + getItems()
         + getCitizen()
         + getPoliticalAgent()
+    }
+
+    class ComplaintItem {
+        - description
+        - complaintDate
+        + getDescription()
+        + getComplaintDate()
+        + getPoliticalFunction()
     }
 
     enum PoliticalFunction <<enumeration>> {
@@ -90,7 +97,8 @@ package "pt.ipp.isep.dei.domain" {
 
     Citizen "1" -- "0..*" Complaint : submits
     Complaint "0..*" -- "1" PoliticalAgent : targets
-    Complaint "0..*" -- "1" PoliticalFunction : references
+    Complaint "1" *-- "1..*" ComplaintItem : items
+    ComplaintItem "0..*" -- "1" PoliticalFunction : references
 
     ' -- complaint assessment (US27) --------------------------------------
     class ComplaintAssessment {

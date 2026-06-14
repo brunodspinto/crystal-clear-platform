@@ -127,8 +127,8 @@ class BusinessParticipation {
 ConsultIntegratedSituationUI .> ConsultIntegratedSituationController
 
 ConsultIntegratedSituationController ..> Repositories
-Repositories ..> PoliticalAgentRepository
-Repositories ..> DeclarationRepository
+Repositories *-- PoliticalAgentRepository
+Repositories *-- DeclarationRepository
 ConsultIntegratedSituationController ..> PoliticalAgentRepository
 ConsultIntegratedSituationController ..> DeclarationRepository
 ConsultIntegratedSituationController ..> PoliticalAgent

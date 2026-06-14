@@ -16,10 +16,10 @@ participant "dto:OrganizationDTO" as DTO
 
 activate PA
 
-    PA -> UI : asks to list institutions
+    PA -> UI : asks to list organizations
     activate UI
 
-        UI --> CTRL** : create()
+        UI -> CTRL** : create()
         activate CTRL
             CTRL -> REPOS : getInstance()
             activate REPOS
@@ -31,7 +31,7 @@ activate PA
                 REPOS_SINGLETON --> CTRL : organizationRepository
             deactivate REPOS_SINGLETON
 
-            CTRL --> MAPPER** : create()
+            CTRL -> MAPPER** : create()
         deactivate CTRL
 
         UI -> CTRL : getOrganizationsGroupedByType()
@@ -51,7 +51,7 @@ activate PA
                 CTRL -> MAPPER : toDTO(organizations)
                 activate MAPPER
                     loop for each organization
-                        MAPPER --> DTO** : new OrganizationDTO(name,\ntypeDesignation, natureDesignation)
+                        MAPPER -> DTO** : new OrganizationDTO(name,\ntypeDesignation, natureDesignation)
                     end
                     MAPPER --> CTRL : organizationDTOs
                 deactivate MAPPER
@@ -60,7 +60,7 @@ activate PA
             CTRL --> UI : grouped (Map<OrganizationType, List<OrganizationDTO>>)
         deactivate CTRL
 
-        UI --> PA : displays institutions grouped by type,\nsorted alphabetically within each group
+        UI --> PA : displays organizations grouped by type,\nsorted alphabetically within each group
     deactivate UI
 
 deactivate PA

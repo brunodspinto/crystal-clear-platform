@@ -102,8 +102,8 @@ class SubsidyEntry {
 AnalyseIncomeEvolutionUI .> AnalyseIncomeEvolutionController
 
 AnalyseIncomeEvolutionController ..> Repositories
-Repositories ..> PoliticalAgentRepository
-Repositories ..> DeclarationRepository
+Repositories *-- PoliticalAgentRepository
+Repositories *-- DeclarationRepository
 AnalyseIncomeEvolutionController ..> PoliticalAgentRepository
 AnalyseIncomeEvolutionController ..> DeclarationRepository
 AnalyseIncomeEvolutionController ..> PoliticalAgent

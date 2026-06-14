@@ -7,7 +7,7 @@ autonumber
 
 actor "Ethics Committee Member" as ECM
 participant ":ConsultIntegratedSituationUI" as UI
-participant "d:Declaration" as DEC
+participant "dto:DeclarationDTO" as DEC
 
 autonumber 9
  -> UI : display declarations
@@ -16,7 +16,7 @@ activate UI
     group Display Declarations
 
         loop for each d in declarations
-            UI -> DEC : getPositionEntries()
+            UI -> DEC : getPositions()
             activate DEC
                 DEC --> UI : positionEntries
             deactivate DEC
@@ -26,12 +26,12 @@ activate UI
                 DEC --> UI : incomes
             deactivate DEC
 
-            UI -> DEC : getSubsidyEntries()
+            UI -> DEC : getSubsidies()
             activate DEC
                 DEC --> UI : subsidyEntries
             deactivate DEC
 
-            UI -> DEC : getAssetEntries()
+            UI -> DEC : getAssets()
             activate DEC
                 DEC --> UI : assetEntries
             deactivate DEC

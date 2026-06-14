@@ -70,15 +70,26 @@ class OrganizationRepository {
 
 class DeclarationRepository {
     + save(declaration : Declaration) : boolean
+    + getDeclarationsByAgent(agent : PoliticalAgent) : List<Declaration>
+    + getById(declarationId : String) : Declaration
 }
 
 class PoliticalAgentRepository {
     + getByEmail(email : String) : PoliticalAgent
 }
 
-class AuthenticationRepository {
+class AuthenticationRepository <<adapter>> {
     + getCurrentUserSession() : UserSession
 }
+
+class AuthFacade <<external>> {
+}
+
+note right of AuthenticationRepository
+    Adapter: wraps the external AuthLib (AuthFacade).
+    UserSession is an AuthLib type. The same adapter
+    is reused in US08, US11 and US12.
+end note
 
 class PoliticalAgent {
     - name : String
@@ -219,6 +230,7 @@ Repositories *-- OrganizationRepository
 Repositories *-- DeclarationRepository
 Repositories *-- PoliticalAgentRepository
 Repositories *-- AuthenticationRepository
+AuthenticationRepository ..> AuthFacade : delegates
 
 ' ── Repositories store domain objects ─────────────────────────────────────────
 OrganizationRepository --> "*" Organization : stores
