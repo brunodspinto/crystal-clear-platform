@@ -256,7 +256,7 @@ Both `Entity` and `Edge` expose `isActiveAt(String date)`: an element is active 
 
 ## 6. Integration and Demo
 
-* An option **"Network Dynamics Over Time"** is available in the Administrator menu, both in the console UI (`NetworkDynamicsUI`) and in the GUI (`NetworkDynamics.fxml` with `NetworkDynamicsFXController`).
+* An option **"Network Dynamics Over Time"** is available to every authenticated user (Citizen, Journalist, Political Agent, Ethics Committee and Administrator), as the user story is written for a generic user, both in the console UI (`NetworkDynamicsUI`) and in the GUI (`NetworkDynamics.fxml` with `NetworkDynamicsFXController`).
 * The user enters one or more snapshot dates in `yyyy-MM-dd` format; the dates are sorted before the snapshots are built.
 * For each date, the snapshot shows the number of active entities and relations, the entities grouped by type and the relations grouped by label.
 * The entities and relations must be loaded first with US19 and US20; otherwise the UI shows a warning and stops.

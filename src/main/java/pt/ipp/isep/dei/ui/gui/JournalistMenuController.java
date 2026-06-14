@@ -32,6 +32,13 @@ public class JournalistMenuController {
     }
 
     @FXML
+    private void handleNetworkDynamics() {
+        if (mainController != null) {
+            mainController.loadCenter("/fxml/NetworkDynamics.fxml");
+        }
+    }
+
+    @FXML
     private void handleLogout() {
         authController.doLogout();
         if (mainController != null) {

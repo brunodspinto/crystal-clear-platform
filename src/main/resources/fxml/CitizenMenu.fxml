@@ -10,6 +10,7 @@
       <Label style="-fx-font-size: 20px;" text="Citizen Menu" />
       <Button maxWidth="240.0" mnemonicParsing="false" onAction="#handleConsultAssets" text="Consult Assets" />
       <Button maxWidth="240.0" mnemonicParsing="false" onAction="#handleSubmitComplaint" text="Submit Complaint" />
+      <Button maxWidth="240.0" mnemonicParsing="false" onAction="#handleNetworkDynamics" text="Network Dynamics Over Time" />
       <Button maxWidth="240.0" mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
    </children>
    <padding>

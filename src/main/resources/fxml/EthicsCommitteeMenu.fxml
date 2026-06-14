@@ -19,6 +19,7 @@
             <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleDetectConflicts" styleClass="primary-button" text="Detect Conflicts of Interest" />
             <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleFindPath" styleClass="primary-button" text="Find Pathway" />
             <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleSubnetwork" styleClass="primary-button" text="Influence Subnetwork" />
+            <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleNetworkDynamics" styleClass="primary-button" text="Network Dynamics Over Time" />
             <Label styleClass="field-label" text="Statistical analyses" />
             <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleUs14" styleClass="primary-button" text="Declaration Statistics" />
             <Button maxWidth="300.0" mnemonicParsing="false" onAction="#handleUs16" styleClass="primary-button" text="Income Boxplots by Role" />

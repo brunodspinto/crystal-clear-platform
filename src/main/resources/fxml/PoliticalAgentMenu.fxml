@@ -10,6 +10,7 @@
       <Label styleClass="scene-title" text="Political Agent Menu" />
       <Button maxWidth="260.0" mnemonicParsing="false" onAction="#handleListOrganizations" styleClass="primary-button" text="List Institutions" />
       <Button maxWidth="260.0" mnemonicParsing="false" onAction="#handleSubmitDeclaration" styleClass="primary-button" text="Submit Declaration of Interests" />
+      <Button maxWidth="260.0" mnemonicParsing="false" onAction="#handleNetworkDynamics" styleClass="primary-button" text="Network Dynamics Over Time" />
       <Button maxWidth="260.0" mnemonicParsing="false" onAction="#handleLogout" styleClass="secondary-button" text="Logout" />
    </children>
    <padding>

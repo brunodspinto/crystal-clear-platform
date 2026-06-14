@@ -78,6 +78,11 @@ public class EthicsCommitteeMenuController implements Initializable {
     }
 
     @FXML
+    private void handleNetworkDynamics() {
+        open("/fxml/NetworkDynamics.fxml");
+    }
+
+    @FXML
     private void handleUs14() {
         showStatistics(StatsScreen.US14);
     }

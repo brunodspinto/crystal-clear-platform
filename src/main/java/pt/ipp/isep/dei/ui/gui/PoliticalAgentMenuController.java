@@ -29,6 +29,11 @@ public class PoliticalAgentMenuController {
     }
 
     @FXML
+    private void handleNetworkDynamics() {
+        open("/fxml/NetworkDynamics.fxml");
+    }
+
+    @FXML
     private void handleLogout() {
         authController.doLogout();
         if (mainController != null) {

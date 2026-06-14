@@ -6,6 +6,7 @@ import pt.ipp.isep.dei.ui.console.ConsultIntegratedSituationUI;
 import pt.ipp.isep.dei.ui.console.DetectConflictsUI;
 import pt.ipp.isep.dei.ui.console.DetectNepotismUI;
 import pt.ipp.isep.dei.ui.console.FindPathUI;
+import pt.ipp.isep.dei.ui.console.NetworkDynamicsUI;
 import pt.ipp.isep.dei.ui.console.SubnetworkUI;
 import pt.ipp.isep.dei.ui.console.ValidateDeclarationUI;
 import pt.ipp.isep.dei.ui.console.utils.Utils;
@@ -45,6 +46,7 @@ public class EthicsCommitteeUI implements Runnable {
         options.add(new MenuItem(
                 "Visualise Influence Subnetwork for an Entity (US36)",
                 new SubnetworkUI()));
+        options.add(new MenuItem("Network Dynamics Over Time (US32)", new NetworkDynamicsUI()));
 
         int option = 0;
         do {
