@@ -10,7 +10,7 @@
 | `RegisterUI` | `src/main/java/pt/ipp/isep/dei/ui/console/RegisterUI.java` |
 | `RegistrationRequest` | `src/main/java/pt/ipp/isep/dei/domain/RegistrationRequest.java` |
 
-**`RegisterController`**: exposes the available roles (excluding ADMINISTRATOR), validates the password format, checks whether an identification document is required, and delegates request creation and persistence to `RegistrationRequest` and `RegistrationRequestRepository`.
+**`RegisterController`**: exposes the available roles (excluding ADMINISTRATOR), validates the password format, checks whether an identification document is required, and delegates request creation and persistence to `RegistrationRequest` and `RegistrationRequestRepository`. For Political Agents it also collects the extra data (national identity card, tax number and mandate start) through `submitPoliticalAgentRequest`, which validates that all three fields are present.
 
 **`RegisterUI`**: collects the user's role selection, name, email, password (with up to 3 retry attempts), and optional identification document; shows a confirmation summary and calls the controller.
 
@@ -37,11 +37,15 @@
 | `ensureJournalistWithDocumentIsSubmitted` | A JOURNALIST request with a document is accepted |
 | `ensureJournalistWithoutDocumentThrows` | A JOURNALIST request with no document throws `IllegalArgumentException` |
 | `ensureIsValidPasswordDelegatesToDomain` | `isValidPassword` returns true for a valid password and false for a weak one |
+| `ensurePoliticalAgentRequiresPoliticalData` | `requiresPoliticalData` returns true for POLITICAL_AGENT and false for CITIZEN and JOURNALIST |
+| `ensurePoliticalAgentRequestWithDataIsSubmitted` | A Political Agent request with card, tax number and mandate start is saved (repository has 1 entry) |
+| `ensurePoliticalAgentRequestWithoutNifThrows` | A Political Agent request with a blank tax number throws `IllegalArgumentException` |
+| `ensurePoliticalAgentRequestWithoutMandateStartThrows` | A Political Agent request with no mandate start date throws `IllegalArgumentException` |
 
 ## Checklist
 
 - [x] `RegistrationRequest`: domain class with password policy and duplicate-check equality
-- [x] `RegisterController`: role listing, document requirement, request submission
+- [x] `RegisterController`: role listing, document requirement, request submission, Political Agent data collection
 - [x] `RegisterUI`: role selection, password retry, confirmation, error handling
 - [x] `MainMenuUI`: "Register" option accessible before login
-- [x] 15 unit tests (all passing)
+- [x] 19 unit tests (all passing)

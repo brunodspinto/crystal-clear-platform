@@ -9,6 +9,7 @@ class ReviewRegistrationUI {
 
 class ReviewRegistrationController {
     + ReviewRegistrationController()
+    + getPendingRequests() : List<RegistrationRequest>
     + getPendingRequestsAsDTO() : List<RegistrationRequestDTO>
     + approveRequestByEmail(email : String) : void
     + rejectRequestByEmail(email : String, reason : String) : void
