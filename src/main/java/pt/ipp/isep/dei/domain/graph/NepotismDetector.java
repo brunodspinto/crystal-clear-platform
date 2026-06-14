@@ -67,16 +67,15 @@ public class NepotismDetector {
         // Edge direction: appointed --appointedBy--> appointer
         for (String appointed : graph.nodes()) {
             for (Edge apptEdge : graph.neighbors(appointed)) {
-                if (!REL_APPOINTED_BY.equals(apptEdge.getLabel())) {
-                    continue;
-                }
-                String appointer = apptEdge.getToId();
+                if (REL_APPOINTED_BY.equals(apptEdge.getLabel())) {
+                    String appointer = apptEdge.getToId();
 
-                // GraphBuilder guarantees symmetric ties are stored in both
-                // directions, so checking only appointer→appointed is sufficient.
-                String tie = findPersonalTie(graph, appointer, appointed);
-                if (tie != null) {
-                    results.add(new NepotismPair(appointer, appointed, tie));
+                    // GraphBuilder guarantees symmetric ties are stored in both
+                    // directions, so checking only appointer→appointed is sufficient.
+                    String tie = findPersonalTie(graph, appointer, appointed);
+                    if (tie != null) {
+                        results.add(new NepotismPair(appointer, appointed, tie));
+                    }
                 }
             }
         }

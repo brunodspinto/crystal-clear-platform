@@ -247,10 +247,11 @@ public class SubnetworkController {
                                     SubnetworkResult result) {
         List<Edge> filtered = new ArrayList<>();
         for (String nodeId : relationGraph.nodes()) {
-            if (!containedInResult(result, nodeId)) continue;
-            for (Edge e : relationGraph.neighbors(nodeId)) {
-                if (containedInResult(result, e.getToId())) {
-                    filtered.add(e);
+            if (containedInResult(result, nodeId)) {
+                for (Edge e : relationGraph.neighbors(nodeId)) {
+                    if (containedInResult(result, e.getToId())) {
+                        filtered.add(e);
+                    }
                 }
             }
         }
