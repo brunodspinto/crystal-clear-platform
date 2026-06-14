@@ -1,11 +1,15 @@
 package pt.ipp.isep.dei.controller;
 
+import pt.ipp.isep.dei.domain.Citizen;
+import pt.ipp.isep.dei.domain.EthicsCommitteeMember;
 import pt.ipp.isep.dei.domain.PoliticalAgent;
 import pt.ipp.isep.dei.domain.RegistrationRequest;
 import pt.ipp.isep.dei.domain.UserRole;
 import pt.ipp.isep.dei.dto.RegistrationRequestDTO;
 import pt.ipp.isep.dei.mapper.RegistrationRequestMapper;
 import pt.ipp.isep.dei.repository.AuthenticationRepository;
+import pt.ipp.isep.dei.repository.CitizenRepository;
+import pt.ipp.isep.dei.repository.EthicsCommitteeMemberRepository;
 import pt.ipp.isep.dei.repository.PoliticalAgentRepository;
 import pt.ipp.isep.dei.repository.RegistrationRequestRepository;
 import pt.ipp.isep.dei.repository.Repositories;
@@ -24,6 +28,8 @@ public class ReviewRegistrationController {
     private final RegistrationRequestRepository repository;
     private final AuthenticationRepository authRepository;
     private final PoliticalAgentRepository politicalAgentRepository;
+    private final CitizenRepository citizenRepository;
+    private final EthicsCommitteeMemberRepository ethicsCommitteeMemberRepository;
     private final EmailService emailService;
     private final RegistrationRequestMapper registrationRequestMapper = new RegistrationRequestMapper();
 
@@ -34,6 +40,8 @@ public class ReviewRegistrationController {
         this.repository = Repositories.getInstance().getRegistrationRequestRepository();
         this.authRepository = Repositories.getInstance().getAuthenticationRepository();
         this.politicalAgentRepository = Repositories.getInstance().getPoliticalAgentRepository();
+        this.citizenRepository = Repositories.getInstance().getCitizenRepository();
+        this.ethicsCommitteeMemberRepository = Repositories.getInstance().getEthicsCommitteeMemberRepository();
         this.emailService = EmailServiceFactory.create();
     }
 
@@ -65,6 +73,8 @@ public class ReviewRegistrationController {
         this.repository = repository;
         this.authRepository = authRepository;
         this.politicalAgentRepository = politicalAgentRepository;
+        this.citizenRepository = Repositories.getInstance().getCitizenRepository();
+        this.ethicsCommitteeMemberRepository = Repositories.getInstance().getEthicsCommitteeMemberRepository();
         this.emailService = emailService;
     }
 
@@ -89,6 +99,8 @@ public class ReviewRegistrationController {
         authRepository.addUserWithRole(request.getFullName(), request.getEmail(),
                 request.getPassword(), roleId);
         registerPoliticalAgentIfNeeded(request);
+        registerCitizenIfNeeded(request);
+        registerEthicsCommitteeMemberIfNeeded(request);
         emailService.sendNotification(
                 request.getEmail(),
                 "Registration Approved",
@@ -119,6 +131,42 @@ public class ReviewRegistrationController {
                 request.getNationalIdentityCard(), request.getTaxIdentificationNumber(),
                 request.getMandateStart(), null);
         politicalAgentRepository.save(agent);
+    }
+
+    /**
+     * Creates the {@link Citizen} domain object when an approved request is for
+     * the Citizen role. Without this step the citizen could log in but would not
+     * be found when submitting a complaint (US12 resolves the citizen by email),
+     * so the feature would fail. The identification document provided at
+     * registration is used as the national id card number.
+     *
+     * @param request the approved registration request
+     */
+    private void registerCitizenIfNeeded(RegistrationRequest request) {
+        if (request.getRole() != UserRole.CITIZEN) {
+            return;
+        }
+        Citizen citizen = new Citizen(request.getEmail(), request.getFullName(),
+                request.getIdentificationDocument());
+        citizenRepository.save(citizen);
+    }
+
+    /**
+     * Creates the {@link EthicsCommitteeMember} domain object when an approved
+     * request is for the Ethics Committee role. Without this step the member
+     * could log in but would not be found when validating a declaration (US08)
+     * or assessing a complaint (US27), which resolve the current member by
+     * email, so those features would fail.
+     *
+     * @param request the approved registration request
+     */
+    private void registerEthicsCommitteeMemberIfNeeded(RegistrationRequest request) {
+        if (request.getRole() != UserRole.ETHICS_COMMITTEE) {
+            return;
+        }
+        EthicsCommitteeMember member =
+                new EthicsCommitteeMember(request.getFullName(), request.getEmail());
+        ethicsCommitteeMemberRepository.save(member);
     }
 
     /**
