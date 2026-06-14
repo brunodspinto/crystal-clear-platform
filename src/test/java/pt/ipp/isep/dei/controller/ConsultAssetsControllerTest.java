@@ -133,8 +133,12 @@ class ConsultAssetsControllerTest {
         ConsultAssetsController controller =
                 new ConsultAssetsController(new PoliticalAgentRepository(), new DeclarationRepository(), null);
 
-        assertThrows(IllegalArgumentException.class,
-                () -> controller.getPoliticalAgentsWithDataAt(null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.getPoliticalAgentsWithDataAt(null);
+            }
+        });
     }
 
     @Test

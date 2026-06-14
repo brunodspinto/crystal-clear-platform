@@ -1,6 +1,7 @@
 package pt.ipp.isep.dei.controller;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import pt.ipp.isep.dei.domain.graph.Edge;
 import pt.ipp.isep.dei.domain.graph.Person;
 import pt.ipp.isep.dei.domain.graph.SupportGraph;
@@ -44,8 +45,18 @@ class GlobalSupportMatrixControllerTest {
     void ensureBuildForBlankDateThrows() {
         GlobalSupportMatrixController controller =
                 new GlobalSupportMatrixController(new GraphRepository());
-        assertThrows(IllegalArgumentException.class, () -> controller.buildFor(""));
-        assertThrows(IllegalArgumentException.class, () -> controller.buildFor(null));
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.buildFor("");
+            }
+        });
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                controller.buildFor(null);
+            }
+        });
     }
 
     @Test
