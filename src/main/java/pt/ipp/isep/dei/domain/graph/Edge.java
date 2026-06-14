@@ -1,6 +1,8 @@
 package pt.ipp.isep.dei.domain.graph;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 /**
  * A relation between two entities, identified by their ids.
@@ -116,9 +118,30 @@ public class Edge implements Serializable {
      */
     public boolean isActiveAt(String date) {
         if (date == null || date.isBlank()) return false;
-        boolean startOk = startDate.isEmpty() || startDate.compareTo(date) <= 0;
-        boolean endOk = endDate.isEmpty() || endDate.compareTo(date) >= 0;
+        LocalDate target = parseOrNull(date);
+        if (target == null) return false;
+        LocalDate start = parseOrNull(startDate);
+        LocalDate end = parseOrNull(endDate);
+        boolean startOk = start == null || !start.isAfter(target);
+        boolean endOk = end == null || !end.isBefore(target);
         return startOk && endOk;
+    }
+
+    /**
+     * Parses a date in yyyy-MM-dd format, returning null when the value is
+     * empty or cannot be parsed. A null start or end date means the period is
+     * open on that side.
+     *
+     * @param value the date text
+     * @return the parsed date, or null
+     */
+    private static LocalDate parseOrNull(String value) {
+        if (value == null || value.isBlank()) return null;
+        try {
+            return LocalDate.parse(value.trim());
+        } catch (DateTimeParseException e) {
+            return null;
+        }
     }
 
     private static String requireNonBlank(String value, String name) {

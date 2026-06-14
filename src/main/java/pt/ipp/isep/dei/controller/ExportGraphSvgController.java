@@ -50,7 +50,10 @@ public class ExportGraphSvgController {
         }
 
         ProcessBuilder pb = new ProcessBuilder("dot", "-Tsvg", dotPath, "-o", outputSvgPath);
-        pb.redirectErrorStream(true);
+        // Discard dot's stdout/stderr so a chatty process cannot fill the pipe
+        // buffer and deadlock waitFor(); the SVG itself is written to the file.
+        pb.redirectOutput(ProcessBuilder.Redirect.DISCARD);
+        pb.redirectError(ProcessBuilder.Redirect.DISCARD);
         try {
             Process process = pb.start();
             int code = process.waitFor();
