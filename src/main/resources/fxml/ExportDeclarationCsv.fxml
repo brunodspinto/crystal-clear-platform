@@ -18,7 +18,7 @@
             <Button mnemonicParsing="false" onAction="#handleBrowse" styleClass="secondary-button" text="Browse..." />
          </children>
       </HBox>
-      <Label fx:id="messageLabel" maxWidth="Infinity" />
+      <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" />
       <HBox alignment="CENTER_LEFT" spacing="12.0">
          <children>
             <Button defaultButton="true" mnemonicParsing="false" onAction="#handleExport" styleClass="primary-button" text="Export" />

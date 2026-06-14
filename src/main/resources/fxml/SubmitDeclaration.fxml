@@ -26,9 +26,9 @@
                   <ComboBox fx:id="typeCombo" prefWidth="180.0" styleClass="input-field" />
                </children>
             </HBox>
-            <VBox fx:id="exceptionalBox" spacing="6.0" style="-fx-border-color:#e8c2bf; -fx-border-radius:4;                      -fx-background-color:#fdf0ef; -fx-background-radius:4;                      -fx-padding:10;">
+            <VBox fx:id="exceptionalBox" spacing="6.0" style="-fx-border-color: #e8c2bf; -fx-border-radius: 4; -fx-background-color: #fdf0ef; -fx-background-radius: 4; -fx-padding: 10;">
                <children>
-                  <Label style="-fx-font-weight:bold; -fx-font-size:11px; -fx-text-fill:#c0392b;" text="Exceptional Declaration — additional information required" />
+                  <Label style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: #c0392b;" text="Exceptional Declaration — additional information required" />
                   <HBox alignment="CENTER_LEFT" spacing="12.0">
                      <children>
                         <Label minWidth="160.0" text="Amended Declaration ID:" />
@@ -41,7 +41,7 @@
             </VBox>
             <HBox alignment="CENTER_LEFT" spacing="12.0">
                <children>
-                  <Label minWidth="130.0" style="-fx-font-size:11px; -fx-text-fill:#555;" text="Import from previous:" />
+                  <Label minWidth="130.0" style="-fx-font-size: 11px; -fx-text-fill: #555;" text="Import from previous:" />
                   <ComboBox fx:id="importCombo" prefWidth="340.0" styleClass="input-field" />
                   <Button fx:id="importButton" mnemonicParsing="false" onAction="#handleImport" styleClass="secondary-button" text="Import data" />
                </children>
@@ -60,7 +60,7 @@
                      <content>
                         <VBox spacing="8.0">
                            <children>
-                              <Label style="-fx-font-size:11px; -fx-text-fill:#666;" text="Declare your partner, descendants and any other family members you wish to include." />
+                              <Label style="-fx-font-size: 11px; -fx-text-fill: #666;" text="Declare your partner, descendants and any other family members you wish to include." />
                               <HBox alignment="CENTER_LEFT" spacing="10.0">
                                  <children>
                                     <Label minWidth="80.0" text="Full Name:" />
@@ -193,7 +193,7 @@
                                     <Button mnemonicParsing="false" onAction="#handleRemoveAsset" styleClass="secondary-button" text="Remove" />
                                  </children>
                               </HBox>
-                              <Label style="-fx-font-size:11px; -fx-text-fill:#888888;" text="Detail: Real Estate = description (+ municipality), Vehicles = model, Stocks = share name." />
+                              <Label style="-fx-font-size: 11px; -fx-text-fill: #888888;" text="Detail: Real Estate = description (+ municipality), Vehicles = model, Stocks = share name." />
                               <TableView fx:id="assetTable" prefHeight="120.0">
                                  <columns>
                                     <TableColumn fx:id="assetColType" prefWidth="130.0" text="Type" />
@@ -253,7 +253,7 @@
       </ScrollPane>
       <VBox spacing="8.0">
          <children>
-            <Label fx:id="messageLabel" maxWidth="Infinity" wrapText="true" />
+            <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" wrapText="true" />
             <HBox alignment="CENTER_RIGHT" spacing="10.0">
                <children>
                   <Button cancelButton="true" mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />

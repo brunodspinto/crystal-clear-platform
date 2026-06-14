@@ -30,8 +30,8 @@
             <ComboBox fx:id="targetCombo" prefWidth="280.0" styleClass="combo-box" />
          </children>
       </HBox>
-      <Label fx:id="messageLabel" maxWidth="Infinity" wrapText="true" />
-      <Label fx:id="resultLabel" maxWidth="Infinity" styleClass="field-label" wrapText="true" />
+      <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" wrapText="true" />
+      <Label fx:id="resultLabel" maxWidth="1.7976931348623157E308" styleClass="field-label" wrapText="true" />
       <HBox alignment="CENTER_LEFT" spacing="12.0">
          <children>
             <Button defaultButton="true" mnemonicParsing="false" onAction="#handleFindPath" styleClass="primary-button" text="Find Path" />

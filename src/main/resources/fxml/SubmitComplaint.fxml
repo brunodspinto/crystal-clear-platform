@@ -19,9 +19,9 @@
       <GridPane hgap="12.0" vgap="8.0">
          <children>
             <Label styleClass="field-label" text="Political Agent:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <ComboBox fx:id="agentCombo" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <ComboBox fx:id="agentCombo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="0" />
             <Label styleClass="field-label" text="Political Function:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-            <ComboBox fx:id="functionCombo" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ComboBox fx:id="functionCombo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label styleClass="field-label" text="Complaint Date:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
             <DatePicker fx:id="datePicker" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label styleClass="field-label" text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
@@ -39,7 +39,7 @@
       </HBox>
       <Label styleClass="field-label" text="Grievances in this complaint:" />
       <ListView fx:id="grievancesList" prefHeight="120.0" VBox.vgrow="ALWAYS" />
-      <Label fx:id="messageLabel" maxWidth="Infinity" />
+      <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" />
       <HBox alignment="CENTER_LEFT" spacing="12.0">
          <children>
             <Button defaultButton="true" mnemonicParsing="false" onAction="#handleSubmit" styleClass="primary-button" text="Submit complaint" />

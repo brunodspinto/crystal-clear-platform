@@ -44,7 +44,7 @@
       </HBox>
       <Label styleClass="field-label" text="Reason (mandatory if invalid):" />
       <TextArea fx:id="reasonArea" prefRowCount="3" wrapText="true" />
-      <Label fx:id="messageLabel" maxWidth="Infinity" />
+      <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" />
       <HBox alignment="CENTER_LEFT" spacing="12.0">
          <children>
             <Button defaultButton="true" mnemonicParsing="false" onAction="#handleAssess" styleClass="primary-button" text="Assess" />

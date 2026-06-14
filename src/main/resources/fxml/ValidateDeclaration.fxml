@@ -20,7 +20,7 @@
       <VBox spacing="4.0" styleClass="root-pane">
          <children>
             <Label styleClass="scene-title" text="Validate Declaration of Interests" />
-            <Label style="-fx-font-size:11px; -fx-text-fill:#666666;" text="Select a pending declaration to review and validate." />
+            <Label style="-fx-font-size: 11px; -fx-text-fill: #666666;" text="Select a pending declaration to review and validate." />
          </children>
          <padding>
             <Insets bottom="10.0" left="20.0" right="20.0" top="14.0" />
@@ -45,31 +45,31 @@
                         <Button fx:id="reviewButton" mnemonicParsing="false" onAction="#handleReview" prefWidth="220.0" styleClass="primary-button" text="Review selected declaration" />
                      </children>
                   </HBox>
-                  <VBox fx:id="reviewPanel" spacing="10.0" style="-fx-border-color:#cccccc; -fx-border-radius:5;                              -fx-background-color:#fafafa; -fx-background-radius:5;">
+                  <VBox fx:id="reviewPanel" spacing="10.0" style="-fx-border-color: #cccccc; -fx-border-radius: 5; -fx-background-color: #fafafa; -fx-background-radius: 5;">
                      <children>
                         <Label styleClass="field-label" text="Declaration Details" />
-                        <GridPane hgap="10.0" style="-fx-background-color:#ffffff; -fx-border-color:#e0e0e0;                                      -fx-border-radius:5; -fx-background-radius:5;" vgap="8.0">
+                        <GridPane hgap="10.0" style="-fx-background-color: #ffffff; -fx-border-color: #e0e0e0; -fx-border-radius: 5; -fx-background-radius: 5;" vgap="8.0">
                            <children>
-                              <Label style="-fx-text-fill:#888888; -fx-font-size:11px;" text="Agent" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                              <Label fx:id="lblAgent" style="-fx-font-weight:bold;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                              <Label style="-fx-text-fill:#888888; -fx-font-size:11px;" text="Status" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                              <Label fx:id="lblStatus" style="-fx-font-weight:bold;" GridPane.columnIndex="3" GridPane.rowIndex="0" />
-                              <Label style="-fx-text-fill:#888888; -fx-font-size:11px;" text="Type" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                              <Label style="-fx-text-fill: #888888; -fx-font-size: 11px;" text="Agent" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                              <Label fx:id="lblAgent" style="-fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                              <Label style="-fx-text-fill: #888888; -fx-font-size: 11px;" text="Status" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                              <Label fx:id="lblStatus" style="-fx-font-weight: bold;" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                              <Label style="-fx-text-fill: #888888; -fx-font-size: 11px;" text="Type" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                               <Label fx:id="lblType" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <Label style="-fx-text-fill:#888888; -fx-font-size:11px;" text="Submitted" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <Label style="-fx-text-fill: #888888; -fx-font-size: 11px;" text="Submitted" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                               <Label fx:id="lblDate" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                               <Separator GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="2" />
-                              <Label style="-fx-text-fill:#888888; -fx-font-size:11px;" text="Position entries" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                              <Label style="-fx-text-fill: #888888; -fx-font-size: 11px;" text="Position entries" GridPane.columnIndex="0" GridPane.rowIndex="3" />
                               <Label fx:id="lblPositions" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                              <Label style="-fx-text-fill:#888888; -fx-font-size:11px;" text="Income entries" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                              <Label style="-fx-text-fill: #888888; -fx-font-size: 11px;" text="Income entries" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                               <Label fx:id="lblIncomes" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                              <Label style="-fx-text-fill:#888888; -fx-font-size:11px;" text="Subsidy entries" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                              <Label style="-fx-text-fill: #888888; -fx-font-size: 11px;" text="Subsidy entries" GridPane.columnIndex="0" GridPane.rowIndex="4" />
                               <Label fx:id="lblSubsidies" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                              <Label style="-fx-text-fill:#888888; -fx-font-size:11px;" text="Asset entries" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                              <Label style="-fx-text-fill: #888888; -fx-font-size: 11px;" text="Asset entries" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                               <Label fx:id="lblAssets" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                              <Label style="-fx-text-fill:#888888; -fx-font-size:11px;" text="Business participations" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                              <Label style="-fx-text-fill: #888888; -fx-font-size: 11px;" text="Business participations" GridPane.columnIndex="0" GridPane.rowIndex="5" />
                               <Label fx:id="lblBusiness" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                              <Label style="-fx-text-fill:#888888; -fx-font-size:11px;" text="Attachments" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                              <Label style="-fx-text-fill: #888888; -fx-font-size: 11px;" text="Attachments" GridPane.columnIndex="2" GridPane.rowIndex="5" />
                               <Label fx:id="lblAttachments" GridPane.columnIndex="3" GridPane.rowIndex="5" />
                            </children>
                            <padding>

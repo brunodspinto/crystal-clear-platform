@@ -24,7 +24,7 @@
          </children>
       </HBox>
       <Label fx:id="maskNotice" style="-fx-text-fill: #888888; -fx-font-style: italic;" text="Sensitive values are masked. Log in as a journalist to see full details." />
-      <Label fx:id="messageLabel" maxWidth="Infinity" />
+      <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" />
       <TableView fx:id="assetsTable" VBox.vgrow="ALWAYS">
          <columns>
             <TableColumn fx:id="colAgent" prefWidth="160.0" text="Agent" />

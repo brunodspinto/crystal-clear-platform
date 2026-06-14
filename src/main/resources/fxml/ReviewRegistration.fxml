@@ -44,7 +44,7 @@
                   </GridPane>
                   <Label styleClass="field-label" text="Rejection reason (mandatory for reject):" />
                   <TextArea fx:id="reasonArea" prefRowCount="3" wrapText="true" />
-                  <Label fx:id="messageLabel" maxWidth="Infinity" />
+                  <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" />
                   <HBox alignment="CENTER_LEFT" spacing="12.0">
                      <children>
                         <Button fx:id="acceptButton" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#handleAccept" styleClass="primary-button" text="Accept" />

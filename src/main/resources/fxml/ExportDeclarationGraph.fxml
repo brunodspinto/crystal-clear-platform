@@ -33,7 +33,7 @@
             <Button mnemonicParsing="false" onAction="#handleBrowseRelations" styleClass="secondary-button" text="Browse..." />
          </children>
       </HBox>
-      <Label fx:id="messageLabel" maxWidth="Infinity" wrapText="true" />
+      <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" wrapText="true" />
       <HBox alignment="CENTER_LEFT" spacing="12.0">
          <children>
             <Button defaultButton="true" mnemonicParsing="false" onAction="#handleExport" styleClass="primary-button" text="Export" />

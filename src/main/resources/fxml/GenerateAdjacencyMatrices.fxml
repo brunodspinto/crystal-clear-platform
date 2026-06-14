@@ -19,7 +19,7 @@
             <ComboBox fx:id="matrixCombo" onAction="#handleMatrixSelected" prefWidth="280.0" styleClass="combo-box" />
          </children>
       </HBox>
-      <Label fx:id="messageLabel" maxWidth="Infinity" wrapText="true" />
+      <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" wrapText="true" />
       <TextArea fx:id="matrixArea" editable="false" style="-fx-font-family: 'Courier New', monospace;" wrapText="false" VBox.vgrow="ALWAYS" />
       <HBox alignment="CENTER_LEFT" spacing="12.0">
          <children>

@@ -12,8 +12,8 @@
    <children>
       <Label styleClass="scene-title" text="Direct Nepotism Detection" />
       <Label text="Flags every case where someone was appointed by a person they have a personal tie with (relativeOf, friendOf or associatedWith)." wrapText="true" />
-      <Label fx:id="messageLabel" maxWidth="Infinity" wrapText="true" />
-      <Label fx:id="resultLabel" maxWidth="Infinity" styleClass="field-label" wrapText="true" />
+      <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" wrapText="true" />
+      <Label fx:id="resultLabel" maxWidth="1.7976931348623157E308" styleClass="field-label" wrapText="true" />
       <TableView fx:id="pairsTable" prefHeight="280.0" VBox.vgrow="ALWAYS">
          <columns>
             <TableColumn fx:id="colAppointed" prefWidth="220.0" text="Appointed" />

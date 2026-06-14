@@ -24,7 +24,7 @@
             <Button cancelButton="true" mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
          </children>
       </HBox>
-      <Label fx:id="messageLabel" maxWidth="Infinity" />
+      <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" />
       <TableView fx:id="declarationsTable" prefHeight="180.0">
          <columns>
             <TableColumn fx:id="colType" prefWidth="200.0" text="Type" />

@@ -21,7 +21,7 @@
             <Label text="No institutions registered yet." />
          </placeholder>
       </TableView>
-      <Label fx:id="messageLabel" maxWidth="Infinity" />
+      <Label fx:id="messageLabel" maxWidth="1.7976931348623157E308" />
       <HBox alignment="CENTER_LEFT" spacing="12.0">
          <children>
             <Button cancelButton="true" mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />

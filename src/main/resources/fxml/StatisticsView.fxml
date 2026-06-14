@@ -18,7 +18,7 @@
             <Button cancelButton="true" mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-button" text="Back" />
          </children>
       </HBox>
-      <Label fx:id="statusLabel" maxWidth="Infinity" />
+      <Label fx:id="statusLabel" maxWidth="1.7976931348623157E308" />
       <Label styleClass="field-label" text="Output:" />
       <TextArea fx:id="logArea" editable="false" wrapText="true" VBox.vgrow="ALWAYS" />
    </children>
