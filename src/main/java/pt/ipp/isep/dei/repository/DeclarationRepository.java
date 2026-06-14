@@ -53,6 +53,14 @@ public class DeclarationRepository implements Serializable {
         if (declaration == null) {
             throw new IllegalArgumentException("Declaration cannot be null.");
         }
+        // a declaration already stored must not be added twice (e.g. when it is
+        // saved again after validation) — update it in place instead.
+        for (int i = 0; i < declarations.size(); i++) {
+            if (declarations.get(i).getId().equals(declaration.getId())) {
+                declarations.set(i, declaration);
+                return true;
+            }
+        }
         return declarations.add(declaration);
     }
 

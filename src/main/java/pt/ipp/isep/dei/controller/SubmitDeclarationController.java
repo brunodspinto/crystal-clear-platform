@@ -70,7 +70,15 @@ public class SubmitDeclarationController {
     /** @return all registered organisations as DTOs (ESOFT — DTO pattern) */
     public List<OrganizationDTO> getOrganizations() {
         OrganizationMapper mapper = new OrganizationMapper();
-        return mapper.toDTO(organizationRepository.getOrganizations());
+        // skip the system organisation ("This Company"), which has no type and is
+        // not a real institution the agent can declare a position/holding in.
+        List<Organization> registered = new ArrayList<>();
+        for (Organization org : organizationRepository.getOrganizations()) {
+            if (org.getType() != null) {
+                registered.add(org);
+            }
+        }
+        return mapper.toDTO(registered);
     }
 
     /** @return all position natures */
