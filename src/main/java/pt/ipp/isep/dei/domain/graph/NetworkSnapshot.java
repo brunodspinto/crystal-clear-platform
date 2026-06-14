@@ -45,12 +45,30 @@ public class NetworkSnapshot {
         }
         List<Edge> activeEdges = new ArrayList<>();
         for (Edge e : allEdges) {
-            if (e.isActiveAt(date)) {
+            if (e.isActiveAt(date)
+                    && containsId(activeEntities, e.getFromId())
+                    && containsId(activeEntities, e.getToId())) {
                 activeEdges.add(e);
             }
         }
         RelationGraph graph = GraphBuilder.build(activeEntities, activeEdges);
         return new NetworkSnapshot(date, activeEntities, activeEdges, graph);
+    }
+
+    /**
+     * Returns true if the list contains an entity with the given id.
+     *
+     * @param entities the entities to search
+     * @param id        the entity id to look for
+     * @return true when an entity with that id is present
+     */
+    private static boolean containsId(List<Entity> entities, String id) {
+        for (Entity e : entities) {
+            if (e.getId().equals(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
