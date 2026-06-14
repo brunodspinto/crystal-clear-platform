@@ -38,16 +38,50 @@ public class GraphDotExporter {
             dot.append("];\n");
         }
 
-        for (Edge edge : edges) {
-            dot.append("  \"").append(escape(edge.getFromId())).append("\" -> \"");
-            dot.append(escape(edge.getToId())).append("\"");
-            dot.append(" [label=\"").append(escape(edge.getLabel())).append("\"");
-            dot.append(", tooltip=\"").append(escape(tooltipFor(edge))).append("\"");
-            dot.append("];\n");
+        for (int i = 0; i < edges.size(); i++) {
+            Edge edge = edges.get(i);
+            boolean symmetric = GraphBuilder.isSymmetricLabel(edge.getLabel());
+            // Symmetric ties (friendOf, relativeOf, associatedWith) hold in both
+            // directions, so they are drawn as a single arc with an arrowhead on
+            // each end. When the data already lists the reverse edge, only the
+            // first occurrence is drawn so the pair is not rendered twice.
+            boolean alreadyDrawnAsBidirectional = symmetric && reverseAppearsBefore(edges, i);
+            if (!alreadyDrawnAsBidirectional) {
+                dot.append("  \"").append(escape(edge.getFromId())).append("\" -> \"");
+                dot.append(escape(edge.getToId())).append("\"");
+                dot.append(" [label=\"").append(escape(edge.getLabel())).append("\"");
+                if (symmetric) {
+                    dot.append(", dir=both");
+                }
+                dot.append(", tooltip=\"").append(escape(tooltipFor(edge))).append("\"");
+                dot.append("];\n");
+            }
         }
 
         dot.append("}\n");
         return dot.toString();
+    }
+
+    /**
+     * Tells whether the reverse of the edge at {@code index} (same label, with
+     * the endpoints swapped) appears earlier in the list. Used to avoid drawing
+     * a symmetric relation twice.
+     *
+     * @param edges the edges being exported.
+     * @param index the position of the edge to check.
+     * @return {@code true} if the reverse edge appears before {@code index}.
+     */
+    private static boolean reverseAppearsBefore(List<Edge> edges, int index) {
+        Edge e = edges.get(index);
+        for (int j = 0; j < index; j++) {
+            Edge other = edges.get(j);
+            if (other.getFromId().equals(e.getToId())
+                    && other.getToId().equals(e.getFromId())
+                    && other.getLabel().equals(e.getLabel())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static String shapeFor(Entity entity) {

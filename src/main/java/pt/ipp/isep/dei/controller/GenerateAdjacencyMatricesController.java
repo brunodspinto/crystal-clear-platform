@@ -49,15 +49,7 @@ public class GenerateAdjacencyMatricesController {
             throw new IllegalStateException("No relations graph available. Build the relations graph first (US20).");
         }
 
-        IndexRegistry registry = new IndexRegistry();
-        for (String nodeId : graph.nodes()) {
-            registry.indexFor(nodeId);
-        }
-
-        List<String> nodeIds = new ArrayList<>();
-        for (int i = 0; i < registry.size(); i++) {
-            nodeIds.add(registry.idAt(i));
-        }
+        List<String> allNodeIds = graph.nodes();
 
         List<String> labels = new ArrayList<>();
         for (String nodeId : graph.nodes()) {
@@ -70,12 +62,79 @@ public class GenerateAdjacencyMatricesController {
 
         List<LabeledAdjacencyMatrix> matrices = new ArrayList<>();
         for (String label : labels) {
-            AdjacencyMatrix m = graph.toAdjacencyMatrix(label, registry);
-            matrices.add(new LabeledAdjacencyMatrix(label, m));
+            matrices.add(buildLabelMatrix(graph, label, allNodeIds));
         }
 
-        AdjacencyMatrix global = buildGlobalMatrix(matrices, nodeIds.size());
-        return new GenerationResult(nodeIds, matrices, global);
+        AdjacencyMatrix global = buildGlobalMatrix(graph, allNodeIds);
+        return new GenerationResult(allNodeIds, matrices, global);
+    }
+
+    /**
+     * Builds the matrix for a single relation label, including only the
+     * entities that actually participate in that relation (as source or
+     * target). This is why a relation such as "relativeOf", that only exists
+     * between people, produces a matrix with people only, instead of every
+     * entity in the graph.
+     *
+     * @param graph      the relations graph.
+     * @param label      the relation label.
+     * @param allNodeIds the ordered ids of every node, used to keep the rows
+     *                   and columns in the same global order.
+     * @return the labeled matrix restricted to the participating entities.
+     */
+    private LabeledAdjacencyMatrix buildLabelMatrix(RelationGraph graph, String label, List<String> allNodeIds) {
+        List<String> labelNodeIds = participatingNodeIds(graph, label, allNodeIds);
+
+        IndexRegistry registry = new IndexRegistry();
+        for (String nodeId : labelNodeIds) {
+            registry.indexFor(nodeId);
+        }
+
+        AdjacencyMatrix m = new AdjacencyMatrix(registry.size());
+        for (String nodeId : graph.nodes()) {
+            for (Edge e : graph.neighbors(nodeId)) {
+                if (label.equals(e.getLabel())) {
+                    int from = registry.indexFor(e.getFromId());
+                    int to = registry.indexFor(e.getToId());
+                    m.addEdge(from, to, e.getWeight());
+                }
+            }
+        }
+        return new LabeledAdjacencyMatrix(label, m, labelNodeIds);
+    }
+
+    /**
+     * Collects the ids of the entities that take part in at least one edge of
+     * the given label (as source or target), keeping them in the same order as
+     * {@code allNodeIds}.
+     *
+     * @param graph      the relations graph.
+     * @param label      the relation label.
+     * @param allNodeIds the ordered ids of every node.
+     * @return the ordered ids of the entities connected by this relation.
+     */
+    private List<String> participatingNodeIds(RelationGraph graph, String label, List<String> allNodeIds) {
+        List<String> participating = new ArrayList<>();
+        for (String nodeId : graph.nodes()) {
+            for (Edge e : graph.neighbors(nodeId)) {
+                if (label.equals(e.getLabel())) {
+                    if (!participating.contains(e.getFromId())) {
+                        participating.add(e.getFromId());
+                    }
+                    if (!participating.contains(e.getToId())) {
+                        participating.add(e.getToId());
+                    }
+                }
+            }
+        }
+
+        List<String> ordered = new ArrayList<>();
+        for (String nodeId : allNodeIds) {
+            if (participating.contains(nodeId)) {
+                ordered.add(nodeId);
+            }
+        }
+        return ordered;
     }
 
     /**
@@ -98,29 +157,29 @@ public class GenerateAdjacencyMatricesController {
     }
 
     /**
-     * Builds the global adjacency matrix as the sum of every per-label
-     * matrix. When multiple relations connect the same pair of nodes, the
-     * weights are summed in the resulting cell (MDISC clarification).
+     * Builds the global adjacency matrix over every entity in the graph. When
+     * multiple relations connect the same pair of nodes, the weights are
+     * summed in the resulting cell (MDISC clarification). Unlike the per-label
+     * matrices, the global matrix always includes every entity.
      *
-     * @param matrices the per-label matrices.
-     * @param n        the size of each matrix (number of nodes).
-     * @return the global matrix; null when n is 0.
+     * @param graph      the relations graph.
+     * @param allNodeIds the ordered ids of every node.
+     * @return the global matrix; null when there are no nodes.
      */
-    private AdjacencyMatrix buildGlobalMatrix(List<LabeledAdjacencyMatrix> matrices, int n) {
-        if (n == 0) {
+    private AdjacencyMatrix buildGlobalMatrix(RelationGraph graph, List<String> allNodeIds) {
+        if (allNodeIds.isEmpty()) {
             return null;
         }
-        AdjacencyMatrix global = new AdjacencyMatrix(n);
-        for (LabeledAdjacencyMatrix lam : matrices) {
-            AdjacencyMatrix m = lam.getMatrix();
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    double add = m.getWeight(i, j);
-                    if (add != 0) {
-                        double existing = global.getWeight(i, j);
-                        global.addEdge(i, j, existing + add);
-                    }
-                }
+        IndexRegistry registry = new IndexRegistry();
+        for (String nodeId : allNodeIds) {
+            registry.indexFor(nodeId);
+        }
+        AdjacencyMatrix global = new AdjacencyMatrix(registry.size());
+        for (String nodeId : graph.nodes()) {
+            for (Edge e : graph.neighbors(nodeId)) {
+                int from = registry.indexFor(e.getFromId());
+                int to = registry.indexFor(e.getToId());
+                global.addEdge(from, to, global.getWeight(from, to) + e.getWeight());
             }
         }
         return global;

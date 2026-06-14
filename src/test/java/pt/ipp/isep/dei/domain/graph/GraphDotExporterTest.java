@@ -61,6 +61,51 @@ class GraphDotExporterTest {
     }
 
     @Test
+    void ensureSymmetricRelationIsDrawnAsBidirectional() {
+        List<Entity> entities = new ArrayList<>();
+        entities.add(new Person("P-001", "politician", "", "", "Alice", "", ""));
+        entities.add(new Person("P-002", "politician", "", "", "Bob", "", ""));
+        List<Edge> edges = new ArrayList<>();
+        edges.add(new Edge("P-001", "P-002", "friendOf", 1.0));
+        String dot = GraphDotExporter.export(entities, edges);
+        assertTrue(dot.contains("dir=both"));
+    }
+
+    @Test
+    void ensureDirectedRelationIsNotMarkedBidirectional() {
+        List<Entity> entities = new ArrayList<>();
+        entities.add(new Person("P-001", "politician", "", "", "Alice", "", ""));
+        entities.add(new Organization("O-001", "company", "", "", "Acme", "private", "PT"));
+        List<Edge> edges = new ArrayList<>();
+        edges.add(new Edge("P-001", "O-001", "employment", 1.0));
+        String dot = GraphDotExporter.export(entities, edges);
+        assertFalse(dot.contains("dir=both"));
+    }
+
+    @Test
+    void ensureSymmetricRelationListedBothWaysIsDrawnOnce() {
+        List<Entity> entities = new ArrayList<>();
+        entities.add(new Person("P-001", "politician", "", "", "Alice", "", ""));
+        entities.add(new Person("P-002", "politician", "", "", "Bob", "", ""));
+        List<Edge> edges = new ArrayList<>();
+        edges.add(new Edge("P-001", "P-002", "friendOf", 1.0));
+        edges.add(new Edge("P-002", "P-001", "friendOf", 1.0));
+        String dot = GraphDotExporter.export(entities, edges);
+        assertEquals(1, countOccurrences(dot, "->"));
+        assertTrue(dot.contains("dir=both"));
+    }
+
+    private int countOccurrences(String text, String needle) {
+        int count = 0;
+        int from = text.indexOf(needle);
+        while (from >= 0) {
+            count = count + 1;
+            from = text.indexOf(needle, from + needle.length());
+        }
+        return count;
+    }
+
+    @Test
     void ensureEmptyGraphProducesValidDot() {
         String dot = GraphDotExporter.export(new ArrayList<>(), new ArrayList<>());
         assertTrue(dot.startsWith("digraph G {"));

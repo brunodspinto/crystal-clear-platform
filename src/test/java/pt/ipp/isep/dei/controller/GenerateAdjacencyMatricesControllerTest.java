@@ -60,7 +60,7 @@ class GenerateAdjacencyMatricesControllerTest {
     }
 
     @Test
-    void ensureAllMatricesShareTheSameSize() {
+    void ensureEachLabelMatrixOnlyIncludesEntitiesItConnects() {
         RelationGraph graph = new RelationGraph();
         graph.addEdge(new Edge("A", "B", "kinship", 1.0));
         graph.addEdge(new Edge("C", "D", "employment", 1.0));
@@ -70,10 +70,53 @@ class GenerateAdjacencyMatricesControllerTest {
         GenerateAdjacencyMatricesController controller = new GenerateAdjacencyMatricesController(repo);
 
         List<LabeledAdjacencyMatrix> matrices = controller.generate().getMatrices();
-        int expectedSize = graph.nodeCount();
+
+        // The graph has 4 entities, but each relation only connects 2 of them,
+        // so each per-label matrix must be 2x2 and not include the others.
         for (LabeledAdjacencyMatrix entry : matrices) {
-            assertEquals(expectedSize, entry.getMatrix().getSize());
+            assertEquals(2, entry.getMatrix().getSize());
+            assertEquals(2, entry.getNodeIds().size());
         }
+    }
+
+    @Test
+    void ensureLabelMatrixExcludesEntitiesNotInThatRelation() {
+        RelationGraph graph = new RelationGraph();
+        graph.addEdge(new Edge("A", "B", "kinship", 1.0));
+        graph.addEdge(new Edge("C", "D", "employment", 1.0));
+
+        GraphRepository repo = new GraphRepository();
+        repo.setRelationGraph(graph);
+        GenerateAdjacencyMatricesController controller = new GenerateAdjacencyMatricesController(repo);
+
+        List<LabeledAdjacencyMatrix> matrices = controller.generate().getMatrices();
+
+        List<String> kinshipNodes = nodeIdsFor(matrices, "kinship");
+        assertTrue(kinshipNodes.contains("A"));
+        assertTrue(kinshipNodes.contains("B"));
+        assertFalse(kinshipNodes.contains("C"));
+        assertFalse(kinshipNodes.contains("D"));
+
+        List<String> employmentNodes = nodeIdsFor(matrices, "employment");
+        assertTrue(employmentNodes.contains("C"));
+        assertTrue(employmentNodes.contains("D"));
+        assertFalse(employmentNodes.contains("A"));
+        assertFalse(employmentNodes.contains("B"));
+    }
+
+    @Test
+    void ensureGlobalMatrixStillIncludesEveryEntity() {
+        RelationGraph graph = new RelationGraph();
+        graph.addEdge(new Edge("A", "B", "kinship", 1.0));
+        graph.addEdge(new Edge("C", "D", "employment", 1.0));
+
+        GraphRepository repo = new GraphRepository();
+        repo.setRelationGraph(graph);
+        GenerateAdjacencyMatricesController controller = new GenerateAdjacencyMatricesController(repo);
+
+        GenerateAdjacencyMatricesController.GenerationResult result = controller.generate();
+        assertEquals(graph.nodeCount(), result.getGlobalMatrix().getSize());
+        assertEquals(graph.nodeCount(), result.getNodeIds().size());
     }
 
     @Test
@@ -129,6 +172,15 @@ class GenerateAdjacencyMatricesControllerTest {
         for (LabeledAdjacencyMatrix entry : matrices) {
             if (entry.getLabel().equals(label)) {
                 return entry.getMatrix();
+            }
+        }
+        throw new IllegalArgumentException("matrix not found: " + label);
+    }
+
+    private List<String> nodeIdsFor(List<LabeledAdjacencyMatrix> matrices, String label) {
+        for (LabeledAdjacencyMatrix entry : matrices) {
+            if (entry.getLabel().equals(label)) {
+                return entry.getNodeIds();
             }
         }
         throw new IllegalArgumentException("matrix not found: " + label);

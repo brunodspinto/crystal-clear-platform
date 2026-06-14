@@ -48,11 +48,12 @@ public class GenerateAdjacencyMatricesUI implements Runnable {
             return;
         }
 
-        System.out.println("\nGenerated " + matrices.size() + " adjacency matrices ("
-                + nodeIds.size() + " x " + nodeIds.size() + " each).");
+        System.out.println("\nGenerated " + matrices.size() + " adjacency matrices. "
+                + "Each per-relation matrix only includes the entities that relation connects; "
+                + "the global matrix includes all " + nodeIds.size() + " entities.");
 
         for (LabeledAdjacencyMatrix entry : matrices) {
-            printMatrix(entry.getLabel(), entry.getMatrix(), nodeIds);
+            printMatrix(entry.getLabel(), entry.getMatrix(), entry.getNodeIds());
         }
 
         AdjacencyMatrix global = result.getGlobalMatrix();

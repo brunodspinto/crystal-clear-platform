@@ -42,7 +42,15 @@ public class GraphBuilder {
         return graph;
     }
 
-    private static boolean isSymmetricLabel(String label) {
+    /**
+     * Tells whether a relation label represents a symmetric (bidirectional)
+     * tie, i.e. one that holds in both directions between the two entities
+     * (being relatives, friends or associates of each other).
+     *
+     * @param label the relation label.
+     * @return {@code true} if the relation is symmetric.
+     */
+    public static boolean isSymmetricLabel(String label) {
         return "relativeOf".equals(label)
                 || "friendOf".equals(label)
                 || "associatedWith".equals(label);

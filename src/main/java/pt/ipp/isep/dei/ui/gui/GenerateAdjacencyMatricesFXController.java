@@ -78,7 +78,8 @@ public class GenerateAdjacencyMatricesFXController implements Initializable {
 
         int n = result.getNodeIds().size();
         showSuccess("Generated " + result.getMatrices().size()
-                + " adjacency matrices (" + n + " x " + n + " each).");
+                + " adjacency matrices. Each per-relation matrix only includes the entities "
+                + "that relation connects; the global matrix includes all " + n + " entities.");
     }
 
     @FXML
@@ -92,17 +93,19 @@ public class GenerateAdjacencyMatricesFXController implements Initializable {
         }
 
         AdjacencyMatrix matrix = null;
+        List<String> nodeIds = result.getNodeIds();
         if (GLOBAL_OPTION.equals(selected)) {
             matrix = result.getGlobalMatrix();
         } else {
             for (LabeledAdjacencyMatrix entry : result.getMatrices()) {
                 if (matrix == null && entry.getLabel().equals(selected)) {
                     matrix = entry.getMatrix();
+                    nodeIds = entry.getNodeIds();
                 }
             }
         }
         if (matrix != null) {
-            matrixArea.setText(matrixToText(selected, matrix, result.getNodeIds()));
+            matrixArea.setText(matrixToText(selected, matrix, nodeIds));
         }
     }
 
