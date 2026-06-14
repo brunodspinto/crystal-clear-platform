@@ -27,7 +27,7 @@ To install and run the platform, your machine must have:
 - **Java:** JDK 21 or newer
 - **Maven:** 3.6 or newer
 - **Python:** 3.10 or newer (only for statistical features)
-- **Python packages:** `pandas`, `matplotlib`, `scipy`
+- **Python packages:** `pandas`, `numpy`, `matplotlib`, `scipy`, `seaborn`
 - **Graphviz:** 2.40 or newer (required by the relations graph rendering; the `dot` binary must be on the system PATH)
 - **Git:** 2.30 or newer
 - **RAM:** 4 GB (8 GB recommended)
@@ -36,14 +36,15 @@ To install and run the platform, your machine must have:
 ### Installation
 
 1. Clone the repository: `git clone <repository-url>`
-2. Enter the project folder: `cd HEREISLAPR`
+2. Enter the project folder: `cd sem2-pi-25-26-g023-repo`
 3. Build the application: `mvn clean package`
 4. Install Python dependencies: `pip install -r requirements.txt`
 5. Install Graphviz:
    - macOS: `brew install graphviz`
    - Linux (Debian/Ubuntu): `sudo apt install graphviz`
    - Windows: download the installer from https://graphviz.org/download/ and make sure the `dot` binary is added to the system PATH.
-6. Run the platform: `java -jar target/project-template-1.0-SNAPSHOT-jar-with-dependencies.jar`
+6. Run the platform (graphical interface): `mvn javafx:run`
+   - A text-only console version can also be launched from the generated `target/project-template-1.0-SNAPSHOT-jar-with-dependencies.jar`; this manual describes the graphical interface.
 
 The platform opens a graphical interface (JavaFX) where you log in and reach the menu of your role. The sections below describe the functionalities available in each menu.
 
@@ -106,13 +107,11 @@ A member of the body responsible for supervising declarations and investigating 
 A technical user who configures and feeds the platform.
 
 - Review pending registration requests and accept or reject them. The requester is notified of the decision by email.
-- Create tasks in the platform.
 - Register a new organisation.
 - Load the list of entities from a CSV file.
 - Build the relations graph between entities from a CSV file.
 - Generate the adjacency matrices of the relations graph.
 - Generate the global support adjacency matrix of the support graph (no directions or weights).
-- View the dynamics of the network over time: a list of dates produces discrete snapshots of the network.
 - Export the declarations dataset to CSV.
 - Export the holdings dataset to CSV.
 - Export the heterogeneous graph as an interactive SVG file.
@@ -124,7 +123,8 @@ These actions are available to every user, regardless of role:
 
 - Register on the platform by filling out the registration form.
 - Log in with the credentials assigned after a registration request is approved.
-- Log out at any moment by returning to the main menu and choosing "Exit".
+- View the dynamics of the relations network over time (Network Dynamics): a list of dates produces discrete snapshots of the network. Available from every authenticated role menu.
+- Log out at any moment using the **Logout** button in your role menu.
 
 ---
 
