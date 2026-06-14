@@ -138,7 +138,7 @@ public class NetworkDynamicsFXController implements Initializable {
     @FXML
     private void handleBack() {
         if (mainController != null) {
-            mainController.showAdminMenu();
+            mainController.goBackToMenu();
         }
     }
 

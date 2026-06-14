@@ -21,6 +21,7 @@ public class MainController {
     private Stage stage;
     private HostServices hostServices;
     private StatsScreen pendingStatsScreen;
+    private String currentMenuFxml;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -47,15 +48,15 @@ public class MainController {
     }
 
     public void showCitizenMenu() {
-        loadCenter("/fxml/CitizenMenu.fxml");
+        showMenu("/fxml/CitizenMenu.fxml");
     }
 
     public void showJournalistMenu() {
-        loadCenter("/fxml/JournalistMenu.fxml");
+        showMenu("/fxml/JournalistMenu.fxml");
     }
 
     public void showAdminMenu() {
-        loadCenter("/fxml/AdminMenu.fxml");
+        showMenu("/fxml/AdminMenu.fxml");
     }
 
     public void showRegisterOrganization() {
@@ -79,11 +80,36 @@ public class MainController {
     }
 
     public void showPoliticalAgentMenu() {
-        loadCenter("/fxml/PoliticalAgentMenu.fxml");
+        showMenu("/fxml/PoliticalAgentMenu.fxml");
     }
 
     public void showEthicsCommitteeMenu() {
-        loadCenter("/fxml/EthicsCommitteeMenu.fxml");
+        showMenu("/fxml/EthicsCommitteeMenu.fxml");
+    }
+
+    /**
+     * Loads a role menu and remembers it as the current menu, so screens that
+     * can be opened from more than one role (e.g. Network Dynamics, Consult
+     * Assets) know where the user came from and can return there.
+     *
+     * @param menuFxml the menu FXML path.
+     */
+    private void showMenu(String menuFxml) {
+        this.currentMenuFxml = menuFxml;
+        loadCenter(menuFxml);
+    }
+
+    /**
+     * Returns to the role menu the user is currently in. Used by the back
+     * button of screens shared by several roles, so it no longer redirects to
+     * a fixed menu. Falls back to the login screen if no menu was shown yet.
+     */
+    public void goBackToMenu() {
+        if (currentMenuFxml == null) {
+            showLogin();
+        } else {
+            loadCenter(currentMenuFxml);
+        }
     }
 
     public void showStatistics(StatsScreen screen) {
