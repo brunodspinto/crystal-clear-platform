@@ -38,7 +38,8 @@ public class EthicsCommitteeMenuController implements Initializable {
                 validateButton.setText("Validate Declaration (" + pending + " pending)");
             }
         } catch (RuntimeException e) {
-            // keep the plain button label
+            // badge is optional; keep the plain button label
+            System.err.println("Could not load pending validation count: " + e.getMessage());
         }
     }
 

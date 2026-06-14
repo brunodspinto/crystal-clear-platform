@@ -16,7 +16,6 @@ import pt.ipp.isep.dei.dto.DeclarationDTO;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -223,8 +222,8 @@ public class ValidateDeclarationFXController implements Initializable {
                 : "Confirm returning declaration " + selectedDeclaration.getId() + " for correction?";
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, question, ButtonType.OK, ButtonType.CANCEL);
         confirm.setHeaderText(null);
-        Optional<ButtonType> choice = confirm.showAndWait();
-        if (!choice.isPresent() || choice.get() != ButtonType.OK) {
+        ButtonType choice = confirm.showAndWait().orElse(ButtonType.CANCEL);
+        if (choice != ButtonType.OK) {
             return;
         }
 

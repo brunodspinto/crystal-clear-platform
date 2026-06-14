@@ -10,7 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.util.StringConverter;
 import pt.ipp.isep.dei.controller.SubmitDeclarationController;
 import pt.ipp.isep.dei.domain.*;
 import pt.ipp.isep.dei.dto.DeclarationDTO;
@@ -136,12 +135,6 @@ public class SubmitDeclarationFXController implements Initializable {
         List<DeclarationDTO> previous = controller.getPreviousDeclarations();
         importCombo.setItems(FXCollections.observableArrayList(previous));
         importCombo.setPromptText(previous.isEmpty() ? "No previous declarations" : "Select to import…");
-        importCombo.setConverter(new StringConverter<DeclarationDTO>() {
-            @Override public String toString(DeclarationDTO d) {
-                return d == null ? "" : d.getId() + "  " + d.getType() + "  " + d.getSubmissionDate();
-            }
-            @Override public DeclarationDTO fromString(String s) { return null; }
-        });
         importButton.setDisable(previous.isEmpty());
 
         // Organisation combos
@@ -463,10 +456,6 @@ public class SubmitDeclarationFXController implements Initializable {
     private void setupOrgCombo(ComboBox<OrganizationDTO> combo, ObservableList<OrganizationDTO> orgs) {
         combo.setItems(orgs);
         combo.setPromptText("Select organisation…");
-        combo.setConverter(new StringConverter<OrganizationDTO>() {
-            @Override public String toString(OrganizationDTO o)   { return o == null ? "" : o.getName(); }
-            @Override public OrganizationDTO fromString(String s) { return null; }
-        });
     }
 
     private String readPosFunction() {

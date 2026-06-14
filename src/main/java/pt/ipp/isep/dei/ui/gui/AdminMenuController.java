@@ -37,7 +37,8 @@ public class AdminMenuController implements Initializable {
                 reviewButton.setText("Review Registration Requests (" + pending + " pending)");
             }
         } catch (RuntimeException e) {
-            // keep the plain button label
+            // badge is optional; keep the plain button label
+            System.err.println("Could not load pending registration count: " + e.getMessage());
         }
     }
 
