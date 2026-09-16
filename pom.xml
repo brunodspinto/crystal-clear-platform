@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pt.ipp.isep.dei</groupId>
-    <artifactId>project-template</artifactId>
+    <artifactId>crystal-clear-platform</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>

@@ -36,7 +36,7 @@ To install and run the platform, your machine must have:
 ### Installation
 
 1. Clone the repository: `git clone <repository-url>`
-2. Enter the project folder: `cd sem2-pi-25-26-g023-repo`
+2. Enter the project folder: `cd crystal-clear-platform`
 3. Build the application: `mvn clean package`
 4. Install Python dependencies: `pip install -r requirements.txt`
 5. Install Graphviz:
@@ -44,7 +44,7 @@ To install and run the platform, your machine must have:
    - Linux (Debian/Ubuntu): `sudo apt install graphviz`
    - Windows: download the installer from https://graphviz.org/download/ and make sure the `dot` binary is added to the system PATH.
 6. Run the platform (graphical interface): `mvn javafx:run`
-   - A text-only console version can also be launched from the generated `target/project-template-1.0-SNAPSHOT-jar-with-dependencies.jar`; this manual describes the graphical interface.
+   - A text-only console version can also be launched from the generated `target/crystal-clear-platform-1.0-SNAPSHOT-jar-with-dependencies.jar`; this manual describes the graphical interface.
 
 The platform opens a graphical interface (JavaFX) where you log in and reach the menu of your role. The sections below describe the functionalities available in each menu.
 
