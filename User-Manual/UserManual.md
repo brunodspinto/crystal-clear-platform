@@ -1,15 +1,6 @@
 # Crystal Clear Platform: User Manual
 
-**Sprint 3: 2nd Version (June 2026)**
-
-ISEP / LEI / LAPR2 2025-2026: Team g023
-
-| Student Number | Name              |
-|----------------|-------------------|
-| [removed]        | Tomás Fonseca     |
-| [removed]        | Marcelo Oliveira  |
-| [removed]        | André Oliveira    |
-| [removed]        | Bruno Pinto       |
+Developed by Bruno Pinto, Tomás Fonseca, Marcelo Oliveira and André Oliveira. ISEP, 2025/2026.
 
 ---
 
