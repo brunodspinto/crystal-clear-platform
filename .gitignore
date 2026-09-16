@@ -16,3 +16,13 @@ repositories.dat
 
 # Notification log written by the EmailService implementations
 notifications.txt
+
+.claude/
+
+logs/
+*.log
+
+# Credentials
+.env
+*.key
+*.pem
