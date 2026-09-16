@@ -1,82 +1,90 @@
-# Project Template
+# Crystal Clear Platform
 
-This project template contains didactic artifacts relevant to the Integrative Project to be developed during the second semester of the [Degree in Informatics Engineering (LEI)](https://www.isep.ipp.pt/Course/Course/26) from the [School of Engineering – Polytechnic of Porto (ISEP)](https://www.isep.ipp.pt).
+A transparency portal where political agents submit declarations of interests, an Ethics Committee reviews them, and citizens and journalists consult and analyse the data.
 
-In particular, it has:
+The platform combines a Java/JavaFX desktop application with graph algorithms, to detect nepotism and conflicts of interest in a network of relations between entities, and statistical analysis in Python.
 
-* The [Team Members and Task Distribution](docs/TeamMembersAndTasks.md) during sprints;
-* [Templates](docs/(template-files)) to capture and systematize evidence of proper application of the Software Development Process, namely regarding the activities of Requirements Engineering, OO Analysis and Design;
-* [Sample documentation](docs/outsourcing-tasks-example) and [source code](src) available as a starting point;
-* General description of how the provided application works (and it is structured).
+## Features
 
+**Declarations of interests**
+- Political agents submit initial, regular or exceptional declarations covering income, positions, assets, business participations and household members
+- Data from a previous declaration can be imported into a new one
+- The Ethics Committee validates declarations or returns them with comments
 
-## Maven goals
+**Relations network analysis**
+- Relations graph between entities built from CSV data, with adjacency matrices and interactive SVG export
+- Nepotism detection: pairs of entities connected by both an appointment and a personal tie
+- Conflict of interest detection between political agents and organisations
+- Shortest pathway and distance between any two entities
+- Influence subnetwork of an entity
+- Network dynamics over time through dated snapshots
+- Automatic inference of family relationships (symmetric, inverse and transitive)
 
-### Run the unit tests
-```
-mvn clean test
-```
+**Statistical analysis (Python)**
+- Declaration statistics by type, role and institution
+- Top companies by total share value held by political actors
+- Largest stock value increases over time
+- Correlation between remuneration and assets per political role, validated through residual analysis
+- Non-linear patterns between participation percentages and total stock value
 
-### Generate javadoc for the source code
-```
-mvn javadoc:javadoc
-```
+**Access and roles**
+- Five user profiles: Ordinary Citizen, Journalist, Political Agent, Ethics Committee Member and Administrator
+- Registration requests approved by the administrator, with email notification
+- Role-based access: sensitive values are partially masked for citizens and fully visible to journalists
 
-### Generate javadoc for the test code
-```
-mvn javadoc:test-javadoc
-```
+## Tech Stack
 
-### Generate Jacoco source code coverage report
-```
-mvn test jacoco:report
-```
+- **Java 21** and **JavaFX** (graphical interface)
+- **Maven** (build and dependency management)
+- **JUnit** and **JaCoCo** (testing and coverage)
+- **Python** with pandas, NumPy, SciPy, Matplotlib and seaborn (statistics)
+- **Graphviz** (graph rendering)
 
-### Check if thresholds limits are achieved
-```
-mvn test jacoco:check
-```
+## Getting Started
 
-## How to generate a Jar package for the project
+### Requirements
 
-Place the following plugin on the appropriate place of the pom.xml file.
+- JDK 21 or newer
+- Maven 3.6 or newer
+- Python 3.10 or newer (only for statistical features)
+- Graphviz 2.40 or newer, with the `dot` binary on the system PATH
 
-```xml
-<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-assembly-plugin</artifactId>
-    <version>3.6.0</version>
-    <executions>
-        <execution>
-            <phase>package</phase>
-            <goals>
-                <goal>single</goal>
-            </goals>
-            <configuration>
-                <archive>
-                    <manifest>
-                        <mainClass>pt.ipp.isep.dei.esoft.project.ui.Main</mainClass>
-                    </manifest>
-                </archive>
-                <descriptorRefs>
-                    <descriptorRef>jar-with-dependencies</descriptorRef>
-                </descriptorRefs>
-            </configuration>
-        </execution>
-    </executions>
-</plugin>
+### Installation
+
+```bash
+git clone https://github.com/brunodspinto/crystal-clear-platform.git
+cd crystal-clear-platform
+mvn clean package
+pip install -r requirements.txt
 ```
 
-Run the following command on the project root folder. You can use IntelliJ to run the command or the command line of your computer if you hav Maven installed.
+Install Graphviz:
+- **macOS:** `brew install graphviz`
+- **Linux (Debian/Ubuntu):** `sudo apt install graphviz`
+- **Windows:** download the installer from [graphviz.org](https://graphviz.org/download/) and add `dot` to the PATH
 
-```
-mvn package
+### Running
+
+```bash
+mvn javafx:run
 ```
 
-## How to run the project from the generated Jar Package
+### Tests
 
-Run the following command on the project root folder. You can use IntelliJ to run the command or the command line of your computer if you hav Maven installed.
+```bash
+mvn clean test              # run unit tests
+mvn test jacoco:report      # generate coverage report
+```
 
-```
-java -jar target/project-template-1.0-SNAPSHOT-jar-with-dependencies.jar
-```
+## Documentation
+
+- [User Manual](User-Manual/UserManual.md): installation and features available to each role
+- [`docs/`](docs): requirements engineering, analysis and design artefacts
+
+## Team
+
+Developed by Bruno Pinto, Tomás Fonseca, Marcelo Oliveira and André Oliveira.
+
+## Academic Context
+
+Developed as the Integrative Project (LAPR2) of the 1st year, 2nd semester of the Degree in Informatics Engineering at ISEP – Polytechnic of Porto, 2025/2026, following an iterative process across three sprints.
